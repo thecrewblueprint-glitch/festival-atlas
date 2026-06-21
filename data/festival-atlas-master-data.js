@@ -116,19 +116,50 @@ Danny Wimmer Presents|U.S. festival producer|United States|https://dannywimmerpr
 Another Planet Entertainment|U.S. promoter / producer|Northern California|
 Founders Entertainment|U.S. festival producer|New York|
 Superfly U.S.|U.S. festival / experiential producer|United States|
-Aggreko U.S.|U.S. power / HVAC|United States|https://www.aggreko.com/en-us/careers
+Aggreko U.S.|U.S. power / HVAC|United States|https://careers.aggreko.com/na/en-us
 United Rentals|U.S. equipment rental|United States|https://jobs.unitedrentals.com/
-Sunbelt Rentals|U.S. equipment rental|United States|https://www.sunbeltrentals.com/careers/
-ASM Global U.S. venues|U.S. venue operator|United States|https://www.asmglobal.com/careers/
+Sunbelt Rentals|U.S. equipment rental|United States|https://careers.sunbeltrentals.com/
+ASM Global U.S. venues|U.S. venue operator|United States|https://legendsglobal.com/careers/
 Oak View Group U.S. venues|U.S. venue operator|United States|https://www.oakviewgroup.com/careers/
 Local U.S. production managers|U.S. referral network|Market-specific United States|
 U.S. venue crew pools|U.S. venue labor|Market-specific United States|`;
+const statusMap={
+'Coachella':['confirmed_active_2026','https://en.wikipedia.org/wiki/Coachella_2026',true],
+'Stagecoach':['confirmed_active_2026','https://pitchfork.com/news/stagecoach-festival-2026-lineup-announced-post-malone-lainey-wilson/',true],
+'Ultra Music Festival':['confirmed_active_2026','https://en.wikipedia.org/wiki/Ultra_Music_Festival',true],
+'EDC Las Vegas':['confirmed_active_2026','https://www.businessinsider.com/guides/tickets/where-to-buy-edc-tickets-music-festival',true],
+'Bonnaroo':['confirmed_active_2026','https://pitchfork.com/news/bonnaroo-2026-livestream-schedule-and-details-announced-for-disney-and-hulu/',true],
+'CMA Fest':['confirmed_active_2026','https://www.axios.com/local/nashville/2026/02/25/cma-fest-2026-headliners-tim-mcgraw-keith-urban',true],
+'Electric Forest':['confirmed_active_2026','https://en.wikipedia.org/wiki/Electric_Forest',true],
+'Lollapalooza Chicago':['confirmed_active_2026','https://nypost.com/2026/03/17/ticket-sales/lollapalooza-2026-where-to-buy-tickets-lineup-dates/',true],
+'Austin City Limits':['confirmed_active_2026','https://en.wikipedia.org/wiki/Austin_City_Limits_Music_Festival',true],
+'Louder Than Life':['confirmed_active_2026','https://en.wikipedia.org/wiki/Louder_Than_Life',true],
+'Welcome to Rockville':['confirmed_active_2026','https://en.wikipedia.org/wiki/2026_in_rock_music',true],
+'Sonic Temple':['confirmed_active_2026','https://en.wikipedia.org/wiki/2026_in_rock_music',true],
+'Inkcarceration':['confirmed_active_2026','https://www.loudersound.com/bands-artists/music-festivals/inkcarceration-featuring-bad-omens-papa-roach-limp-bizkit-poppy-2026',true],
+'Aftershock':['confirmed_active_2026','https://en.wikipedia.org/wiki/Aftershock_Festival',true],
+'Governors Ball':['confirmed_active_2026','https://en.wikipedia.org/wiki/Governors_Ball_Music_Festival',true],
+'Shaky Knees':['confirmed_active_2026','https://en.wikipedia.org/wiki/Shaky_Knees_Music_Festival',true],
+'BottleRock Napa Valley':['confirmed_active_2026','https://nypost.com/2026/01/15/ticket-sales/bottlerock-festival-2026-lineup-see-backstreet-boys-foo-fighters/',true],
+'Kilby Block Party':['confirmed_active_2026','https://en.wikipedia.org/wiki/Kilby_Block_Party_(music_festival)',true],
+'Hinterland':['confirmed_active_2026','https://nypost.com/2025/11/18/ticket-sales/hinterland-festival-2026-where-to-buy-tickets-lineup-dates/',true],
+'Newport Folk Festival':['confirmed_active_2026','https://en.wikipedia.org/wiki/Newport_Folk_Festival',true],
+'Newport Jazz Festival':['confirmed_active_2026','https://pitchfork.com/news/thundercat-angine-de-poitrine-to-play-newport-jazz-festival-2026/',true],
+'Okeechobee Music & Arts Festival':['confirmed_active_2026','https://en.wikipedia.org/wiki/Okeechobee_Music_%26_Arts_Festival',true],
+'Sick New World':['confirmed_active_2026','https://en.wikipedia.org/wiki/2026_in_rock_music',true],
+'Sea.Hear.Now':['confirmed_active_2026','https://en.wikipedia.org/wiki/Sea.Hear.Now_Festival',true],
+'Boston Calling':['inactive_2026','https://en.wikipedia.org/wiki/Boston_Calling_Music_Festival',false],
+'Hangout Music Festival':['inactive_2026','https://people.com/morgan-wallen-sand-in-my-boots-festival-will-not-return-in-2026-11865336',false],
+'Electric Zoo':['inactive_2026','https://en.wikipedia.org/wiki/Electric_Zoo',false],
+'Blue Ridge Rock Festival':['inactive_2026','',false],
+'Life Is Beautiful':['needs_verification','',false]
+};
 const west=['CA','NV','AZ','WA','OR','ID','UT','CO','NM','MT','WY'];const mid=['IL','WI','MI','OH','IA','MO','MN','IN','ND','SD','NE','KS'];const south=['TX','FL','GA','TN','KY','LA','AL','NC','SC','VA','OK','AR','MS','MD','DC','DE','WV'];const ne=['NY','NJ','MA','RI','PA','CT','VT','NH','ME'];
 const region=s=>west.includes(s)?'West':mid.includes(s)?'Midwest':south.includes(s)?'South':ne.includes(s)?'Northeast':'United States multi-market';
 const base=['staging','lighting','audio','power','site_ops','logistics','stage_mgmt','production_office'];
 function festivalDeps(name){let d=[...base]; if(/coachella|edc|bonnaroo|lolla|outside|acl|ultra|rockville|sonic|aftershock|governors|bottle|when we|sick|hard|hula|electric|portola|countdown|lost|life|riot|bourbon|louder|inkcarceration|hangout|breakaway/i.test(name)) d.push('rigging','video_led'); if(/edc|ultra|forest|hard|beyond|zoo|iii|movement|portola|crssd|countdown|dreamstate|lights|hula|coachella|life/i.test(name)) d.push('scenic','video_led'); if(/country|cma|stagecoach|rock|jazz|folk|roots|bluegrass|railbird|faster|newport|sonic|riot|bourbon|louder|aftershock|inkcarceration|welcome|hinterland|high sierra|floyd/i.test(name)) d.push('backline'); return [...new Set(d)];}
 function employerDeps(type,name){let t=(type+' '+name).toLowerCase(),d=[]; if(/stage|structure|staging|labor|iatse|venue/.test(t)) d.push('staging'); if(/rigg|iatse|venue/.test(t)) d.push('rigging'); if(/light|production|av|technology|venue/.test(t)) d.push('lighting'); if(/audio|sound|production|av|venue/.test(t)) d.push('audio'); if(/video|display|broadcast|av|technology|venue/.test(t)) d.push('video_led'); if(/power|equipment|rental/.test(t)) d.push('power'); if(/infrastructure|ground|temporary|exhibition|venue|producer|promoter|festival|equipment|rental/.test(t)) d.push('site_ops'); if(/labor|staffing|transport|rental|exhibition|events|equipment/.test(t)) d.push('logistics'); if(/scenic|automation|brand|exhibit|superfly/.test(t)) d.push('scenic'); if(/producer|promoter|festival|venue|production manager/.test(t)) d.push('stage_mgmt','production_office'); return d.length?[...new Set(d)]:['production_office'];}
-const festivals=rawFestivals.trim().split('\n').map((line,i)=>{let [name,city,state,month,producer]=line.split('|');return{id:'fest-'+String(i+1).padStart(3,'0'),name,city,state,region:region(state),month:+month,window:'research calendar target',producer,producerStatus:'needs source verification unless separately marked',departments:festivalDeps(name),employerNotes:'U.S. research only. Map exact stage builder, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic/backline, stage management, production office, IATSE local, nonunion labor companies, and production company.',verificationStatus:'needs verification',source:'master-data-us-only'}});
+const festivals=rawFestivals.trim().split('\n').map((line,i)=>{let [name,city,state,month,producer]=line.split('|');let status=statusMap[name]||['needs_verification','',false];return{id:'fest-'+String(i+1).padStart(3,'0'),name,city,state,region:region(state),month:+month,window:'research calendar target',producer,producerStatus:status[0]==='confirmed_active_2026'?'2026 active source attached':status[0],active2026Status:status[0],active2026SourceUrl:status[1],active2026CheckedDate:'2026-06-21',visibleInActive2026View:status[2],departments:festivalDeps(name),employerNotes:'U.S. research only. Map exact stage builder, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic/backline, stage management, production office, IATSE local, nonunion labor companies, and production company.',verificationStatus:status[0],source:'master-data-us-only'}});
 const employers=rawEmployers.trim().split('\n').map((line,i)=>{let [name,type,reg,careerUrl]=line.split('|');return{id:'emp-'+String(i+1).padStart(3,'0'),name,type,region:reg,careerUrl,marketScope:'United States only',departments:employerDeps(type,name),pathway:'verify U.S. application/referral route',notes:'U.S. employer/vendor lead only. Verify current market, department scope, classification, pay route, and festival relationship.',verificationStatus:'needs verification',source:'master-data-us-only'}});
-window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Master Data',branch:'research-version',updated:'2026-06-21',purpose:'Single clean active U.S.-only data source for the Pages app. Older research and older data files remain archived but do not drive the visible UI.',marketScope:'United States only',status:'research leads; verify before outreach',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,currentEmployerTargets:employers.length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
+window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Master Data',branch:'research-version',updated:'2026-06-21',purpose:'Single clean active U.S.-only data source for the Pages app. Older research and older data files remain archived but do not drive the visible UI.',marketScope:'United States only',status:'research leads; verify before outreach',active2026Rule:'visible app should show only records with visibleInActive2026View true',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,active2026VisibleTargets:festivals.filter(f=>f.visibleInActive2026View).length,currentEmployerTargets:employers.length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
 })();
