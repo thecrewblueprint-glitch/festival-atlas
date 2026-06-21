@@ -4,7 +4,8 @@
   "private": true,
   "description": "Research expansion branch for Festival Atlas.",
   "scripts": {
-    "validate:data": "node tools/validate-data.js"
+    "validate:data": "node tools/validate-data.js",
+    "validate:branch-research": "node tools/validate-branch-research-packages.js"
   },
   "engines": {
     "node": ">=18"
