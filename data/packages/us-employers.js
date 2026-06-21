@@ -38,3 +38,43 @@ window.RESOURCE_EMPLOYERS = [
   {id:'sunbelt-rentals',name:'Sunbelt Rentals',type:'U.S. equipment rental',region:'United States',departments:['logistics','site_ops','power'],links:{homepage:'https://www.sunbeltrentals.com/',careers:'https://careers.sunbeltrentals.com/',apply:'https://careers.sunbeltrentals.com/',contact:'https://www.sunbeltrentals.com/contact-us/'},linkStatus:'verified_career',bestUse:'equipment/logistics jobs'},
   {id:'asm-legends',name:'ASM Global U.S. venues / Legends Global',type:'U.S. venue operator',region:'United States',departments:['staging','rigging','lighting','audio','video_led','site_ops'],links:{homepage:'https://legendsglobal.com/',careers:'https://legendsglobal.com/careers/',apply:'https://legendsglobal.com/careers/',contact:'https://legendsglobal.com/contact/'},linkStatus:'verified_career',bestUse:'venue operations and arena/stadium employment'}
 ];
+(function(){
+  function loadBranchLeadDataset(){
+    if(window.BRANCH_EMPLOYER_LEADS)return Promise.resolve();
+    return new Promise(function(resolve){
+      var s=document.createElement('script');
+      s.src='data/packages/branch-employer-leads.js?v=branchleads1';
+      s.onload=function(){resolve()};
+      s.onerror=function(){resolve()};
+      document.head.appendChild(s);
+    });
+  }
+  function installBranchPopupBridge(){
+    if(window.__branchPopupBridgeInstalled)return;
+    window.__branchPopupBridgeInstalled=true;
+    loadBranchLeadDataset().then(function(){setTimeout(function(){
+      if(typeof window.openOpportunity!=='function')return;
+      var originalOpenOpportunity=window.openOpportunity;
+      window.openOpportunity=function(id){
+        try{
+          var o=scopedOpportunities.find(function(x){return x.id===id});
+          if(!o||!window.BRANCH_EMPLOYER_LEADS){return originalOpenOpportunity(id)}
+          var leadData=window.BRANCH_EMPLOYER_LEADS.branches||{};
+          var branchHtml=(o.departments||[]).map(function(dep){
+            var b=branches.find(function(x){return x.id===dep})||{name:dep,question:'Verify branch'};
+            var data=leadData[dep]||{};
+            var ids=data.leadEmployerIds||[];
+            var linkedEmployers=ids.map(function(empId){return employers.find(function(e){return e.id===empId})}).filter(Boolean).slice(0,8);
+            var chips=linkedEmployers.map(function(e){return linkChip(e.name,bestLink(e),'gray')}).join('')||chip('needs employer research','warn');
+            var clues=(data.roleClues||[]).slice(0,6).map(function(c){return chip(c,'gray')}).join('');
+            var task=data.researchTask||'Confirm the actual public vendor, employer, labor provider, or local route for this specific event.';
+            return '<div class="branch"><h4>'+b.name+'</h4><p class="sub">'+b.question+'</p><p><b>Research task:</b> '+task+'</p><div class="chips">'+chips+'</div><div class="chips">'+clues+'</div><p class="sub">These are public branch leads, not confirmed event vendors. Confirm event-specific source before outreach.</p></div>';
+          }).join('');
+          var sources=(o.intelligence&&o.intelligence.publicSources||[]).filter(function(s){return s.url}).map(function(s){return linkChip(s.label||'source',s.url)}).join('')||'<span class="chip gray">No public source attached yet</span>';
+          openModal('<h2>'+o.name+'</h2><p class="sub">'+o.city+', '+o.state+' • '+(o.venue||'venue verify')+' • '+(o.startDate||'date verify')+(o.endDate?' to '+o.endDate:'')+'</p><div class="chips">'+opportunityBadges(o)+'</div><div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+((o.producer&&o.producer.name)||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+(o.longTermValueScore||0)+'/100</div><div class="detail"><b>Lodging</b><br>'+label(o.accommodation&&o.accommodation.lodgingLikely)+'</div><div class="detail"><b>Travel / per diem</b><br>Travel: '+label(o.travelCompensation&&o.travelCompensation.travelPaid)+'<br>Per diem: '+label(o.travelCompensation&&o.travelCompensation.perDiem)+'</div></div><p><b>Public confidence:</b> '+label(o.confidence)+' • <b>source type:</b> '+label(o.sourceType)+' • <b>safety:</b> '+label(o.publishSafety)+'</p><p><b>Next human action:</b> '+o.nextHumanAction+'</p><div class="chips">'+sources+'</div><h3>Mapped production branches</h3>'+branchHtml);
+        }catch(err){originalOpenOpportunity(id)}
+      };
+    },0)});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installBranchPopupBridge);else installBranchPopupBridge();
+})();
