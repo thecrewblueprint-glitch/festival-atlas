@@ -1,0 +1,12 @@
+{
+  "name": "festival-atlas-research-version",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Research expansion branch for Festival Atlas.",
+  "scripts": {
+    "validate:data": "node tools/validate-data.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
