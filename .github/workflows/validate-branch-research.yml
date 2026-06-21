@@ -22,4 +22,4 @@ jobs:
           node-version: '20'
 
       - name: Validate package syntax and required fields
-        run: node tools/validate-branch-research-packages.js
+        run: npm run validate:branch-research
