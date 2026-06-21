@@ -78,3 +78,31 @@ window.BRANCH_EMPLOYER_LEADS = {
     }
   }
 };
+(function(){
+  function installCalendarCleanups(){
+    if(window.__calendarCleanupsInstalled)return;
+    window.__calendarCleanupsInstalled=true;
+    function statusChip(o){
+      var status=String(o.activeStatus||o.status||'').toLowerCase();
+      if(status.indexOf('confirm')>-1||o.active2026SourceUrl||o.confidence==='confirmed')return chip('confirmed','warn');
+      return chip('verify','gray');
+    }
+    window.renderStats=function(){
+      var stats=document.querySelector('#stats');
+      if(!stats)return;
+      stats.innerHTML='<div class="stat"><b>'+scopedOpportunities.length+'</b><span>active opportunities</span></div><div class="stat"><b>'+employers.length+'</b><span>U.S. employer leads</span></div><div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE local records</span></div><div class="stat"><b>'+branches.length+'</b><span>production branches</span></div><div class="stat"><b>US</b><span>market scope</span></div>';
+    };
+    window.renderCalendar=function(){
+      var data=activeOpportunities();
+      document.querySelector('#calendarGrid').innerHTML=MONTHS.map(function(m,i){
+        var ev=data.filter(function(o){return Number(o.month)===i+1});
+        return '<div class="month"><h3>'+m+' <span class="sub">'+ev.length+'</span></h3><div class="monthBody">'+(ev.length?ev.map(function(o){
+          return '<div class="event" onclick=\'openOpportunity('+JSON.stringify(o.id)+')\'><b>'+o.name+'</b><small>'+o.city+', '+o.state+' • '+label(o.opportunityType)+'</small><div class="chips">'+statusChip(o)+'</div></div>';
+        }).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
+      }).join('');
+    };
+    renderStats();
+    renderCalendar();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(installCalendarCleanups,0)});else setTimeout(installCalendarCleanups,0);
+})();
