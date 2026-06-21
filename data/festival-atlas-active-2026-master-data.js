@@ -66,30 +66,30 @@ CRSSD Festival|San Diego|CA|3|FNGRS CRSSD, verify
 Okeechobee Music & Arts Festival|Okeechobee|FL|3|verify current status
 Blue Ridge Rock Festival|Virginia market|VA|9|verify current status; risk-review target
 Levitation Austin|Austin|TX|9|Levitation / partners, verify`;
-const rawEmployers=`Crew One Productions|U.S. production labor staffing|United States multi-market|
-Rhino Staging|U.S. production labor staffing|United States multi-market|
-Bigger Hammer Production Services|U.S. production labor staffing|California / Western United States|https://www.biggerhammer.com/careers
-Christie Lites U.S.|U.S. lighting rental / touring production|United States|
-4Wall Entertainment|U.S. lighting / video / production services|United States|
-Bandit Lites|U.S. lighting rental / touring production|United States|
-PRG U.S.|U.S. full-service production technology|United States|
-Solotech U.S.|U.S. full-service production technology|United States|
-Clair Global U.S.|U.S. audio / communications / production services|United States|https://www.clairglobal.com/careers
-Eighth Day Sound|U.S. audio production|United States|https://www.8thdaysound.com/careers
-NEP Live Events U.S.|U.S. broadcast / video production|United States|https://www.nepgroup.com/careers
-TAIT U.S.|U.S. staging / automation / scenic engineering|United States|https://www.taittowers.com/careers
-Mountain Productions|U.S. staging / structures / rigging|United States|
-Stageco US|U.S. staging / structures|United States|
-All Access Staging & Productions|U.S. staging / scenic / special structures|United States|https://allaccessinc.com/careers/
-IATSE Local Unions|U.S. union stagehand labor|United States jurisdiction-based|https://iatse.net/local-union-directory/
-C3 Presents|U.S. festival producer / promoter|United States|
-Goldenvoice / AEG|U.S. festival producer / promoter|California / United States|https://aegworldwide.com/careers
-Insomniac|U.S. festival producer / promoter|United States|
-Danny Wimmer Presents|U.S. festival producer|United States|
-Aggreko U.S.|U.S. power / HVAC|United States|https://careers.aggreko.com/na/en-us
-United Rentals|U.S. equipment rental|United States|https://jobs.unitedrentals.com/
-Sunbelt Rentals|U.S. equipment rental|United States|https://careers.sunbeltrentals.com/
-ASM Global U.S. venues / Legends Global|U.S. venue operator|United States|https://legendsglobal.com/careers/`;
+const rawEmployers=`Crew One Productions|U.S. production labor staffing|United States multi-market|https://www.crew1.com/|homepage_fallback
+Rhino Staging|U.S. production labor staffing|United States multi-market|https://www.rhinostaging.com/|homepage_fallback
+Bigger Hammer Production Services|U.S. production labor staffing|California / Western United States|https://www.biggerhammer.com/careers|verified_career
+Christie Lites U.S.|U.S. lighting rental / touring production|United States|https://www.christielites.com/|homepage_fallback
+4Wall Entertainment|U.S. lighting / video / production services|United States|https://www.4wall.com/|homepage_fallback
+Bandit Lites|U.S. lighting rental / touring production|United States|https://www.banditlites.com/|homepage_fallback
+PRG U.S.|U.S. full-service production technology|United States|https://www.prg.com/|homepage_fallback
+Solotech U.S.|U.S. full-service production technology|United States|https://www.solotech.com/|homepage_fallback
+Clair Global U.S.|U.S. audio / communications / production services|United States|https://www.clairglobal.com/careers|verified_career
+Eighth Day Sound|U.S. audio production|United States|https://www.8thdaysound.com/careers|verified_career
+NEP Live Events U.S.|U.S. broadcast / video production|United States|https://www.nepgroup.com/careers|verified_career
+TAIT U.S.|U.S. staging / automation / scenic engineering|United States|https://www.taittowers.com/careers|verified_career
+Mountain Productions|U.S. staging / structures / rigging|United States|https://www.mountainproductions.com/|homepage_fallback
+Stageco US|U.S. staging / structures|United States|https://stageco.com/|homepage_fallback
+All Access Staging & Productions|U.S. staging / scenic / special structures|United States|https://allaccessinc.com/careers/|verified_career
+IATSE Local Unions|U.S. union stagehand labor|United States jurisdiction-based|https://iatse.net/local-union-directory/|verified_career
+C3 Presents|U.S. festival producer / promoter|United States|https://www.c3presents.com/|homepage_fallback
+Goldenvoice / AEG|U.S. festival producer / promoter|California / United States|https://aegworldwide.com/careers|verified_career
+Insomniac|U.S. festival producer / promoter|United States|https://www.insomniac.com/|homepage_fallback
+Danny Wimmer Presents|U.S. festival producer|United States|https://dannywimmerpresents.com/|homepage_fallback
+Aggreko U.S.|U.S. power / HVAC|United States|https://careers.aggreko.com/na/en-us|verified_career
+United Rentals|U.S. equipment rental|United States|https://jobs.unitedrentals.com/|verified_career
+Sunbelt Rentals|U.S. equipment rental|United States|https://careers.sunbeltrentals.com/|verified_career
+ASM Global U.S. venues / Legends Global|U.S. venue operator|United States|https://legendsglobal.com/careers/|verified_career`;
 const west=['CA','NV','AZ','WA','OR','ID','UT','CO','NM','MT','WY'],mid=['IL','WI','MI','OH','IA','MO','MN','IN','ND','SD','NE','KS'],south=['TX','FL','GA','TN','KY','LA','AL','NC','SC','VA','OK','AR','MS','MD','DC','DE','WV'],ne=['NY','NJ','MA','RI','PA','CT','VT','NH','ME'];
 const region=s=>west.includes(s)?'West':mid.includes(s)?'Midwest':south.includes(s)?'South':ne.includes(s)?'Northeast':'United States multi-market';
 const base=['staging','lighting','audio','power','site_ops','logistics','stage_mgmt','production_office'];
@@ -99,8 +99,7 @@ const confirmedByReport=['Summerfest','Bourbon & Beyond','Portola Music Festival
 const confirmedPrior=['Coachella','Stagecoach','Ultra Music Festival','EDC Las Vegas','Bonnaroo','CMA Fest','Electric Forest','Lollapalooza Chicago','Austin City Limits','Louder Than Life','Welcome to Rockville','Sonic Temple','Inkcarceration','Aftershock','Governors Ball','Shaky Knees','BottleRock Napa Valley','Kilby Block Party','Hinterland','Newport Folk Festival','Newport Jazz Festival','Okeechobee Music & Arts Festival','Sick New World','Sea.Hear.Now'];
 const inactive=['Boston Calling','Hangout Music Festival','Electric Zoo','Blue Ridge Rock Festival','Life Is Beautiful','When We Were Young','Faster Horses'];
 const sourceUrls={Coachella:'https://en.wikipedia.org/wiki/Coachella_2026',Stagecoach:'https://pitchfork.com/news/stagecoach-festival-2026-lineup-announced-post-malone-lainey-wilson/','Ultra Music Festival':'https://en.wikipedia.org/wiki/Ultra_Music_Festival','EDC Las Vegas':'https://www.businessinsider.com/guides/tickets/where-to-buy-edc-tickets-music-festival',Bonnaroo:'https://pitchfork.com/news/bonnaroo-2026-livestream-schedule-and-details-announced-for-disney-and-hulu/','CMA Fest':'https://www.axios.com/local/nashville/2026/02/25/cma-fest-2026-headliners-tim-mcgraw-keith-urban','Electric Forest':'https://en.wikipedia.org/wiki/Electric_Forest','Austin City Limits':'https://en.wikipedia.org/wiki/Austin_City_Limits_Music_Festival','Newport Folk Festival':'https://en.wikipedia.org/wiki/Newport_Folk_Festival','Boston Calling':'https://en.wikipedia.org/wiki/Boston_Calling_Music_Festival'};
-const verifiedEmployerLinks=new Set(['Bigger Hammer Production Services','Clair Global U.S.','Eighth Day Sound','NEP Live Events U.S.','TAIT U.S.','All Access Staging & Productions','IATSE Local Unions','Goldenvoice / AEG','Aggreko U.S.','United Rentals','Sunbelt Rentals','ASM Global U.S. venues / Legends Global']);
 const festivals=rawFestivals.trim().split('\n').map((line,i)=>{let[name,city,state,month,producer]=line.split('|');let status='needs_verification',visible=false;if(confirmedPrior.includes(name)||confirmedByReport.includes(name)){status='confirmed_active_2026';visible=true}if(inactive.includes(name)){status='inactive_2026';visible=false}return{id:'fest-'+String(i+1).padStart(3,'0'),name,city,state,region:region(state),month:+month,window:'research calendar target',producer,departments:festivalDeps(name),employerNotes:'U.S. research only. Verify exact production vendors and labor routes before outreach.',source:'active-2026-master-data',active2026Status:status,active2026SourceUrl:sourceUrls[name]||'',active2026SourceNote:sourceUrls[name]?'linked source attached':'status from user-provided 2026 report; source URL still needs attachment',active2026CheckedDate:'2026-06-21',visibleInActive2026View:visible}});
-const employers=rawEmployers.trim().split('\n').map((line,i)=>{let[name,type,reg,careerUrl]=line.split('|');const verified=verifiedEmployerLinks.has(name);return{id:'emp-'+String(i+1).padStart(3,'0'),name,type,region:reg,careerUrl:verified?careerUrl:'',careerUrlStatus:verified?'verified':'needs_manual_verification',marketScope:'United States only',departments:employerDeps(type,name),pathway:'verify U.S. application/referral route',notes:verified?'Verified clickable hiring/career/contact link.':'U.S. employer/vendor lead. Link hidden until verified.',verificationStatus:'needs verification',source:'active-2026-master-data'}});
-window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Active 2026 Master Data',branch:'research-version',updated:'2026-06-21',marketScope:'United States only',active2026ViewRule:'visibleInActive2026View true only',employerLinkRule:'only verified links are clickable',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,currentEmployerTargets:employers.length,confirmedActive2026Count:festivals.filter(f=>f.active2026Status==='confirmed_active_2026').length,inactive2026Count:festivals.filter(f=>f.active2026Status==='inactive_2026').length,needsVerificationCount:festivals.filter(f=>f.active2026Status==='needs_verification').length,verifiedEmployerLinkCount:employers.filter(e=>e.careerUrlStatus==='verified').length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
+const employers=rawEmployers.trim().split('\n').map((line,i)=>{let[name,type,reg,url,status]=line.split('|');return{id:'emp-'+String(i+1).padStart(3,'0'),name,type,region:reg,careerUrl:url,careerUrlStatus:status,marketScope:'United States only',departments:employerDeps(type,name),pathway:status==='verified_career'?'verified hiring/career/application route':'official homepage fallback; find careers/apply route if needed',notes:status==='verified_career'?'Verified clickable hiring/career/contact link.':'No clear verified careers/apply link yet; homepage used as fallback.',verificationStatus:'needs verification',source:'active-2026-master-data'}});
+window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Active 2026 Master Data',branch:'research-version',updated:'2026-06-21',marketScope:'United States only',active2026ViewRule:'visibleInActive2026View true only',employerLinkRule:'verified career/apply links first; homepage fallback when no clear careers page exists',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,currentEmployerTargets:employers.length,confirmedActive2026Count:festivals.filter(f=>f.active2026Status==='confirmed_active_2026').length,inactive2026Count:festivals.filter(f=>f.active2026Status==='inactive_2026').length,needsVerificationCount:festivals.filter(f=>f.active2026Status==='needs_verification').length,verifiedEmployerCareerLinkCount:employers.filter(e=>e.careerUrlStatus==='verified_career').length,homepageFallbackCount:employers.filter(e=>e.careerUrlStatus==='homepage_fallback').length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
 })();
