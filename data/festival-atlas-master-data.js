@@ -1,15 +1,15 @@
 (()=>{
 const departments=[
-{id:'staging',name:'Staging / Structures',question:'Who builds the stage?',employerTypes:['staging vendor','roof-system provider','temporary-structure company','stage deck provider','local labor provider'],routes:['vendor application','local labor company','IATSE referral','production manager referral'],workerPrep:['PPE','deck terminology','safe lifting','truck-pack discipline']},
-{id:'rigging',name:'Rigging',question:'Who supplies rigging?',employerTypes:['IATSE local','rigging contractor','production vendor','arena/stadium rigging department'],routes:['union referral','qualified-rigger vendor','department-head referral'],workerPrep:['do not claim qualification without training','motors/truss vocabulary','exclusion zones']},
-{id:'lighting',name:'Lighting',question:'Who supplies lighting?',employerTypes:['lighting vendor','production house','touring vendor','local stagehand labor'],routes:['vendor jobs','shop prep','local crew calls','IATSE local'],workerPrep:['fixture handling','cable','DMX/network basics','focus support']},
-{id:'audio',name:'Audio',question:'Who supplies audio?',employerTypes:['audio vendor','PA company','touring sound provider','labor vendor'],routes:['audio vendor','PA shop','local crew','department referral'],workerPrep:['XLR/NL4','stage patch','line-check behavior','comm discipline']},
-{id:'video_led',name:'Video / LED',question:'Who supplies video/LED?',employerTypes:['LED wall vendor','video production company','projection vendor','broadcast/camera provider'],routes:['video vendor','LED shop','camera crew referral','local stagehand support'],workerPrep:['LED panel handling','fiber/data care','processor vocabulary']},
-{id:'power',name:'Power / Electrical',question:'Who handles power?',employerTypes:['generator company','temporary power vendor','electrical contractor','venue power department'],routes:['power vendor','qualified electrician path','production vendor support','union jurisdiction'],workerPrep:['authorization boundaries','cable ramps','distro-zone respect']},
-{id:'site_ops',name:'Site Operations',question:'Who handles site ops?',employerTypes:['festival operations contractor','promoter ops team','fencing vendor','barricade vendor','tent/signage vendor'],routes:['festival ops hiring','site contractor','temp staffing','local labor company'],workerPrep:['radio etiquette','site maps','heat/weather readiness','guest-facing professionalism']},
-{id:'logistics',name:'Logistics / Equipment Movement',question:'Who moves gear and manages compounds?',employerTypes:['labor company','forklift/telehandler operator pool','trucking coordinator','equipment rental vendor','yard boss'],routes:['labor provider','equipment vendor','production office','logistics coordinator'],workerPrep:['truck-pack discipline','case labels','forklift exclusion zones','boneyard organization']},
-{id:'scenic',name:'Scenic / Carpentry',question:'Who builds scenic and temporary production pieces?',employerTypes:['scenic shop','fabrication vendor','carpentry crew','art install team','brand activation builder'],routes:['scenic shop','production company','local carpenter calls','art department referral'],workerPrep:['measuring','fasteners','finish awareness','safe tool use']},
-{id:'backline',name:'Backline',question:'Who handles artist gear?',employerTypes:['backline rental company','festival backline vendor','stage tech network','artist tech team'],routes:['backline vendor','stage manager referral','production company','local music network'],workerPrep:['careful gear handling','stage plots','riser moves','artist-area professionalism']},
+{id:'staging',name:'Staging / Structures',question:'Who builds the stage?',employerTypes:['U.S. staging vendor','U.S. roof-system provider','U.S. temporary-structure company','U.S. stage deck provider','U.S. local labor provider'],routes:['vendor application','local labor company','IATSE referral','production manager referral'],workerPrep:['PPE','deck terminology','safe lifting','truck-pack discipline']},
+{id:'rigging',name:'Rigging',question:'Who supplies rigging?',employerTypes:['IATSE local','U.S. rigging contractor','U.S. production vendor','arena/stadium rigging department'],routes:['union referral','qualified-rigger vendor','department-head referral'],workerPrep:['do not claim qualification without training','motors/truss vocabulary','exclusion zones']},
+{id:'lighting',name:'Lighting',question:'Who supplies lighting?',employerTypes:['U.S. lighting vendor','U.S. production house','U.S. touring vendor','local stagehand labor'],routes:['vendor jobs','shop prep','local crew calls','IATSE local'],workerPrep:['fixture handling','cable','DMX/network basics','focus support']},
+{id:'audio',name:'Audio',question:'Who supplies audio?',employerTypes:['U.S. audio vendor','U.S. PA company','U.S. touring sound provider','labor vendor'],routes:['audio vendor','PA shop','local crew','department referral'],workerPrep:['XLR/NL4','stage patch','line-check behavior','comm discipline']},
+{id:'video_led',name:'Video / LED',question:'Who supplies video/LED?',employerTypes:['U.S. LED wall vendor','U.S. video production company','U.S. projection vendor','U.S. broadcast/camera provider'],routes:['video vendor','LED shop','camera crew referral','local stagehand support'],workerPrep:['LED panel handling','fiber/data care','processor vocabulary']},
+{id:'power',name:'Power / Electrical',question:'Who handles power?',employerTypes:['U.S. generator company','U.S. temporary power vendor','U.S. electrical contractor','venue power department'],routes:['power vendor','qualified electrician path','production vendor support','union jurisdiction'],workerPrep:['authorization boundaries','cable ramps','distro-zone respect']},
+{id:'site_ops',name:'Site Operations',question:'Who handles site ops?',employerTypes:['U.S. festival operations contractor','promoter ops team','fencing vendor','barricade vendor','tent/signage vendor'],routes:['festival ops hiring','site contractor','temp staffing','local labor company'],workerPrep:['radio etiquette','site maps','heat/weather readiness','guest-facing professionalism']},
+{id:'logistics',name:'Logistics / Equipment Movement',question:'Who moves gear and manages compounds?',employerTypes:['U.S. labor company','forklift/telehandler operator pool','trucking coordinator','equipment rental vendor','yard boss'],routes:['labor provider','equipment vendor','production office','logistics coordinator'],workerPrep:['truck-pack discipline','case labels','forklift exclusion zones','boneyard organization']},
+{id:'scenic',name:'Scenic / Carpentry',question:'Who builds scenic and temporary production pieces?',employerTypes:['U.S. scenic shop','U.S. fabrication vendor','carpentry crew','art install team','brand activation builder'],routes:['scenic shop','production company','local carpenter calls','art department referral'],workerPrep:['measuring','fasteners','finish awareness','safe tool use']},
+{id:'backline',name:'Backline',question:'Who handles artist gear?',employerTypes:['U.S. backline rental company','festival backline vendor','stage tech network','artist tech team'],routes:['backline vendor','stage manager referral','production company','local music network'],workerPrep:['careful gear handling','stage plots','riser moves','artist-area professionalism']},
 {id:'stage_mgmt',name:'Stage Management',question:'Who coordinates show flow?',employerTypes:['festival production team','stage manager','production company','promoter production department'],routes:['production manager referral','stage manager network','PA-to-stage-management path'],workerPrep:['radio discipline','calm communication','time awareness','paperwork literacy']},
 {id:'production_office',name:'Production Assistant / Production Office',question:'Who coordinates office, runners, credentials, and vendor paperwork?',employerTypes:['promoter production office','production company','staffing agency','local event coordinator'],routes:['direct posting','production office referral','runner/PA calls','event staffing'],workerPrep:['organization','discretion','receipts','spreadsheets','local driving']}
 ];
@@ -78,57 +78,57 @@ CRSSD Festival|San Diego|CA|9|FNGRS CRSSD, verify
 Okeechobee Music & Arts Festival|Okeechobee|FL|3|verify current status
 Blue Ridge Rock Festival|Virginia market|VA|9|verify current status; risk-review target
 Levitation|Austin|TX|10|Levitation / partners, verify`;
-const rawEmployers=`Crew One Productions|Production labor staffing|Multi-market US|https://www.crew1.com/careers
-Rhino Staging|Production labor staffing|Multiple US markets|https://www.rhinostaging.com/careers/
-Bigger Hammer Production Services|Production labor staffing|Western US / Southern California|https://www.biggerhammer.com/careers
-Showcall|Production labor staffing|Southeast / touring markets|
-Christie Lites|Lighting rental / touring production|North America|https://www.christielites.com/careers
-4Wall Entertainment|Lighting / video / production services|National|https://www.4wall.com/careers
-Bandit Lites|Lighting rental / touring production|National / touring|https://www.banditlites.com/careers/
-PRG|Full-service production technology|National / global|https://www.prg.com/en/careers
-Solotech|Full-service production technology|National / global|https://www.solotech.com/careers/
-Clair Global|Audio / communications / production services|National / global|https://www.clairglobal.com/careers
-Eighth Day Sound|Audio production|National / global|https://www.8thdaysound.com/careers
-Firehouse Productions|Audio production|National / touring|https://firehouseproductions.com/careers/
-LMG|Audio / video / lighting production|National|https://www.lmg.net/careers
-Creative Technology|Video / display / production technology|National / global|https://www.ct-group.com/careers/
-Fuse Technical Group|Video / media servers / technical production|National|https://www.fuse-tg.com/careers
-NEP Live Events|Broadcast / video production|National / global|https://www.nepgroup.com/careers
-TAIT|Staging / automation / scenic engineering|National / global|https://www.taittowers.com/careers/
-Mountain Productions|Staging / structures / rigging|North America|https://www.mountainproductions.com/careers/
-Stageco US|Staging / structures|US / global|https://stageco.com/careers/
-All Access Staging & Productions|Staging / scenic / special structures|National|https://allaccessinc.com/careers/
-Gallagher Staging|Staging / structures|Western US / national projects|
-Accurate Staging|Staging / structures|Southern California / national projects|
-Staging Dimensions|Staging / event structures|National|
-Eventstar Structures|Temporary structures|National / international|
-EPS|Temporary infrastructure / ground protection|National / global|
-Terraplas|Ground protection / turf protection|National / global|
-StageRight|Staging / seating / risers|National|
-Freeman|Exhibitions / brand experience|National|https://www.freeman.com/careers/
-GES|Exhibitions / live events|National|https://www.ges.com/careers/
-Encore|Venue AV / event technology|National|https://www.encoreglobal.com/careers/
-IATSE Local Unions|Union stagehand labor|Jurisdiction-based nationwide|https://iatse.net/local-union-directory/
-C3 Presents|Festival producer / promoter|National|https://www.c3presents.com/contact/
-Goldenvoice|Festival producer / promoter|California / national|https://www.aegworldwide.com/careers
-Insomniac|Festival producer / promoter|National|https://www.insomniac.com/careers/
-Danny Wimmer Presents|Festival producer|National|https://dannywimmerpresents.com/careers/
-Another Planet Entertainment|Promoter / producer|Northern California|
-Founders Entertainment|Festival producer|New York|
-Superfly|Festival / experiential producer|National|
-Aggreko|Power / HVAC|National|https://www.aggreko.com/en-us/careers
-United Rentals|Equipment rental|National|https://jobs.unitedrentals.com/
-Sunbelt Rentals|Equipment rental|National|https://www.sunbeltrentals.com/careers/
-ASM Global venues|Venue operator|National|https://www.asmglobal.com/careers/
-Oak View Group venues|Venue operator|National|https://www.oakviewgroup.com/careers/
-Local production managers|Referral network|Market-specific|
-Venue crew pools|Venue labor|Market-specific|`;
+const rawEmployers=`Crew One Productions|U.S. production labor staffing|United States multi-market|https://www.crew1.com/careers
+Rhino Staging|U.S. production labor staffing|United States multi-market|https://www.rhinostaging.com/careers/
+Bigger Hammer Production Services|U.S. production labor staffing|California / Western United States|https://www.biggerhammer.com/careers
+Showcall|U.S. production labor staffing|Southeast United States|
+Christie Lites U.S.|U.S. lighting rental / touring production|United States|https://www.christielites.com/careers
+4Wall Entertainment|U.S. lighting / video / production services|United States|https://www.4wall.com/careers
+Bandit Lites|U.S. lighting rental / touring production|United States|https://www.banditlites.com/careers/
+PRG U.S.|U.S. full-service production technology|United States|https://www.prg.com/en/careers
+Solotech U.S.|U.S. full-service production technology|United States|https://www.solotech.com/careers/
+Clair Global U.S.|U.S. audio / communications / production services|United States|https://www.clairglobal.com/careers
+Eighth Day Sound|U.S. audio production|United States|https://www.8thdaysound.com/careers
+Firehouse Productions|U.S. audio production|United States|https://firehouseproductions.com/careers/
+LMG|U.S. audio / video / lighting production|United States|https://www.lmg.net/careers
+Creative Technology U.S.|U.S. video / display / production technology|United States|https://www.ct-group.com/careers/
+Fuse Technical Group|U.S. video / media servers / technical production|United States|https://www.fuse-tg.com/careers
+NEP Live Events U.S.|U.S. broadcast / video production|United States|https://www.nepgroup.com/careers
+TAIT U.S.|U.S. staging / automation / scenic engineering|United States|https://www.taittowers.com/careers/
+Mountain Productions|U.S. staging / structures / rigging|United States|https://www.mountainproductions.com/careers/
+Stageco US|U.S. staging / structures|United States|https://stageco.com/careers/
+All Access Staging & Productions|U.S. staging / scenic / special structures|United States|https://allaccessinc.com/careers/
+Gallagher Staging|U.S. staging / structures|Western United States|
+Accurate Staging|U.S. staging / structures|Southern California|
+Staging Dimensions|U.S. staging / event structures|United States|
+Eventstar Structures|U.S. temporary structures|United States|
+EPS America|U.S. temporary infrastructure / ground protection|United States|
+Terraplas U.S.|U.S. ground protection / turf protection|United States|
+StageRight|U.S. staging / seating / risers|United States|
+Freeman|U.S. exhibitions / brand experience|United States|https://www.freeman.com/careers/
+GES U.S.|U.S. exhibitions / live events|United States|https://www.ges.com/careers/
+Encore U.S.|U.S. venue AV / event technology|United States|https://www.encoreglobal.com/careers/
+IATSE Local Unions|U.S. union stagehand labor|United States jurisdiction-based|https://iatse.net/local-union-directory/
+C3 Presents|U.S. festival producer / promoter|United States|https://www.c3presents.com/contact/
+Goldenvoice|U.S. festival producer / promoter|California / United States|https://www.aegworldwide.com/careers
+Insomniac|U.S. festival producer / promoter|United States|https://www.insomniac.com/careers/
+Danny Wimmer Presents|U.S. festival producer|United States|https://dannywimmerpresents.com/careers/
+Another Planet Entertainment|U.S. promoter / producer|Northern California|
+Founders Entertainment|U.S. festival producer|New York|
+Superfly U.S.|U.S. festival / experiential producer|United States|
+Aggreko U.S.|U.S. power / HVAC|United States|https://www.aggreko.com/en-us/careers
+United Rentals|U.S. equipment rental|United States|https://jobs.unitedrentals.com/
+Sunbelt Rentals|U.S. equipment rental|United States|https://www.sunbeltrentals.com/careers/
+ASM Global U.S. venues|U.S. venue operator|United States|https://www.asmglobal.com/careers/
+Oak View Group U.S. venues|U.S. venue operator|United States|https://www.oakviewgroup.com/careers/
+Local U.S. production managers|U.S. referral network|Market-specific United States|
+U.S. venue crew pools|U.S. venue labor|Market-specific United States|`;
 const west=['CA','NV','AZ','WA','OR','ID','UT','CO','NM','MT','WY'];const mid=['IL','WI','MI','OH','IA','MO','MN','IN','ND','SD','NE','KS'];const south=['TX','FL','GA','TN','KY','LA','AL','NC','SC','VA','OK','AR','MS','MD','DC','DE','WV'];const ne=['NY','NJ','MA','RI','PA','CT','VT','NH','ME'];
-const region=s=>west.includes(s)?'West':mid.includes(s)?'Midwest':south.includes(s)?'South':ne.includes(s)?'Northeast':'National';
+const region=s=>west.includes(s)?'West':mid.includes(s)?'Midwest':south.includes(s)?'South':ne.includes(s)?'Northeast':'United States multi-market';
 const base=['staging','lighting','audio','power','site_ops','logistics','stage_mgmt','production_office'];
 function festivalDeps(name){let d=[...base]; if(/coachella|edc|bonnaroo|lolla|outside|acl|ultra|rockville|sonic|aftershock|governors|bottle|when we|sick|hard|hula|electric|portola|countdown|lost|life|riot|bourbon|louder|inkcarceration|hangout|breakaway/i.test(name)) d.push('rigging','video_led'); if(/edc|ultra|forest|hard|beyond|zoo|iii|movement|portola|crssd|countdown|dreamstate|lights|hula|coachella|life/i.test(name)) d.push('scenic','video_led'); if(/country|cma|stagecoach|rock|jazz|folk|roots|bluegrass|railbird|faster|newport|sonic|riot|bourbon|louder|aftershock|inkcarceration|welcome|hinterland|high sierra|floyd/i.test(name)) d.push('backline'); return [...new Set(d)];}
 function employerDeps(type,name){let t=(type+' '+name).toLowerCase(),d=[]; if(/stage|structure|staging|labor|iatse|venue/.test(t)) d.push('staging'); if(/rigg|iatse|venue/.test(t)) d.push('rigging'); if(/light|production|av|technology|venue/.test(t)) d.push('lighting'); if(/audio|sound|production|av|venue/.test(t)) d.push('audio'); if(/video|display|broadcast|av|technology|venue/.test(t)) d.push('video_led'); if(/power|equipment|rental/.test(t)) d.push('power'); if(/infrastructure|ground|temporary|exhibition|venue|producer|promoter|festival|equipment|rental/.test(t)) d.push('site_ops'); if(/labor|staffing|transport|rental|exhibition|events|equipment/.test(t)) d.push('logistics'); if(/scenic|automation|brand|exhibit|superfly/.test(t)) d.push('scenic'); if(/producer|promoter|festival|venue|production manager/.test(t)) d.push('stage_mgmt','production_office'); return d.length?[...new Set(d)]:['production_office'];}
-const festivals=rawFestivals.trim().split('\n').map((line,i)=>{let [name,city,state,month,producer]=line.split('|');return{id:'fest-'+String(i+1).padStart(3,'0'),name,city,state,region:region(state),month:+month,window:'research calendar target',producer,producerStatus:'needs source verification unless separately marked',departments:festivalDeps(name),employerNotes:'Map exact stage builder, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic/backline, stage management, production office, IATSE local, nonunion labor companies, and production company.',verificationStatus:'needs verification',source:'master-data'}});
-const employers=rawEmployers.trim().split('\n').map((line,i)=>{let [name,type,reg,careerUrl]=line.split('|');return{id:'emp-'+String(i+1).padStart(3,'0'),name,type,region:reg,careerUrl,departments:employerDeps(type,name),pathway:'verify application/referral route',notes:'Employer/vendor lead. Verify current market, department scope, classification, pay route, and festival relationship.',verificationStatus:'needs verification',source:'master-data'}});
-window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Master Data',branch:'research-version',updated:'2026-06-21',purpose:'Single clean active data source for the Pages app. Older research and older data files remain archived but do not drive the visible UI.',status:'research leads; verify before outreach',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,currentEmployerTargets:employers.length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
+const festivals=rawFestivals.trim().split('\n').map((line,i)=>{let [name,city,state,month,producer]=line.split('|');return{id:'fest-'+String(i+1).padStart(3,'0'),name,city,state,region:region(state),month:+month,window:'research calendar target',producer,producerStatus:'needs source verification unless separately marked',departments:festivalDeps(name),employerNotes:'U.S. research only. Map exact stage builder, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic/backline, stage management, production office, IATSE local, nonunion labor companies, and production company.',verificationStatus:'needs verification',source:'master-data-us-only'}});
+const employers=rawEmployers.trim().split('\n').map((line,i)=>{let [name,type,reg,careerUrl]=line.split('|');return{id:'emp-'+String(i+1).padStart(3,'0'),name,type,region:reg,careerUrl,marketScope:'United States only',departments:employerDeps(type,name),pathway:'verify U.S. application/referral route',notes:'U.S. employer/vendor lead only. Verify current market, department scope, classification, pay route, and festival relationship.',verificationStatus:'needs verification',source:'master-data-us-only'}});
+window.FESTIVAL_ATLAS_MASTER_DATA={meta:{name:'Festival Atlas Master Data',branch:'research-version',updated:'2026-06-21',purpose:'Single clean active U.S.-only data source for the Pages app. Older research and older data files remain archived but do not drive the visible UI.',marketScope:'United States only',status:'research leads; verify before outreach',originalUploadedFestivalBaseline:48,currentFestivalTargets:festivals.length,currentEmployerTargets:employers.length},departments,festivals,employers,requiredVerificationQuestions:['Who builds the stage?','Who supplies rigging?','Who supplies lighting?','Who supplies audio?','Who supplies video/LED?','Who handles site ops?','Who handles power?','Which IATSE local applies?','Which nonunion labor companies staff the event?','Who is the production manager or production company?']};
 })();
