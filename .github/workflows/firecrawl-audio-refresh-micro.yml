@@ -1,11 +1,6 @@
 name: Firecrawl Audio Refresh Micro Sweep
 
 on:
-  push:
-    branches:
-      - research-version
-    paths:
-      - 'research/firecrawl-run-control.json'
   workflow_dispatch:
 
 permissions:
@@ -36,14 +31,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Confirm Firecrawl key is available
-        run: |
-          if [ -z "$FIRECRAWL_API_KEY" ]; then
-            echo "Missing Firecrawl key."
-            exit 1
-          fi
-          echo "Firecrawl key is available."
 
       - name: Run Audio refresh micro sweep
         run: node tools/firecrawl-department-refresh-runner.js
