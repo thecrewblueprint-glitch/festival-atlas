@@ -1,0 +1,74 @@
+name: Firecrawl Low-Mode Research Sweep
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_total_credits:
+        description: 'Hard cap for estimated credits'
+        required: true
+        default: '80'
+      max_search_results:
+        description: 'Search results per target'
+        required: true
+        default: '3'
+      max_scrapes_per_target:
+        description: 'Scrapes per target'
+        required: true
+        default: '1'
+      sweep_mode:
+        description: 'Sweep mode label'
+        required: true
+        default: 'low'
+  push:
+    branches:
+      - research-version
+    paths:
+      - '.github/workflows/firecrawl-low-sweep.yml'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  low-sweep:
+    name: Low-mode Scenic sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      FIRECRAWL_API_KEY: ${{ secrets.FIRECRAWL_API_KEY }}
+      SWEEP_MODE: ${{ github.event.inputs.sweep_mode || 'low' }}
+      MAX_TOTAL_CREDITS: ${{ github.event.inputs.max_total_credits || '80' }}
+      MAX_SEARCH_RESULTS: ${{ github.event.inputs.max_search_results || '3' }}
+      MAX_SCRAPES_PER_TARGET: ${{ github.event.inputs.max_scrapes_per_target || '1' }}
+      REQUEST_DELAY_MS: '1250'
+      OUTPUT_DIR: firecrawl-output
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Confirm secret exists
+        run: |
+          if [ -z "$FIRECRAWL_API_KEY" ]; then
+            echo "FIRECRAWL_API_KEY secret is missing. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Run low-mode Firecrawl sweep
+        run: node tools/firecrawl-low-sweep.js
+
+      - name: Upload Firecrawl research artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: firecrawl-low-sweep-scenic-remaining
+          path: firecrawl-output/
+          if-no-files-found: warn
+          retention-days: 7
