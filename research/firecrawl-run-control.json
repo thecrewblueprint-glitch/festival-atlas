@@ -1,11 +1,11 @@
 {
-  "activeRun": "logistics-refresh-micro-20-001",
-  "branch": "logistics",
+  "activeRun": "stage-mgmt-refresh-micro-20-001",
+  "branch": "stage-mgmt",
   "mode": "micro-20",
   "maxTotalCredits": 20,
   "maxSearchResults": 1,
   "maxScrapesPerTarget": 0,
-  "requestedAt": "2026-06-22T13:55:00-04:00",
+  "requestedAt": "2026-06-22T14:05:00-04:00",
   "requestedBy": "ChatGPT orchestrated commit trigger",
-  "notes": "Run Logistics refresh in micro search-only mode. Do not scrape. Do not exceed 20 estimated credits. Do not overwrite prior research."
+  "notes": "Run Stage Management refresh in micro search-only mode. Do not scrape. Do not exceed 20 estimated credits. Do not overwrite prior research."
 }
