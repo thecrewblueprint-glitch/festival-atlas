@@ -18,6 +18,65 @@
   var employers=[];
   var iatseLocals=[];
   var branchIndex={records:[],byKey:{}};
+  var _leafMap=null;
+  var _leafLayer=null;
+  var OPP_COORDS={
+    'coachella-2026':[33.7175,-116.2167],
+    'stagecoach-2026':[33.7205,-116.2167],
+    'ultra-miami-2026':[25.7742,-80.1869],
+    'edc-las-vegas-2026':[36.2719,-115.0104],
+    'bonnaroo-2026':[35.4823,-86.0880],
+    'cma-fest-2026':[36.1627,-86.7816],
+    'electric-forest-2026':[43.5253,-85.8744],
+    'summerfest-2026':[43.0386,-87.9031],
+    'lollapalooza-chicago-2026':[41.8657,-87.6215],
+    'austin-city-limits-2026':[30.2500,-97.7692],
+    'bourbon-and-beyond-2026':[38.2527,-85.7585],
+    'louder-than-life-2026':[38.2557,-85.7585],
+    'welcome-to-rockville-2026':[29.2108,-81.0228],
+    'sonic-temple-2026':[39.9612,-82.9988],
+    'inkcarceration-2026':[40.7586,-82.5154],
+    'aftershock-2026':[38.5816,-121.4944],
+    'governors-ball-2026':[40.7282,-73.7949],
+    'shaky-knees-2026':[33.7490,-84.3880],
+    'portola-2026':[37.7549,-122.3795],
+    'edc-orlando-2026':[28.5383,-81.3792],
+    'hinterland-2026':[41.2850,-93.8046],
+    'new-orleans-jazz-heritage-2026':[29.9858,-90.0908],
+    'bottlerock-napa-2026':[38.2975,-122.2869],
+    'kilby-block-party-2026':[40.7608,-111.8910],
+    'railbird-2026':[38.0406,-84.5037],
+    'oceans-calling-2026':[38.3365,-75.0849],
+    'sea-hear-now-2026':[40.2204,-74.0121],
+    'dreamville-2026':[35.7796,-78.6382],
+    'roots-picnic-2026':[39.9526,-75.1652],
+    'iii-points-2026':[25.7989,-80.2087],
+    'hard-summer-2026':[33.9617,-118.3531],
+    'beyond-wonderland-socal-2026':[34.1083,-117.2898],
+    'north-coast-2026':[41.7442,-87.8087],
+    'breakaway-2026':null,
+    'country-thunder-us-2026':null,
+    'rock-fest-wisconsin-2026':[44.9505,-91.1457],
+    'hulaween-2026':[30.3889,-82.9667],
+    'high-sierra-2026':[39.2191,-121.0608],
+    'm3f-2026':[33.4874,-112.0712],
+    'newport-folk-2026':[41.4901,-71.3128],
+    'newport-jazz-2026':[41.4931,-71.3128],
+    'levitate-2026':[42.0915,-70.7076],
+    'treefort-2026':[43.6150,-116.2023],
+    'capitol-hill-block-party-2026':[47.6130,-122.3198],
+    'pickathon-2026':[45.4426,-122.5271],
+    'telluride-bluegrass-2026':[37.9375,-107.8123],
+    'floydfest-2026':[37.0454,-80.0401],
+    'rocklahoma-2026':[36.3095,-95.3164],
+    'lights-all-night-2026':[32.7767,-96.7970],
+    'countdown-nye-2026':[34.1113,-117.2898],
+    'dreamstate-socal-2026':[33.7701,-118.1937],
+    'crssd-2026':[32.7157,-117.1611],
+    'okechobee-2026':[27.2436,-80.8298],
+    'sick-new-world-2026':[36.1699,-115.1398],
+    'levitation-austin-2026':[30.2672,-97.7431]
+  };
 
   function $(selector){return document.querySelector(selector)}
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
@@ -99,7 +158,8 @@
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
-      accommodation:(($('#accommodationFilter')||{}).value||'')
+      accommodation:(($('#accommodationFilter')||{}).value||''),
+      state:(($('#stateFilter')||{}).value||'')
     };
   }
 
@@ -127,7 +187,8 @@
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
         &&(!filter.month||String(opportunity.month)===filter.month)
-        &&accFilterMatch(opportunity,filter.accommodation);
+        &&accFilterMatch(opportunity,filter.accommodation)
+        &&(!filter.state||opportunity.state===filter.state);
     });
   }
 
@@ -158,6 +219,8 @@
     uniq(opportunities.map(function(o){return o.region}).concat(employers.map(function(e){return e.region}).concat(iatseLocals.flatMap(function(l){return l.states||[]}).concat(iatseLocals.map(function(l){return l.district}))))).forEach(function(region){var select=$('#regionFilter');if(select)select.innerHTML+='<option>'+esc(region)+'</option>'});
     MONTHS.forEach(function(month,index){var select=$('#monthFilter');if(select)select.innerHTML+='<option value="'+(index+1)+'">'+month+'</option>'});
     uniq(employers.map(function(e){return e.type})).forEach(function(type){var select=$('#employerTypeFilter');if(select)select.innerHTML+='<option>'+esc(type)+'</option>'});
+    var stateSelect=$('#stateFilter');
+    if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
     $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',renderPage)});
     var reset=$('#reset');
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
@@ -218,6 +281,62 @@
       '<p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p>'+
       '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
       '</article>';
+  }
+
+  function renderMap(){
+    var el=$('#app');
+    if(!el)return;
+    var L=window.L;
+    if(!L){el.innerHTML='<h2>Festival Map</h2><p class="lead">Leaflet map library not available on this page.</p>';return;}
+    var positive=['yes','confirmed','included','possible','likely'];
+    if(!_leafMap){
+      el.innerHTML='<h2>Festival Map</h2>'+
+        '<div class="accom-tags" style="margin:0 0 14px">'+
+        '<span class="accom-tag accom-ok">&#9679; Lodging / camping likely</span>'+
+        '<span class="accom-tag accom-warn">&#9679; Accommodation research priority</span>'+
+        '<span class="accom-tag accom-muted">&#9679; Status unknown</span>'+
+        '</div>'+
+        '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
+        '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
+        '<div class="grid" id="mapList"></div>';
+      _leafMap=L.map('mapView').setView([38,-96],4);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom:18
+      }).addTo(_leafMap);
+      _leafLayer=L.layerGroup().addTo(_leafMap);
+    } else {
+      _leafLayer.clearLayers();
+      _leafMap.invalidateSize();
+    }
+    var data=activeOpportunities();
+    var placed=[];
+    data.forEach(function(opportunity){
+      var coords=OPP_COORDS[opportunity.id];
+      if(!coords)return;
+      placed.push(opportunity);
+      var accom=opportunity.accommodation||{};
+      var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+      var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+      var color=positive.indexOf(lodging)>-1?'#48c778':
+                (actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)?'#f5b400':'#a8b2bd';
+      var marker=L.circleMarker(coords,{radius:9,fillColor:color,color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
+      marker.bindPopup(
+        '<div style="min-width:190px">'+
+        '<b style="font-size:.95rem">'+esc(opportunity.name)+'</b><br>'+
+        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</span><br>'+
+        accomChips(opportunity)+
+        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open detail ↗</button></p>'+
+        '</div>',
+        {maxWidth:280}
+      );
+      _leafLayer.addLayer(marker);
+    });
+    var noCoord=data.filter(function(o){return OPP_COORDS[o.id]===null||OPP_COORDS[o.id]===undefined;});
+    var meta=$('#mapMeta');
+    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market (no single location — see list)':'');
+    var list=$('#mapList');
+    if(list)list.innerHTML=data.length?data.map(opportunityCard).join(''):'<p>No opportunities match the current filter.</p>';
   }
 
   function renderHome(){
@@ -298,7 +417,7 @@
 
   function renderPage(){
     var page=document.body.dataset.page;
-    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources}[page]||renderHome)();
+    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap}[page]||renderHome)();
   }
 
   function branchCard(opportunity,branchId){

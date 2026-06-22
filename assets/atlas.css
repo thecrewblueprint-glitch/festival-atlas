@@ -53,6 +53,12 @@ body{margin:0;background:radial-gradient(circle at 82% -10%,rgba(245,180,0,.13),
 .detail b{color:var(--gold2)}
 footer{border-top:1px solid var(--line);color:var(--muted);padding:24px 18px;font-size:.88rem}
 .hiddenRuntime{display:none}
+.filters-compact{grid-template-columns:1.7fr 1fr 1fr auto}
+.leaflet-popup-content-wrapper{background:#0f151c!important;border:1px solid #2a3540!important;border-radius:14px!important;color:#f5f7f9!important;box-shadow:0 8px 24px rgba(0,0,0,.55)!important}
+.leaflet-popup-tip{background:#0f151c!important}
+.leaflet-popup-close-button{color:#a8b2bd!important}
+.leaflet-container a,.leaflet-container a:hover{color:#f5b400}
+.leaflet-container{background:#07090c}
 @media(max-width:960px){.grid,.calendar,.stats,.modalgrid{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr}}
 @media(max-width:560px){.filters{grid-template-columns:1fr}.hero h1{font-size:2.45rem}}
 @media(max-width:760px){.nav{position:static;top:auto;backdrop-filter:none}.navInner{padding:10px 0}.filters{position:static;top:auto;max-height:none;overflow:visible;padding:10px 0 14px}.filters input,.filters select,.filters .btn{width:100%}.page{padding-top:18px}}
