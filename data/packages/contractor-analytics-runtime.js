@@ -3,90 +3,58 @@
   window.__contractorAnalyticsRuntimeInstalled=true;
 
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch];});}
-  function label(value){return String(value||'unknown').replaceAll('_',' ');}
   function arr(value){return Array.isArray(value)?value:[];}
+  function text(value){return String(value||'').replaceAll('_',' ');}
   function monthName(value){return (window.MONTHS||[])[Number(value||1)-1]||'Unknown';}
-  function opportunityList(){try{return typeof scopedOpportunities!=='undefined'?scopedOpportunities:window.scopedOpportunities||[];}catch(err){return window.scopedOpportunities||[];}}
-  function employerList(){try{return typeof employers!=='undefined'?employers:window.RESOURCE_EMPLOYERS||[];}catch(err){return window.RESOURCE_EMPLOYERS||[];}}
-  function localList(){try{return typeof iatseLocals!=='undefined'?iatseLocals:(window.IATSE_US_LOCAL_DIRECTORY||{locals:[]}).locals||[];}catch(err){return (window.IATSE_US_LOCAL_DIRECTORY||{locals:[]}).locals||[];}}
-  function branchList(){return window.RESOURCE_BRANCHES||[];}
-  function branchName(id){var branch=branchList().find(function(item){return item.id===id;});return branch?branch.name:id;}
-  function bestLink(item){var links=item.links||{};return links.apply||links.careers||links.directory||links.homepage||'';}
-  function chip(text,kind){return '<span class="chip '+(kind||'')+'">'+esc(text)+'</span>';}
-  function linkChip(text,url,kind){return url?'<a class="chip '+(kind||'')+'" href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':'';}
-  function score(opportunity){return Number(opportunity.longTermValueScore||0);}
-  function hasUsefulLodging(opportunity){var lodging=String((opportunity.accommodation||{}).lodgingLikely||'').toLowerCase();return lodging.indexOf('likely')>=0||lodging.indexOf('yes')>=0||lodging.indexOf('provided')>=0||lodging.indexOf('possible')>=0;}
-  function hasTravelSignal(opportunity){var travel=String((opportunity.travelCompensation||{}).travelPaid||'').toLowerCase();var perDiem=String((opportunity.travelCompensation||{}).perDiem||'').toLowerCase();return /likely|yes|provided|possible|partial|maybe/.test(travel+' '+perDiem);}
-  function needsVerification(opportunity){return opportunity.humanVerificationNeeded!==false||String(opportunity.confidence||'').toLowerCase().indexOf('unverified')>=0||String(opportunity.sourceType||'').toLowerCase().indexOf('user')>=0;}
-  function daysBetween(a,b){if(!a||!b)return 1;var start=new Date(a+'T00:00:00');var end=new Date(b+'T00:00:00');if(isNaN(start)||isNaN(end))return 1;return Math.max(1,Math.round((end-start)/86400000)+1);}
-  function duration(opportunity){return daysBetween(opportunity.startDate,opportunity.endDate||opportunity.startDate);}
-  function byCount(items,fn){return items.reduce(function(map,item){var key=fn(item)||'Unknown';map[key]=(map[key]||0)+1;return map;},{});}
-  function topEntries(map,limit){return Object.entries(map).sort(function(a,b){return b[1]-a[1]||String(a[0]).localeCompare(String(b[0]));}).slice(0,limit||10);}
-  function barRows(entries,kind){var max=Math.max(1,...entries.map(function(item){return item[1];}));return entries.map(function(item){var key=item[0],value=item[1];return '<div class="bar" onclick="openAnalytics('+JSON.stringify(kind)+','+JSON.stringify(key)+')"><span>'+esc(key)+'</span><div class="track"><div class="fill" style="width:'+(value/max*100).toFixed(1)+'%"></div></div><span>'+value+'</span></div>';}).join('')||'<p class="sub">No data yet.</p>';}
-  function card(title,body,kind,value){var click=kind?' onclick="openAnalytics('+JSON.stringify(kind)+','+JSON.stringify(value||'')+')"':'';return '<article class="card"'+click+'><h3>'+esc(title)+'</h3>'+body+'</article>';}
-  function stat(labelText,value,sub,kind){return '<div class="detail"'+(kind?' onclick="openAnalytics('+JSON.stringify(kind)+')" style="cursor:pointer"':'')+'><b>'+esc(value)+'</b><br><span class="sub">'+esc(labelText)+'</span><p class="sub">'+esc(sub||'')+'</p></div>';}
-  function opportunityMini(opportunity){return '<div class="event" onclick="openOpportunity('+JSON.stringify(opportunity.id)+')"><b>'+esc(opportunity.name)+'</b><small>'+esc(monthName(opportunity.month))+' • '+esc(opportunity.city||'')+', '+esc(opportunity.state||'')+' • value '+esc(score(opportunity))+'</small><div class="chips">'+chip(label(opportunity.opportunityType),'gray')+(hasUsefulLodging(opportunity)?chip('lodging signal','warn'):'')+(hasTravelSignal(opportunity)?chip('travel/per diem signal','warn'):'')+'</div></div>';}
-  function leadList(items){return '<div class="monthBody">'+(items.length?items.map(opportunityMini).join(''):'<p class="sub">No matching opportunities yet.</p>')+'</div>';}
-  function buildWorkLanes(opps){var sorted=opps.slice().sort(function(a,b){return score(b)-score(a);});return {
-      priority:sorted.filter(function(o){return score(o)>=70;}).slice(0,12),
-      lodging:sorted.filter(hasUsefulLodging).slice(0,12),
-      travel:sorted.filter(hasTravelSignal).slice(0,12),
-      verify:sorted.filter(needsVerification).slice(0,12),
-      longRun:sorted.filter(function(o){return duration(o)>=4;}).slice(0,12)
-    };
-  }
-  function routeCoverage(opps){var counts={};opps.forEach(function(o){arr(o.departments).forEach(function(dep){counts[branchName(dep)]=(counts[branchName(dep)]||0)+1;});});return counts;}
-  function missingMonths(opps){var active={};opps.forEach(function(o){if(o.month)active[Number(o.month)]=true;});var names=[];for(var i=1;i<=12;i++){if(!active[i])names.push(monthName(i));}return names;}
-  function employerRouteStats(){var emps=employerList();var counts={};emps.forEach(function(e){arr(e.departments).forEach(function(dep){counts[branchName(dep)]=(counts[branchName(dep)]||0)+1;});});return counts;}
+  function opps(){try{return typeof scopedOpportunities!=='undefined'?scopedOpportunities:window.scopedOpportunities||[];}catch(err){return window.scopedOpportunities||[];}}
+  function emps(){try{return typeof employers!=='undefined'?employers:window.RESOURCE_EMPLOYERS||[];}catch(err){return window.RESOURCE_EMPLOYERS||[];}}
+  function locals(){try{return typeof iatseLocals!=='undefined'?iatseLocals:(window.IATSE_US_LOCAL_DIRECTORY||{locals:[]}).locals||[];}catch(err){return (window.IATSE_US_LOCAL_DIRECTORY||{locals:[]}).locals||[];}}
+  function branches(){return window.RESOURCE_BRANCHES||[];}
+  function branchName(id){var b=branches().find(function(x){return x.id===id;});return b?b.name:id;}
+  function bestLink(e){var l=e.links||{};return l.apply||l.careers||l.directory||l.homepage||'';}
+  function chip(label,kind){return '<span class="chip '+(kind||'')+'">'+esc(label)+'</span>';}
+  function linkChip(label,url,kind){return url?'<a class="chip '+(kind||'')+'" href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(label)+' ↗</a>':'';}
+  function score(o){return Number(o.longTermValueScore||0);}
+  function duration(o){if(!o.startDate)return 1;var a=new Date(o.startDate+'T00:00:00');var b=new Date((o.endDate||o.startDate)+'T00:00:00');if(isNaN(a)||isNaN(b))return 1;return Math.max(1,Math.round((b-a)/86400000)+1);}
+  function lodging(o){var s=String((o.accommodation||{}).lodgingLikely||'').toLowerCase();return /likely|yes|provided|possible|maybe|partial/.test(s);}
+  function travel(o){var s=(String((o.travelCompensation||{}).travelPaid||'')+' '+String((o.travelCompensation||{}).perDiem||'')).toLowerCase();return /likely|yes|provided|possible|maybe|partial|per diem/.test(s);}
+  function verify(o){return o.humanVerificationNeeded!==false||String(o.confidence||'').toLowerCase().includes('unverified')||String(o.sourceType||'').toLowerCase().includes('user')||!o.active2026SourceUrl;}
+  function countBy(list,fn){return list.reduce(function(m,x){var k=fn(x)||'Unknown';m[k]=(m[k]||0)+1;return m;},{});}
+  function top(map,n){return Object.entries(map).sort(function(a,b){return b[1]-a[1]||String(a[0]).localeCompare(String(b[0]));}).slice(0,n||12);}
+  function bars(rows,kind){var max=Math.max(1,...rows.map(function(r){return r[1];}));return rows.map(function(r){return '<div class="bar" onclick="openAnalytics('+JSON.stringify(kind)+','+JSON.stringify(r[0])+')"><span>'+esc(r[0])+'</span><div class="track"><div class="fill" style="width:'+((r[1]/max)*100).toFixed(1)+'%"></div></div><span>'+esc(r[1])+'</span></div>';}).join('')||'<p class="sub">No data yet.</p>';}
+  function mini(o){return '<div class="event" onclick="openOpportunity('+JSON.stringify(o.id)+')"><b>'+esc(o.name)+'</b><small>'+esc(monthName(o.month))+' • '+esc(o.city||'')+', '+esc(o.state||'')+' • value '+esc(score(o))+' • '+esc(duration(o))+' day(s)</small><div class="chips">'+chip(text(o.opportunityType),'gray')+(lodging(o)?chip('lodging signal','warn'):'')+(travel(o)?chip('travel/per diem signal','warn'):'')+(verify(o)?chip('verify','gray'):chip('public-source ready','warn'))+'</div></div>';}
+  function miniList(list,limit){list=list.slice(0,limit||10);return '<div class="monthBody">'+(list.length?list.map(mini).join(''):'<p class="sub">No matching targets yet.</p>')+'</div>';}
+  function card(title,sub,body,kind,value){return '<article class="card"'+(kind?' onclick="openAnalytics('+JSON.stringify(kind)+','+JSON.stringify(value||'')+')"':'')+'><h3>'+esc(title)+'</h3><p class="sub">'+esc(sub||'')+'</p>'+body+'</article>';}
+  function metric(label,value,sub,kind){return '<div class="detail"'+(kind?' onclick="openAnalytics('+JSON.stringify(kind)+')" style="cursor:pointer"':'')+'><b style="font-size:1.35rem">'+esc(value)+'</b><br><span class="sub">'+esc(label)+'</span><p class="sub">'+esc(sub||'')+'</p></div>';}
+  function branchCounts(list){var m={};list.forEach(function(o){arr(o.departments).forEach(function(d){m[branchName(d)]=(m[branchName(d)]||0)+1;});});return m;}
+  function branchEmployerCounts(){var m={};emps().forEach(function(e){arr(e.departments).forEach(function(d){m[branchName(d)]=(m[branchName(d)]||0)+1;});});return m;}
+  function regionBranchMap(list){var regions=Object.keys(countBy(list,function(o){return o.region;})).sort();var branchNames=branches().map(function(b){return b.name;});return '<div class="tablewrap"><table class="matrix"><thead><tr><th>Region</th>'+branchNames.map(function(b){return '<th>'+esc(b)+'</th>';}).join('')+'</tr></thead><tbody>'+regions.map(function(region){return '<tr><td><b>'+esc(region)+'</b></td>'+branchNames.map(function(branch){var count=list.filter(function(o){return o.region===region&&arr(o.departments).some(function(d){return branchName(d)===branch;});}).length;return '<td>'+ (count?'<span class="chip warn">'+count+'</span>':'<span class="chip gray">0</span>') +'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table></div>';}
+  function pursuitLanes(list){var sorted=list.slice().sort(function(a,b){return score(b)-score(a)||duration(b)-duration(a);});return {
+    best:sorted.filter(function(o){return score(o)>=70;}).slice(0,12),
+    road:sorted.filter(function(o){return score(o)>=60&&(lodging(o)||travel(o)||duration(o)>=4);}).slice(0,12),
+    local:sorted.filter(function(o){return score(o)>=45&&!travel(o)&&!lodging(o);}).slice(0,12),
+    verify:sorted.filter(verify).slice(0,12),
+    longrun:sorted.filter(function(o){return duration(o)>=4;}).slice(0,12)
+  };}
+  function emptyMonths(list){var used={};list.forEach(function(o){used[Number(o.month)]=true;});var out=[];for(var i=1;i<=12;i++){if(!used[i])out.push(monthName(i));}return out;}
+  function publicNotes(){return '<div class="notice"><b>Public-facing note:</b> These analytics are a work-scouting dashboard, not a hiring guarantee. Vendor, labor route, lodging, travel, per diem, pay, and jurisdiction all require direct verification before outreach.</div>';}
+  function employerCards(branch){var b=branches().find(function(x){return x.name===branch||x.id===branch;});var list=b?emps().filter(function(e){return arr(e.departments).includes(b.id);}):emps().slice(0,20);return '<div class="monthBody">'+(list.length?list.slice(0,18).map(function(e){return '<div class="event" onclick="openEmployer('+JSON.stringify(e.id)+')"><b>'+esc(e.name)+'</b><small>'+esc(e.type||'employer lead')+' • '+esc(e.region||'')+'</small><div class="chips">'+linkChip('route link',bestLink(e),'gray')+arr(e.departments).slice(0,4).map(function(d){return chip(branchName(d),'gray');}).join('')+'</div></div>';}).join(''):'<p class="sub">No employer-route leads found.</p>')+'</div>';}
   window.renderAnalytics=function(){
     var section=document.getElementById('analytics');if(!section)return;
-    var opps=opportunityList();var emps=employerList();var locals=localList();var lanes=buildWorkLanes(opps);var months=byCount(opps,function(o){return monthName(o.month);});var regions=byCount(opps,function(o){return o.region;});var branches=routeCoverage(opps);var employerRoutes=employerRouteStats();var gaps=missingMonths(opps);
-    var avg=opps.length?Math.round(opps.reduce(function(sum,o){return sum+score(o);},0)/opps.length):0;
-    section.innerHTML='<h2>Contractor Analytics</h2><p class="lead">This page is built for a stagehand contractor deciding where to chase work next: high-value targets, lodging/travel signals, branch coverage, route leads, weak spots, and verification priorities.</p>'+ 
-      '<div class="modalgrid">'+
-        stat('Average work-year value',avg+'/100','Higher means more likely to justify research or travel.','value')+
-        stat('High-priority targets',lanes.priority.length,'Targets scoring 70+ in work-year value.','priority')+
-        stat('Lodging-signal targets',lanes.lodging.length,'Possible lodging or housing value.','lodging')+
-        stat('Travel/per diem signals',lanes.travel.length,'Possible travel support or per diem value.','travel')+
-      '</div>'+ 
-      '<div class="grid">'+
-        card('Best targets to chase first','<p class="sub">Highest work-year score. Use these for direct research and outreach planning.</p>'+leadList(lanes.priority),'priority')+
-        card('Targets that may justify travel','<p class="sub">Lodging, travel, per diem, or extended run signals.</p>'+leadList([].concat(lanes.lodging,lanes.travel).filter(function(v,i,a){return a.findIndex(function(x){return x.id===v.id;})===i;}).slice(0,12)),'travel')+
-        card('Verification queue','<p class="sub">These need human confirmation before relying on them for outreach.</p>'+leadList(lanes.verify),'verify')+
-      '</div>'+ 
-      '<div class="grid">'+
-        card('Calendar density by month','<p class="sub">Use this to find schedule gaps and cluster trips.</p>'+barRows(topEntries(months,12),'month'),'month')+
-        card('Geographic density','<p class="sub">Regions with the most visible opportunity coverage.</p>'+barRows(topEntries(regions,10),'region'),'region')+
-        card('Production branch coverage','<p class="sub">Where the app has opportunity coverage by craft.</p>'+barRows(topEntries(branches,12),'branchName'),'branchName')+
-      '</div>'+ 
-      '<div class="grid">'+
-        card('Employer-route coverage','<p class="sub">Which departments have the most general employer/vendor leads.</p>'+barRows(topEntries(employerRoutes,12),'employerRoute'),'employerRoute')+
-        card('IATSE/local routing aid','<p class="sub">Stored local records help verify jurisdiction before outreach.</p><div class="modalgrid">'+stat('IATSE records',locals.length,'Use as routing aid only.','locals')+stat('Employer leads',emps.length,'General U.S. employer/vendor routes.','employers')+'</div>','locals')+
-        card('Schedule gaps','<p class="sub">Months with no visible active target in the current dataset.</p><div class="chips">'+(gaps.length?gaps.map(function(m){return chip(m,'gray');}).join(''):chip('No empty months','warn'))+'</div><p class="sub">Use gaps to decide what region, branch, or employer list to research next.</p>','gaps')+
-      '</div>'+ 
-      '<div class="grid">'+
-        card('Longer-run targets','<p class="sub">Multi-day work windows can be more valuable than one-off calls.</p>'+leadList(lanes.longRun),'longRun')+
-        card('Action plan','<p><b>1.</b> Open high-priority targets.<br><b>2.</b> Check mapped branches for your craft.<br><b>3.</b> Follow public employer/vendor leads.<br><b>4.</b> Verify local/labor route before outreach.<br><b>5.</b> Track lodging/travel/per diem separately.</p>','action')+
-        card('Data caution','<p class="sub">Analytics are research aids. They do not confirm employment, pay, lodging, travel, jurisdiction, or vendor assignment. Treat every outreach decision as requiring source verification.</p>','caution')+
-      '</div>';
+    var list=opps();var lanes=pursuitLanes(list);var avg=list.length?Math.round(list.reduce(function(s,o){return s+score(o);},0)/list.length):0;var months=countBy(list,function(o){return monthName(o.month);});var regions=countBy(list,function(o){return o.region;});var types=countBy(list,function(o){return text(o.opportunityType);});var branchMap=branchCounts(list);var employerMap=branchEmployerCounts();var gaps=emptyMonths(list);
+    section.innerHTML='<h2>Contractor Work Intelligence Dashboard</h2><p class="lead">A public-facing analytics view for stagehand contractors: what to chase first, where the routes are, which months are dense, what may justify travel, and what still needs verification.</p>'+publicNotes()+
+    '<div class="modalgrid">'+metric('Active work targets',list.length,'Public-safe opportunities currently visible.','targets')+metric('Average work value',avg+'/100','General strength of the active target pool.','value')+metric('Road-worthy targets',lanes.road.length,'Targets with travel, lodging, per diem, or multi-day value.','road')+metric('Verification queue',lanes.verify.length,'Targets needing direct source confirmation.','verify')+'</div>'+ 
+    '<div class="grid">'+card('Best targets to chase first','Highest value scores. Start here when choosing what to research or contact.',miniList(lanes.best,10),'best')+card('Road-worthy / travel-justified targets','Events with lodging, travel, per diem, or multi-day signals.',miniList(lanes.road,10),'road')+card('Verification queue','Good leads that should not be treated as reliable until source-checked.',miniList(lanes.verify,10),'verify')+'</div>'+ 
+    '<div class="grid">'+card('Month-by-month work density','Use this for schedule gap planning and trip clustering.',bars(top(months,12),'month'),'month')+card('Region density','Where the opportunity map is strongest right now.',bars(top(regions,10),'region'),'region')+card('Opportunity type mix','Shows whether the public dashboard leans festivals, arena builds, residencies, conventions, or other work.',bars(top(types,10),'type'),'type')+'</div>'+ 
+    '<div class="grid">'+card('Branch demand heat','Which crafts show up most often in the opportunity dataset.',bars(top(branchMap,12),'branchName'),'branchName')+card('Employer-route depth','Which crafts have the most public employer/vendor route leads.',bars(top(employerMap,12),'employerRoute'),'employerRoute')+card('Schedule gaps','Months with no active visible target. Use these to decide what to research next.','<div class="chips">'+(gaps.length?gaps.map(function(m){return chip(m,'gray');}).join(''):chip('No empty months','warn'))+'</div><p class="sub">A gap means the data needs more targets, not that work does not exist.</p>','gaps')+'</div>'+ 
+    '<h3 style="margin-top:26px">Region x branch work map</h3><p class="lead">This matrix shows where each production branch appears by region. Use it to pick regional outreach routes by craft.</p>'+regionBranchMap(list)+
+    '<div class="grid" style="margin-top:18px">'+card('Longer-run targets','Multi-day windows can be more valuable than one-off calls.',miniList(lanes.longrun,10),'longrun')+card('Local-style targets','Targets without obvious travel/lodging signals. Better for nearby routing or local labor checking.',miniList(lanes.local,10),'local')+card('Contractor action checklist','Public-facing next steps for using this dashboard.','<p><b>1.</b> Pick high-value targets.<br><b>2.</b> Open the opportunity and inspect mapped branches.<br><b>3.</b> Follow employer/vendor route leads.<br><b>4.</b> Verify labor jurisdiction.<br><b>5.</b> Separately track pay, lodging, travel, and per diem.</p>','action')+'</div>';
   };
   window.openAnalytics=function(kind,value){
-    var opps=opportunityList();var emps=employerList();var locals=localList();var title='Analytics detail';var body='';
-    if(kind==='priority'||kind==='value'){title='Best targets to chase first';body=leadList(buildWorkLanes(opps).priority);} 
-    else if(kind==='lodging'){title='Lodging-signal targets';body=leadList(buildWorkLanes(opps).lodging);} 
-    else if(kind==='travel'){title='Travel / per diem signal targets';body=leadList(buildWorkLanes(opps).travel);} 
-    else if(kind==='verify'){title='Verification queue';body=leadList(buildWorkLanes(opps).verify);} 
-    else if(kind==='longRun'){title='Longer-run targets';body=leadList(buildWorkLanes(opps).longRun);} 
-    else if(kind==='month'){title='Month: '+value;body=leadList(opps.filter(function(o){return monthName(o.month)===value;}));} 
-    else if(kind==='region'){title='Region: '+value;body=leadList(opps.filter(function(o){return o.region===value;}));} 
-    else if(kind==='branchName'){title='Branch: '+value;body=leadList(opps.filter(function(o){return arr(o.departments).some(function(dep){return branchName(dep)===value;});}));} 
-    else if(kind==='employerRoute'){title='Employer route: '+value;var branch=branchList().find(function(b){return b.name===value;});var list=branch?emps.filter(function(e){return arr(e.departments).includes(branch.id);}):[];body='<div class="monthBody">'+(list.length?list.map(function(e){return '<div class="event" onclick="openEmployer('+JSON.stringify(e.id)+')"><b>'+esc(e.name)+'</b><small>'+esc(e.type||'employer lead')+' • '+esc(e.region||'')+'</small><div class="chips">'+linkChip('open route',bestLink(e),'gray')+'</div></div>';}).join(''):'<p class="sub">No employer route leads found.</p>')+'</div>';} 
-    else if(kind==='locals'){title='IATSE/local routing aid';body='<p>'+locals.length+' local records are available as jurisdiction-routing aids. Always verify final jurisdiction before outreach.</p>';} 
-    else if(kind==='employers'){title='Employer leads';body='<p>'+emps.length+' employer/vendor lead records are available.</p>';} 
-    else if(kind==='gaps'){title='Schedule gaps';body='<p class="sub">Research these months next: '+esc(missingMonths(opps).join(', ')||'No empty months')+'</p>';} 
-    else {title='Contractor analytics';body='<p class="sub">Use the analytics dashboard to pick targets, verify routes, and plan outreach.</p>';}
-    if(typeof openModal==='function')openModal('<h2>'+esc(title)+'</h2>'+body+'<p class="sub">Research aid only. Confirm vendor, labor route, pay, travel, lodging, and jurisdiction before outreach.</p>');
+    var list=opps();var lanes=pursuitLanes(list);var title='Analytics detail';var body='';
+    if(kind==='best'||kind==='targets'||kind==='value'){title='Best targets to chase first';body=miniList(lanes.best,20);}else if(kind==='road'){title='Road-worthy targets';body=miniList(lanes.road,20);}else if(kind==='verify'){title='Verification queue';body=miniList(lanes.verify,20);}else if(kind==='longrun'){title='Longer-run targets';body=miniList(lanes.longrun,20);}else if(kind==='local'){title='Local-style targets';body=miniList(lanes.local,20);}else if(kind==='month'){title='Month: '+value;body=miniList(list.filter(function(o){return monthName(o.month)===value;}),30);}else if(kind==='region'){title='Region: '+value;body=miniList(list.filter(function(o){return o.region===value;}),30);}else if(kind==='type'){title='Opportunity type: '+value;body=miniList(list.filter(function(o){return text(o.opportunityType)===value;}),30);}else if(kind==='branchName'){title='Branch demand: '+value;body=miniList(list.filter(function(o){return arr(o.departments).some(function(d){return branchName(d)===value;});}),30);}else if(kind==='employerRoute'){title='Employer route leads: '+value;body=employerCards(value);}else if(kind==='gaps'){title='Schedule gaps';body='<p class="sub">Months needing more research: '+esc(emptyMonths(list).join(', ')||'No empty months')+'</p><p>Use this to decide where to add opportunities next, not as proof that no work exists.</p>';}else{title='Contractor analytics';body='<p>Use this dashboard to prioritize targets, pick regions, and verify public routes.</p>';}
+    if(typeof openModal==='function')openModal('<h2>'+esc(title)+'</h2>'+body+'<p class="sub">Research aid only. Confirm all work details before outreach.</p>');
   };
-  function boot(){setTimeout(function(){try{window.renderAnalytics();}catch(err){console.warn('Contractor analytics render failed',err);}},150);}
+  function boot(){setTimeout(function(){try{window.renderAnalytics();}catch(err){console.warn('Contractor analytics render failed',err);}},200);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
