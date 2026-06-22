@@ -117,6 +117,7 @@ window.BRANCH_EMPLOYER_LEADS = {
     loadRuntimeOnce('data/packages/branch-research-runtime.js?v=branchresearch1','__branchResearchRuntimeRequested');
     loadRuntimeOnce('data/packages/branch-tab-runtime.js?v=branchtab1','__branchTabRuntimeRequested');
     loadRuntimeOnce('data/packages/contractor-analytics-runtime.js?v=analytics1','__contractorAnalyticsRuntimeRequested');
+    loadRuntimeOnce('data/packages/guide-for-use-runtime.js?v=guide1','__guideForUseRuntimeRequested');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0)});else setTimeout(boot,0);
 })();
