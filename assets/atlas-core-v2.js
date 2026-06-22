@@ -5,7 +5,7 @@
     'branch-research-batch-001-rigging.js','branch-research-batch-002-rigging.js','branch-research-batch-003-rigging.js','branch-research-batch-004-rigging.js','branch-research-batch-005-rigging.js',
     'branch-research-batch-001-lighting.js','branch-research-batch-002-lighting.js','branch-research-batch-003-lighting.js','branch-research-batch-004-lighting.js','branch-research-batch-005-lighting.js',
     'branch-research-batch-001-audio.js','branch-research-batch-002-audio.js','branch-research-batch-003-audio.js','branch-research-batch-004-audio.js','branch-research-batch-005-audio.js',
-    'branch-research-batch-001-video-led.js','branch-research-batch-002-video-led.js','branch-research-batch-003-video-led.js'
+    'branch-research-batch-001-video-led.js','branch-research-batch-002-video-led.js','branch-research-batch-003-video-led.js','branch-research-batch-004-video-led.js','branch-research-batch-005-video-led.js'
   ];
 
   var branches=[];
@@ -25,7 +25,6 @@
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
   function plainLink(text,url){return url?'<a href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
-  function list(items){items=(items||[]).filter(Boolean);return items.length?'<ul>'+items.map(function(item){return '<li>'+esc(item)+'</li>'}).join('')+'</ul>':'<p class="sub">None listed.</p>'}
 
   function loadScript(src){
     return new Promise(function(resolve){
@@ -42,7 +41,7 @@
 
   function loadBranchResearch(){
     return branchFiles.reduce(function(chain,file){
-      return chain.then(function(){return loadScript('data/packages/'+file+'?v=multipage3')});
+      return chain.then(function(){return loadScript('data/packages/'+file+'?v=multipage4')});
     },Promise.resolve()).then(buildBranchIndex);
   }
 
