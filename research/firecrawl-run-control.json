@@ -1,11 +1,11 @@
 {
-  "activeRun": "lighting-refresh-sweep-001",
-  "branch": "lighting",
-  "mode": "low",
-  "maxTotalCredits": 80,
-  "maxSearchResults": 3,
-  "maxScrapesPerTarget": 1,
-  "requestedAt": "2026-06-22T12:35:00-04:00",
+  "activeRun": "audio-refresh-micro-001",
+  "branch": "audio",
+  "mode": "micro",
+  "maxTotalCredits": 10,
+  "maxSearchResults": 1,
+  "maxScrapesPerTarget": 0,
+  "requestedAt": "2026-06-22T12:55:00-04:00",
   "requestedBy": "ChatGPT orchestrated commit trigger",
-  "notes": "Active instruction: run a supplemental Lighting refresh sweep. Do not delete or overwrite prior Lighting research. Upload the artifact for reviewed additive conversion."
+  "notes": "Run Audio refresh in micro search-only mode. Do not scrape. Do not exceed 10 estimated credits. Do not overwrite prior research."
 }
