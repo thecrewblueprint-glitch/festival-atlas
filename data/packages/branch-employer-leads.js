@@ -104,17 +104,18 @@ window.BRANCH_EMPLOYER_LEADS = {
     renderStats();
     renderCalendar();
   }
-  function loadBranchResearchRuntime(){
-    if(window.__branchResearchRuntimeRequested)return;
-    window.__branchResearchRuntimeRequested=true;
+  function loadRuntimeOnce(src,flag){
+    if(window[flag])return;
+    window[flag]=true;
     var script=document.createElement('script');
-    script.src='data/packages/branch-research-runtime.js?v=branchresearch1';
+    script.src=src;
     script.async=false;
     document.head.appendChild(script);
   }
   function boot(){
     installCalendarCleanups();
-    loadBranchResearchRuntime();
+    loadRuntimeOnce('data/packages/branch-research-runtime.js?v=branchresearch1','__branchResearchRuntimeRequested');
+    loadRuntimeOnce('data/packages/branch-tab-runtime.js?v=branchtab1','__branchTabRuntimeRequested');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0)});else setTimeout(boot,0);
 })();
