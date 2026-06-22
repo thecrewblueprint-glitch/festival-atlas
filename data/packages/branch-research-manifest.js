@@ -39,5 +39,6 @@ window.BRANCH_RESEARCH_MANIFEST = [
   'branch-research-batch-003-logistics.js',
   'branch-research-batch-004-logistics.js',
   'branch-research-batch-005-logistics.js',
-  'branch-research-batch-001-scenic.js'
+  'branch-research-batch-001-scenic.js',
+  'branch-research-batch-002-scenic.js'
 ];
