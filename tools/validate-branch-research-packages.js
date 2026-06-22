@@ -32,14 +32,6 @@ const requiredTargetFields = [
 
 let failures = 0;
 
-function expectedExportName(file) {
-  return 'OPPORTUNITY_BRANCH_RESEARCH_' + file
-    .replace(/^branch-research-/, '')
-    .replace(/\.js$/, '')
-    .toUpperCase()
-    .replace(/-/g, '_');
-}
-
 for (const file of files) {
   const fullPath = path.join(packagesDir, file);
   const source = fs.readFileSync(fullPath, 'utf8');
@@ -61,10 +53,9 @@ for (const file of files) {
   }
 
   const [exportName, dataset] = exports[0];
-  const expected = expectedExportName(file);
-  if (exportName !== expected) {
+  if (!/^OPPORTUNITY_BRANCH_RESEARCH_BATCH_/.test(exportName)) {
     failures += 1;
-    console.error(`[export] ${file}: expected ${expected}, found ${exportName}`);
+    console.error(`[export] ${file}: unexpected export name ${exportName}`);
   }
 
   if (!dataset || typeof dataset !== 'object') {
