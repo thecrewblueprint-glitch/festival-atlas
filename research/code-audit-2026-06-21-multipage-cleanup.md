@@ -164,13 +164,11 @@ Older transitional runtime files could conflict with the multi-page architecture
 
 Fix:
 
-`data/packages/branch-research-runtime.js` was made inert and marked archived. Active pages use `assets/atlas-core-v2.js` either directly or through the compatibility shim.
+- `data/packages/branch-research-runtime.js` was made inert and marked archived.
+- The legacy popup bridge was removed from `data/packages/us-employers.js` so the file now contains employer data only.
+- Active pages use `assets/atlas-core-v2.js` either directly or through the compatibility shim.
 
 Status: stable.
-
-Remaining managed issue:
-
-`us-employers.js` still contains a legacy popup bridge. Active pages neutralize that bridge before loading `us-employers.js`, but a future cleanup should remove the bridge from that data file entirely so the file contains employer data only.
 
 ---
 
@@ -250,12 +248,11 @@ The validator checks page presence, required shared assets, retired runtime refe
 
 1. Browser-test the deployed GitHub Pages site on mobile and desktop.
 2. Make every active page load `assets/atlas-core-v2.js` directly instead of relying on the compatibility shim.
-3. Remove the legacy popup bridge from `us-employers.js` so the file contains employer data only.
-4. Remove or archive any old runtime files no active page uses:
+3. Remove or archive any old runtime files no active page uses:
    - `data/packages/branch-research-runtime.js`
    - `data/packages/guide-for-use-runtime.js`
    - any unused branch-tab or contractor analytics runtime files not referenced by active pages
-5. After every future research batch:
+4. After every future research batch:
    - add the JS package
    - add the readable report
    - add the package filename to the clean core branch research list
@@ -277,5 +274,6 @@ Current stable direction:
 - branch research data package pattern preserved
 - compatibility shim protects older page shells
 - old branch runtime behavior neutralized
+- employer data file cleaned of legacy popup bridge
 - validator file exists
 - package validation scripts exist
