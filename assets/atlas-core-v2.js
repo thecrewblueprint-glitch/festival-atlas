@@ -98,8 +98,26 @@
       branch:(($('#branchFilter')||{}).value||''),
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
-      type:(($('#employerTypeFilter')||{}).value||'')
+      type:(($('#employerTypeFilter')||{}).value||''),
+      accommodation:(($('#accommodationFilter')||{}).value||'')
     };
+  }
+
+  function accFilterMatch(opportunity,val){
+    if(!val)return true;
+    var accom=opportunity.accommodation||{};
+    var travel=opportunity.travelCompensation||{};
+    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
+    var confirmed=['yes','confirmed','included'];
+    var positive=['possible','likely'].concat(confirmed);
+    if(val==='lodging_possible')return positive.indexOf(lodging)>-1||lodgingType.indexOf('camp')>-1;
+    if(val==='camping')return lodgingType.indexOf('camp')>-1||actions.indexOf('camping')>-1;
+    if(val==='lodging_research')return actions.indexOf('lodging')>-1||actions.indexOf('camping')>-1||actions.indexOf('per diem')>-1||actions.indexOf('travel')>-1;
+    if(val==='travel_possible')return positive.indexOf(String(travel.travelPaid||'unknown').toLowerCase())>-1;
+    if(val==='per_diem_possible')return positive.indexOf(String(travel.perDiem||'unknown').toLowerCase())>-1;
+    return true;
   }
 
   function activeOpportunities(){
@@ -108,7 +126,8 @@
       return (!filter.q||text(opportunity).includes(filter.q)||(opportunity.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
-        &&(!filter.month||String(opportunity.month)===filter.month);
+        &&(!filter.month||String(opportunity.month)===filter.month)
+        &&accFilterMatch(opportunity,filter.accommodation);
     });
   }
 
@@ -144,10 +163,35 @@
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
   }
 
+  function accomChips(opportunity){
+    var accom=opportunity.accommodation||{};
+    var travel=opportunity.travelCompensation||{};
+    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
+    var confirmed=['yes','confirmed','included'];
+    var positive=['possible','likely'].concat(confirmed);
+    var chips=[];
+    if(lodgingType.indexOf('camp')>-1)chips.push('<span class="accom-tag accom-ok">Camping</span>');
+    else if(positive.indexOf(lodging)>-1)chips.push('<span class="accom-tag accom-ok">Lodging possible</span>');
+    else if(actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)chips.push('<span class="accom-tag accom-warn">Lodging — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Lodging unknown</span>');
+    var perDiem=String(travel.perDiem||'unknown').toLowerCase();
+    if(positive.indexOf(perDiem)>-1)chips.push('<span class="accom-tag accom-ok">Per diem</span>');
+    else if(actions.indexOf('per diem')>-1||actions.indexOf('perdiem')>-1)chips.push('<span class="accom-tag accom-warn">Per diem — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Per diem unknown</span>');
+    var travelPaid=String(travel.travelPaid||'unknown').toLowerCase();
+    if(positive.indexOf(travelPaid)>-1)chips.push('<span class="accom-tag accom-ok">Travel paid</span>');
+    else if(actions.indexOf('travel')>-1||actions.indexOf('flight')>-1||actions.indexOf('mileage')>-1)chips.push('<span class="accom-tag accom-warn">Travel — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Travel unknown</span>');
+    return '<div class="accom-tags">'+chips.join('')+'</div>';
+  }
+
   function opportunityCard(opportunity){
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
+      accomChips(opportunity)+
       '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
       '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
       '<p><b>Work-year value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
