@@ -48,5 +48,11 @@ window.BRANCH_RESEARCH_MANIFEST = [
   'branch-research-batch-002-scenic.js',
   'branch-research-batch-003-scenic.js',
   'branch-research-batch-004-scenic.js',
-  'branch-research-batch-005-scenic.js'
+  'branch-research-batch-005-scenic.js',
+  'branch-research-batch-006-power.js',
+  'branch-research-batch-006-site-ops.js',
+  'branch-research-batch-006-logistics.js',
+  'branch-research-batch-006-stage-mgmt.js',
+  'branch-research-batch-006-production-office.js',
+  'branch-research-batch-001-backline.js'
 ];

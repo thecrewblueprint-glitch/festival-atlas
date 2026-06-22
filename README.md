@@ -138,27 +138,37 @@ npm run validate:all
 
 The Pages deploy workflow publishes the `research-version` branch through GitHub Actions.
 
-## Current research stop point
+## Current research state
 
-Scenic research has reached:
-
-```text
-branch-research-batch-002-scenic
-```
-
-Latest Scenic files:
+Completed departments (batches 001–005):
 
 ```text
-data/packages/branch-research-batch-001-scenic.js
-research/branch-research-batch-001-scenic.md
-data/packages/branch-research-batch-002-scenic.js
-research/branch-research-batch-002-scenic.md
+Staging, Rigging, Lighting, Audio, Video / LED, Power, Site Ops, Logistics
 ```
+
+Supplemental refresh (batch 006) complete for:
+
+```text
+Staging, Rigging, Lighting, Audio, Video / LED
+Power, Site Ops, Logistics, Stage Management, Production Office
+```
+
+Backline initial batch (batch 001) complete.
+
+Scenic completed through:
+
+```text
+branch-research-batch-005-scenic
+```
+
+All supplemental artifact results have been converted into app-ready data packages.
+
+Firecrawl access has been removed. No Firecrawl runner, workflow, or control file remains active.
 
 Next research task, when work resumes:
 
 ```text
-Create Scenic batch 003 data and report.
+Continue Scenic research starting at batch 006, or begin new department research as needed.
 ```
 
 ## Maintenance notes

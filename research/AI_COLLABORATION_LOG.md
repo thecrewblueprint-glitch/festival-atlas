@@ -47,6 +47,88 @@ Do not continue research until the audit/cleanup pass described in the handoff i
 
 ## Current Top Note
 
+### 2026-06-22 — Claude Code
+
+Current stop point:
+
+```text
+All artifact conversion complete.
+56 branch research packages validated and manifest-linked.
+All packages have matching research reports.
+Firecrawl access fully removed.
+Validation: npm run validate:all passes clean.
+```
+
+Work completed this session:
+
+```text
+1. Merged research-version into working branch (claude/research-version-edits-z0gqw6).
+   README conflict resolved by taking research-version as authoritative.
+
+2. Removed remaining active Firecrawl files:
+   - .github/workflows/firecrawl-low-sweep.yml
+   - .github/workflows/firecrawl-smoke-test.yml
+   - tools/firecrawl-low-sweep.js
+   - docs/firecrawl-low-mode-workflow.md
+
+3. Created missing batch-006 reports for already-existing data packages:
+   - research/branch-research-batch-006-audio.md
+   - research/branch-research-batch-006-lighting.md
+   - research/branch-research-batch-006-rigging.md
+   - research/branch-research-batch-006-staging.md
+   - research/branch-research-batch-006-video-led.md
+
+4. Created 6 new supplemental data packages from artifact quality notes:
+   - data/packages/branch-research-batch-006-power.js (5 targets)
+   - data/packages/branch-research-batch-006-site-ops.js (5 targets)
+   - data/packages/branch-research-batch-006-logistics.js (5 targets)
+   - data/packages/branch-research-batch-006-stage-mgmt.js (5 targets)
+   - data/packages/branch-research-batch-006-production-office.js (6 targets)
+   - data/packages/branch-research-batch-001-backline.js (5 targets)
+
+5. Created matching research reports for all 6 new packages.
+
+6. Updated data/packages/branch-research-manifest.js to include all 6 new packages.
+
+7. Updated README: removed stale Scenic-002 stop point, replaced with accurate
+   current state including Scenic-005, all batch-006 supplemental completions,
+   Backline batch-001, and Firecrawl removal confirmation.
+```
+
+Known state after this session:
+
+```text
+- No Firecrawl runners, workflows, or control files remain active.
+- All 56 packages validated: npm run validate:all passes clean.
+- Every data package has a matching research report.
+- Manifest references all 56 packages.
+- Scenic batches 001-005 and all reports exist and pass validation.
+- All supplemental batch-006 artifact data has been converted.
+- Backline research started at batch-001.
+```
+
+Unfinished work:
+
+```text
+- Scenic batch 006 does not yet exist (no artifact was collected for Scenic).
+- No new Firecrawl research was added — Firecrawl access is gone.
+- Stage Management and Production Office research is supplemental-only (no batches 001-005).
+  If full prior-batch research is needed for those departments, new research sessions are required.
+- The atlas-core-v2.js hardcoded branchFiles fallback is stale but the manifest overrides it
+  at runtime. Suggest updating or removing the fallback in a future cleanup pass.
+```
+
+Next safe steps:
+
+```text
+1. Verify browser behavior on branches.html, sources.html, opportunities.html, analytics.html.
+2. Begin Scenic batch 006 if new research is desired (requires new research session without Firecrawl).
+3. Begin Stage Management / Production Office batches 001-005 if full dept research is desired.
+4. Optionally clean up atlas-core-v2.js hardcoded fallback array.
+```
+
+---
+
 ### 2026-06-22 — ChatGPT
 
 Current stop point:
