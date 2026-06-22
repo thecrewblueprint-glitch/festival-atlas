@@ -47,6 +47,63 @@ Do not continue research until the audit/cleanup pass described in the handoff i
 
 ## Current Top Note
 
+### 2026-06-22 — ChatGPT manifest sync / corrected stop point
+
+Current stop point:
+
+```text
+Completed through Logistics batch 005.
+Scenic batch 001 data exists.
+Scenic batch 001 report exists.
+Scenic batch 002 has not started.
+```
+
+Recent commits:
+
+```text
+Logistics batch 005 data:
+56aae911690bf23e68d365f59f590330dc97209e
+
+Logistics batch 005 report:
+30df42c825441fea33f6a31aad8138395dd2f991
+
+Scenic batch 001 data:
+a03f6df7e319d52f1ec44aeafc887dcc396eaa53
+
+Branch research manifest synced to completed packages:
+1d2b1d24c65d655293c4f9e5de1ba336bd650704
+
+Production Atlas GitHub handoff package:
+279dc2870d0cfc7a6f306356e1ea2f1b4def236e
+```
+
+Files verified/updated in this pass:
+
+```text
+data/packages/branch-research-manifest.js
+research/branch-research-batch-001-scenic.md
+research/AI_COLLABORATION_LOG.md
+```
+
+Known risk:
+
+```text
+The core has manifest-based loading, but a full repository audit and validator run should still be performed before more research is added.
+The manifest has been corrected so it no longer references batch-006 files or future Scenic batch files that do not exist.
+```
+
+Next safe step:
+
+```text
+Run comprehensive code audit and cleanup of the entire research-version branch.
+Verify npm run validate:branch-research, npm run validate:static-app, and npm run validate:all.
+Then continue Scenic batch 002.
+```
+
+---
+
+## Previous Note
+
 ### 2026-06-22 — ChatGPT
 
 Current stop point:
@@ -54,7 +111,7 @@ Current stop point:
 ```text
 Completed through Logistics batch 005.
 Scenic batch 001 data exists.
-Scenic batch 001 report is missing.
+Scenic batch 001 report was believed missing at the time of that note.
 ```
 
 Recent commits:
