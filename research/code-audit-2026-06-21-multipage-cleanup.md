@@ -2,7 +2,7 @@
 
 Date: 2026-06-21  
 Branch: `research-version`  
-Scope: multi-page static app shell, shared styles, shared JS core, popup behavior, source-link handling, mobile usability, branch-research loading, and legacy runtime cleanup.
+Scope: multi-page static app shell, shared styles, shared JS core, popup behavior, source-link handling, mobile usability, branch-research loading, validation scripts, and legacy runtime cleanup.
 
 ---
 
@@ -14,11 +14,12 @@ The current stable model is:
 
 - multi-page static site
 - shared CSS
-- one active app core
+- one clean active app core
+- compatibility shim for older page shells
 - event/item popups without source clutter
 - separate Sources page
 - branch research loaded from data packages
-- old compatibility-loader shortcut removed
+- validation scripts available through `package.json`
 
 ---
 
@@ -48,13 +49,13 @@ assets/home-guide-page.js
 assets/guide-page.js
 ```
 
-Important cleanup result:
+Compatibility file:
 
 ```text
 assets/atlas-core.js
 ```
 
-has been removed. It was only a compatibility loader and is no longer part of the active build.
+`assets/atlas-core.js` is intentionally present as a small compatibility shim. It loads `assets/atlas-core-v2.js` so older page shells that still reference the old filename do not break.
 
 ---
 
@@ -87,17 +88,13 @@ assets/atlas-core-v2.js
 
 Fix:
 
-The obsolete `assets/atlas-core.js` compatibility loader was removed. Active pages load the clean app core directly:
+`assets/atlas-core-v2.js` is the active clean app core. `assets/atlas-core.js` now acts only as a compatibility shim that forwards to the clean core.
 
-```text
-assets/atlas-core-v2.js
-```
-
-Status: fixed.
+Status: fixed for active use.
 
 Future cleanup:
 
-At some point, the clean core can be renamed from `atlas-core-v2.js` back to `atlas-core.js`, but that should be done as one deliberate rename commit after browser verification.
+After browser verification, every page can be patched to load `assets/atlas-core-v2.js` directly. Then the shim can be deleted or the clean core can be deliberately renamed back to `assets/atlas-core.js`.
 
 ---
 
@@ -114,7 +111,7 @@ Fix:
 - Branch popups show branch summary, record count, research needs, worker focus, and event-specific route records.
 - Source links are moved to `sources.html`.
 
-Status: fixed.
+Status: fixed on the clean core and on pages using the compatibility shim.
 
 ---
 
@@ -167,13 +164,13 @@ Older transitional runtime files could conflict with the multi-page architecture
 
 Fix:
 
-Active pages now load the clean core directly and do not depend on the old compatibility loader. The old `assets/atlas-core.js` compatibility file was removed.
+`data/packages/branch-research-runtime.js` was made inert and marked archived. Active pages use `assets/atlas-core-v2.js` either directly or through the compatibility shim.
 
 Status: stable.
 
 Remaining managed issue:
 
-`us-employers.js` still contains a legacy popup bridge. Active pages neutralize that bridge before loading `us-employers.js`, but a future cleanup should remove the bridge from that data file entirely.
+`us-employers.js` still contains a legacy popup bridge. Active pages neutralize that bridge before loading `us-employers.js`, but a future cleanup should remove the bridge from that data file entirely so the file contains employer data only.
 
 ---
 
@@ -207,7 +204,7 @@ Do not commit the following to public files:
 
 - private contacts
 - personal phone numbers or emails
-- hotel/lodging details
+- hotel or lodging details
 - pay terms
 - crew referrals
 - rumors
@@ -238,20 +235,21 @@ Static validator exists:
 tools/validate-static-app.js
 ```
 
-Run manually:
+Package scripts exist:
 
 ```bash
-node tools/validate-static-app.js
+npm run validate:static-app
+npm run validate:all
 ```
 
-The package script update was previously blocked by the connector. Until that is patched, run the validator directly with Node.
+The validator checks page presence, required shared assets, retired runtime references, clean-core coverage, source-page renderer presence, branch-card renderer presence, and the latest research batch files.
 
 ---
 
 ## Remaining Recommended Cleanup
 
 1. Browser-test the deployed GitHub Pages site on mobile and desktop.
-2. Confirm all active pages render with `assets/atlas-core-v2.js`.
+2. Make every active page load `assets/atlas-core-v2.js` directly instead of relying on the compatibility shim.
 3. Remove the legacy popup bridge from `us-employers.js` so the file contains employer data only.
 4. Remove or archive any old runtime files no active page uses:
    - `data/packages/branch-research-runtime.js`
@@ -261,7 +259,7 @@ The package script update was previously blocked by the connector. Until that is
    - add the JS package
    - add the readable report
    - add the package filename to the clean core branch research list
-   - run `node tools/validate-static-app.js`
+   - run `npm run validate:all`
    - verify popups stay source-clean
 
 ---
@@ -277,6 +275,7 @@ Current stable direction:
 - source links separated into Sources page
 - mobile filter/search fixed
 - branch research data package pattern preserved
-- obsolete compatibility-loader shortcut removed
-- old runtime behavior neutralized
+- compatibility shim protects older page shells
+- old branch runtime behavior neutralized
 - validator file exists
+- package validation scripts exist
