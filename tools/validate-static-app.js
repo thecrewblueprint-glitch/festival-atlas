@@ -35,6 +35,12 @@ const retiredRuntimeReferences = [
   'data/packages/guide-for-use-runtime.js'
 ];
 
+const legacyBridgeMarkers = [
+  '__branchPopupBridgeInstalled',
+  'BRANCH_EMPLOYER_LEADS={branches:{}}',
+  'window.BRANCH_EMPLOYER_LEADS={branches:{}}'
+];
+
 let fail = [];
 let warn = [];
 
@@ -76,6 +82,9 @@ pageText.forEach(({ file, content }) => {
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
+  legacyBridgeMarkers.forEach(marker => {
+    check(!content.includes(marker), `${file} still contains legacy branch bridge marker: ${marker}`);
+  });
 });
 
 const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js') : '';
@@ -88,6 +97,11 @@ check(!core.includes('function chip('), 'atlas-core-v2.js still contains public 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
 check(!/\.chips\b/.test(css), 'assets/atlas.css still contains chip container styles');
+
+const employersData = exists('data/packages/us-employers.js') ? read('data/packages/us-employers.js') : '';
+legacyBridgeMarkers.forEach(marker => {
+  check(!employersData.includes(marker), `us-employers.js still contains legacy branch bridge marker: ${marker}`);
+});
 
 const branchPackages = listBranchPackages();
 check(branchPackages.length > 0, 'No branch research package files found');
