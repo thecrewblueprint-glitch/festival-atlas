@@ -3,31 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Production Atlas — Calendar</title>
+  <title>Production Atlas — My Schedule</title>
   <link rel="stylesheet" href="assets/atlas.css">
 </head>
-<body data-page="calendar">
+<body data-page="schedule">
   <header class="hero">
     <div class="wrap">
       <div class="eyebrow">Production Atlas</div>
-      <h1>Opportunity Calendar</h1>
-      <p>Month-by-month work target planning for long-term live-event opportunities.</p>
+      <h1>My 2026 Schedule</h1>
+      <p>Build your personal year plan. Add events to the Gantt timeline and track approximate work days, date overlaps, and coverage gaps across the year.</p>
     </div>
   </header>
-
   <nav class="nav">
     <div class="wrap">
       <div class="navInner">
         <a href="index.html">Home / Guide</a>
-        <a class="active" href="calendar.html">Calendar</a>
+        <a href="calendar.html">Calendar</a>
         <a href="opportunities.html">Opportunities</a>
         <a href="branches.html">Branches</a>
         <a href="employers.html">Employers</a>
         <a href="iatse.html">IATSE Locals</a>
         <a href="matrix.html">Matrix</a>
         <a href="analytics.html">Analytics</a>
-        <a href="sources.html">Sources</a><a href="map.html">Map</a>
-        <a href="schedule.html">Schedule</a>
+        <a href="sources.html">Sources</a>
+        <a href="map.html">Map</a>
+        <a class="active" href="schedule.html">Schedule</a>
       </div>
       <div id="filters" class="filters">
         <input id="q" placeholder="Search opportunity, city, branch, employer...">
@@ -40,18 +40,11 @@
       </div>
     </div>
   </nav>
-
   <main class="wrap page" id="app"></main>
   <div id="stats" class="hiddenRuntime"></div>
   <div id="calendarGrid" class="hiddenRuntime"></div>
-  <div id="modal" class="modal">
-    <div class="modalbox">
-      <button class="btn close" onclick="closeModal()">Close</button>
-      <div id="modalContent"></div>
-    </div>
-  </div>
-  <footer class="wrap">Production Atlas calendar page.</footer>
-
+  <div id="modal" class="modal"><div class="modalbox"><button class="btn close" onclick="closeModal()">Close</button><div id="modalContent"></div></div></div>
+  <footer class="wrap">Production Atlas schedule page. Schedule data is stored locally in your browser only.</footer>
   <script>window.__branchPopupBridgeInstalled=true;window.BRANCH_EMPLOYER_LEADS={branches:{}};</script>
   <script src="data/packages/production-branches.js?v=multi1"></script>
   <script src="data/packages/opportunities-2026.js?v=multi1"></script>

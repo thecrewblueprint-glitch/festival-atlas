@@ -59,6 +59,34 @@ footer{border-top:1px solid var(--line);color:var(--muted);padding:24px 18px;fon
 .leaflet-popup-close-button{color:#a8b2bd!important}
 .leaflet-container a,.leaflet-container a:hover{color:#f5b400}
 .leaflet-container{background:#07090c}
+.gantt{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:14px 0}
+.gantt-head{display:flex;background:#0c1520;border-bottom:1px solid var(--line);font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.gantt-lhd{width:180px;min-width:180px;padding:7px 12px;flex-shrink:0;border-right:1px solid var(--line)}
+.gantt-track-hd{flex:1;overflow:hidden}
+.gantt-months-hd{display:grid;grid-template-columns:repeat(12,1fr)}
+.gantt-months-hd span{text-align:center;padding:7px 0;border-left:1px solid rgba(42,53,64,.4)}
+.gantt-months-hd span:first-child{border-left:none}
+.gantt-rhd{width:40px;min-width:40px;border-left:1px solid var(--line)}
+.gantt-row{display:flex;align-items:stretch;border-bottom:1px solid rgba(42,53,64,.35)}
+.gantt-row:last-child{border-bottom:none}
+.gantt-cell{width:180px;min-width:180px;padding:8px 12px;font-size:.78rem;font-weight:700;flex-shrink:0;cursor:pointer;border-right:1px solid rgba(42,53,64,.35);display:flex;align-items:center;overflow:hidden}
+.gantt-cell span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gantt-cell:hover{color:var(--gold2)}
+.gantt-track{flex:1;position:relative;height:44px;background:#07111a}
+.gantt-dividers{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,1fr);pointer-events:none}
+.gantt-dividers span{border-left:1px solid rgba(42,53,64,.35)}
+.gantt-dividers span:first-child{border-left:none}
+.gantt-bar{position:absolute;top:8px;height:28px;border-radius:6px;border:1px solid transparent;min-width:3px;cursor:pointer;display:flex;align-items:center;padding:0 5px;overflow:hidden;transition:filter .15s;box-sizing:border-box}
+.gantt-bar:hover{filter:brightness(1.3);z-index:2}
+.gantt-bar.approx{border-style:dashed!important}
+.gantt-bar span{font-size:.62rem;font-weight:700;white-space:nowrap}
+.gantt-action{width:40px;min-width:40px;display:flex;align-items:center;justify-content:center;border-left:1px solid rgba(42,53,64,.35);flex-shrink:0}
+.gantt-action .btn{padding:3px 7px;font-size:.75rem;border-color:rgba(168,178,189,.25);color:var(--muted)}
+.gantt-action .btn:hover{border-color:var(--warn);color:var(--warn)}
+.sched-empty{border:1px dashed var(--line);border-radius:14px;padding:32px;text-align:center;color:var(--muted);margin:14px 0}
+.sched-add{background:transparent;border-color:rgba(168,178,189,.3)!important;color:var(--muted)!important}
+.sched-add:hover{border-color:var(--gold)!important;color:var(--gold)!important}
+.sched-in{border-color:rgba(72,199,120,.45)!important;color:#48c778!important;background:rgba(72,199,120,.07)!important}
 @media(max-width:960px){.grid,.calendar,.stats,.modalgrid{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr}}
 @media(max-width:560px){.filters{grid-template-columns:1fr}.hero h1{font-size:2.45rem}}
 @media(max-width:760px){.nav{position:static;top:auto;backdrop-filter:none}.navInner{padding:10px 0}.filters{position:static;top:auto;max-height:none;overflow:visible;padding:10px 0 14px}.filters input,.filters select,.filters .btn{width:100%}.page{padding-top:18px}}

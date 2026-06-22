@@ -78,6 +78,13 @@
     'levitation-austin-2026':[30.2672,-97.7431]
   };
 
+  var SCH_KEY='production-atlas-schedule-v1';
+  function getSchedule(){try{return JSON.parse(localStorage.getItem(SCH_KEY)||'[]')}catch(e){return [];}}
+  function saveSchedule(ids){try{localStorage.setItem(SCH_KEY,JSON.stringify(ids))}catch(e){}}
+  window.addGig=function(id){var s=getSchedule();if(s.indexOf(id)<0)s.push(id);saveSchedule(s);renderPage();};
+  window.removeGig=function(id){saveSchedule(getSchedule().filter(function(x){return x!==id;}));renderPage();};
+  window.clearSchedule=function(){saveSchedule([]);renderPage();};
+
   function $(selector){return document.querySelector(selector)}
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
@@ -339,6 +346,75 @@
     if(list)list.innerHTML=data.length?data.map(opportunityCard).join(''):'<p>No opportunities match the current filter.</p>';
   }
 
+  function renderSchedule(){
+    var el=$('#app');
+    if(!el)return;
+    var schedule=getSchedule();
+    var YEAR_START=new Date(2026,0,1).getTime();
+    var YEAR_MS=new Date(2027,0,1).getTime()-YEAR_START;
+    var BRANCH_COLORS={staging:'#f5b400',rigging:'#e84393',lighting:'#7c5cbf',audio:'#2196f3',video_led:'#00bcd4',power:'#ff5722',site_ops:'#4caf50',logistics:'#795548',scenic:'#9e9e9e',backline:'#8bc34a',stage_mgmt:'#ffc107',production_office:'#607d8b'};
+    var MOS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function dateMs(str){if(!str)return null;var d=new Date(str);return isNaN(d.getTime())?null:d.getTime();}
+    function pct(ms){return Math.max(0,Math.min(100,(ms-YEAR_START)/YEAR_MS*100));}
+    function ganttBar(opportunity){
+      var s=dateMs(opportunity.startDate),e=dateMs(opportunity.endDate),approx=false;
+      if(!s){var m=Number(opportunity.month||0);if(!m)return '';s=new Date(2026,m-1,1).getTime();e=new Date(2026,m,1).getTime()-1;approx=true;}
+      else if(!e){e=s+86400000*2;}
+      var l=pct(s),w=Math.max(0.4,pct(e)-l);
+      var color=BRANCH_COLORS[(opportunity.departments||[])[0]]||'#f5b400';
+      return '<div class="gantt-bar'+(approx?' approx':'')+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%;background:'+color+'22;border-color:'+color+'" onclick="openOpportunity(\''+esc(opportunity.id)+'\')" title="'+esc(opportunity.name)+'"><span style="color:'+color+'">'+esc(opportunity.name.length>22?opportunity.name.substring(0,22)+'…':opportunity.name)+'</span></div>';
+    }
+    var scheduledOpps=schedule.map(function(id){return opportunities.find(function(o){return o.id===id;});}).filter(Boolean);
+    var totalDays=0,overlaps=0,ranges=[];
+    scheduledOpps.forEach(function(opportunity){
+      var s=dateMs(opportunity.startDate),e=dateMs(opportunity.endDate);
+      if(!s){var m=Number(opportunity.month||1);s=new Date(2026,m-1,1).getTime();e=new Date(2026,m,1).getTime()-1;}
+      if(!e)e=s+86400000*2;
+      totalDays+=Math.round((e-s)/86400000);
+      ranges.forEach(function(r){if(s<=r[1]&&e>=r[0])overlaps++;});
+      ranges.push([s,e]);
+    });
+    var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
+      return '<div class="gantt-row">'+
+        '<div class="gantt-cell" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span>'+esc(opportunity.name)+'</span></div>'+
+        '<div class="gantt-track"><div class="gantt-dividers">'+MOS.map(function(){return '<span></span>';}).join('')+'</div>'+ganttBar(opportunity)+'</div>'+
+        '<div class="gantt-action"><button class="btn" onclick="removeGig(\''+esc(opportunity.id)+'\')">✕</button></div>'+
+        '</div>';
+    }).join(''):'<div class="sched-empty">No events in your schedule yet — use the browse list below to add some.</div>';
+    var browseData=activeOpportunities();
+    var browseHtml=browseData.map(function(opportunity){
+      var inSched=schedule.indexOf(opportunity.id)>-1;
+      return '<article class="card">'+
+        '<h3>'+esc(opportunity.name)+'</h3>'+
+        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</div>'+
+        accomChips(opportunity)+
+        '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
+        '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
+        '<button class="btn '+(inSched?'sched-in':'sched-add')+'" onclick="'+(inSched?'removeGig':'addGig')+'(\''+esc(opportunity.id)+'\')">'+(inSched?'✓ In schedule':'+ Add to schedule')+'</button>'+
+        '</article>';
+    }).join('');
+    el.innerHTML=
+      '<h2>My 2026 Work Schedule</h2>'+
+      '<p class="lead">Build your personal year plan. Click any event in the Gantt to view detail; use ✕ to remove. Exact dates show solid bars; month-only estimates show dashed.</p>'+
+      '<div class="stats" style="grid-template-columns:repeat(3,1fr)">'+
+        '<div class="stat"><b>'+scheduledOpps.length+'</b><span>events planned</span></div>'+
+        '<div class="stat"><b>~'+totalDays+'</b><span>approx event days</span></div>'+
+        '<div class="stat"><b>'+overlaps+'</b><span>date overlaps</span></div>'+
+      '</div>'+
+      (scheduledOpps.length?'<button class="btn" style="margin:0 0 14px" onclick="clearSchedule()">Clear all</button>':'')+
+      '<div class="gantt">'+
+        '<div class="gantt-head">'+
+          '<div class="gantt-lhd">Festival</div>'+
+          '<div class="gantt-track-hd"><div class="gantt-months-hd">'+MOS.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div></div>'+
+          '<div class="gantt-rhd"></div>'+
+        '</div>'+
+        ganttRows+
+      '</div>'+
+      '<h2 style="margin-top:28px">Browse &amp; Add Events</h2>'+
+      '<p class="lead" style="margin-bottom:14px">Use the filters above to narrow the list. Green button = already in your schedule.</p>'+
+      '<div class="grid">'+(browseHtml||'<p>No opportunities match the current filter.</p>')+'</div>';
+  }
+
   function renderHome(){
     var el=$('#app');
     if(!el)return;
@@ -417,7 +493,7 @@
 
   function renderPage(){
     var page=document.body.dataset.page;
-    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap}[page]||renderHome)();
+    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap,schedule:renderSchedule}[page]||renderHome)();
   }
 
   function branchCard(opportunity,branchId){
