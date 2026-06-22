@@ -1,86 +1,165 @@
-# FestWorker Stagehand Work Atlas
+# Production Atlas
 
-Generated: 2026-06-21T01:30:26
+Generated: 2026-06-22
 
-This repository package contains the uploaded FestWorker web app, the deep research review, implementation planning, and the accessible conversation record.
+Production Atlas is a static GitHub Pages research dashboard for scouting long-term live-event production work targets, employer/vendor routes, IATSE/local routes, and department-specific production branches.
 
-## Repository contents
+## Live GitHub Pages site
+
+- **Pages:** https://thecrewblueprint-glitch.github.io/festival-atlas/
+
+Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, or Pages path changes, update this README in the same commit as the change.
+
+## Repository / branch
 
 ```text
-.
-├── README.md
-├── index.html
-└── research/
-    ├── deep-research-report.md
-    ├── implementation-roadmap.md
-    └── source-links.md
+Repository: thecrewblueprint-glitch/festival-atlas
+Active research branch: research-version
+Default branch: main
+Public site: https://thecrewblueprint-glitch.github.io/festival-atlas/
 ```
 
-## Conversation archive
+## Active app pages
 
-# Conversation Record
+```text
+index.html
+calendar.html
+opportunities.html
+branches.html
+employers.html
+iatse.html
+matrix.html
+analytics.html
+sources.html
+guide.html
+```
 
-## Accuracy note
+## Active shared files
 
-The user requested the entire conversation verbatim as the README. This package contains the conversation content available to ChatGPT in the active context plus the generated deep-research report. It may not include every hidden tool event, UI-only state, or messages outside the accessible conversation context. For a truly complete verbatim archive, export the conversation directly from ChatGPT and replace this README with that export.
+```text
+assets/atlas.css
+assets/atlas-core-v2.js
+assets/home-guide-page.js
+assets/guide-page.js
+data/packages/branch-research-manifest.js
+```
 
-## User request: Web app deep research review
+Compatibility shim still present:
 
-User:
+```text
+assets/atlas-core.js
+```
 
-> Deep research review this web app. Research how to make it better, the information on it, the functionality of it, everything about it. Make it the best tool for finding work as a 1099 freelance stagehand possible.
+Long-term target: every active page should continue loading `assets/atlas-core-v2.js` directly. Retire the shim only after active page compatibility is verified.
 
-Uploaded file:
+## Important data files
 
-- `index.html`
+```text
+data/packages/production-branches.js
+data/packages/opportunities-2026.js
+data/packages/us-employers.js
+data/iatse-us-local-directory.js
+data/packages/branch-research-manifest.js
+data/packages/branch-research-batch-*.js
+```
 
-Assistant action:
+## Branch research loading rule
 
-- Started a deep research review of the uploaded FestWorker web app.
-- Research scope included information architecture, dataset quality, UX/UI, search/filtering, 1099 stagehand market needs, union/nonunion hiring channels, production vendors, seasonal opportunity mapping, lead generation, maps, outreach CRM, analytics, mobile usability, accessibility, technical architecture, and implementation roadmap.
+Branch research data is loaded through:
 
-Deep research result:
+```text
+data/packages/branch-research-manifest.js
+```
 
-- See `research/deep-research-report.md`.
+When adding a new branch research batch:
 
-## User request: GitHub repository
+1. Create one data package in `data/packages/`.
+2. Create one matching report in `research/`.
+3. Add the data package filename to `data/packages/branch-research-manifest.js`.
+4. Keep the rule: one branch research data file equals one `window.*` export only.
+5. Run validation.
 
-User:
+Example data/report pair:
 
-> Create a GitHub repo with this entire conversation verbatim as the read me file. All research in a folder and the current index.HTML for the Web app
+```text
+data/packages/branch-research-batch-002-scenic.js
+research/branch-research-batch-002-scenic.md
+```
 
-Assistant constraints discovered:
+## Public-safety rules
 
-- Authenticated GitHub user: `thecrewblueprint-glitch`.
-- Available GitHub connector can create/update files in existing repositories.
-- Available GitHub connector does **not** expose a create-new-repository action.
-- No matching existing repo was found for “festworker stagehand work festival production.”
+Public data may include official/public links, employer homepages, confidence labels, public route notes, and next action notes.
 
-Assistant package output:
+Do **not** publish:
 
-- `README.md`
-- `index.html`
-- `research/deep-research-report.md`
-- `research/source-links.md`
-- `research/implementation-roadmap.md`
+```text
+private contacts
+phone numbers
+personal emails
+pay rates
+hotel/lodging details
+crew rumors
+private field notes
+NDA information
+client-sensitive information
+private referrals
+```
 
+Source links belong on:
 
-## Research summary
+```text
+sources.html
+```
 
-The current app is a strong static festival/company intelligence atlas, but it is not yet a complete work-finding system. The recommended transformation is to evolve it into a worker-first platform with profiles, credentials, availability, structured job posts, employer verification, saved searches, alerts, applications, and eventually 1099 paperwork support.
+Do not put source links inside public popups.
 
-See:
+## Validation
 
-- [`research/deep-research-report.md`](research/deep-research-report.md)
-- [`research/implementation-roadmap.md`](research/implementation-roadmap.md)
-- [`research/source-links.md`](research/source-links.md)
+```bash
+npm run validate:branch-research
+npm run validate:static-app
+npm run validate:all
+```
 
-## Current app
+GitHub Actions workflow:
 
-The current uploaded web app is saved at:
+```text
+.github/workflows/validate-branch-research.yml
+```
 
-- [`index.html`](index.html)
+The workflow runs:
 
-## Important limitation
+```bash
+npm run validate:all
+```
 
-The README contains the accessible conversation record and generated research. It is not guaranteed to be a complete verbatim export of every ChatGPT UI/tool event. To make it fully verbatim, export the conversation from ChatGPT and replace this README with that exported transcript.
+## Current research stop point
+
+Scenic research has reached:
+
+```text
+branch-research-batch-002-scenic
+```
+
+Latest Scenic files:
+
+```text
+data/packages/branch-research-batch-001-scenic.js
+research/branch-research-batch-001-scenic.md
+data/packages/branch-research-batch-002-scenic.js
+research/branch-research-batch-002-scenic.md
+```
+
+Next research task, when work resumes:
+
+```text
+Create Scenic batch 003 data and report.
+```
+
+## Maintenance notes
+
+- Keep this README current when the Pages URL or deployment path changes.
+- Keep the manifest current with every new branch research package.
+- Keep every data package paired with a matching research report.
+- Do not bypass the one-export-per-file rule.
+- Do not continue research until workflow failures are resolved.
