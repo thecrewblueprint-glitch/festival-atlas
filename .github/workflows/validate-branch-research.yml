@@ -1,4 +1,4 @@
-name: Validate branch research packages
+name: Validate Production Atlas
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  validate-branch-research:
+  validate-production-atlas:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -21,5 +21,5 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Validate package syntax and required fields
-        run: npm run validate:branch-research
+      - name: Validate branch research and static app
+        run: npm run validate:all
