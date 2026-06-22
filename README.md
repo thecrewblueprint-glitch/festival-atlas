@@ -16,6 +16,8 @@ Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, o
 Repository: thecrewblueprint-glitch/festival-atlas
 Active research branch: research-version
 Default branch: main
+Pages source: GitHub Actions
+Live preview source branch: research-version
 Public site: https://thecrewblueprint-glitch.github.io/festival-atlas/
 ```
 
@@ -125,13 +127,16 @@ GitHub Actions workflow:
 
 ```text
 .github/workflows/validate-branch-research.yml
+.github/workflows/deploy-research-version-pages.yml
 ```
 
-The workflow runs:
+The validation workflow runs:
 
 ```bash
 npm run validate:all
 ```
+
+The Pages deploy workflow publishes the `research-version` branch through GitHub Actions.
 
 ## Current research stop point
 
