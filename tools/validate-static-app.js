@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 const root = path.resolve(__dirname, '..');
+const packagesDir = path.join(root, 'data', 'packages');
+const researchDir = path.join(root, 'research');
+
 const requiredPages = [
   'index.html',
   'calendar.html',
@@ -11,11 +15,25 @@ const requiredPages = [
   'iatse.html',
   'matrix.html',
   'analytics.html',
-  'sources.html'
+  'sources.html',
+  'guide.html'
 ];
+
+const requiredSharedFiles = [
+  'assets/atlas.css',
+  'assets/atlas-core-v2.js',
+  'data/packages/branch-research-manifest.js',
+  'data/packages/production-branches.js',
+  'data/packages/opportunities-2026.js',
+  'data/packages/us-employers.js',
+  'data/iatse-us-local-directory.js',
+  'archive/README.md'
+];
+
 const retiredRuntimeReferences = [
   'data/packages/branch-research-runtime.js',
-  'data/packages/guide-for-use-runtime.js'
+  'data/packages/guide-for-use-runtime.js',
+  'assets/atlas-core.js'
 ];
 
 let fail = [];
@@ -41,52 +59,66 @@ function caution(condition, message) {
   if (!condition) warn.push(message);
 }
 
-requiredPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
-check(exists('assets/atlas.css'), 'Missing assets/atlas.css');
-check(exists('assets/atlas-core-v2.js'), 'Missing assets/atlas-core-v2.js');
-check(exists('data/packages/production-branches.js'), 'Missing data/packages/production-branches.js');
-check(exists('data/packages/opportunities-2026.js'), 'Missing data/packages/opportunities-2026.js');
-check(exists('data/packages/us-employers.js'), 'Missing data/packages/us-employers.js');
-check(exists('data/iatse-us-local-directory.js'), 'Missing data/iatse-us-local-directory.js');
-check(exists('archive/README.md'), 'Missing archive/README.md');
+function listBranchPackages() {
+  if (!fs.existsSync(packagesDir)) return [];
+  return fs.readdirSync(packagesDir)
+    .filter((name) => /^branch-research-batch-.*\.js$/.test(name))
+    .sort();
+}
 
-const pageText = requiredPages.filter(exists).map(file => ({ file, content: read(file) }));
+requiredPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
+requiredSharedFiles.forEach(sharedFile => check(exists(sharedFile), `Missing required shared file: ${sharedFile}`));
+
+const pageText = requiredPages.filter(exists).map(page => ({ file: page, content: read(page) }));
 
 pageText.forEach(({ file, content }) => {
   check(content.includes('assets/atlas.css'), `${file} does not load shared CSS`);
-  caution(
-    content.includes('assets/atlas-core-v2.js') || content.includes('assets/atlas-core.js'),
-    `${file} does not load an app core`
-  );
+  check(content.includes('assets/atlas-core-v2.js'), `${file} does not load direct atlas-core-v2.js`);
+  check(!content.includes('assets/atlas-core.js'), `${file} still loads compatibility core shim`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
 });
 
 const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js') : '';
-[
-  'branch-research-batch-001-staging.js',
-  'branch-research-batch-005-audio.js',
-  'branch-research-batch-003-video-led.js',
-  'branch-research-batch-004-video-led.js',
-  'branch-research-batch-005-video-led.js'
-].forEach(file => check(core.includes(file), `atlas-core-v2.js does not load ${file}`));
-
+check(core.includes('function loadBranchManifest'), 'atlas-core-v2.js does not load branch-research-manifest.js');
+check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not reference BRANCH_RESEARCH_MANIFEST');
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
-check(exists('data/packages/branch-research-batch-005-video-led.js'), 'Missing latest Video / LED batch 005 data package');
-check(exists('research/branch-research-batch-005-video-led.md'), 'Missing latest Video / LED batch 005 report');
+check(!core.includes('class="chip'), 'atlas-core-v2.js still renders chip/badge classes');
+check(!/openModal\([\s\S]*sourceLinks/.test(core), 'atlas-core-v2.js appears to render sourceLinks inside modal content');
 
-const activePageCoreRefs = pageText.map(({ file, content }) => ({
-  file,
-  usesCleanCore: content.includes('assets/atlas-core-v2.js'),
-  usesCompatibilityCore: content.includes('assets/atlas-core.js')
-}));
+const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
+check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
+check(!/\.chips\b/.test(css), 'assets/atlas.css still contains chip container styles');
 
-activePageCoreRefs.forEach(({ file, usesCleanCore, usesCompatibilityCore }) => {
-  caution(usesCleanCore, `${file} uses compatibility core instead of direct atlas-core-v2.js`);
-  check(usesCleanCore || usesCompatibilityCore, `${file} has no core script`);
+const branchPackages = listBranchPackages();
+check(branchPackages.length > 0, 'No branch research package files found');
+
+let manifestFiles = [];
+if (exists('data/packages/branch-research-manifest.js')) {
+  const source = read('data/packages/branch-research-manifest.js');
+  const sandbox = { window: {} };
+  try {
+    vm.runInNewContext(source, sandbox, { filename: 'branch-research-manifest.js' });
+    if (Array.isArray(sandbox.window.BRANCH_RESEARCH_MANIFEST)) {
+      manifestFiles = sandbox.window.BRANCH_RESEARCH_MANIFEST.slice().sort();
+    } else {
+      fail.push('branch-research-manifest.js does not export window.BRANCH_RESEARCH_MANIFEST as an array');
+    }
+  } catch (error) {
+    fail.push(`branch-research-manifest.js syntax/runtime error: ${error.message}`);
+  }
+}
+
+branchPackages.forEach(name => {
+  check(manifestFiles.includes(name), `Manifest missing data package: ${name}`);
+  const report = path.join(researchDir, name.replace(/\.js$/, '.md'));
+  check(fs.existsSync(report), `Missing research report for data package: research/${name.replace(/\.js$/, '.md')}`);
+});
+manifestFiles.forEach(name => {
+  check(branchPackages.includes(name), `Manifest references missing data package: ${name}`);
 });
 
 const legacyRuntime = exists('data/packages/branch-research-runtime.js') ? read('data/packages/branch-research-runtime.js') : '';
@@ -105,4 +137,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log('Production Atlas static app validation passed.');
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports.`);
