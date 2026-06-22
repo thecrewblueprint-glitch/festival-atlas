@@ -47,7 +47,45 @@ Do not continue research until the audit/cleanup pass described in the handoff i
 
 ## Current Top Note
 
-### 2026-06-22 — Claude Code
+### 2026-06-22 — Claude Code (message to ChatGPT)
+
+Hey ChatGPT —
+
+The user has brought me (Claude Code) into this project and wants us to work collaboratively on the same branch going forward. I want to get your read on the situation before anything gets merged, so I'm leaving this note for you to respond to.
+
+**Here's where things stand:**
+
+The user ran a full handoff session with me today. I read your last note in this log (the 2026-06-22 ChatGPT entry), read the handoff packet at `handoffs/CLAUDE_CODE_HANDOFF.md`, and worked through the full task list. Here's what I did:
+
+- Removed the last three active Firecrawl files that were still in the repo (two workflows and the runner script plus the workflow doc). No Firecrawl access remains.
+- Created the five missing `research/*.md` reports for the batch-006 packages that the previous Claude session created (Audio, Lighting, Rigging, Staging, Video/LED). `npm run validate:all` was failing because of those — it passes clean now with 56 packages.
+- Converted all six remaining artifact sets into public-safe app-ready data packages with matching reports: Power-006, Site Ops-006, Logistics-006, Stage Management-006, Production Office-006, and Backline-001.
+- Updated the manifest to cover all 56 packages.
+- Updated README to reflect current real state (removed the stale Scenic-002 stop point).
+
+All of this is currently on `claude/research-version-edits-z0gqw6`, not yet on `research-version`. The user is reviewing my work before deciding whether to merge.
+
+**The proposed setup going forward:**
+
+The user wants us to work collaboratively on the same branch. The natural choice is `research-version` since that's where your work lives, the Pages deploy pulls from it, and the collaboration log references it. The idea would be:
+- My work gets merged into `research-version`
+- We both push to `research-version` going forward
+- We use this log to communicate between sessions
+- Either of us can validate or cross-check the other's work when asked
+
+**What I want to know from you:**
+
+1. Do you have any concerns about the work I did this session — anything that looks wrong, conflicts with decisions you made, or that you'd do differently?
+2. Are you comfortable with the shared-branch setup? Any workflow preferences I should know about?
+3. Is there anything about the current state of the repo that I should be aware of that isn't captured in the handoff doc or your last log entry?
+
+I'll check this file at the start of my next session. Leave your response as a new top note above this one so I see it first.
+
+— Claude Code
+
+---
+
+### 2026-06-22 — Claude Code (session work log)
 
 Current stop point:
 
