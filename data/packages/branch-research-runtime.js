@@ -6,7 +6,8 @@
     'branch-research-batch-001-staging.js','branch-research-batch-002-staging.js','branch-research-batch-003-staging.js','branch-research-batch-004-staging.js','branch-research-batch-005-staging.js',
     'branch-research-batch-001-rigging.js','branch-research-batch-002-rigging.js','branch-research-batch-003-rigging.js','branch-research-batch-004-rigging.js','branch-research-batch-005-rigging.js',
     'branch-research-batch-001-lighting.js','branch-research-batch-002-lighting.js','branch-research-batch-003-lighting.js','branch-research-batch-004-lighting.js','branch-research-batch-005-lighting.js',
-    'branch-research-batch-001-audio.js','branch-research-batch-002-audio.js','branch-research-batch-003-audio.js','branch-research-batch-004-audio.js','branch-research-batch-005-audio.js'
+    'branch-research-batch-001-audio.js','branch-research-batch-002-audio.js','branch-research-batch-003-audio.js','branch-research-batch-004-audio.js','branch-research-batch-005-audio.js',
+    'branch-research-batch-001-video-led.js'
   ];
 
   function safeText(value){
@@ -39,7 +40,7 @@
   function loadPackages(){
     if(window.__branchResearchPackagesLoaded)return window.__branchResearchPackagesLoaded;
     window.__branchResearchPackagesLoaded=PACKAGE_FILES.reduce(function(chain,file){
-      return chain.then(function(){return loadScript('data/packages/'+file+'?v=branchresearch1');});
+      return chain.then(function(){return loadScript('data/packages/'+file+'?v=branchresearch2');});
     },Promise.resolve()).then(function(){
       window.BRANCH_RESEARCH_INDEX=buildIndex();
       return window.BRANCH_RESEARCH_INDEX;
@@ -109,11 +110,11 @@
       var sources=(record.sourceLinks||[]).filter(function(source){return source.url;}).slice(0,3).map(function(source){
         return '<a class="chip gray" href="'+safeText(source.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+safeText(source.label||'source')+' ↗</a>';
       }).join('');
-      return '<div class="branch"><h4>'+safeText(record.branchName||branch.name)+'</h4>'+
-        '<div class="chips"><span class="chip warn">'+safeText(String(record.status||'route_lead').replaceAll('_',' '))+'</span><span class="chip gray">'+safeText(String(record.confidence||'vendor_unconfirmed').replaceAll('_',' '))+'</span></div>'+
-        '<p><b>Likely route:</b> '+safeText(record.branchDisplayText||record.evidenceSummary||'Research route stored in branch package.')+'</p>'+
-        '<p class="sub"><b>Next:</b> '+safeText(record.nextAction||'Verify vendor, labor route, and source confidence before outreach.')+'</p>'+
-        '<div class="chips">'+(leads||'<span class="chip gray">No public leads stored</span>')+'</div>'+
+      return '<div class="branch"><h4>'+safeText(record.branchName||branch.name)+'</h4>'+ 
+        '<div class="chips"><span class="chip warn">'+safeText(String(record.status||'route_lead').replaceAll('_',' '))+'</span><span class="chip gray">'+safeText(String(record.confidence||'vendor_unconfirmed').replaceAll('_',' '))+'</span></div>'+ 
+        '<p><b>Likely route:</b> '+safeText(record.branchDisplayText||record.evidenceSummary||'Research route stored in branch package.')+'</p>'+ 
+        '<p class="sub"><b>Next:</b> '+safeText(record.nextAction||'Verify vendor, labor route, and source confidence before outreach.')+'</p>'+ 
+        '<div class="chips">'+(leads||'<span class="chip gray">No public leads stored</span>')+'</div>'+ 
         '<div class="chips">'+(sources||'<span class="chip gray">No source links stored</span>')+'</div></div>';
     }
     return '<div class="branch"><h4>'+safeText(branch.name)+'</h4><p class="sub">'+safeText(branch.question||'Verify branch route')+'</p><div class="chips"><span class="chip warn">No event-specific branch record yet</span></div><p class="sub">Next research: confirm actual U.S. vendor/labor route with source URL, date, and confidence label.</p></div>';
@@ -138,13 +139,13 @@
       loadPackages().then(function(){
         var branchHtml=(opportunity.departments||[]).map(function(branchId){return branchCard(opportunity,branchId);}).join('');
         var badges=(typeof opportunityBadges==='function')?opportunityBadges(opportunity):'';
-        var html='<h2>'+safeText(opportunity.name)+'</h2>'+
-          '<p class="sub">'+safeText(opportunity.city)+', '+safeText(opportunity.state)+' • '+safeText(opportunity.venue||'venue verify')+' • '+safeText(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+safeText(opportunity.endDate):'')+'</p>'+
-          '<div class="chips">'+badges+'</div>'+
-          '<div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+safeText((opportunity.producer||{}).name||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+safeText(opportunity.longTermValueScore||0)+'/100</div><div class="detail"><b>Lodging</b><br>'+safeText(labels((opportunity.accommodation||{}).lodgingLikely))+'</div><div class="detail"><b>Travel / per diem</b><br>Travel: '+safeText(labels((opportunity.travelCompensation||{}).travelPaid))+'<br>Per diem: '+safeText(labels((opportunity.travelCompensation||{}).perDiem))+'</div></div>'+
-          '<p><b>Public confidence:</b> '+safeText(labels(opportunity.confidence))+' • <b>source type:</b> '+safeText(labels(opportunity.sourceType))+' • <b>safety:</b> '+safeText(labels(opportunity.publishSafety))+'</p>'+
-          '<p><b>Next human action:</b> '+safeText(opportunity.nextHumanAction||'Verify before outreach.')+'</p>'+
-          '<div class="chips">'+sourceChips(opportunity)+'</div>'+
+        var html='<h2>'+safeText(opportunity.name)+'</h2>'+ 
+          '<p class="sub">'+safeText(opportunity.city)+', '+safeText(opportunity.state)+' • '+safeText(opportunity.venue||'venue verify')+' • '+safeText(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+safeText(opportunity.endDate):'')+'</p>'+ 
+          '<div class="chips">'+badges+'</div>'+ 
+          '<div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+safeText((opportunity.producer||{}).name||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+safeText(opportunity.longTermValueScore||0)+'/100</div><div class="detail"><b>Lodging</b><br>'+safeText(labels((opportunity.accommodation||{}).lodgingLikely))+'</div><div class="detail"><b>Travel / per diem</b><br>Travel: '+safeText(labels((opportunity.travelCompensation||{}).travelPaid))+'<br>Per diem: '+safeText(labels((opportunity.travelCompensation||{}).perDiem))+'</div></div>'+ 
+          '<p><b>Public confidence:</b> '+safeText(labels(opportunity.confidence))+' • <b>source type:</b> '+safeText(labels(opportunity.sourceType))+' • <b>safety:</b> '+safeText(labels(opportunity.publishSafety))+'</p>'+ 
+          '<p><b>Next human action:</b> '+safeText(opportunity.nextHumanAction||'Verify before outreach.')+'</p>'+ 
+          '<div class="chips">'+sourceChips(opportunity)+'</div>'+ 
           '<h3>Mapped production branches</h3>'+branchHtml;
         window.openModal(html);
       });
