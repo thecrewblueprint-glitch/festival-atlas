@@ -2,19 +2,25 @@
 
 Date: 2026-06-21  
 Branch: `research-version`  
-Scope: multi-page static app shell, shared styles, shared JS core, popup behavior, source-link handling, and branch-research loading.
+Scope: multi-page static app shell, shared styles, shared JS core, popup behavior, source-link handling, mobile usability, and branch-research loading.
 
 ---
 
 ## Audit Summary
 
-The app was partially converted from a single-page tab interface into a multi-page static site, but several pages still loaded the older shared core and older navigation structure. This meant the clean-popup behavior and source separation rule were not consistently active across all pages.
+Production Atlas has been stabilized as a multi-page static GitHub Pages app. The audit focused on removing the single-page-tab fragility, cleaning popup behavior, keeping source links out of popup windows, improving mobile usability, and making future research additions safer.
 
-This audit pass focused on stabilizing the multi-page format so future branch research can be added without repeatedly editing a giant compressed `index.html` file.
+The current active architecture is:
+
+- multi-page static HTML
+- shared stylesheet: `assets/atlas.css`
+- clean shared runtime: `assets/atlas-core-v2.js`
+- public source list isolated on `sources.html`
+- branch research stored as data packages under `data/packages/`
 
 ---
 
-## Main Findings
+## Main Findings and Fixes
 
 ### 1. Two competing shared cores existed
 
@@ -23,13 +29,15 @@ Files observed:
 - `assets/atlas-core.js`
 - `assets/atlas-core-v2.js`
 
-`atlas-core-v2.js` is now the preferred core because it removes public source lists from popups and includes a dedicated `sources` page renderer.
+`atlas-core-v2.js` is now the preferred active core because it removes public source lists from popups and includes a dedicated `sources` page renderer.
 
-Status: partially fixed.
+Status: fixed for active pages.
 
-Pages now switched to `atlas-core-v2.js` during this pass:
+Active pages now migrated to `assets/atlas-core-v2.js`:
 
+- `index.html`
 - `calendar.html`
+- `opportunities.html`
 - `branches.html`
 - `employers.html`
 - `iatse.html`
@@ -38,16 +46,13 @@ Pages now switched to `atlas-core-v2.js` during this pass:
 - `guide.html`
 - `sources.html`
 
-Known remaining issue:
-
-- `index.html` direct update was blocked by the connector safety filter during this audit pass, so it may still load `assets/atlas-core.js` until manually patched or patched through a safer future commit.
-- `opportunities.html` direct update was also blocked once by the connector safety filter and needs re-checking before final closeout.
+`assets/atlas-core.js` remains in the repository as a legacy rollback file, but active pages should not load it.
 
 ---
 
 ### 2. Sources were appearing inside popups
 
-The user requirement is now:
+User requirement:
 
 > Do not list sources in popup windows. Keep popups clean and relevant. If sources need to be revealed, move them to a separate organized page.
 
@@ -57,7 +62,7 @@ Fix applied:
 - A dedicated `sources.html` page was created.
 - `sources.html` renders organized opportunity and branch source links in a table.
 
-Status: fixed on pages using `atlas-core-v2.js`.
+Status: fixed for active pages.
 
 ---
 
@@ -79,15 +84,17 @@ Status: fixed.
 
 ### 4. Multi-page shell was too compressed
 
-Some page shells were generated as single long lines. This made future audits and patching harder.
+Some page shells were originally generated as single long lines. This made future audits and patching harder.
 
 Fix applied:
 
-- `calendar.html` was rewritten into a cleaner, line-broken shell.
+- `index.html` was rewritten into a cleaner home/guide shell.
+- `calendar.html` was rewritten into a cleaner shell.
+- `opportunities.html` was rewritten into a cleaner shell.
 - `branches.html` was rewritten into a cleaner shell.
-- Other pages were patched to use the clean core; further formatting cleanup is recommended but not blocking.
+- Other pages were patched to use the clean core.
 
-Status: partially fixed.
+Status: improved. Further formatting cleanup can still be done later, but it is not blocking.
 
 ---
 
@@ -97,7 +104,31 @@ Fix applied:
 
 - `assets/atlas-core-v2.js` includes `branch-research-batch-003-video-led.js` in its branch file list.
 
-Status: fixed for pages using `atlas-core-v2.js`.
+Current branch-research coverage loaded by the clean core:
+
+- Staging batches 001-005
+- Rigging batches 001-005
+- Lighting batches 001-005
+- Audio batches 001-005
+- Video / LED batches 001-003
+
+Status: fixed.
+
+---
+
+### 6. Legacy bridge code still exists in `us-employers.js`
+
+`us-employers.js` still contains a legacy popup bridge. Active pages neutralize that bridge by setting:
+
+```html
+<script>window.__branchPopupBridgeInstalled=true;window.BRANCH_EMPLOYER_LEADS={branches:{}};</script>
+```
+
+before loading `us-employers.js`.
+
+Status: managed. Not currently breaking active pages.
+
+Recommendation: remove that legacy bridge from `us-employers.js` in a future targeted cleanup after confirming all active pages load `atlas-core-v2.js` in production.
 
 ---
 
@@ -123,39 +154,65 @@ Status: architecture supports public-safe separation.
 
 Remaining caution:
 
-- URL fields from source links and employer links are rendered as href attributes. Keep source URLs public and trusted.
+- URL fields from source links and employer links are rendered as `href` attributes.
+- Keep source URLs public and trusted.
 - Avoid adding unreviewed user-submitted HTML into data files.
 
-Status: acceptable for static internal research tool, but source URL validation could be improved later.
+Status: acceptable for a static public research dashboard. Source URL validation could be improved later.
+
+---
+
+## Current Active Page Expectations
+
+Every active page should load:
+
+```text
+assets/atlas.css
+assets/atlas-core-v2.js
+```
+
+Home also loads:
+
+```text
+assets/home-guide-page.js
+```
+
+Guide archive also loads:
+
+```text
+assets/guide-page.js
+```
 
 ---
 
 ## Recommended Next Cleanup
 
-1. Patch `index.html` to use `assets/atlas-core-v2.js`.
-2. Patch `opportunities.html` to use `assets/atlas-core-v2.js`.
-3. Decide whether to delete or archive `assets/atlas-core.js` after all pages are migrated.
-4. Remove older runtime patch files if no page loads them anymore:
+1. Browser-test the deployed GitHub Pages site on mobile and desktop.
+2. Confirm all active pages render with `assets/atlas-core-v2.js`.
+3. After production verification, remove or archive unused legacy files:
+   - `assets/atlas-core.js`
    - `data/packages/branch-research-runtime.js`
    - `data/packages/guide-for-use-runtime.js`
-   - any unused branch-tab or contractor analytics runtime files not referenced by current pages.
-5. Run a final page inventory to ensure every page points to the same shared core.
-6. Add a small static validation script to check page links and required data files.
+   - any unused branch-tab or contractor analytics runtime files not referenced by active pages
+4. Add a static validation script that checks:
+   - all page links exist
+   - all required data files exist
+   - all branch-research package names in `atlas-core-v2.js` resolve
+   - no active page loads `assets/atlas-core.js`
 
 ---
 
 ## Current Status
 
-The app is substantially cleaner and more maintainable after this pass.
+The app is now materially cleaner and more maintainable:
 
-The main functional direction is correct:
+- Multi-page static site is active.
+- Shared CSS is active.
+- Clean shared JS core is active.
+- Popups are cleaner and no longer list sources.
+- Sources are moved to a dedicated page.
+- Branch research loads from data packages.
+- Mobile search/filter stickiness was fixed.
+- Public/private boundary is preserved.
 
-- Multi-page static site.
-- Shared CSS.
-- Shared JS core.
-- Clean popups.
-- Sources moved to a dedicated page.
-- Branch research loaded from data packages.
-- Public/private boundary preserved.
-
-Final cleanup is still needed on `index.html` and possibly `opportunities.html` because connector safety filtering blocked one or more direct updates.
+Final production verification should be done in a browser before deleting legacy rollback files.
