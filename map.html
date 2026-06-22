@@ -2,45 +2,49 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Production Atlas — Calendar</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Production Atlas — Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="assets/atlas.css">
 </head>
-<body data-page="calendar">
+<body data-page="map">
   <header class="hero">
     <div class="wrap">
       <div class="eyebrow">Production Atlas</div>
-      <h1>Opportunity Calendar</h1>
-      <p>Month-by-month work target planning for long-term live-event opportunities.</p>
+      <h1>Opportunity Map</h1>
+      <p>Active 2026 work targets by confirmed location. Filter by state or accommodation status. Click any marker to open details.</p>
     </div>
   </header>
-
   <nav class="nav">
     <div class="wrap">
       <div class="navInner">
         <a href="index.html">Home / Guide</a>
-        <a class="active" href="calendar.html">Calendar</a>
+        <a href="calendar.html">Calendar</a>
         <a href="opportunities.html">Opportunities</a>
         <a href="branches.html">Branches</a>
         <a href="employers.html">Employers</a>
         <a href="iatse.html">IATSE Locals</a>
         <a href="matrix.html">Matrix</a>
         <a href="analytics.html">Analytics</a>
-        <a href="sources.html">Sources</a><a href="map.html">Map</a>
+        <a href="sources.html">Sources</a>
+        <a class="active" href="map.html">Map</a>
         <a href="schedule.html">Schedule</a>
       </div>
-      <div id="filters" class="filters">
-        <input id="q" placeholder="Search opportunity, city, branch, employer...">
-        <select id="branchFilter"><option value="">All branches</option></select>
-        <select id="regionFilter"><option value="">All regions</option></select>
-        <select id="monthFilter"><option value="">All months</option></select>
-        <select id="employerTypeFilter"><option value="">All employer types</option></select>
-        <select id="accommodationFilter"><option value="">All accommodations</option><option value="lodging_possible">Lodging / camping possible</option><option value="camping">On-site camping</option><option value="lodging_research">Accommodation research priority</option><option value="travel_possible">Travel paid possible</option><option value="per_diem_possible">Per diem possible</option></select>
+      <div id="filters" class="filters filters-compact">
+        <input id="q" placeholder="Search festival, city, state...">
+        <select id="stateFilter"><option value="">All states</option></select>
+        <select id="accommodationFilter">
+          <option value="">All accommodations</option>
+          <option value="lodging_possible">Lodging / camping possible</option>
+          <option value="camping">On-site camping</option>
+          <option value="lodging_research">Accommodation research priority</option>
+          <option value="travel_possible">Travel paid possible</option>
+          <option value="per_diem_possible">Per diem possible</option>
+        </select>
         <button class="btn" id="reset">Reset</button>
       </div>
     </div>
   </nav>
-
   <main class="wrap page" id="app"></main>
   <div id="stats" class="hiddenRuntime"></div>
   <div id="calendarGrid" class="hiddenRuntime"></div>
@@ -50,13 +54,13 @@
       <div id="modalContent"></div>
     </div>
   </div>
-  <footer class="wrap">Production Atlas calendar page.</footer>
-
+  <footer class="wrap">Production Atlas map page.</footer>
+  <script>window.__branchPopupBridgeInstalled=true;window.BRANCH_EMPLOYER_LEADS={branches:{}};</script>
   <script src="data/packages/production-branches.js?v=multi1"></script>
   <script src="data/packages/opportunities-2026.js?v=multi1"></script>
   <script src="data/packages/us-employers.js?v=multi1"></script>
   <script src="data/iatse-us-local-directory.js?v=multi1"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="assets/atlas-core-v2.js?v=multi3"></script>
-  <script src="assets/approx-date-labels.js?v=approx1"></script>
 </body>
 </html>

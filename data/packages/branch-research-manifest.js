@@ -1,22 +1,58 @@
-(function(){
-  var branchBatchCounts = {
-    'staging': 6,
-    'rigging': 6,
-    'lighting': 6,
-    'audio': 6,
-    'video-led': 6,
-    'power': 5,
-    'site-ops': 5,
-    'logistics': 5,
-    'scenic': 5
-  };
-
-  var files = [];
-  Object.keys(branchBatchCounts).forEach(function(branchId){
-    for(var batchNumber = 1; batchNumber <= branchBatchCounts[branchId]; batchNumber += 1){
-      files.push('branch-research-batch-' + String(batchNumber).padStart(3,'0') + '-' + branchId + '.js');
-    }
-  });
-
-  window.BRANCH_RESEARCH_MANIFEST = files;
-})();
+window.BRANCH_RESEARCH_MANIFEST = [
+  'branch-research-batch-001-staging.js',
+  'branch-research-batch-002-staging.js',
+  'branch-research-batch-003-staging.js',
+  'branch-research-batch-004-staging.js',
+  'branch-research-batch-005-staging.js',
+  'branch-research-batch-006-staging.js',
+  'branch-research-batch-001-rigging.js',
+  'branch-research-batch-002-rigging.js',
+  'branch-research-batch-003-rigging.js',
+  'branch-research-batch-004-rigging.js',
+  'branch-research-batch-005-rigging.js',
+  'branch-research-batch-006-rigging.js',
+  'branch-research-batch-001-lighting.js',
+  'branch-research-batch-002-lighting.js',
+  'branch-research-batch-003-lighting.js',
+  'branch-research-batch-004-lighting.js',
+  'branch-research-batch-005-lighting.js',
+  'branch-research-batch-006-lighting.js',
+  'branch-research-batch-001-audio.js',
+  'branch-research-batch-002-audio.js',
+  'branch-research-batch-003-audio.js',
+  'branch-research-batch-004-audio.js',
+  'branch-research-batch-005-audio.js',
+  'branch-research-batch-006-audio.js',
+  'branch-research-batch-001-video-led.js',
+  'branch-research-batch-002-video-led.js',
+  'branch-research-batch-003-video-led.js',
+  'branch-research-batch-004-video-led.js',
+  'branch-research-batch-005-video-led.js',
+  'branch-research-batch-006-video-led.js',
+  'branch-research-batch-001-power.js',
+  'branch-research-batch-002-power.js',
+  'branch-research-batch-003-power.js',
+  'branch-research-batch-004-power.js',
+  'branch-research-batch-005-power.js',
+  'branch-research-batch-001-site-ops.js',
+  'branch-research-batch-002-site-ops.js',
+  'branch-research-batch-003-site-ops.js',
+  'branch-research-batch-004-site-ops.js',
+  'branch-research-batch-005-site-ops.js',
+  'branch-research-batch-001-logistics.js',
+  'branch-research-batch-002-logistics.js',
+  'branch-research-batch-003-logistics.js',
+  'branch-research-batch-004-logistics.js',
+  'branch-research-batch-005-logistics.js',
+  'branch-research-batch-001-scenic.js',
+  'branch-research-batch-002-scenic.js',
+  'branch-research-batch-003-scenic.js',
+  'branch-research-batch-004-scenic.js',
+  'branch-research-batch-005-scenic.js',
+  'branch-research-batch-006-power.js',
+  'branch-research-batch-006-site-ops.js',
+  'branch-research-batch-006-logistics.js',
+  'branch-research-batch-006-stage-mgmt.js',
+  'branch-research-batch-006-production-office.js',
+  'branch-research-batch-001-backline.js'
+];

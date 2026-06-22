@@ -18,6 +18,72 @@
   var employers=[];
   var iatseLocals=[];
   var branchIndex={records:[],byKey:{}};
+  var _leafMap=null;
+  var _leafLayer=null;
+  var OPP_COORDS={
+    'coachella-2026':[33.7175,-116.2167],
+    'stagecoach-2026':[33.7205,-116.2167],
+    'ultra-miami-2026':[25.7742,-80.1869],
+    'edc-las-vegas-2026':[36.2719,-115.0104],
+    'bonnaroo-2026':[35.4823,-86.0880],
+    'cma-fest-2026':[36.1627,-86.7816],
+    'electric-forest-2026':[43.5253,-85.8744],
+    'summerfest-2026':[43.0386,-87.9031],
+    'lollapalooza-chicago-2026':[41.8657,-87.6215],
+    'austin-city-limits-2026':[30.2500,-97.7692],
+    'bourbon-and-beyond-2026':[38.2527,-85.7585],
+    'louder-than-life-2026':[38.2557,-85.7585],
+    'welcome-to-rockville-2026':[29.2108,-81.0228],
+    'sonic-temple-2026':[39.9612,-82.9988],
+    'inkcarceration-2026':[40.7586,-82.5154],
+    'aftershock-2026':[38.5816,-121.4944],
+    'governors-ball-2026':[40.7282,-73.7949],
+    'shaky-knees-2026':[33.7490,-84.3880],
+    'portola-2026':[37.7549,-122.3795],
+    'edc-orlando-2026':[28.5383,-81.3792],
+    'hinterland-2026':[41.2850,-93.8046],
+    'new-orleans-jazz-heritage-2026':[29.9858,-90.0908],
+    'bottlerock-napa-2026':[38.2975,-122.2869],
+    'kilby-block-party-2026':[40.7608,-111.8910],
+    'railbird-2026':[38.0406,-84.5037],
+    'oceans-calling-2026':[38.3365,-75.0849],
+    'sea-hear-now-2026':[40.2204,-74.0121],
+    'dreamville-2026':[35.7796,-78.6382],
+    'roots-picnic-2026':[39.9526,-75.1652],
+    'iii-points-2026':[25.7989,-80.2087],
+    'hard-summer-2026':[33.9617,-118.3531],
+    'beyond-wonderland-socal-2026':[34.1083,-117.2898],
+    'north-coast-2026':[41.7442,-87.8087],
+    'breakaway-2026':null,
+    'country-thunder-us-2026':null,
+    'rock-fest-wisconsin-2026':[44.9505,-91.1457],
+    'hulaween-2026':[30.3889,-82.9667],
+    'high-sierra-2026':[39.2191,-121.0608],
+    'm3f-2026':[33.4874,-112.0712],
+    'newport-folk-2026':[41.4901,-71.3128],
+    'newport-jazz-2026':[41.4931,-71.3128],
+    'levitate-2026':[42.0915,-70.7076],
+    'treefort-2026':[43.6150,-116.2023],
+    'capitol-hill-block-party-2026':[47.6130,-122.3198],
+    'pickathon-2026':[45.4426,-122.5271],
+    'telluride-bluegrass-2026':[37.9375,-107.8123],
+    'floydfest-2026':[37.0454,-80.0401],
+    'rocklahoma-2026':[36.3095,-95.3164],
+    'lights-all-night-2026':[32.7767,-96.7970],
+    'countdown-nye-2026':[34.1113,-117.2898],
+    'dreamstate-socal-2026':[33.7701,-118.1937],
+    'crssd-2026':[32.7157,-117.1611],
+    'okechobee-2026':[27.2436,-80.8298],
+    'sick-new-world-2026':[36.1699,-115.1398],
+    'levitation-austin-2026':[30.2672,-97.7431]
+  };
+
+  var SCH_KEY='production-atlas-schedule-v1';
+  function getSchedule(){try{return JSON.parse(localStorage.getItem(SCH_KEY)||'[]')}catch(e){return [];}}
+  function saveSchedule(ids){try{localStorage.setItem(SCH_KEY,JSON.stringify(ids))}catch(e){}}
+  window.addGig=function(id){var s=getSchedule();if(s.indexOf(id)<0)s.push(id);saveSchedule(s);renderPage();};
+  window.removeGig=function(id){saveSchedule(getSchedule().filter(function(x){return x!==id;}));renderPage();};
+  window.clearSchedule=function(){saveSchedule([]);renderPage();};
 
   function $(selector){return document.querySelector(selector)}
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
@@ -98,8 +164,27 @@
       branch:(($('#branchFilter')||{}).value||''),
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
-      type:(($('#employerTypeFilter')||{}).value||'')
+      type:(($('#employerTypeFilter')||{}).value||''),
+      accommodation:(($('#accommodationFilter')||{}).value||''),
+      state:(($('#stateFilter')||{}).value||'')
     };
+  }
+
+  function accFilterMatch(opportunity,val){
+    if(!val)return true;
+    var accom=opportunity.accommodation||{};
+    var travel=opportunity.travelCompensation||{};
+    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
+    var confirmed=['yes','confirmed','included'];
+    var positive=['possible','likely'].concat(confirmed);
+    if(val==='lodging_possible')return positive.indexOf(lodging)>-1||lodgingType.indexOf('camp')>-1;
+    if(val==='camping')return lodgingType.indexOf('camp')>-1||actions.indexOf('camping')>-1;
+    if(val==='lodging_research')return actions.indexOf('lodging')>-1||actions.indexOf('camping')>-1||actions.indexOf('per diem')>-1||actions.indexOf('travel')>-1;
+    if(val==='travel_possible')return positive.indexOf(String(travel.travelPaid||'unknown').toLowerCase())>-1;
+    if(val==='per_diem_possible')return positive.indexOf(String(travel.perDiem||'unknown').toLowerCase())>-1;
+    return true;
   }
 
   function activeOpportunities(){
@@ -108,7 +193,9 @@
       return (!filter.q||text(opportunity).includes(filter.q)||(opportunity.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
-        &&(!filter.month||String(opportunity.month)===filter.month);
+        &&(!filter.month||String(opportunity.month)===filter.month)
+        &&accFilterMatch(opportunity,filter.accommodation)
+        &&(!filter.state||opportunity.state===filter.state);
     });
   }
 
@@ -139,15 +226,42 @@
     uniq(opportunities.map(function(o){return o.region}).concat(employers.map(function(e){return e.region}).concat(iatseLocals.flatMap(function(l){return l.states||[]}).concat(iatseLocals.map(function(l){return l.district}))))).forEach(function(region){var select=$('#regionFilter');if(select)select.innerHTML+='<option>'+esc(region)+'</option>'});
     MONTHS.forEach(function(month,index){var select=$('#monthFilter');if(select)select.innerHTML+='<option value="'+(index+1)+'">'+month+'</option>'});
     uniq(employers.map(function(e){return e.type})).forEach(function(type){var select=$('#employerTypeFilter');if(select)select.innerHTML+='<option>'+esc(type)+'</option>'});
+    var stateSelect=$('#stateFilter');
+    if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
     $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',renderPage)});
     var reset=$('#reset');
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
+  }
+
+  function accomChips(opportunity){
+    var accom=opportunity.accommodation||{};
+    var travel=opportunity.travelCompensation||{};
+    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
+    var confirmed=['yes','confirmed','included'];
+    var positive=['possible','likely'].concat(confirmed);
+    var chips=[];
+    if(lodgingType.indexOf('camp')>-1)chips.push('<span class="accom-tag accom-ok">Camping</span>');
+    else if(positive.indexOf(lodging)>-1)chips.push('<span class="accom-tag accom-ok">Lodging possible</span>');
+    else if(actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)chips.push('<span class="accom-tag accom-warn">Lodging — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Lodging unknown</span>');
+    var perDiem=String(travel.perDiem||'unknown').toLowerCase();
+    if(positive.indexOf(perDiem)>-1)chips.push('<span class="accom-tag accom-ok">Per diem</span>');
+    else if(actions.indexOf('per diem')>-1||actions.indexOf('perdiem')>-1)chips.push('<span class="accom-tag accom-warn">Per diem — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Per diem unknown</span>');
+    var travelPaid=String(travel.travelPaid||'unknown').toLowerCase();
+    if(positive.indexOf(travelPaid)>-1)chips.push('<span class="accom-tag accom-ok">Travel paid</span>');
+    else if(actions.indexOf('travel')>-1||actions.indexOf('flight')>-1||actions.indexOf('mileage')>-1)chips.push('<span class="accom-tag accom-warn">Travel — research</span>');
+    else chips.push('<span class="accom-tag accom-muted">Travel unknown</span>');
+    return '<div class="accom-tags">'+chips.join('')+'</div>';
   }
 
   function opportunityCard(opportunity){
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
+      accomChips(opportunity)+
       '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
       '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
       '<p><b>Work-year value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
@@ -174,6 +288,131 @@
       '<p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p>'+
       '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
       '</article>';
+  }
+
+  function renderMap(){
+    var el=$('#app');
+    if(!el)return;
+    var L=window.L;
+    if(!L){el.innerHTML='<h2>Festival Map</h2><p class="lead">Leaflet map library not available on this page.</p>';return;}
+    var positive=['yes','confirmed','included','possible','likely'];
+    if(!_leafMap){
+      el.innerHTML='<h2>Festival Map</h2>'+
+        '<div class="accom-tags" style="margin:0 0 14px">'+
+        '<span class="accom-tag accom-ok">&#9679; Lodging / camping likely</span>'+
+        '<span class="accom-tag accom-warn">&#9679; Accommodation research priority</span>'+
+        '<span class="accom-tag accom-muted">&#9679; Status unknown</span>'+
+        '</div>'+
+        '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
+        '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
+        '<div class="grid" id="mapList"></div>';
+      _leafMap=L.map('mapView').setView([38,-96],4);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom:18
+      }).addTo(_leafMap);
+      _leafLayer=L.layerGroup().addTo(_leafMap);
+    } else {
+      _leafLayer.clearLayers();
+      _leafMap.invalidateSize();
+    }
+    var data=activeOpportunities();
+    var placed=[];
+    data.forEach(function(opportunity){
+      var coords=OPP_COORDS[opportunity.id];
+      if(!coords)return;
+      placed.push(opportunity);
+      var accom=opportunity.accommodation||{};
+      var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
+      var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
+      var color=positive.indexOf(lodging)>-1?'#48c778':
+                (actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)?'#f5b400':'#a8b2bd';
+      var marker=L.circleMarker(coords,{radius:9,fillColor:color,color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
+      marker.bindPopup(
+        '<div style="min-width:190px">'+
+        '<b style="font-size:.95rem">'+esc(opportunity.name)+'</b><br>'+
+        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</span><br>'+
+        accomChips(opportunity)+
+        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open detail ↗</button></p>'+
+        '</div>',
+        {maxWidth:280}
+      );
+      _leafLayer.addLayer(marker);
+    });
+    var noCoord=data.filter(function(o){return OPP_COORDS[o.id]===null||OPP_COORDS[o.id]===undefined;});
+    var meta=$('#mapMeta');
+    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market (no single location — see list)':'');
+    var list=$('#mapList');
+    if(list)list.innerHTML=data.length?data.map(opportunityCard).join(''):'<p>No opportunities match the current filter.</p>';
+  }
+
+  function renderSchedule(){
+    var el=$('#app');
+    if(!el)return;
+    var schedule=getSchedule();
+    var YEAR_START=new Date(2026,0,1).getTime();
+    var YEAR_MS=new Date(2027,0,1).getTime()-YEAR_START;
+    var BRANCH_COLORS={staging:'#f5b400',rigging:'#e84393',lighting:'#7c5cbf',audio:'#2196f3',video_led:'#00bcd4',power:'#ff5722',site_ops:'#4caf50',logistics:'#795548',scenic:'#9e9e9e',backline:'#8bc34a',stage_mgmt:'#ffc107',production_office:'#607d8b'};
+    var MOS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function dateMs(str){if(!str)return null;var d=new Date(str);return isNaN(d.getTime())?null:d.getTime();}
+    function pct(ms){return Math.max(0,Math.min(100,(ms-YEAR_START)/YEAR_MS*100));}
+    function ganttBar(opportunity){
+      var s=dateMs(opportunity.startDate),e=dateMs(opportunity.endDate),approx=false;
+      if(!s){var m=Number(opportunity.month||0);if(!m)return '';s=new Date(2026,m-1,1).getTime();e=new Date(2026,m,1).getTime()-1;approx=true;}
+      else if(!e){e=s+86400000*2;}
+      var l=pct(s),w=Math.max(0.4,pct(e)-l);
+      var color=BRANCH_COLORS[(opportunity.departments||[])[0]]||'#f5b400';
+      return '<div class="gantt-bar'+(approx?' approx':'')+'" style="left:'+l.toFixed(2)+'%;width:'+w.toFixed(2)+'%;background:'+color+'22;border-color:'+color+'" onclick="openOpportunity(\''+esc(opportunity.id)+'\')" title="'+esc(opportunity.name)+'"><span style="color:'+color+'">'+esc(opportunity.name.length>22?opportunity.name.substring(0,22)+'…':opportunity.name)+'</span></div>';
+    }
+    var scheduledOpps=schedule.map(function(id){return opportunities.find(function(o){return o.id===id;});}).filter(Boolean);
+    var totalDays=0,overlaps=0,ranges=[];
+    scheduledOpps.forEach(function(opportunity){
+      var s=dateMs(opportunity.startDate),e=dateMs(opportunity.endDate);
+      if(!s){var m=Number(opportunity.month||1);s=new Date(2026,m-1,1).getTime();e=new Date(2026,m,1).getTime()-1;}
+      if(!e)e=s+86400000*2;
+      totalDays+=Math.round((e-s)/86400000);
+      ranges.forEach(function(r){if(s<=r[1]&&e>=r[0])overlaps++;});
+      ranges.push([s,e]);
+    });
+    var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
+      return '<div class="gantt-row">'+
+        '<div class="gantt-cell" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span>'+esc(opportunity.name)+'</span></div>'+
+        '<div class="gantt-track"><div class="gantt-dividers">'+MOS.map(function(){return '<span></span>';}).join('')+'</div>'+ganttBar(opportunity)+'</div>'+
+        '<div class="gantt-action"><button class="btn" onclick="removeGig(\''+esc(opportunity.id)+'\')">✕</button></div>'+
+        '</div>';
+    }).join(''):'<div class="sched-empty">No events in your schedule yet — use the browse list below to add some.</div>';
+    var browseData=activeOpportunities();
+    var browseHtml=browseData.map(function(opportunity){
+      var inSched=schedule.indexOf(opportunity.id)>-1;
+      return '<article class="card">'+
+        '<h3>'+esc(opportunity.name)+'</h3>'+
+        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</div>'+
+        accomChips(opportunity)+
+        '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
+        '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
+        '<button class="btn '+(inSched?'sched-in':'sched-add')+'" onclick="'+(inSched?'removeGig':'addGig')+'(\''+esc(opportunity.id)+'\')">'+(inSched?'✓ In schedule':'+ Add to schedule')+'</button>'+
+        '</article>';
+    }).join('');
+    el.innerHTML=
+      '<h2>My 2026 Work Schedule</h2>'+
+      '<p class="lead">Build your personal year plan. Click any event in the Gantt to view detail; use ✕ to remove. Exact dates show solid bars; month-only estimates show dashed.</p>'+
+      '<div class="stats" style="grid-template-columns:repeat(3,1fr)">'+
+        '<div class="stat"><b>'+scheduledOpps.length+'</b><span>events planned</span></div>'+
+        '<div class="stat"><b>~'+totalDays+'</b><span>approx event days</span></div>'+
+        '<div class="stat"><b>'+overlaps+'</b><span>date overlaps</span></div>'+
+      '</div>'+
+      (scheduledOpps.length?'<button class="btn" style="margin:0 0 14px" onclick="clearSchedule()">Clear all</button>':'')+
+      '<div class="gantt">'+
+        '<div class="gantt-head">'+
+          '<div class="gantt-lhd">Festival</div>'+
+          '<div class="gantt-track-hd"><div class="gantt-months-hd">'+MOS.map(function(m){return '<span>'+m+'</span>';}).join('')+'</div></div>'+
+          '<div class="gantt-rhd"></div>'+
+        '</div>'+
+        ganttRows+
+      '</div>'+
+      '<h2 style="margin-top:28px">Browse &amp; Add Events</h2>'+
+      '<p class="lead" style="margin-bottom:14px">Use the filters above to narrow the list. Green button = already in your schedule.</p>'+
+      '<div class="grid">'+(browseHtml||'<p>No opportunities match the current filter.</p>')+'</div>';
   }
 
   function renderHome(){
@@ -254,7 +493,7 @@
 
   function renderPage(){
     var page=document.body.dataset.page;
-    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources}[page]||renderHome)();
+    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap,schedule:renderSchedule}[page]||renderHome)();
   }
 
   function branchCard(opportunity,branchId){
