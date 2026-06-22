@@ -14,11 +14,11 @@ The current stable model is:
 
 - multi-page static site
 - shared CSS
-- shared app core
+- one active app core
 - event/item popups without source clutter
-- separate sources page
+- separate Sources page
 - branch research loaded from data packages
-- legacy transitional runtime made inert
+- old compatibility-loader shortcut removed
 
 ---
 
@@ -48,13 +48,13 @@ assets/home-guide-page.js
 assets/guide-page.js
 ```
 
-Compatibility file:
+Important cleanup result:
 
 ```text
 assets/atlas-core.js
 ```
 
-`assets/atlas-core.js` is only a compatibility loader. Active app logic should live in `assets/atlas-core-v2.js` until a future controlled rename moves the clean core back into `assets/atlas-core.js`.
+has been removed. It was only a compatibility loader and is no longer part of the active build.
 
 ---
 
@@ -87,9 +87,17 @@ assets/atlas-core-v2.js
 
 Fix:
 
-`assets/atlas-core-v2.js` is the active clean app core. `assets/atlas-core.js` is only a compatibility loader for any older page shell that still references it.
+The obsolete `assets/atlas-core.js` compatibility loader was removed. Active pages load the clean app core directly:
 
-Status: stable, but future cleanup should rename the clean core back to `assets/atlas-core.js` in one controlled commit.
+```text
+assets/atlas-core-v2.js
+```
+
+Status: fixed.
+
+Future cleanup:
+
+At some point, the clean core can be renamed from `atlas-core-v2.js` back to `atlas-core.js`, but that should be done as one deliberate rename commit after browser verification.
 
 ---
 
@@ -106,7 +114,7 @@ Fix:
 - Branch popups show branch summary, record count, research needs, worker focus, and event-specific route records.
 - Source links are moved to `sources.html`.
 
-Status: fixed for the clean core.
+Status: fixed.
 
 ---
 
@@ -124,7 +132,7 @@ Added:
 sources.html
 ```
 
-The sources page is an organized public source table for opportunity and branch research source links.
+The Sources page is an organized public-source table for opportunity and branch research links.
 
 Status: fixed.
 
@@ -159,9 +167,13 @@ Older transitional runtime files could conflict with the multi-page architecture
 
 Fix:
 
-`data/packages/branch-research-runtime.js` is now intentionally inert and marks itself archived. Active branch research loading is handled by the clean app core.
+Active pages now load the clean core directly and do not depend on the old compatibility loader. The old `assets/atlas-core.js` compatibility file was removed.
 
-Status: safe.
+Status: stable.
+
+Remaining managed issue:
+
+`us-employers.js` still contains a legacy popup bridge. Active pages neutralize that bridge before loading `us-employers.js`, but a future cleanup should remove the bridge from that data file entirely.
 
 ---
 
@@ -232,16 +244,19 @@ Run manually:
 node tools/validate-static-app.js
 ```
 
-The `package.json` script update was blocked by the connector during this audit. Until that is patched, run the validator directly with Node.
+The package script update was previously blocked by the connector. Until that is patched, run the validator directly with Node.
 
 ---
 
 ## Remaining Recommended Cleanup
 
-1. Reformat every page shell into line-broken HTML.
-2. Add `validate:static-app` to `package.json` when connector write filters allow it.
-3. In one controlled commit, rename the clean core back from `assets/atlas-core-v2.js` to `assets/atlas-core.js` and remove compatibility indirection.
-4. Remove or archive any old runtime files no active page uses.
+1. Browser-test the deployed GitHub Pages site on mobile and desktop.
+2. Confirm all active pages render with `assets/atlas-core-v2.js`.
+3. Remove the legacy popup bridge from `us-employers.js` so the file contains employer data only.
+4. Remove or archive any old runtime files no active page uses:
+   - `data/packages/branch-research-runtime.js`
+   - `data/packages/guide-for-use-runtime.js`
+   - any unused branch-tab or contractor analytics runtime files not referenced by active pages
 5. After every future research batch:
    - add the JS package
    - add the readable report
@@ -262,5 +277,6 @@ Current stable direction:
 - source links separated into Sources page
 - mobile filter/search fixed
 - branch research data package pattern preserved
+- obsolete compatibility-loader shortcut removed
 - old runtime behavior neutralized
 - validator file exists
