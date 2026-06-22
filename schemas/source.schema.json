@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thecrewblueprint-glitch/festival-atlas/schemas/source.schema.json",
+  "title": "Festival Atlas Source Record",
+  "type": "object",
+  "required": ["id", "title", "url", "source_type", "confidence", "date_accessed"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string" },
+    "url": { "type": "string" },
+    "publisher": { "type": "string" },
+    "source_type": {
+      "type": "string",
+      "enum": ["official-site", "careers-page", "press-release", "vendor-site", "union-local", "job-board", "government", "industry-org", "news", "social", "user-note", "other"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["primary-official", "secondary-credible", "job-board-listing", "social-or-forum", "user-supplied", "unknown"]
+    },
+    "date_published": { "type": ["string", "null"] },
+    "date_accessed": { "type": "string", "format": "date" },
+    "claims_supported": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

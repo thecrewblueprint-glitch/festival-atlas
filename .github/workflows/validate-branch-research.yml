@@ -1,0 +1,25 @@
+name: Validate Production Atlas
+
+on:
+  push:
+    branches:
+      - research-version
+  pull_request:
+    branches:
+      - research-version
+      - main
+
+jobs:
+  validate-production-atlas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate branch research and static app
+        run: npm run validate:all

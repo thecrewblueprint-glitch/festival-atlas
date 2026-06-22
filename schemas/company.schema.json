@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/thecrewblueprint-glitch/festival-atlas/schemas/company.schema.json",
+  "title": "Festival Atlas Company Profile",
+  "type": "object",
+  "required": ["id", "name", "company_type", "research_status", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "aliases": { "type": "array", "items": { "type": "string" } },
+    "company_type": { "type": "string" },
+    "service_categories": { "type": "array", "items": { "type": "string" } },
+    "headquarters": { "type": "string" },
+    "markets_served": { "type": "array", "items": { "type": "string" } },
+    "website": { "type": "string" },
+    "careers_url": { "type": "string" },
+    "contact_url": { "type": "string" },
+    "known_festival_connections": { "type": "array", "items": { "type": "string" } },
+    "worker_entry_notes": { "type": "string" },
+    "classification_notes": { "type": "string" },
+    "research_status": {
+      "type": "string",
+      "enum": ["confirmed", "needs-verification", "lead-only", "historical", "user-supplied", "conflicting-sources"]
+    },
+    "last_verified_date": { "type": ["string", "null"], "format": "date" },
+    "sources": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

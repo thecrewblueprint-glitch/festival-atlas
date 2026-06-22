@@ -1,0 +1,15 @@
+{
+  "name": "festival-atlas-research-version",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Research expansion branch for Festival Atlas / Production Atlas.",
+  "scripts": {
+    "validate:data": "node tools/validate-data.js",
+    "validate:branch-research": "node tools/validate-branch-research-packages.js",
+    "validate:static-app": "node tools/validate-static-app.js",
+    "validate:all": "npm run validate:branch-research && npm run validate:static-app"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
