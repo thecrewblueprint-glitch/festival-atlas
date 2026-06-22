@@ -67,18 +67,16 @@ const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js')
 [
   'branch-research-batch-001-staging.js',
   'branch-research-batch-005-audio.js',
-  'branch-research-batch-003-video-led.js'
+  'branch-research-batch-003-video-led.js',
+  'branch-research-batch-004-video-led.js',
+  'branch-research-batch-005-video-led.js'
 ].forEach(file => check(core.includes(file), `atlas-core-v2.js does not load ${file}`));
 
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
-check(exists('data/packages/branch-research-batch-004-video-led.js'), 'Missing latest Video / LED batch 004 data package');
-check(exists('research/branch-research-batch-004-video-led.md'), 'Missing latest Video / LED batch 004 report');
-check(
-  exists('data/packages/branch-research-batch-003-video-led.js') && read('data/packages/branch-research-batch-003-video-led.js').includes('OPPORTUNITY_BRANCH_RESEARCH_BATCH_004_VIDEO_LED'),
-  'Loaded Video / LED batch 003 package does not expose batch 004 to the app'
-);
+check(exists('data/packages/branch-research-batch-005-video-led.js'), 'Missing latest Video / LED batch 005 data package');
+check(exists('research/branch-research-batch-005-video-led.md'), 'Missing latest Video / LED batch 005 report');
 
 const activePageCoreRefs = pageText.map(({ file, content }) => ({
   file,
