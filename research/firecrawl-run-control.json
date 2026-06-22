@@ -1,11 +1,11 @@
 {
-  "activeRun": "backline-low-sweep-001",
-  "branch": "backline",
+  "activeRun": "lighting-refresh-sweep-001",
+  "branch": "lighting",
   "mode": "low",
   "maxTotalCredits": 80,
   "maxSearchResults": 3,
   "maxScrapesPerTarget": 1,
-  "requestedAt": "2026-06-22T12:31:00-04:00",
+  "requestedAt": "2026-06-22T12:35:00-04:00",
   "requestedBy": "ChatGPT orchestrated commit trigger",
-  "notes": "Changing this file triggers the Firecrawl backline low-mode sweep workflow. Do not store secrets here."
+  "notes": "Active instruction: run a supplemental Lighting refresh sweep. Do not delete or overwrite prior Lighting research. Upload the artifact for reviewed additive conversion."
 }
