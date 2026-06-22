@@ -8,7 +8,7 @@ Scope: multi-page static app shell, shared styles, shared JS core, popup behavio
 
 ## Audit Summary
 
-Production Atlas has been stabilized as a multi-page static GitHub Pages app. The audit focused on removing single-page-tab fragility, keeping popup windows concise, moving source links to a dedicated page, improving mobile usability, and making future research additions safer.
+Production Atlas has been stabilized as a multi-page static GitHub Pages app. The audit focused on removing single-page-tab fragility, keeping popup windows concise, moving source links to a dedicated page, improving mobile usability, removing public-facing badge clutter, and making future research additions safer.
 
 The current stable model is:
 
@@ -17,6 +17,7 @@ The current stable model is:
 - one clean active app core
 - compatibility shim for older page shells
 - event/item popups without source clutter
+- public cards without irrelevant badge/chip markers
 - separate Sources page
 - branch research loaded from data packages
 - validation scripts available through `package.json`
@@ -98,11 +99,11 @@ After browser verification, every page can be patched to load `assets/atlas-core
 
 ---
 
-### 3. Source links in popups
+### 3. Source links and badge clutter in popups/cards
 
 Problem:
 
-Popup windows were becoming cluttered with source links and unrelated verification details.
+Popup windows and public-facing cards were becoming cluttered with source links, status badges, value badges, verification badges, lodging badges, branch-count badges, and other visual markers that did not directly help the selected event or item.
 
 Fix:
 
@@ -110,6 +111,8 @@ Fix:
 - Event popups show key event details, route indicators, next action, and mapped production branches.
 - Branch popups show branch summary, record count, research needs, worker focus, and event-specific route records.
 - Source links are moved to `sources.html`.
+- Public-facing cards now use plain text instead of irrelevant badge/chip markers.
+- Employer and source links render as normal text links, not visual badges.
 
 Status: fixed on the clean core and on pages using the compatibility shim.
 
@@ -257,7 +260,7 @@ The validator checks page presence, required shared assets, retired runtime refe
    - add the readable report
    - add the package filename to the clean core branch research list
    - run `npm run validate:all`
-   - verify popups stay source-clean
+   - verify popups stay source-clean and badge-free
 
 ---
 
@@ -270,6 +273,7 @@ Current stable direction:
 - multi-page app
 - clean popups
 - source links separated into Sources page
+- public cards without irrelevant badges
 - mobile filter/search fixed
 - branch research data package pattern preserved
 - compatibility shim protects older page shells
