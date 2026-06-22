@@ -22,6 +22,7 @@ const requiredPages = [
 const requiredSharedFiles = [
   'assets/atlas.css',
   'assets/atlas-core-v2.js',
+  'assets/approx-date-labels.js',
   'data/packages/branch-research-manifest.js',
   'data/packages/production-branches.js',
   'data/packages/opportunities-2026.js',
@@ -79,6 +80,7 @@ const pageText = requiredPages.filter(exists).map(page => ({ file: page, content
 pageText.forEach(({ file, content }) => {
   check(content.includes('assets/atlas.css'), `${file} does not load shared CSS`);
   check(content.includes('assets/atlas-core-v2.js'), `${file} does not load direct atlas-core-v2.js`);
+  check(content.includes('assets/approx-date-labels.js'), `${file} does not load approximate date helper`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
@@ -93,6 +95,11 @@ check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not refe
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
+
+const approx = exists('assets/approx-date-labels.js') ? read('assets/approx-date-labels.js') : '';
+check(approx.includes('Approx. date window'), 'approx-date-labels.js does not label cards as approximate date windows');
+check(approx.includes('Approx. planning window'), 'approx-date-labels.js does not label modals as approximate planning windows');
+check(approx.includes('verify before planning'), 'approx-date-labels.js does not add verification language');
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
