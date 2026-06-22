@@ -7,6 +7,15 @@ const files = fs.readdirSync(packagesDir)
   .filter((file) => /^branch-research-batch-.*\.js$/.test(file))
   .sort();
 
+const requiredDatasetFields = [
+  'batchId',
+  'researchedAt',
+  'branchId',
+  'branchName',
+  'purpose',
+  'targets'
+];
+
 const requiredTargetFields = [
   'opportunityId',
   'opportunityName',
@@ -22,6 +31,14 @@ const requiredTargetFields = [
 ];
 
 let failures = 0;
+
+function expectedExportName(file) {
+  return 'OPPORTUNITY_BRANCH_RESEARCH_' + file
+    .replace(/^branch-research-/, '')
+    .replace(/\.js$/, '')
+    .toUpperCase()
+    .replace(/-/g, '_');
+}
 
 for (const file of files) {
   const fullPath = path.join(packagesDir, file);
@@ -44,10 +61,29 @@ for (const file of files) {
   }
 
   const [exportName, dataset] = exports[0];
+  const expected = expectedExportName(file);
+  if (exportName !== expected) {
+    failures += 1;
+    console.error(`[export] ${file}: expected ${expected}, found ${exportName}`);
+  }
+
   if (!dataset || typeof dataset !== 'object') {
     failures += 1;
     console.error(`[dataset] ${file}: ${exportName} is not an object`);
     continue;
+  }
+
+  for (const field of requiredDatasetFields) {
+    if (!(field in dataset)) {
+      failures += 1;
+      console.error(`[dataset-field] ${file}: missing ${field}`);
+    }
+  }
+
+  const expectedBatchId = file.replace(/\.js$/, '');
+  if (dataset.batchId !== expectedBatchId) {
+    failures += 1;
+    console.error(`[batchId] ${file}: expected ${expectedBatchId}, found ${dataset.batchId}`);
   }
 
   if (!Array.isArray(dataset.targets) || dataset.targets.length === 0) {
@@ -62,6 +98,22 @@ for (const file of files) {
         failures += 1;
         console.error(`[field] ${file}: target ${index} missing ${field}`);
       }
+    }
+    if (!Array.isArray(target.confirmedVendors)) {
+      failures += 1;
+      console.error(`[type] ${file}: target ${index} confirmedVendors must be an array`);
+    }
+    if (!Array.isArray(target.likelyResponsible)) {
+      failures += 1;
+      console.error(`[type] ${file}: target ${index} likelyResponsible must be an array`);
+    }
+    if (!Array.isArray(target.publicLeads)) {
+      failures += 1;
+      console.error(`[type] ${file}: target ${index} publicLeads must be an array`);
+    }
+    if (!Array.isArray(target.sourceLinks)) {
+      failures += 1;
+      console.error(`[type] ${file}: target ${index} sourceLinks must be an array`);
     }
   }
 
