@@ -1,23 +1,22 @@
 (function(){
-  var completedFiveBatchBranches = [
-    'staging',
-    'rigging',
-    'lighting',
-    'audio',
-    'video-led',
-    'power',
-    'site-ops',
-    'logistics'
-  ];
+  var branchBatchCounts = {
+    'staging': 6,
+    'rigging': 6,
+    'lighting': 6,
+    'audio': 6,
+    'video-led': 6,
+    'power': 5,
+    'site-ops': 5,
+    'logistics': 5,
+    'scenic': 5
+  };
 
   var files = [];
-  completedFiveBatchBranches.forEach(function(branchId){
-    for(var batchNumber = 1; batchNumber <= 5; batchNumber += 1){
-      files.push('branch-research-batch-00' + batchNumber + '-' + branchId + '.js');
+  Object.keys(branchBatchCounts).forEach(function(branchId){
+    for(var batchNumber = 1; batchNumber <= branchBatchCounts[branchId]; batchNumber += 1){
+      files.push('branch-research-batch-' + String(batchNumber).padStart(3,'0') + '-' + branchId + '.js');
     }
   });
-
-  files.push('branch-research-batch-001-scenic.js');
 
   window.BRANCH_RESEARCH_MANIFEST = files;
 })();
