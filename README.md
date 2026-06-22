@@ -34,6 +34,8 @@ matrix.html
 analytics.html
 sources.html
 guide.html
+map.html
+schedule.html
 ```
 
 ## Active shared files
@@ -41,6 +43,7 @@ guide.html
 ```text
 assets/atlas.css
 assets/atlas-core-v2.js
+assets/approx-date-labels.js
 assets/home-guide-page.js
 assets/guide-page.js
 data/packages/branch-research-manifest.js
