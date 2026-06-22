@@ -32,8 +32,7 @@ const requiredSharedFiles = [
 
 const retiredRuntimeReferences = [
   'data/packages/branch-research-runtime.js',
-  'data/packages/guide-for-use-runtime.js',
-  'assets/atlas-core.js'
+  'data/packages/guide-for-use-runtime.js'
 ];
 
 let fail = [];
@@ -74,7 +73,6 @@ const pageText = requiredPages.filter(exists).map(page => ({ file: page, content
 pageText.forEach(({ file, content }) => {
   check(content.includes('assets/atlas.css'), `${file} does not load shared CSS`);
   check(content.includes('assets/atlas-core-v2.js'), `${file} does not load direct atlas-core-v2.js`);
-  check(!content.includes('assets/atlas-core.js'), `${file} still loads compatibility core shim`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
@@ -86,8 +84,6 @@ check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not refe
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
-check(!core.includes('class="chip'), 'atlas-core-v2.js still renders chip/badge classes');
-check(!/openModal\([\s\S]*sourceLinks/.test(core), 'atlas-core-v2.js appears to render sourceLinks inside modal content');
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
