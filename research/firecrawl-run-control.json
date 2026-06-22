@@ -1,11 +1,11 @@
 {
-  "activeRun": "power-refresh-micro-20-001",
-  "branch": "power",
+  "activeRun": "site-ops-refresh-micro-20-001",
+  "branch": "site-ops",
   "mode": "micro-20",
   "maxTotalCredits": 20,
   "maxSearchResults": 1,
   "maxScrapesPerTarget": 0,
-  "requestedAt": "2026-06-22T13:35:00-04:00",
+  "requestedAt": "2026-06-22T13:45:00-04:00",
   "requestedBy": "ChatGPT orchestrated commit trigger",
-  "notes": "Run Power refresh in micro search-only mode. Do not scrape. Do not exceed 20 estimated credits. Do not overwrite prior research."
+  "notes": "Run Site Ops refresh in micro search-only mode. Do not scrape. Do not exceed 20 estimated credits. Do not overwrite prior research."
 }
