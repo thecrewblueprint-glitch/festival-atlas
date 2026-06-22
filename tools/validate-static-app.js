@@ -2,25 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const fail = [];
-const warn = [];
-
-function exists(file) {
-  return fs.existsSync(path.join(root, file));
-}
-
-function read(file) {
-  return fs.readFileSync(path.join(root, file), 'utf8');
-}
-
-function check(condition, message) {
-  if (!condition) fail.push(message);
-}
-
-function caution(condition, message) {
-  if (!condition) warn.push(message);
-}
-
 const requiredPages = [
   'index.html',
   'calendar.html',
@@ -32,22 +13,41 @@ const requiredPages = [
   'analytics.html',
   'sources.html'
 ];
-
-const requiredAssets = [
-  'assets/atlas.css',
-  'assets/atlas-core-v2.js',
-  'assets/home-guide-page.js'
-];
-
 const retiredRuntimeReferences = [
   'data/packages/branch-research-runtime.js',
-  'data/packages/guide-for-use-runtime.js',
-  'data/packages/branch-tab-runtime.js',
-  'data/packages/contractor-analytics-runtime.js'
+  'data/packages/guide-for-use-runtime.js'
 ];
 
-requiredPages.forEach(file => check(exists(file), `Missing required page: ${file}`));
-requiredAssets.forEach(file => check(exists(file), `Missing required asset: ${file}`));
+let fail = [];
+let warn = [];
+
+function file(rel) {
+  return path.join(root, rel);
+}
+
+function exists(rel) {
+  return fs.existsSync(file(rel));
+}
+
+function read(rel) {
+  return fs.readFileSync(file(rel), 'utf8');
+}
+
+function check(condition, message) {
+  if (!condition) fail.push(message);
+}
+
+function caution(condition, message) {
+  if (!condition) warn.push(message);
+}
+
+requiredPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
+check(exists('assets/atlas.css'), 'Missing assets/atlas.css');
+check(exists('assets/atlas-core-v2.js'), 'Missing assets/atlas-core-v2.js');
+check(exists('data/packages/production-branches.js'), 'Missing data/packages/production-branches.js');
+check(exists('data/packages/opportunities-2026.js'), 'Missing data/packages/opportunities-2026.js');
+check(exists('data/packages/us-employers.js'), 'Missing data/packages/us-employers.js');
+check(exists('data/iatse-us-local-directory.js'), 'Missing data/iatse-us-local-directory.js');
 check(exists('archive/README.md'), 'Missing archive/README.md');
 
 const pageText = requiredPages.filter(exists).map(file => ({ file, content: read(file) }));
@@ -72,8 +72,13 @@ const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js')
 
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
-check(exists('data/packages/branch-research-batch-003-video-led.js'), 'Missing latest Video / LED batch 003 data package');
-check(exists('research/branch-research-batch-003-video-led.md'), 'Missing latest Video / LED batch 003 report');
+check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
+check(exists('data/packages/branch-research-batch-004-video-led.js'), 'Missing latest Video / LED batch 004 data package');
+check(exists('research/branch-research-batch-004-video-led.md'), 'Missing latest Video / LED batch 004 report');
+check(
+  exists('data/packages/branch-research-batch-003-video-led.js') && read('data/packages/branch-research-batch-003-video-led.js').includes('OPPORTUNITY_BRANCH_RESEARCH_BATCH_004_VIDEO_LED'),
+  'Loaded Video / LED batch 003 package does not expose batch 004 to the app'
+);
 
 const activePageCoreRefs = pageText.map(({ file, content }) => ({
   file,
@@ -97,9 +102,9 @@ if (warn.length) {
 }
 
 if (fail.length) {
-  console.error('\nValidation failed:');
+  console.error('\nFailures:');
   fail.forEach(message => console.error(`- ${message}`));
   process.exit(1);
 }
 
-console.log('Static app validation passed.');
+console.log('Production Atlas static app validation passed.');
