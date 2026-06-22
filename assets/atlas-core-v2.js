@@ -5,7 +5,11 @@
     'branch-research-batch-001-rigging.js','branch-research-batch-002-rigging.js','branch-research-batch-003-rigging.js','branch-research-batch-004-rigging.js','branch-research-batch-005-rigging.js',
     'branch-research-batch-001-lighting.js','branch-research-batch-002-lighting.js','branch-research-batch-003-lighting.js','branch-research-batch-004-lighting.js','branch-research-batch-005-lighting.js',
     'branch-research-batch-001-audio.js','branch-research-batch-002-audio.js','branch-research-batch-003-audio.js','branch-research-batch-004-audio.js','branch-research-batch-005-audio.js',
-    'branch-research-batch-001-video-led.js','branch-research-batch-002-video-led.js','branch-research-batch-003-video-led.js','branch-research-batch-004-video-led.js','branch-research-batch-005-video-led.js'
+    'branch-research-batch-001-video-led.js','branch-research-batch-002-video-led.js','branch-research-batch-003-video-led.js','branch-research-batch-004-video-led.js','branch-research-batch-005-video-led.js',
+    'branch-research-batch-001-power.js','branch-research-batch-002-power.js','branch-research-batch-003-power.js','branch-research-batch-004-power.js','branch-research-batch-005-power.js',
+    'branch-research-batch-001-site-ops.js','branch-research-batch-002-site-ops.js','branch-research-batch-003-site-ops.js','branch-research-batch-004-site-ops.js','branch-research-batch-005-site-ops.js',
+    'branch-research-batch-001-logistics.js','branch-research-batch-002-logistics.js','branch-research-batch-003-logistics.js','branch-research-batch-004-logistics.js','branch-research-batch-005-logistics.js',
+    'branch-research-batch-001-scenic.js'
   ];
 
   var branches=[];
@@ -39,10 +43,20 @@
     });
   }
 
+  function loadBranchManifest(){
+    return loadScript('data/packages/branch-research-manifest.js?v=manifest1').then(function(){
+      if(Array.isArray(window.BRANCH_RESEARCH_MANIFEST)&&window.BRANCH_RESEARCH_MANIFEST.length){
+        branchFiles=window.BRANCH_RESEARCH_MANIFEST.slice();
+      }
+    });
+  }
+
   function loadBranchResearch(){
-    return branchFiles.reduce(function(chain,file){
-      return chain.then(function(){return loadScript('data/packages/'+file+'?v=multipage4')});
-    },Promise.resolve()).then(buildBranchIndex);
+    return loadBranchManifest().then(function(){
+      return branchFiles.reduce(function(chain,file){
+        return chain.then(function(){return loadScript('data/packages/'+file+'?v=manifest1')});
+      },Promise.resolve());
+    }).then(buildBranchIndex);
   }
 
   function buildBranchIndex(){
@@ -69,7 +83,7 @@
       visibility:'public',
       confidence:hasSource?'likely':'unverified',
       publishSafety:'public_safe',
-      nextHumanAction:'Verify vendors, labor route, lodging, travel, and per diem before outreach.',
+      nextHumanAction:'Verify vendors, labor route, travel logistics, and current event details before outreach.',
       intelligence:{publicSources:hasSource?[{label:'active status source',url:opportunity.active2026SourceUrl}]:[],fieldNotes:[],crewReferrals:[],privateContacts:[],doNotPublish:[]}
     },opportunity);
   }
@@ -260,7 +274,7 @@
     var opportunity=opportunities.find(function(item){return item.id===id});
     if(!opportunity)return;
     var branchHtml=(opportunity.departments||[]).map(function(dep){return branchCard(opportunity,dep)}).join('');
-    openModal('<h2>'+esc(opportunity.name)+'</h2><p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p><div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100</div><div class="detail"><b>Lodging</b><br>'+esc(label((opportunity.accommodation||{}).lodgingLikely))+'</div><div class="detail"><b>Travel / per diem</b><br>Travel: '+esc(label((opportunity.travelCompensation||{}).travelPaid))+'<br>Per diem: '+esc(label((opportunity.travelCompensation||{}).perDiem))+'</div></div><p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||'Verify before outreach.')+'</p><h3>Mapped production branches</h3>'+branchHtml);
+    openModal('<h2>'+esc(opportunity.name)+'</h2><p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p><div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100</div><div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div><div class="detail"><b>Research status</b><br>'+esc(label(opportunity.confidence||opportunity.sourceType||'verify'))+'</div></div><p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||'Verify before outreach.')+'</p><h3>Mapped production branches</h3>'+branchHtml);
   };
 
   window.openEmployer=function(id){
