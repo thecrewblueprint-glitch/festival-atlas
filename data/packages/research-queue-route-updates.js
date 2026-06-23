@@ -128,7 +128,7 @@
       ],
       nextResearchActions: [
         'verify Insomniac / Live Nation public hiring route for Las Vegas',
-        'verify IATSE Local 720 (Las Vegas) or applicable local jurisdiction',
+        'verify applicable IATSE/local jurisdiction for Las Vegas (research local number before outreach)',
         'research Las Vegas Motor Speedway approved production vendor route',
         'verify multi-day EDC build/strike crew intake windows (May)',
         'research LED/staging/audio vendor stack via public sources only'
@@ -173,7 +173,7 @@
       ],
       nextResearchActions: [
         'verify Country Music Association / Live Nation public hiring route for Nashville',
-        'verify IATSE Local 46 (Nashville) jurisdiction for main stage and stadium work',
+        'verify applicable IATSE/local jurisdiction for Nashville main stage and stadium work (research local number before outreach)',
         'research Nissan Stadium approved production vendor route separately from outdoor stages',
         'research multi-venue logistics across stadium, outdoor parks, and club venues',
         'verify country festival vendor stack specifics for Nashville production'

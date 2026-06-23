@@ -85,6 +85,8 @@ pageText.forEach(({ file, content }) => {
   check(content.includes('assets/atlas.css'), `${file} does not load shared CSS`);
   check(content.includes('assets/atlas-core-v2.js'), `${file} does not load direct atlas-core-v2.js`);
   check(content.includes('assets/approx-date-labels.js'), `${file} does not load approximate date helper`);
+  check(content.includes('data/packages/opportunity-taxonomy.js'), `${file} does not load opportunity taxonomy package`);
+  check(content.includes('data/packages/research-queue-route-updates.js'), `${file} does not load route research updates package`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
