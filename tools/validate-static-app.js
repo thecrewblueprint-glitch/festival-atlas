@@ -5,6 +5,7 @@ const vm = require('vm');
 const root = path.resolve(__dirname, '..');
 const packagesDir = path.join(root, 'data', 'packages');
 const researchDir = path.join(root, 'research');
+const collaborationLogDir = path.join(root, 'ai-communication', 'collaboration-log');
 
 const requiredPages = [
   'index.html',
@@ -32,7 +33,8 @@ const requiredSharedFiles = [
   'data/packages/opportunities-2026.js',
   'data/packages/us-employers.js',
   'data/iatse-us-local-directory.js',
-  'archive/README.md'
+  'archive/README.md',
+  'ai-communication/collaboration-log/README.md'
 ];
 
 const retiredRuntimeReferences = [
@@ -170,12 +172,28 @@ check(!/\.chips\b/.test(css), 'assets/atlas.css still contains chip container st
 
 const readme = exists('README.md') ? read('README.md') : '';
 check(readme.includes('Source-of-truth rule'), 'README.md missing source-of-truth rule');
+check(readme.includes('Collaboration log rule'), 'README.md missing collaboration log rule');
+check(readme.includes('ai-communication/collaboration-log/'), 'README.md missing collaboration log folder path');
+check(readme.includes('one new file per commit'), 'README.md missing one-file-per-commit collaboration log rule');
 check(readme.includes('data/packages/research-queue-route-updates.js'), 'README.md missing active route research update package');
 check(readme.includes('Required runtime load order'), 'README.md missing required runtime load order section');
 check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
 check(readme.includes('guide.html        Full Guide for Use'), 'README.md missing current Guide page role');
 check(readme.includes('verify applicable IATSE/local jurisdiction'), 'README.md missing normalized IATSE/local jurisdiction language rule');
 check(readme.includes('README current when significant app behavior'), 'README.md missing strengthened README maintenance rule');
+
+const collaborationLogReadme = exists('ai-communication/collaboration-log/README.md') ? read('ai-communication/collaboration-log/README.md') : '';
+check(collaborationLogReadme.includes('one collaboration log file per commit'), 'collaboration-log README missing one-file-per-commit purpose');
+check(collaborationLogReadme.includes('YYYY-MM-DD-###-assistant-short-topic.md'), 'collaboration-log README missing filename pattern');
+check(collaborationLogReadme.includes('Do not maintain one giant append-only ledger'), 'collaboration-log README missing no-giant-ledger rule');
+
+if (fs.existsSync(collaborationLogDir)) {
+  const logEntries = fs.readdirSync(collaborationLogDir)
+    .filter(name => /^\d{4}-\d{2}-\d{2}-\d{3}-.*\.md$/.test(name));
+  check(logEntries.length > 0, 'collaboration-log folder has no dated numbered log entries');
+} else {
+  fail.push('Missing collaboration-log folder');
+}
 
 const employersData = exists('data/packages/us-employers.js') ? read('data/packages/us-employers.js') : '';
 legacyBridgeMarkers.forEach(marker => {
@@ -226,4 +244,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, and normalized IATSE wording are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, and collaboration-log convention are active.`);
