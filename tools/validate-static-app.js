@@ -113,7 +113,16 @@ check(taxonomy.includes('taxonomy-page-note'), 'opportunity-taxonomy.js does not
 check(taxonomy.includes('taxonomy-route-note'), 'opportunity-taxonomy.js does not render visible route-card language');
 check(taxonomy.includes('researchQueueUpdates'), 'opportunity-taxonomy.js does not define active research queue updates');
 check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js does not apply active research queue updates');
-['stagecoach-2026','bourbon-and-beyond-2026','inkcarceration-2026','portola-2026'].forEach(id => {
+[
+  'stagecoach-2026',
+  'bourbon-and-beyond-2026',
+  'inkcarceration-2026',
+  'portola-2026',
+  'edc-orlando-2026',
+  'railbird-2026',
+  'oceans-calling-2026',
+  'roots-picnic-2026'
+].forEach(id => {
   check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
 });
 
@@ -170,4 +179,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy and first research queue updates are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy and research queue target updates are active.`);
