@@ -90,9 +90,17 @@
     });
   }
 
+  function activeOpportunities(){
+    var scoped = window.scopedOpportunities;
+    if(Array.isArray(scoped) && scoped.length) return scoped;
+    var all = window.RESOURCE_OPPORTUNITIES || [];
+    if(!Array.isArray(all)) return [];
+    return all.filter(function(item){ return item && item.visibleInActive2026View !== false; });
+  }
+
   function activeRouteCoverage(){
     var updates = window.PRODUCTION_ATLAS_ROUTE_RESEARCH_UPDATES || [];
-    var active = window.scopedOpportunities || [];
+    var active = activeOpportunities();
     if(!Array.isArray(updates) || !updates.length) return {matched:0,total:Array.isArray(active)?active.length:0,updates:0};
     var activeIds = (Array.isArray(active) ? active : []).reduce(function(map, item){
       if(item && item.id) map[item.id] = true;
@@ -100,6 +108,82 @@
     }, {});
     var matched = updates.filter(function(item){return item && item.id && activeIds[item.id];}).length;
     return {matched: matched, total: Array.isArray(active) && active.length ? active.length : 54, updates: updates.length};
+  }
+
+  function hasUsefulValue(value){
+    if(value === true) return true;
+    if(value === false || value === null || typeof value === 'undefined') return false;
+    var text = String(value).trim().toLowerCase();
+    if(!text) return false;
+    return ['unknown','no','none','n/a','na','tbd','unverified'].indexOf(text) === -1;
+  }
+
+  function lodgingTravelNeeds(record){
+    var candidates = [
+      record.accommodationStatus,
+      record.lodgingStatus,
+      record.lodging,
+      record.camping,
+      record.travelStatus,
+      record.travel,
+      record.perDiem,
+      record.perDiemStatus,
+      record.accommodationType
+    ];
+    var hasAny = candidates.some(hasUsefulValue);
+    return !hasAny;
+  }
+
+  function dateOrVenueNeeds(record){
+    return !record.startDate || !record.venue || String(record.venue).trim().toLowerCase() === 'unknown';
+  }
+
+  function multiMarketNeeds(record){
+    var id = record.id || '';
+    var status = record.routeResearchStatus || '';
+    var name = (record.name || record.title || '').toLowerCase();
+    return status.indexOf('multi_market') !== -1 || id === 'breakaway-2026' || id === 'country-thunder-us-2026' || name.indexOf('multi-market') !== -1;
+  }
+
+  function dataCompletenessMetrics(){
+    var active = activeOpportunities();
+    var total = active.length || 54;
+    var route = activeRouteCoverage();
+    var queueUpdates = (window.PRODUCTION_ATLAS_RESEARCH_QUEUE_UPDATES || []).length || 18;
+    var sourceCovered = active.filter(function(record){ return !!record.active2026SourceUrl; }).length;
+    var lodgingTravelNeeded = active.filter(lodgingTravelNeeds).length;
+    var dateVenueNeeded = active.filter(dateOrVenueNeeds).length;
+    var multiMarketNeeded = active.filter(multiMarketNeeds).length;
+    return {
+      total: total,
+      queueUpdates: queueUpdates,
+      routeMapped: route.matched,
+      sourceCovered: sourceCovered,
+      lodgingTravelNeeded: lodgingTravelNeeded,
+      dateVenueNeeded: dateVenueNeeded,
+      multiMarketNeeded: multiMarketNeeded
+    };
+  }
+
+  function metricCard(label, value, note){
+    return '<article class="card" style="padding:14px"><div class="eyebrow">'+label+'</div><h3 style="margin:.2rem 0">'+value+'</h3><p class="sub" style="margin:0">'+note+'</p></article>';
+  }
+
+  function renderAnalyticsCompletenessPanel(){
+    var metrics = dataCompletenessMetrics();
+    var needsLine = metrics.lodgingTravelNeeded + ' of ' + metrics.total + ' records need lodging/travel detail \u00b7 ' + metrics.routeMapped + ' records have route leads mapped \u00b7 ' + metrics.multiMarketNeeded + ' records need per-market split review';
+    return ''+
+      '<section class="analytics-data-completeness" style="margin:0 0 18px">'+
+        '<div class="notice" style="margin:0 0 12px"><b>Data completeness snapshot:</b> '+needsLine+'.</div>'+ 
+        '<div class="grid">'+
+          metricCard('Source coverage', metrics.sourceCovered + ' / ' + metrics.total, 'Active records with a public source URL.')+
+          metricCard('Research queue', metrics.queueUpdates, 'Source/date updates already applied to active records.')+
+          metricCard('Route leads', metrics.routeMapped + ' / ' + metrics.total, 'Records with public producer/operator route leads mapped.')+
+          metricCard('Lodging/travel gaps', metrics.lodgingTravelNeeded, 'Records needing better lodging, travel, camping, or per diem detail.')+
+          metricCard('Date/site gaps', metrics.dateVenueNeeded, 'Records needing date, venue, or site verification.')+
+          metricCard('Market split review', metrics.multiMarketNeeded, 'Broad multi-market records that need city-level handling.')+
+        '</div>'+ 
+      '</section>';
   }
 
   function manageAnalyticsNotices(){
@@ -111,19 +195,12 @@
       note.style.display = 'none';
     });
 
-    var coverage = activeRouteCoverage();
-    var queueUpdates = (window.PRODUCTION_ATLAS_RESEARCH_QUEUE_UPDATES || []).length || 18;
-    var text = 'Research queue status: ' + queueUpdates + ' source/date updates are active. Route research coverage: ' + coverage.matched + ' / ' + coverage.total + ' active records have public route leads. Vendor and labor-provider assignments remain verification-open.';
-    var existing = app.querySelector('.analytics-research-summary-note');
-    if(existing){
-      existing.textContent = text;
+    var existingPanel = app.querySelector('.analytics-data-completeness');
+    if(existingPanel){
+      existingPanel.outerHTML = renderAnalyticsCompletenessPanel();
       return;
     }
-    var note = document.createElement('div');
-    note.className = 'notice analytics-research-summary-note';
-    note.style.margin = '0 0 16px';
-    note.textContent = text;
-    app.insertBefore(note, app.firstChild);
+    app.insertAdjacentHTML('afterbegin', renderAnalyticsCompletenessPanel());
   }
 
   function scheduleApproximatePass(){
