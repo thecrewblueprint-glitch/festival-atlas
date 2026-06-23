@@ -103,6 +103,9 @@ pageText.forEach(({ file, content }) => {
   check(content.includes('assets/approx-date-labels.js'), `${file} does not load approximate date helper`);
   check(content.includes('data/packages/opportunity-taxonomy.js'), `${file} does not load opportunity taxonomy package`);
   check(content.includes('data/packages/research-queue-route-updates.js'), `${file} does not load route research updates package`);
+  check(!content.includes('Home / Guide'), `${file} still uses combined Home / Guide nav label`);
+  check(content.includes('href="index.html"') && content.includes('>Home</a>'), `${file} missing separate Home nav link`);
+  check(content.includes('href="guide.html"') && content.includes('>Guide</a>'), `${file} missing separate Guide nav link`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
@@ -280,4 +283,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, and collaboration-log lifecycle are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, collaboration-log lifecycle, and separate Home/Guide nav are active.`);
