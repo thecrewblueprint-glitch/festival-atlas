@@ -121,7 +121,15 @@ check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js d
   'edc-orlando-2026',
   'railbird-2026',
   'oceans-calling-2026',
-  'roots-picnic-2026'
+  'roots-picnic-2026',
+  'iii-points-2026',
+  'hard-summer-2026',
+  'beyond-wonderland-socal-2026',
+  'north-coast-2026',
+  'rock-fest-wisconsin-2026',
+  'hulaween-2026',
+  'high-sierra-2026',
+  'm3f-2026'
 ].forEach(id => {
   check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
 });
