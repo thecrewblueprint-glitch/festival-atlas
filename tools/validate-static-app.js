@@ -148,7 +148,13 @@ check(routeUpdates.includes('applyRouteResearchUpdates'), 'research-queue-route-
   'country-thunder-us-2026',
   'bottlerock-napa-2026',
   'electric-forest-2026',
-  'lollapalooza-chicago-2026'
+  'lollapalooza-chicago-2026',
+  'coachella-2026',
+  'stagecoach-2026',
+  'edc-las-vegas-2026',
+  'ultra-miami-2026',
+  'bonnaroo-2026',
+  'cma-fest-2026'
 ].forEach(id => {
   check(routeUpdates.includes(id), `research-queue-route-updates.js missing route research update for ${id}`);
 });
