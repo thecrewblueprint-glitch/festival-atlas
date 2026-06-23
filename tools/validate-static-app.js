@@ -160,10 +160,22 @@ check(routeUpdates.includes('applyRouteResearchUpdates'), 'research-queue-route-
 ].forEach(id => {
   check(routeUpdates.includes(id), `research-queue-route-updates.js missing route research update for ${id}`);
 });
+check(!/verify IATSE jurisdiction/i.test(routeUpdates), 'route research updates use non-normalized IATSE jurisdiction wording');
+check(!/verify [A-Za-z-]+ IATSE\/local jurisdiction route/i.test(routeUpdates), 'route research updates use non-normalized IATSE/local wording');
+check(routeUpdates.includes('verify applicable IATSE/local jurisdiction'), 'route research updates missing preferred IATSE/local jurisdiction wording');
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
 check(!/\.chips\b/.test(css), 'assets/atlas.css still contains chip container styles');
+
+const readme = exists('README.md') ? read('README.md') : '';
+check(readme.includes('Source-of-truth rule'), 'README.md missing source-of-truth rule');
+check(readme.includes('data/packages/research-queue-route-updates.js'), 'README.md missing active route research update package');
+check(readme.includes('Required runtime load order'), 'README.md missing required runtime load order section');
+check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
+check(readme.includes('guide.html        Full Guide for Use'), 'README.md missing current Guide page role');
+check(readme.includes('verify applicable IATSE/local jurisdiction'), 'README.md missing normalized IATSE/local jurisdiction language rule');
+check(readme.includes('README current when significant app behavior'), 'README.md missing strengthened README maintenance rule');
 
 const employersData = exists('data/packages/us-employers.js') ? read('data/packages/us-employers.js') : '';
 legacyBridgeMarkers.forEach(marker => {
@@ -214,4 +226,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, and route research updates are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, and normalized IATSE wording are active.`);
