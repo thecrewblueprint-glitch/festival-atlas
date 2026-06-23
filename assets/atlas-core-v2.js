@@ -324,7 +324,7 @@
         '</div>'+
         '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
         '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
-        '<div class="grid" id="mapList"></div>';
+        '<div id="mapList"></div>';
       _leafMap=L.map('mapView').setView([38,-96],4);
       L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
         attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -360,9 +360,16 @@
     });
     var noCoord=data.filter(function(o){return OPP_COORDS[o.id]===null||OPP_COORDS[o.id]===undefined;});
     var meta=$('#mapMeta');
-    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market (no single location — see list)':'');
+    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market / unmapped':'');
     var list=$('#mapList');
-    if(list)list.innerHTML=data.length?data.map(opportunityCard).join(''):'<p>No opportunities match the current filter.</p>';
+    if(list){
+      if(!data.length){list.innerHTML='<p>No opportunities match the current filter.</p>';}
+      else{
+        list.innerHTML=
+          (placed.length?'<h3 style="margin:18px 0 10px">Mapped events ('+placed.length+')</h3><div class="grid">'+placed.map(opportunityCard).join('')+'</div>':'')+
+          (noCoord.length?'<h3 style="margin:22px 0 10px">Multi-market / unmapped ('+noCoord.length+')</h3><p class="sub" style="margin:0 0 10px;font-size:.82rem">These events span multiple cities or lack a single map coordinate.</p><div class="grid">'+noCoord.map(opportunityCard).join('')+'</div>':'');
+      }
+    }
   }
 
   function renderSchedule(){
@@ -393,6 +400,9 @@
       ranges.forEach(function(r){if(s<=r[1]&&e>=r[0])overlaps++;});
       ranges.push([s,e]);
     });
+    var avgScore=scheduledOpps.length?Math.round(scheduledOpps.reduce(function(sum,o){return sum+(o.longTermValueScore||0);},0)/scheduledOpps.length):0;
+    var monthSet={};scheduledOpps.forEach(function(o){if(o.month)monthSet[o.month]=1;});
+    var regionSet={};scheduledOpps.forEach(function(o){if(o.region)regionSet[o.region]=1;});
     var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
       return '<div class="gantt-row">'+
         '<div class="gantt-cell" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span>'+esc(opportunity.name)+'</span></div>'+
@@ -419,6 +429,9 @@
         '<div class="stat"><b>'+scheduledOpps.length+'</b><span>events planned</span></div>'+
         '<div class="stat"><b>~'+totalDays+'</b><span>approx event days</span></div>'+
         '<div class="stat"><b>'+overlaps+'</b><span>date overlaps</span></div>'+
+        '<div class="stat"><b>'+avgScore+'</b><span>avg value score</span></div>'+
+        '<div class="stat"><b>'+Object.keys(monthSet).length+'</b><span>months covered</span></div>'+
+        '<div class="stat"><b>'+Object.keys(regionSet).length+'</b><span>regions covered</span></div>'+
       '</div>'+
       (scheduledOpps.length?'<button class="btn" style="margin:0 0 14px" onclick="clearSchedule()">Clear all</button>':'')+
       '<div class="gantt">'+
@@ -485,7 +498,18 @@
     if(!el)return;
     el.innerHTML='<h2>Long-Term Opportunity Calendar</h2><p class="lead">Month-by-month view of active public-safe work targets.</p><div class="calendar">'+MONTHS.map(function(month,index){
       var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1});
-      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="font-size:.62rem;padding:1px 7px;margin:0 0 4px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span><b style="display:block">'+esc(opportunity.name)+'</b><small>'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(label(opportunity.opportunityType))+'</small></div>'}).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
+      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){
+        var calDepts=(opportunity.departments||[]).slice(0,3).map(branchName);
+        var calExtra=Math.max(0,(opportunity.departments||[]).length-3);
+        var hasCalSrc=!!opportunity.active2026SourceUrl;
+        return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
+          '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="font-size:.62rem;padding:1px 7px;margin:0 0 4px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
+          '<b style="display:block">'+esc(opportunity.name)+'</b>'+
+          '<small>'+esc(opportunity.city)+', '+esc(opportunity.state)+'</small>'+
+          (calDepts.length?'<div style="margin-top:4px;font-size:.69rem;color:var(--muted)">'+esc(calDepts.join(' \xb7 ')+(calExtra?' +'+calExtra:''))+'</div>':'')+
+          (hasCalSrc?'<div style="margin-top:3px;font-size:.68rem;color:#48c778">&#9679; source</div>':'')+
+          '</div>';
+      }).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
     }).join('')+'</div>';
   }
 
@@ -568,6 +592,8 @@
       '<div class="grid">'+
         '<div class="card"><h3>By region</h3>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
         '<div class="card"><h3>By value tier</h3>'+bars(counts(opportunities,function(o){return valueTierLabel(o.longTermValueScore)}))+'</div>'+
+        '<div class="card"><h3>By month</h3>'+bars(counts(opportunities,function(o){return MONTHS[(o.month||1)-1]}))+'</div>'+
+        '<div class="card"><h3>By confidence</h3>'+bars(counts(opportunities,function(o){return confidenceLabel(o.confidence||o.sourceType)}))+'</div>'+
         '<div class="card"><h3>Branch records</h3>'+bars(counts(branchIndex.records,function(r){return r.branchName||branchName(r.branchId)}))+'</div>'+
         '<div class="card"><h3>Employers by type</h3>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
       '</div>';
@@ -582,10 +608,37 @@
   function renderSources(){
     var el=$('#app');
     if(!el)return;
+    var filter=filterValues();
     var rows=[];
-    opportunities.forEach(function(opportunity){((opportunity.intelligence||{}).publicSources||[]).forEach(function(source){if(source.url)rows.push([opportunity.name,'Opportunity',source.label||'source',source.url])})});
-    branchIndex.records.forEach(function(record){(record.sourceLinks||[]).forEach(function(source){if(source.url)rows.push([record.opportunityName||record.opportunityId,record.branchName||record.branchId,source.label||'source',source.url])})});
-    el.innerHTML='<h2>Sources</h2><p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and branch popups stay clean.</p><div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Section</th><th>Source</th><th>Link</th></tr></thead><tbody>'+rows.map(function(row){return '<tr><td>'+esc(row[0])+'</td><td>'+esc(row[1])+'</td><td>'+esc(row[2])+'</td><td>'+plainLink('Open source',row[3])+'</td></tr>'}).join('')+'</tbody></table></div>';
+    opportunities.forEach(function(opportunity){
+      ((opportunity.intelligence||{}).publicSources||[]).forEach(function(source){
+        if(source.url)rows.push({type:'opportunity',item:opportunity.name,section:'Opportunity',label:source.label||'source',url:source.url,searchText:(opportunity.name+' '+(source.label||'')).toLowerCase(),branchIds:opportunity.departments||[]});
+      });
+    });
+    branchIndex.records.forEach(function(record){
+      (record.sourceLinks||[]).forEach(function(source){
+        if(source.url)rows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,searchText:((record.opportunityName||record.opportunityId)+' '+(record.branchName||record.branchId)+' '+(source.label||'')).toLowerCase(),branchIds:[record.branchId]});
+      });
+    });
+    var filtered=rows.filter(function(row){
+      if(filter.q&&!row.searchText.includes(filter.q))return false;
+      if(filter.branch&&!row.branchIds.includes(filter.branch))return false;
+      return true;
+    });
+    var oppCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
+    var branchCount=filtered.filter(function(r){return r.type==='branch';}).length;
+    el.innerHTML='<h2>Sources</h2>'+
+      '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and branch popups stay clean.</p>'+
+      '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
+        '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
+        '<div class="stat"><b>'+oppCount+'</b><span>opportunity sources</span></div>'+
+        '<div class="stat"><b>'+branchCount+'</b><span>branch sources</span></div>'+
+      '</div>'+
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Type</th><th>Section</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
+      (filtered.length?filtered.map(function(row){
+        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='opportunity'?'Opportunity':'Branch')+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
+      }).join(''):'<tr><td colspan="5" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
+      '</tbody></table></div>';
   }
 
   function renderPage(){
