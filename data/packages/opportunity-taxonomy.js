@@ -21,20 +21,89 @@
       { id: 'official-contractor-route', label: 'Official contractor route' },
       { id: 'procurement-route', label: 'Public procurement route' },
       { id: 'unknown-publicly', label: 'Unknown publicly' }
+    ],
+    researchQueueUpdates: [
+      {
+        id: 'stagecoach-2026',
+        active2026SourceUrl: 'https://pitchfork.com/news/stagecoach-2026-livestream-schedule-and-details/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'public_media_source_attached',
+        researchQueueNote: 'Attached public 2026 Stagecoach source; continue vendor/labor/lodging research.'
+      },
+      {
+        id: 'bourbon-and-beyond-2026',
+        active2026SourceUrl: 'https://bourbonandbeyond.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official 2026 source confirms September 24-27, 2026 at Kentucky Expo Center; continue DWP vendor and Louisville labor route research.'
+      },
+      {
+        id: 'inkcarceration-2026',
+        startDate: '2026-07-17',
+        endDate: '2026-07-19',
+        active2026SourceUrl: 'https://inkcarceration.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official 2026 source confirms July 17-19, 2026 in Mansfield, Ohio; date queue item resolved, vendor/labor route still open.',
+        nextResearchActions: ['verify DWP vendor stack','verify Mansfield/Ohio labor route']
+      },
+      {
+        id: 'portola-2026',
+        active2026SourceUrl: 'https://portolamusicfestival.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official Portola source attached; continue SF labor/local route and LED/audio vendor research.'
+      }
     ]
   };
 
+  function patchOne(record, update){
+    if(!record || !update) return;
+    Object.keys(update).forEach(function(key){
+      if(key === 'id') return;
+      record[key] = update[key];
+    });
+    if(!record.intelligence) record.intelligence = {};
+    if(!Array.isArray(record.intelligence.publicSources)) record.intelligence.publicSources = [];
+    if(update.active2026SourceUrl && !record.intelligence.publicSources.some(function(source){return source.url === update.active2026SourceUrl;})){
+      record.intelligence.publicSources.push({label:'active 2026 public source',url:update.active2026SourceUrl});
+    }
+  }
+
+  function applyResearchQueueUpdates(){
+    var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY || {};
+    var updates = taxonomy.researchQueueUpdates || [];
+    var pools = [window.RESOURCE_OPPORTUNITIES, window.scopedOpportunities];
+    pools.forEach(function(pool){
+      if(!Array.isArray(pool)) return;
+      updates.forEach(function(update){
+        var record = pool.find(function(item){return item && item.id === update.id;});
+        patchOne(record, update);
+      });
+    });
+    window.PRODUCTION_ATLAS_RESEARCH_QUEUE_UPDATES = updates;
+  }
+
   function applyOpportunityTaxonomy(){
+    applyResearchQueueUpdates();
     var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY;
     var app = document.querySelector('#app');
     var page = document.body ? document.body.dataset.page : '';
-    if(app && ['opportunities','calendar','map','schedule','branches','sources'].indexOf(page) !== -1 && app.dataset.taxonomyNotice !== 'applied'){
+    if(app && ['opportunities','calendar','map','schedule','branches','sources','analytics'].indexOf(page) !== -1 && app.dataset.taxonomyNotice !== 'applied'){
       var pageNote = document.createElement('div');
       pageNote.className = 'notice taxonomy-page-note';
       pageNote.style.margin = '0 0 16px';
-      pageNote.textContent = 'Public route intelligence: taxonomy language is active. This app maps public work routes and verification steps.';
+      pageNote.textContent = 'Public route intelligence: taxonomy language and first research queue source updates are active. This app maps public work routes and verification steps.';
       app.insertBefore(pageNote, app.firstChild);
       app.dataset.taxonomyNotice = 'applied';
+    }
+    if(app && page === 'analytics' && app.dataset.researchQueueUpdateNotice !== 'applied'){
+      var queueNote = document.createElement('div');
+      queueNote.className = 'notice research-queue-update-note';
+      queueNote.style.margin = '0 0 16px';
+      queueNote.textContent = 'Research queue update applied: Stagecoach, Bourbon & Beyond, Inkcarceration, and Portola now have public source updates. Inkcarceration dates were also confirmed.';
+      app.insertBefore(queueNote, app.firstChild);
+      app.dataset.researchQueueUpdateNotice = 'applied';
     }
     Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(card){
       if(card.dataset.taxonomyNote === 'applied') return;
@@ -51,7 +120,9 @@
     });
   }
 
+  window.applyResearchQueueUpdates = applyResearchQueueUpdates;
   window.applyOpportunityTaxonomy = applyOpportunityTaxonomy;
+  applyResearchQueueUpdates();
   document.addEventListener('DOMContentLoaded', function(){ setTimeout(applyOpportunityTaxonomy, 0); });
   document.addEventListener('click', function(){ setTimeout(applyOpportunityTaxonomy, 0); }, true);
 })();
