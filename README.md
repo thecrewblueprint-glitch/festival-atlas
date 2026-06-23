@@ -46,6 +46,7 @@ assets/atlas-core-v2.js
 assets/approx-date-labels.js
 assets/home-guide-page.js
 assets/guide-page.js
+data/packages/opportunity-taxonomy.js
 data/packages/branch-research-manifest.js
 ```
 
@@ -63,10 +64,27 @@ Long-term target: every active page should continue loading `assets/atlas-core-v
 data/packages/production-branches.js
 data/packages/opportunities-2026.js
 data/packages/us-employers.js
+data/packages/opportunity-taxonomy.js
 data/iatse-us-local-directory.js
 data/packages/branch-research-manifest.js
 data/packages/branch-research-batch-*.js
 ```
+
+## Active opportunity taxonomy
+
+The public route taxonomy lives at:
+
+```text
+data/packages/opportunity-taxonomy.js
+```
+
+It is loaded by the already-active shared helper:
+
+```text
+assets/approx-date-labels.js
+```
+
+The taxonomy must remain live. Do not leave replacement taxonomy or public-route language files outside the active loader path. The taxonomy currently provides visible public-route language on opportunity-style cards and selected pages, while preserving the existing opportunity data model.
 
 ## Branch research loading rule
 
@@ -179,5 +197,6 @@ Continue Scenic research starting at batch 006, or begin new department research
 - Keep this README current when the Pages URL or deployment path changes.
 - Keep the manifest current with every new branch research package.
 - Keep every data package paired with a matching research report.
+- Keep the active taxonomy live through `assets/approx-date-labels.js` unless a cleaner core-runtime integration replaces it in the same validated commit.
 - Do not bypass the one-export-per-file rule.
 - Do not continue research until workflow failures are resolved.
