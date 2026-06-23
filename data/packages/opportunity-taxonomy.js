@@ -138,6 +138,27 @@
         active2026CheckedDate: '2026-06-23',
         sourceQuality: 'official_public_source_attached',
         researchQueueNote: 'Official M3F source confirms Steele Indian School Park, March 6-7, Phoenix AZ. Continue Phoenix labor route, site ops vendors, and apply/contact route research.'
+      },
+      {
+        id: 'shaky-knees-2026',
+        startDate: '2026-09-18',
+        endDate: '2026-09-20',
+        venue: 'Piedmont Park',
+        active2026SourceUrl: 'https://pitchfork.com/news/turnstile-geese-pavement-booked-for-atlanta-festival-shaky-knees/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'public_media_source_attached',
+        researchQueueNote: 'Public media confirms Shaky Knees 2026 at Piedmont Park from September 18-20, 2026; official site direct verification remains useful before vendor/labor-route work.',
+        nextResearchActions: ['verify Atlanta labor/local route','verify vendor stack','verify official Shaky Knees source page']
+      },
+      {
+        id: 'sick-new-world-2026',
+        startDate: '2026-04-25',
+        endDate: '2026-04-25',
+        active2026SourceUrl: 'https://en.wikipedia.org/wiki/Sick_New_World',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'public_listing_source_attached',
+        researchQueueNote: 'Public listings show Sick New World Las Vegas on April 25, 2026 at Las Vegas Festival Grounds; verify official festival page before vendor/labor-route research.',
+        nextResearchActions: ['verify Las Vegas labor route','verify rock festival vendor stack','verify official Sick New World source page']
       }
     ]
   };
@@ -186,7 +207,7 @@
       var queueNote = document.createElement('div');
       queueNote.className = 'notice research-queue-update-note';
       queueNote.style.margin = '0 0 16px';
-      queueNote.textContent = 'Research queue updates applied: 16 active queue source updates are now patched through the active taxonomy package. Hulaween remains official-source verification open.';
+      queueNote.textContent = 'Research queue updates applied: 18 active queue source/date updates are now patched through the active taxonomy package. Hulaween remains official-source verification open.';
       app.insertBefore(queueNote, app.firstChild);
       app.dataset.researchQueueUpdateNotice = 'applied';
     }
