@@ -94,6 +94,9 @@
   function norm(value){return String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
   function label(value){return String(value||'unknown').replaceAll('_',' ')}
   function text(obj){return JSON.stringify(obj||{}).toLowerCase()}
+  function valueTierLabel(score){var s=Number(score||0);if(s>=80)return 'Priority travel-work target';if(s>=60)return 'Strong opportunity';if(s>=40)return 'Track / research further';if(s>=20)return 'Local or speculative';return 'Low current value';}
+  function valueTierClass(score){var s=Number(score||0);if(s>=80)return 'vtier-priority';if(s>=60)return 'vtier-strong';if(s>=40)return 'vtier-track';if(s>=20)return 'vtier-local';return 'vtier-low';}
+  function sortOpportunities(list){return list.slice().sort(function(a,b){var d=(b.longTermValueScore||0)-(a.longTermValueScore||0);if(d)return d;var as=a.active2026SourceUrl?1:0,bs=b.active2026SourceUrl?1:0;if(bs-as)return bs-as;return (a.month||13)-(b.month||13);});}
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
@@ -169,7 +172,8 @@
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
       accommodation:(($('#accommodationFilter')||{}).value||''),
-      state:(($('#stateFilter')||{}).value||'')
+      state:(($('#stateFilter')||{}).value||''),
+      tier:(($('#tierFilter')||{}).value||'')
     };
   }
 
@@ -192,7 +196,8 @@
 
   function activeOpportunities(){
     var filter=filterValues();
-    return opportunities.filter(function(opportunity){
+    var list=opportunities.filter(function(opportunity){
+      if(filter.tier){var s=Number(opportunity.longTermValueScore||0);if(filter.tier==='tier_60plus'&&s<60)return false;if(filter.tier==='tier_40to59'&&(s<40||s>=60))return false;if(filter.tier==='tier_under40'&&s>=40)return false;}
       return (!filter.q||text(opportunity).includes(filter.q)||(opportunity.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
@@ -200,6 +205,7 @@
         &&accFilterMatch(opportunity,filter.accommodation)
         &&(!filter.state||opportunity.state===filter.state);
     });
+    return sortOpportunities(list);
   }
 
   function activeEmployers(){
@@ -231,6 +237,8 @@
     uniq(employers.map(function(e){return e.type})).forEach(function(type){var select=$('#employerTypeFilter');if(select)select.innerHTML+='<option>'+esc(type)+'</option>'});
     var stateSelect=$('#stateFilter');
     if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
+    var tierSelect=$('#tierFilter');
+    if(tierSelect){[['tier_60plus','Priority / Strong (60+)'],['tier_40to59','Track / Research (40–59)'],['tier_under40','Local / Low (<40)']].forEach(function(pair){tierSelect.innerHTML+='<option value="'+pair[0]+'">'+pair[1]+'</option>';});}
     $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',renderPage)});
     var reset=$('#reset');
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
@@ -262,12 +270,13 @@
 
   function opportunityCard(opportunity){
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
+      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
       accomChips(opportunity)+
       '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
       '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
-      '<p><b>Work-year value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
+      '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
       '<p><b>Next:</b> '+esc((opportunity.nextResearchActions||[])[0]||opportunity.nextHumanAction||'Verify before outreach')+'</p>'+
       '</article>';
   }
@@ -421,7 +430,46 @@
   function renderHome(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Dashboard Overview</h2><div class="stats"><div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div><div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div><div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div><div class="stat"><b>'+branches.length+'</b><span>branches</span></div><div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div></div>';
+    var sorted=sortOpportunities(opportunities);
+    var top=sorted.slice(0,5);
+    var needsDates=opportunities.filter(function(o){return !o.startDate;}).length;
+    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;}).length;
+    var topHtml=top.map(function(o){
+      return '<article class="card click" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
+        '<span class="vtier '+valueTierClass(o.longTermValueScore)+'">'+esc(valueTierLabel(o.longTermValueScore))+'</span>'+
+        '<h3>'+esc(o.name)+'</h3>'+
+        '<div class="sub">'+esc(o.city)+', '+esc(o.state)+' &bull; '+esc(MONTHS[(o.month||1)-1])+'</div>'+
+        '<p><b>Value:</b> '+esc(o.longTermValueScore)+'/100</p>'+
+        '<p><b>Next:</b> '+esc((o.nextResearchActions||[])[0]||'Verify before outreach')+'</p>'+
+        '</article>';
+    }).join('');
+    el.innerHTML=
+      '<h2>Dashboard Overview</h2>'+
+      '<div class="stats">'+
+        '<div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div>'+
+        '<div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div>'+
+        '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div>'+
+        '<div class="stat"><b>'+branches.length+'</b><span>branches</span></div>'+
+        '<div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div>'+
+      '</div>'+
+      '<div class="home-dash">'+
+        '<h3>Top priority targets</h3>'+
+        '<div class="grid">'+topHtml+'</div>'+
+        '<h3 style="margin-top:22px">Verification snapshot</h3>'+
+        '<div class="notice">'+
+          needsDates+' of '+opportunities.length+' active opportunities are missing confirmed dates. '+
+          noSource+' have no attached public source. '+
+          '<a href="analytics.html">Open research queue &nearr;</a>'+
+        '</div>'+
+        '<h3 style="margin-top:22px">Quick links</h3>'+
+        '<div class="home-links">'+
+          '<a href="opportunities.html" class="btn">Browse all opportunities</a>'+
+          '<a href="calendar.html" class="btn">Calendar view</a>'+
+          '<a href="map.html" class="btn">Open map</a>'+
+          '<a href="analytics.html" class="btn">Research queue</a>'+
+          '<a href="schedule.html" class="btn">My schedule</a>'+
+        '</div>'+
+      '</div>';
   }
 
   function renderCalendar(){
@@ -475,8 +523,47 @@
     var el=$('#app');
     if(!el)return;
     function counts(items,fn){return items.reduce(function(acc,item){var key=fn(item)||'Unknown';acc[key]=(acc[key]||0)+1;return acc},{})}
-    function bars(obj){var max=Math.max(1,...Object.values(obj));return Object.entries(obj).sort(function(a,b){return b[1]-a[1]}).map(function(pair){return '<div class="bar"><span>'+esc(pair[0])+'</span><div class="track"><div class="fill" style="width:'+(pair[1]/max*100)+'%"></div></div><span>'+pair[1]+'</span></div>'}).join('')}
-    el.innerHTML='<h2>Dataset Analytics</h2><div class="grid"><div class="card"><h3>Opportunities by region</h3>'+bars(counts(opportunities,function(o){return o.region}))+'</div><div class="card"><h3>Research records by branch</h3>'+bars(counts(branchIndex.records,function(r){return r.branchName||branchName(r.branchId)}))+'</div><div class="card"><h3>Employers by type</h3>'+bars(counts(employers,function(e){return e.type}))+'</div></div>';
+    function bars(obj){var max=Math.max(1,...Object.values(obj));return Object.entries(obj).sort(function(a,b){return b[1]-a[1]}).map(function(pair){return '<div class="bar"><span>'+esc(pair[0])+'</span><div class="track"><div class="fill" style="width:'+(pair[1]/max*100)+'%"></div></div><span>'+pair[1]+'</span></div>'}).join('');}
+    function hasAction(o,pattern){return (o.nextResearchActions||[]).some(function(a){return pattern.test(a);});}
+    function queueCard(title,items,note){
+      if(!items.length)return '';
+      return '<div class="card">'+
+        '<h3>'+esc(title)+' <span class="sub">('+items.length+')</span></h3>'+
+        '<p class="sub" style="margin:0 0 6px">'+esc(note)+'</p>'+
+        '<ul class="queue-list">'+
+        items.slice(0,8).map(function(o){
+          return '<li onclick="openOpportunity(\''+esc(o.id)+'\')">'+
+            '<span class="vtier '+valueTierClass(o.longTermValueScore)+'" style="font-size:.6rem;padding:1px 6px;margin:0 4px 0 0">'+esc(o.longTermValueScore)+'/100</span>'+
+            '<b>'+esc(o.name)+'</b><br>'+
+            '<span style="color:var(--muted);font-size:.78rem">'+esc((o.nextResearchActions||[])[0]||'verify')+'</span>'+
+            '</li>';
+        }).join('')+
+        (items.length>8?'<li class="sub">&hellip; and '+(items.length-8)+' more &mdash; <a href="opportunities.html">see all &nearr;</a></li>':'')+
+        '</ul></div>';
+    }
+    var needsDates=opportunities.filter(function(o){return !o.startDate;});
+    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;});
+    var needsVendor=opportunities.filter(function(o){return hasAction(o,/vendor/i);});
+    var needsLabor=opportunities.filter(function(o){return hasAction(o,/labor/i);});
+    var needsTravel=opportunities.filter(function(o){return hasAction(o,/lodging|travel|per diem/i);});
+    el.innerHTML=
+      '<h2>Analytics &amp; Research Queue</h2>'+
+      '<h3>Research Queue</h3>'+
+      '<p class="lead">Opportunities grouped by what still needs verification. Click any item to open detail.</p>'+
+      '<div class="grid">'+
+        queueCard('Dates unconfirmed',needsDates,'Confirm exact dates before travel or outreach decisions.')+
+        queueCard('Source missing',noSource,'Find a public source that confirms this event is active for 2026.')+
+        queueCard('Vendor stack unverified',needsVendor,'Research which companies handle production for this event.')+
+        queueCard('Labor route unverified',needsLabor,'Identify the union local or labor provider and hiring pathway.')+
+        queueCard('Travel / lodging unverified',needsTravel,'Check lodging, per diem, and travel coverage potential.')+
+      '</div>'+
+      '<h3 style="margin-top:26px">Dataset breakdown</h3>'+
+      '<div class="grid">'+
+        '<div class="card"><h3>By region</h3>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
+        '<div class="card"><h3>By value tier</h3>'+bars(counts(opportunities,function(o){return valueTierLabel(o.longTermValueScore)}))+'</div>'+
+        '<div class="card"><h3>Branch records</h3>'+bars(counts(branchIndex.records,function(r){return r.branchName||branchName(r.branchId)}))+'</div>'+
+        '<div class="card"><h3>Employers by type</h3>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
+      '</div>';
   }
 
   function renderGuide(){

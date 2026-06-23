@@ -3,11 +3,10 @@
   function card(title,body){return '<article class="card"><h3>'+title+'</h3><p>'+body+'</p></article>'}
   function step(n,title,body){return '<article class="card"><div class="eyebrow">Step '+n+'</div><h3>'+title+'</h3><p>'+body+'</p></article>'}
   function row(a,b,c){return '<tr><td><b>'+a+'</b></td><td>'+b+'</td><td>'+c+'</td></tr>'}
-  function guideWithStats(statsHtml){
-    return ''+
-      '<h2>Guide for Use</h2>'+ 
-      '<p class="lead">Production Atlas is a public-safe scouting dashboard for live-event work targets. It helps identify events, venues, departments, vendor routes, employer leads, and local labor pathways worth researching. It is not a job board, a confirmed hiring list, or a private contact database.</p>'+ 
-      (statsHtml||'')+
+  function guideWithStats(dashHtml){
+    return (dashHtml||'')+
+      '<h2 style="margin-top:36px">Guide for Use</h2>'+
+      '<p class="lead">Production Atlas is a public-safe scouting dashboard for live-event work targets. It helps identify events, venues, departments, vendor routes, employer leads, and local labor pathways worth researching. It is not a job board, a confirmed hiring list, or a private contact database.</p>'+
       '<div class="notice"><b>Core rule:</b> treat every record as a research lead until a current public source or direct official source confirms the actual vendor, labor provider, hiring route, date, and venue.</div>'+ 
       '<div class="grid">'+
         card('Primary purpose','Use the tool to fill work-year gaps by finding multi-day events, extended builds, touring-adjacent markets, camping festivals, arena/stadium runs, seasonal events, vendor ecosystems, and possible lodging/travel/per diem indicators.')+
@@ -75,8 +74,8 @@
     var timer=setInterval(function(){
       var stats=app.querySelector('.stats');
       if(stats||tries>30){
-        var statsHtml=stats?stats.outerHTML:'';
-        app.innerHTML=guideWithStats(statsHtml);
+        var dashHtml=app.innerHTML||'';
+        app.innerHTML=guideWithStats(dashHtml);
         clearInterval(timer);
       }
       tries++;
