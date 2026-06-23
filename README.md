@@ -9,7 +9,7 @@ Production Atlas is a static GitHub Pages research dashboard for scouting long-t
 
 - **Pages:** https://thecrewblueprint-glitch.github.io/festival-atlas/
 
-Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, Pages path, runtime loading model, active shared files, validation contract, major data state, page roles, collaboration-log convention, or public-safety/source policy changes, update this README in the same work cycle as the change.
+Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, Pages path, runtime loading model, active shared files, validation contract, major data state, page roles, collaboration-log convention, collaboration-log lifecycle, or public-safety/source policy changes, update this README in the same work cycle as the change.
 
 ## Repository / branch
 
@@ -54,18 +54,23 @@ Recommended filename pattern:
 YYYY-MM-DD-###-assistant-short-topic.md
 ```
 
-Each log entry should include:
+Each log entry must include lifecycle metadata:
 
 ```text
-Date
-Assistant
-Commit SHA or commit range
-Files changed
-Validation status
-What changed
-Known risks
-Next action
-README impact: updated / not affected
+Status: complete | incomplete | blocked | superseded
+Created: YYYY-MM-DD
+Review after: YYYY-MM-DD
+Assistant: ChatGPT | Claude | Claude Code | other
+Branch: research-version
+Commit: <sha or range>
+```
+
+Two-week cleanup rule:
+
+```text
+complete or superseded logs older than 14 days may be deleted if no longer useful.
+incomplete or blocked logs older than 14 days should be moved to ai-communication/collaboration-log/incomplete/.
+incomplete or blocked logs must remain auditable and must not be deleted during routine cleanup.
 ```
 
 Use `ai-communication/` root for major handoffs, decision records, current-state summaries, and cross-assistant instructions. Use `ai-communication/collaboration-log/` for compact per-commit/per-change notes.
@@ -281,8 +286,11 @@ Continue Scenic research starting at batch 006, or begin new department research
 
 ## Maintenance notes
 
-- Keep README current when significant app behavior, runtime loading, active pages, shared files, validation, research state, collaboration-log convention, source-link policy, or public-safety boundaries change.
+- Keep README current when significant app behavior, runtime loading, active pages, shared files, validation, research state, collaboration-log convention, collaboration-log lifecycle, source-link policy, or public-safety boundaries change.
 - Create a new file in `ai-communication/collaboration-log/` for routine per-commit/per-small-change notes instead of growing one long ledger.
+- Every collaboration log entry must include status metadata and a review-after date.
+- During two-week review, delete old complete/superseded logs only when no longer useful; move old incomplete/blocked logs into `ai-communication/collaboration-log/incomplete/`.
+- Do not delete incomplete or blocked logs during routine cleanup; keep them auditable until Aaron manually removes them or a later entry resolves them.
 - Keep the manifest current with every new branch research package.
 - Keep every data package paired with a matching research report.
 - Keep the active taxonomy and route update packages live through explicit HTML script tags before `assets/atlas-core-v2.js` unless a validated refactor replaces that model.
