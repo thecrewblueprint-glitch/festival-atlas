@@ -97,6 +97,8 @@
   function valueTierLabel(score){var s=Number(score||0);if(s>=80)return 'Priority travel-work target';if(s>=60)return 'Strong opportunity';if(s>=40)return 'Track / research further';if(s>=20)return 'Local or speculative';return 'Low current value';}
   function valueTierClass(score){var s=Number(score||0);if(s>=80)return 'vtier-priority';if(s>=60)return 'vtier-strong';if(s>=40)return 'vtier-track';if(s>=20)return 'vtier-local';return 'vtier-low';}
   function sortOpportunities(list){return list.slice().sort(function(a,b){var d=(b.longTermValueScore||0)-(a.longTermValueScore||0);if(d)return d;var as=a.active2026SourceUrl?1:0,bs=b.active2026SourceUrl?1:0;if(bs-as)return bs-as;return (a.month||13)-(b.month||13);});}
+  function confidenceLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'confirmed';if(/^likely/.test(v)||v==='public_secondary_source')return 'likely';if(/^possible/.test(v)||v==='route_lead')return 'possible';if(/supplemental/.test(v))return 'supplemental route lead';if(/unconfirmed|unverified|vendor_unconfirmed|needs_source|user_field_note/.test(v))return 'unverified';return 'human verification needed';}
+  function statusLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'Confirmed vendor';if(/^likely/.test(v))return 'Likely route';if(v==='route_lead')return 'Route lead';if(/unconfirmed|vendor_unconfirmed/.test(v))return 'Vendor unconfirmed';return label(val);}
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
@@ -269,13 +271,18 @@
   }
 
   function opportunityCard(opportunity){
+    var depts=(opportunity.departments||[]).slice(0,4).map(branchName);
+    var extra=Math.max(0,(opportunity.departments||[]).length-4);
+    var hasSource=!!opportunity.active2026SourceUrl;
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
       '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
+      '<p class="sub" style="font-size:.78rem;margin:3px 0 6px"><b>Depts:</b> '+esc(depts.join(', ')+(extra?' +'+extra+' more':''))+'</p>'+
       accomChips(opportunity)+
       '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
       '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
+      '<p><b>Confidence:</b> '+(hasSource?'<span style="color:#48c778">Likely — source attached</span>':'<span style="color:var(--muted)">Unverified — source needed</span>')+'</p>'+
       '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
       '<p><b>Next:</b> '+esc((opportunity.nextResearchActions||[])[0]||opportunity.nextHumanAction||'Verify before outreach')+'</p>'+
       '</article>';
@@ -478,7 +485,7 @@
     if(!el)return;
     el.innerHTML='<h2>Long-Term Opportunity Calendar</h2><p class="lead">Month-by-month view of active public-safe work targets.</p><div class="calendar">'+MONTHS.map(function(month,index){
       var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1});
-      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><b>'+esc(opportunity.name)+'</b><small>'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(label(opportunity.opportunityType))+'</small></div>'}).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
+      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="font-size:.62rem;padding:1px 7px;margin:0 0 4px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span><b style="display:block">'+esc(opportunity.name)+'</b><small>'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(label(opportunity.opportunityType))+'</small></div>'}).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
     }).join('')+'</div>';
   }
 
@@ -596,14 +603,40 @@
       var employer=employers.find(function(item){return item.id===id});
       return employer?plainLink(employer.name,bestLink(employer)):esc(id);
     }).join('<br>');
-    return '<div class="branch"><h4>'+esc(record.branchName||branch.name)+'</h4><p><b>Status:</b> '+esc(label(record.status))+'</p><p><b>Confidence:</b> '+esc(label(record.confidence))+'</p><p><b>Likely route:</b> '+esc(record.branchDisplayText||record.evidenceSummary||'Research route stored.')+'</p><p><b>Next:</b> '+esc(record.nextAction||'Verify before outreach.')+'</p><p><b>Relevant public leads:</b><br>'+employerLinks+'</p></div>';
+    var stText=statusLabel(record.status);
+    var confText=confidenceLabel(record.confidence);
+    var isRouteOnly=confText==='unverified'||confText==='possible'||confText==='supplemental route lead';
+    return '<div class="branch">'+
+      '<h4>'+esc(record.branchName||branch.name)+'</h4>'+
+      '<p><b>Status:</b> '+esc(stText)+'</p>'+
+      '<p><b>Confidence:</b> '+esc(confText)+'</p>'+
+      (isRouteOnly?'<p class="sub" style="color:var(--warn);font-size:.76rem">Route lead only — not a confirmed vendor. Verify before outreach.</p>':'')+
+      '<p><b>Route intelligence:</b> '+esc(record.branchDisplayText||record.evidenceSummary||'Research route stored.')+'</p>'+
+      '<p><b>Next action:</b> '+esc(record.nextAction||'Verify before outreach.')+'</p>'+
+      (employerLinks?'<p><b>Relevant public leads:</b><br>'+employerLinks+'</p>':'')+
+      '</div>';
   }
 
   window.openOpportunity=function(id){
     var opportunity=opportunities.find(function(item){return item.id===id});
     if(!opportunity)return;
+    var hasSource=!!opportunity.active2026SourceUrl;
+    var confText=confidenceLabel(opportunity.confidence||opportunity.sourceType);
     var branchHtml=(opportunity.departments||[]).map(function(dep){return branchCard(opportunity,dep)}).join('');
-    openModal('<h2>'+esc(opportunity.name)+'</h2><p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p><div class="modalgrid"><div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div><div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100</div><div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div><div class="detail"><b>Research status</b><br>'+esc(label(opportunity.confidence||opportunity.sourceType||'verify'))+'</div></div><p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||'Verify before outreach.')+'</p><h3>Mapped production branches</h3>'+branchHtml);
+    openModal(
+      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="display:inline-block;margin-bottom:8px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
+      '<h2 style="margin:0 0 6px">'+esc(opportunity.name)+'</h2>'+
+      '<p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
+      '<div class="modalgrid">'+
+        '<div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div>'+
+        '<div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100 — '+esc(valueTierLabel(opportunity.longTermValueScore))+'</div>'+
+        '<div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div>'+
+        '<div class="detail"><b>Confidence</b><br>'+esc(confText)+(hasSource?' — public source on <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a>':' — no public source yet')+'</div>'+
+      '</div>'+
+      '<p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||((opportunity.nextResearchActions||[])[0])||'Verify before outreach.')+'</p>'+
+      '<h3>Mapped production branches</h3>'+
+      branchHtml
+    );
   };
 
   window.openEmployer=function(id){
