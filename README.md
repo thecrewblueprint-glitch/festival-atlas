@@ -9,7 +9,7 @@ Production Atlas is a static GitHub Pages research dashboard for scouting long-t
 
 - **Pages:** https://thecrewblueprint-glitch.github.io/festival-atlas/
 
-Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, Pages path, runtime loading model, active shared files, validation contract, major data state, page roles, or public-safety/source policy changes, update this README in the same work cycle as the change.
+Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, Pages path, runtime loading model, active shared files, validation contract, major data state, page roles, collaboration-log convention, or public-safety/source policy changes, update this README in the same work cycle as the change.
 
 ## Repository / branch
 
@@ -37,6 +37,38 @@ When repo-visible documents disagree, resolve in this order:
 ```
 
 If actual files or validators show README drift, update README in the same work cycle. Do not leave source-of-truth drift for another assistant to discover.
+
+## Collaboration log rule
+
+Routine per-commit or per-small-change notes belong in:
+
+```text
+ai-communication/collaboration-log/
+```
+
+Use one new file per commit or compact commit group. Do not maintain one giant append-only active-session ledger for routine commit notes.
+
+Recommended filename pattern:
+
+```text
+YYYY-MM-DD-###-assistant-short-topic.md
+```
+
+Each log entry should include:
+
+```text
+Date
+Assistant
+Commit SHA or commit range
+Files changed
+Validation status
+What changed
+Known risks
+Next action
+README impact: updated / not affected
+```
+
+Use `ai-communication/` root for major handoffs, decision records, current-state summaries, and cross-assistant instructions. Use `ai-communication/collaboration-log/` for compact per-commit/per-change notes.
 
 ## Active app pages
 
@@ -249,7 +281,8 @@ Continue Scenic research starting at batch 006, or begin new department research
 
 ## Maintenance notes
 
-- Keep README current when significant app behavior, runtime loading, active pages, shared files, validation, research state, source-link policy, or public-safety boundaries change.
+- Keep README current when significant app behavior, runtime loading, active pages, shared files, validation, research state, collaboration-log convention, source-link policy, or public-safety boundaries change.
+- Create a new file in `ai-communication/collaboration-log/` for routine per-commit/per-small-change notes instead of growing one long ledger.
 - Keep the manifest current with every new branch research package.
 - Keep every data package paired with a matching research report.
 - Keep the active taxonomy and route update packages live through explicit HTML script tags before `assets/atlas-core-v2.js` unless a validated refactor replaces that model.
