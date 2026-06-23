@@ -7,7 +7,7 @@
     "validate:data": "node tools/validate-data.js",
     "validate:branch-research": "node tools/validate-branch-research-packages.js",
     "validate:static-app": "node tools/validate-static-app.js",
-    "validate:all": "npm run validate:branch-research && npm run validate:static-app"
+    "validate:all": "npm run validate:data && npm run validate:branch-research && npm run validate:static-app"
   },
   "engines": {
     "node": ">=18"

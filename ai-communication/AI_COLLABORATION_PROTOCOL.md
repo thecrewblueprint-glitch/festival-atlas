@@ -518,21 +518,21 @@ If the environment cannot run validation, document that explicitly and identify 
 
 ## 16. Pull Request Rules
 
-Current open PR:
+Current PR status (as of 2026-06-23):
 
 ```text
-PR #1: Load research batches into live app
-Base: main
-Head: claude/research-version-edits-z0gqw6
+PR #1 (claude/research-version-edits-z0gqw6 → main) — CLOSED.
+Do not reopen. Do not reference as active.
+All current work is on research-version.
 ```
 
-Rules:
+Rules for any future PR:
 
 ```text
-Do not merge PR #1 unless Aaron explicitly says to merge.
-Do not close PR #1 unless Aaron explicitly says to close.
+Do not open, merge, or close a PR unless Aaron explicitly requests it.
 Do not force-push or rewrite PR history unless explicitly instructed.
-Do not assume PR #1 is stale without checking current branch state.
+Do not push to main without explicit instruction.
+research-version is the active development branch.
 ```
 
 If PR status changes, add a note in:
@@ -862,21 +862,21 @@ Both must verify active branch and current files before acting.
 Neither should trust stale chat memory over repo state.
 ```
 
-## 31. Current Immediate Instruction to Claude
+## 31. Session Start Instruction to Any Incoming Assistant
 
-Claude, when you next pick this up:
+When you next pick this up:
 
 ```text
 1. Read this protocol.
-2. Read ai-communication/2026-06-22-chatgpt-to-claude-current-state.md.
+2. Read the most recent dated file in ai-communication/ (sort by date in filename, take the latest).
 3. Read README.md on research-version.
 4. Inspect branch-research-manifest.js.
 5. Inspect atlas-core-v2.js.
 6. Run npm run validate:all if you are about to make code/data changes.
-7. Leave your own Claude-to-ChatGPT handoff when done.
+7. Leave your own handoff in ai-communication/ when done.
 ```
 
-Do not proceed from old handoff assumptions without checking current files.
+Do not read a specific hardcoded filename as the catch-up source — filenames in this folder are dated and the latest is authoritative. Do not proceed from old handoff assumptions without checking current files.
 
 ## 32. Final Operating Principle
 

@@ -1,113 +1,112 @@
 #!/usr/bin/env node
 /*
-  Festival Atlas research data validator.
+  Opportunities data validator for Production Atlas.
+  Checks data/packages/opportunities-2026.js for structural integrity.
   No external dependencies. Run with:
 
     node tools/validate-data.js
-
-  This performs lightweight structural checks for the research-version branch.
 */
 
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
-const ROOT = process.cwd();
-const DATA_DIR = path.join(ROOT, 'data');
-const REQUIRED_STATUS = new Set([
-  'confirmed',
-  'needs-verification',
-  'lead-only',
-  'historical',
-  'user-supplied',
-  'conflicting-sources'
-]);
+const root = path.resolve(__dirname, '..');
 
-function readJson(relativePath) {
-  const fullPath = path.join(ROOT, relativePath);
-  if (!fs.existsSync(fullPath)) {
-    return { error: `Missing file: ${relativePath}` };
-  }
+function exists(rel) { return fs.existsSync(path.join(root, rel)); }
+function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
+
+const fail = [];
+const warn = [];
+
+function check(condition, message) { if (!condition) fail.push(message); }
+
+const oppFile = 'data/packages/opportunities-2026.js';
+check(exists(oppFile), `Missing ${oppFile}`);
+
+let records = [];
+if (exists(oppFile)) {
+  const source = read(oppFile);
+  const sandbox = { window: {}, console: { warn: () => {}, log: () => {}, error: () => {} } };
   try {
-    return { data: JSON.parse(fs.readFileSync(fullPath, 'utf8')) };
-  } catch (error) {
-    return { error: `Invalid JSON in ${relativePath}: ${error.message}` };
-  }
-}
-
-function assertArrayDataset(filePath, key, errors) {
-  const result = readJson(filePath);
-  if (result.error) {
-    errors.push(result.error);
-    return [];
-  }
-  const dataset = result.data;
-  if (!dataset.schema_version) errors.push(`${filePath}: missing schema_version`);
-  if (!Array.isArray(dataset[key])) {
-    errors.push(`${filePath}: expected ${key} to be an array`);
-    return [];
-  }
-  return dataset[key];
-}
-
-function validateCommonRecord(record, filePath, index, errors) {
-  const label = `${filePath} record ${index + 1}`;
-  if (!record.id || !/^[a-z0-9-]+$/.test(record.id)) errors.push(`${label}: invalid or missing id`);
-  if (!record.name) errors.push(`${label}: missing name`);
-  if (!record.research_status || !REQUIRED_STATUS.has(record.research_status)) errors.push(`${label}: invalid or missing research_status`);
-  if (!Array.isArray(record.sources)) errors.push(`${label}: sources must be an array`);
-}
-
-function validateSources(sources, errors) {
-  const seen = new Set();
-  for (const [index, source] of sources.entries()) {
-    const label = `data/sources.json record ${index + 1}`;
-    if (!source.id || !/^[a-z0-9-]+$/.test(source.id)) errors.push(`${label}: invalid or missing id`);
-    if (source.id && seen.has(source.id)) errors.push(`${label}: duplicate source id ${source.id}`);
-    if (source.id) seen.add(source.id);
-    if (!source.title) errors.push(`${label}: missing title`);
-    if (!source.url) errors.push(`${label}: missing url`);
-    if (!source.source_type) errors.push(`${label}: missing source_type`);
-    if (!source.confidence) errors.push(`${label}: missing confidence`);
-    if (!source.date_accessed) errors.push(`${label}: missing date_accessed`);
-  }
-  return seen;
-}
-
-function validateLinkedSources(records, sourceIds, filePath, errors) {
-  for (const [index, record] of records.entries()) {
-    if (!Array.isArray(record.sources)) continue;
-    for (const sourceId of record.sources) {
-      if (!sourceIds.has(sourceId)) {
-        errors.push(`${filePath} record ${index + 1}: unknown source id ${sourceId}`);
-      }
+    vm.runInNewContext(source, sandbox, { filename: 'opportunities-2026.js' });
+    if (!Array.isArray(sandbox.window.RESOURCE_OPPORTUNITIES)) {
+      fail.push('opportunities-2026.js does not export window.RESOURCE_OPPORTUNITIES as an array');
+    } else {
+      records = sandbox.window.RESOURCE_OPPORTUNITIES;
     }
+  } catch (e) {
+    fail.push(`opportunities-2026.js parse/runtime error: ${e.message}`);
   }
 }
 
-function main() {
-  const errors = [];
-  if (!fs.existsSync(DATA_DIR)) errors.push('Missing data directory');
+const seenIds = new Set();
+let activeCount = 0;
+let inactiveCount = 0;
+let sourcedCount = 0;
+let unsourcedCount = 0;
+const dateRe = /^\d{4}-\d{2}-\d{2}$/;
 
-  const festivals = assertArrayDataset('data/festivals.json', 'festivals', errors);
-  const companies = assertArrayDataset('data/companies.json', 'companies', errors);
-  const sources = assertArrayDataset('data/sources.json', 'sources', errors);
+records.forEach(function(record, i) {
+  if (!record) { fail.push(`Record ${i + 1}: null or undefined`); return; }
 
-  festivals.forEach((record, index) => validateCommonRecord(record, 'data/festivals.json', index, errors));
-  companies.forEach((record, index) => validateCommonRecord(record, 'data/companies.json', index, errors));
-  const sourceIds = validateSources(sources, errors);
-  validateLinkedSources(festivals, sourceIds, 'data/festivals.json', errors);
-  validateLinkedSources(companies, sourceIds, 'data/companies.json', errors);
+  const label = `Record ${i + 1} (${record.id || 'no id'})`;
 
-  if (errors.length) {
-    console.error('Research data validation failed:\n');
-    for (const error of errors) console.error(`- ${error}`);
-    process.exit(1);
+  check(record.id && /^[a-z0-9-]+$/.test(record.id), `${label}: invalid or missing id`);
+  if (record.id) {
+    check(!seenIds.has(record.id), `Duplicate id: ${record.id}`);
+    seenIds.add(record.id);
   }
 
-  console.log('Research data validation passed.');
-  console.log(`Festivals: ${festivals.length}`);
-  console.log(`Companies: ${companies.length}`);
-  console.log(`Sources: ${sources.length}`);
+  check(!!record.name, `${label}: missing name`);
+
+  if (record.month != null) {
+    check(Number.isInteger(record.month) && record.month >= 1 && record.month <= 12,
+      `${label}: month must be 1–12, got ${record.month}`);
+  }
+
+  if (record.startDate) {
+    check(dateRe.test(record.startDate), `${label}: startDate format invalid: ${record.startDate}`);
+  }
+  if (record.endDate) {
+    check(dateRe.test(record.endDate), `${label}: endDate format invalid: ${record.endDate}`);
+  }
+  if (record.startDate && record.endDate) {
+    check(record.endDate >= record.startDate,
+      `${label}: endDate ${record.endDate} is before startDate ${record.startDate}`);
+  }
+
+  if (record.longTermValueScore !== undefined) {
+    check(typeof record.longTermValueScore === 'number',
+      `${label}: longTermValueScore must be a number, got ${typeof record.longTermValueScore}`);
+  }
+
+  const isActive = record.visibleInActive2026View !== false;
+  if (isActive) {
+    activeCount++;
+    if (record.active2026SourceUrl) {
+      sourcedCount++;
+    } else {
+      unsourcedCount++;
+      warn.push(`${label}: active record missing active2026SourceUrl`);
+    }
+  } else {
+    inactiveCount++;
+  }
+});
+
+if (warn.length) {
+  console.warn('\nWarnings:');
+  warn.forEach(m => console.warn(`  - ${m}`));
 }
 
-main();
+if (fail.length) {
+  console.error('\nFailures:');
+  fail.forEach(m => console.error(`  - ${m}`));
+  process.exit(1);
+}
+
+console.log('Opportunities data validation passed.');
+console.log(`Total records: ${records.length}`);
+console.log(`Active: ${activeCount} (${sourcedCount} sourced, ${unsourcedCount} without source URL)`);
+console.log(`Inactive (hidden): ${inactiveCount}`);
