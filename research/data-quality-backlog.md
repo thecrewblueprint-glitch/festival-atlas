@@ -32,6 +32,39 @@ Fixed in `data/packages/opportunities-2026.js`:
 
 ---
 
+## Resolved — 2026-06-23 Data Cleanup Pass 2
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**Score updates applied (research batches 001–011):**
+All 54 active records recalibrated. Top moves: summerfest 58→76, bottlerock 35→66, breakaway 66→74, coachella/electric-forest →62, north-coast 36→56, bourbon-and-beyond/aftershock →56, lollapalooza/stagecoach →54.
+
+**Dates confirmed and filled (Category 1):**
+- `governors-ball-2026` — Jun 5–7, 2026, Flushing Meadows Corona Park
+- `bottlerock-napa-2026` — May 22–24, 2026, Napa Valley Expo
+- `kilby-block-party-2026` — May 15–17, 2026, Utah State Fairpark
+- `hinterland-2026` — Jul 30–Aug 2, 2026, Avenue of the Saints Amphitheater
+- `sea-hear-now-2026` — Sep 19–20, 2026, Asbury Park waterfront
+- `newport-folk-2026` — Jul 24–26, 2026, Fort Adams State Park
+- `newport-jazz-2026` — Jul 31–Aug 2, 2026, Fort Adams State Park
+- `okechobee-2026` — Mar 19–22, 2026, Sunshine Grove (venue also updated)
+
+**Source URLs filled (Category 2):**
+- `governors-ball-2026` — en.wikipedia.org/wiki/Governors_Ball_Music_Festival
+- `shaky-knees-2026` — en.wikipedia.org/wiki/Shaky_Knees_Music_Festival
+- `hinterland-2026` — hinterlandiowa.com
+- `bottlerock-napa-2026` — bottlerocknapavalley.com
+- `kilby-block-party-2026` — en.wikipedia.org/wiki/Kilby_Block_Party
+- `sea-hear-now-2026` — en.wikipedia.org/wiki/Sea.Hear.Now_Festival
+- `floydfest-2026` — floydfest.com
+- `newport-jazz-2026` — en.wikipedia.org/wiki/Newport_Jazz_Festival
+- `okechobee-2026` — okeechobeefest.com (updated from Wikipedia to official site)
+
+**Dreamville marked inactive:**
+- `dreamville-2026` — score 32→18, visibleInActive2026View:false, active2026Status:inactive_2026. Research indicates festival ended after 2025.
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
 These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
@@ -39,19 +72,11 @@ These active records have `startDate: null`. The Gantt view shows them as dashed
 Priority order is by value score descending.
 
 ```
-breakaway-2026            Score 66  Multi-city run Apr–Nov; each market needs its own date
+breakaway-2026            Score 74  Multi-city run Apr–Nov; each market needs its own date
 country-thunder-us-2026   Score 62  Multi-market Apr–Jul; split into per-market records
-hinterland-2026           Score 36  Iowa August; confirm dates from official source
-governors-ball-2026       Score 36  Queens NY June; confirm 2026 dates
-inkcarceration-2026       Score 36  DWP Mansfield OH July; confirm dates
-bottlerock-napa-2026      Score 35  Napa Valley Expo May; confirm 2026 dates
-sea-hear-now-2026         Score 35  Asbury Park NJ September; confirm dates
-shaky-knees-2026          Score 35  Atlanta GA May; confirm venue AND dates
-kilby-block-party-2026    Score 34  Salt Lake City UT May; confirm dates
-newport-folk-2026         Score 34  Newport RI July; confirm dates
-newport-jazz-2026         Score 34  Newport RI August; confirm dates
-okechobee-2026            Score 38  Okeechobee FL March; confirm 2026 dates and status
-sick-new-world-2026       Score 34  Las Vegas NV April; confirm venue and dates
+inkcarceration-2026       Score 50  DWP Mansfield OH July; confirm dates
+shaky-knees-2026          Score 42  Atlanta GA May; confirm venue AND dates
+sick-new-world-2026       Score 48  Las Vegas NV April; confirm venue and dates
 ```
 
 ---
@@ -63,46 +88,35 @@ These active records have no `active2026SourceUrl`. The research queue will flag
 All non-source records should be treated as `unverified` until a public URL is attached.
 
 ```
-stagecoach-2026             Score 36  Country festival; find public 2026 confirmation
-bourbon-and-beyond-2026     Score 42  DWP Louisville; attach secondary source
-inkcarceration-2026         Score 36  DWP Mansfield; attach secondary source
-governors-ball-2026         Score 36  NYC festival; attach secondary source
-shaky-knees-2026            Score 35  Atlanta; attach secondary source
-portola-2026                Score 34  SF waterfront; attach secondary source
-edc-orlando-2026            Score 38  Orlando; attach secondary source
-hinterland-2026             Score 36  Iowa; attach secondary source
-new-orleans-jazz-heritage-2026 Score 56  Important regional; attach official or wikipedia source
-bottlerock-napa-2026        Score 35  Napa; attach secondary source
-kilby-block-party-2026      Score 34  SLC; attach secondary source
-railbird-2026               Score 32  Lexington KY; attach secondary source
-oceans-calling-2026         Score 38  Ocean City MD; attach secondary source
-sea-hear-now-2026           Score 35  Asbury Park NJ; attach secondary source
-dreamville-2026             Score 32  Raleigh NC; attach secondary source
-roots-picnic-2026           Score 32  Philadelphia PA; attach secondary source
-iii-points-2026             Score 34  Miami FL; attach secondary source
-hard-summer-2026            Score 34  Inglewood CA; attach secondary source
-beyond-wonderland-socal-2026 Score 34  San Bernardino CA; attach secondary source
-north-coast-2026            Score 36  Bridgeview IL; attach secondary source
-breakaway-2026              Score 66  Multi-city; source attached — split per-market records still needed
+stagecoach-2026             Score 54  Country festival; find public 2026 confirmation
+bourbon-and-beyond-2026     Score 56  DWP Louisville; attach secondary source
+inkcarceration-2026         Score 50  DWP Mansfield; attach secondary source
+portola-2026                Score 44  SF waterfront; attach secondary source
+edc-orlando-2026            Score 50  Orlando; attach secondary source
+railbird-2026               Score 38  Lexington KY; attach secondary source
+oceans-calling-2026         Score 48  Ocean City MD; attach secondary source
+roots-picnic-2026           Score 42  Philadelphia PA; attach secondary source
+iii-points-2026             Score 38  Miami FL; attach secondary source
+hard-summer-2026            Score 40  Inglewood CA; attach secondary source
+beyond-wonderland-socal-2026 Score 38  San Bernardino CA; attach secondary source
+north-coast-2026            Score 56  Bridgeview IL; attach secondary source
+breakaway-2026              Score 74  Multi-city; source attached — split per-market records still needed
 country-thunder-us-2026     Score 62  Multi-market; source attached — split per-market records still needed
-rock-fest-wisconsin-2026    Score 38  Cadott WI; attach secondary source
-hulaween-2026               Score 44  Suwannee FL; attach secondary source
-high-sierra-2026            Score 42  Grass Valley CA; attach secondary source
+rock-fest-wisconsin-2026    Score 52  Cadott WI; attach secondary source
+hulaween-2026               Score 58  Suwannee FL; attach secondary source
+high-sierra-2026            Score 50  Grass Valley CA; attach secondary source
 m3f-2026                    Score 30  Phoenix AZ; attach secondary source
-newport-folk-2026           Score 34  Newport RI; attach secondary source (wiki exists)
-newport-jazz-2026           Score 34  Newport RI; attach secondary source
-levitate-2026               Score 32  Marshfield MA; attach secondary source
-treefort-2026               Score 40  Boise ID; attach secondary source
+levitate-2026               Score 34  Marshfield MA; attach secondary source
+treefort-2026               Score 50  Boise ID; attach secondary source
 capitol-hill-block-party-2026 Score 32  Seattle WA; attach secondary source
-pickathon-2026              Score 42  Happy Valley OR; attach secondary source
-telluride-bluegrass-2026    Score 40  Telluride CO; attach secondary source
-floydfest-2026              Score 44  Floyd VA; attach secondary source
-rocklahoma-2026             Score 38  Pryor OK; attach secondary source
-lights-all-night-2026       Score 30  Dallas TX; attach secondary source
-countdown-nye-2026          Score 34  San Bernardino CA; attach secondary source
-dreamstate-socal-2026       Score 32  Long Beach CA; attach secondary source
-sick-new-world-2026         Score 34  Las Vegas NV; attach secondary source
-levitation-austin-2026      Score 38  Austin TX; attach secondary source
+pickathon-2026              Score 40  Happy Valley OR; attach secondary source
+telluride-bluegrass-2026    Score 54  Telluride CO; attach secondary source
+rocklahoma-2026             Score 48  Pryor OK; attach secondary source
+lights-all-night-2026       Score 32  Dallas TX; attach secondary source
+countdown-nye-2026          Score 36  San Bernardino CA; attach secondary source
+dreamstate-socal-2026       Score 44  Long Beach CA; attach secondary source
+sick-new-world-2026         Score 48  Las Vegas NV; attach secondary source
+levitation-austin-2026      Score 36  Austin TX; attach secondary source
 ```
 
 ---
