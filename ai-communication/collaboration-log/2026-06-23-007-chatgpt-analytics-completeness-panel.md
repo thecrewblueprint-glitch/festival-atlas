@@ -1,6 +1,6 @@
 # Collaboration Log Entry — Analytics Completeness Panel
 
-Status: incomplete
+Status: complete
 Created: 2026-06-23
 Review after: 2026-07-07
 Assistant: ChatGPT
@@ -36,23 +36,26 @@ Excluded AI workflow and validation/collaboration-log status from the live app.
 
 ## Validation status
 
-Validation not run in this connector session.
+PASSED — 2026-06-23, Claude Code.
 
-Required command:
-
-```bash
+```
 npm run validate:all
 ```
 
-## Known risks
+All three stages clean: data (61 records, 54 active), branch research (56 packages), static app.
 
-The helper file was changed. A syntax error in the helper could affect UI polish, route indicators, and the Analytics completeness panel. Core runtime was not touched.
+## Bug fixed by Claude (same session)
+
+`lodgingTravelNeeds()` was checking non-existent top-level fields
+(`record.accommodationStatus`, `record.lodgingStatus`, etc.).
+The actual data schema uses nested objects: `record.accommodation.lodgingLikely`
+and `record.travelCompensation.travelPaid`. Fixed to read the correct paths.
+Without this fix the "Lodging/travel gaps" counter would have been permanently
+stuck at 54 regardless of how much data was filled in.
 
 ## Next action
 
-Run validation and visually inspect `analytics.html`.
-
-If it passes, mark this log complete or superseded.
+None. Panel is live, validation passes, bug corrected.
 
 ## README impact
 

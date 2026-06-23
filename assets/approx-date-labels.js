@@ -119,19 +119,13 @@
   }
 
   function lodgingTravelNeeds(record){
+    var acc = record.accommodation || {};
+    var trav = record.travelCompensation || {};
     var candidates = [
-      record.accommodationStatus,
-      record.lodgingStatus,
-      record.lodging,
-      record.camping,
-      record.travelStatus,
-      record.travel,
-      record.perDiem,
-      record.perDiemStatus,
-      record.accommodationType
+      acc.lodgingLikely, acc.lodgingType, acc.whoProvides,
+      trav.travelPaid, trav.perDiem, trav.flightProvided
     ];
-    var hasAny = candidates.some(hasUsefulValue);
-    return !hasAny;
+    return !candidates.some(hasUsefulValue);
   }
 
   function dateOrVenueNeeds(record){
