@@ -82,6 +82,62 @@
         active2026CheckedDate: '2026-06-23',
         sourceQuality: 'official_source_lead_with_public_media_confirmation',
         researchQueueNote: 'Official Roots Picnic site attached and public media confirms May 30-31, 2026 at Belmont Plateau; continue Philadelphia labor/local route and vendor stack research.'
+      },
+      {
+        id: 'iii-points-2026',
+        active2026SourceUrl: 'https://www.iiipoints.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official III Points source confirms III Points 2026, Mana Wynwood, and October 16-17. Continue Mana Wynwood labor route and stage/vendor research.'
+      },
+      {
+        id: 'hard-summer-2026',
+        active2026SourceUrl: 'https://www.hardsummer.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official HARD Summer source confirms August 1-2, 2026 Los Angeles and tickets on sale. Continue Hollywood Park/Inglewood labor route, Insomniac vendor stack, and parking/site ops vendor research.'
+      },
+      {
+        id: 'beyond-wonderland-socal-2026',
+        active2026SourceUrl: 'https://socal.beyondwonderland.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_source_conflicting_year_text',
+        researchQueueNote: 'Official Beyond SoCal page is active but has conflicting 2026/2027 page text; do not change existing 2026 dates until directly verified. Continue NOS labor route and Insomniac vendor research.'
+      },
+      {
+        id: 'north-coast-2026',
+        active2026SourceUrl: 'https://northcoastfestival.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official North Coast source confirms 2026 festival/lineup and Labor Day Weekend positioning. Continue SeatGeek Stadium site vendor and Chicago-area labor route research.'
+      },
+      {
+        id: 'rock-fest-wisconsin-2026',
+        active2026SourceUrl: 'https://rock-fest.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official Rock Fest source confirms July 16-18, 2026, 5 stages, 80+ bands, and 7,500 campsites. Continue camping/lodging route, Wisconsin labor route, and rock festival vendor stack research.'
+      },
+      {
+        id: 'hulaween-2026',
+        active2026SourceUrl: 'https://en.wikipedia.org/wiki/Suwannee_Hulaween',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'public_background_source_only',
+        researchQueueNote: 'Public background source confirms Hulaween as a Live Oak / Spirit of the Suwannee Music Park camping festival, but 2026 official source was not reachable in this pass. Keep official 2026 verification open.'
+      },
+      {
+        id: 'high-sierra-2026',
+        active2026SourceUrl: 'https://www.highsierramusic.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official High Sierra source attached and public reporting confirms July 2-5, 2026 at Nevada County Fairgrounds in Grass Valley. Continue new-venue staffing and local labor route research.'
+      },
+      {
+        id: 'm3f-2026',
+        active2026SourceUrl: 'https://www.m3ffest.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official M3F source confirms Steele Indian School Park, March 6-7, Phoenix AZ. Continue Phoenix labor route, site ops vendors, and apply/contact route research.'
       }
     ]
   };
@@ -130,7 +186,7 @@
       var queueNote = document.createElement('div');
       queueNote.className = 'notice research-queue-update-note';
       queueNote.style.margin = '0 0 16px';
-      queueNote.textContent = 'Research queue updates applied: Stagecoach, Bourbon & Beyond, Inkcarceration, Portola, EDC Orlando, Railbird, Oceans Calling, and Roots Picnic now have public source updates. Inkcarceration dates were confirmed.';
+      queueNote.textContent = 'Research queue updates applied: 16 active queue source updates are now patched through the active taxonomy package. Hulaween remains official-source verification open.';
       app.insertBefore(queueNote, app.firstChild);
       app.dataset.researchQueueUpdateNotice = 'applied';
     }
