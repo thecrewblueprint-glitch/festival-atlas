@@ -1,6 +1,20 @@
 (function(){
   var running = false;
   var taxonomyLoadStarted = false;
+  var routeUpdatesLoadStarted = false;
+
+  function loadRouteResearchUpdates(){
+    if(routeUpdatesLoadStarted || window.PRODUCTION_ATLAS_ROUTE_RESEARCH_UPDATES) return;
+    routeUpdatesLoadStarted = true;
+    var script = document.createElement('script');
+    script.src = 'data/packages/research-queue-route-updates.js?v=route1';
+    script.async = false;
+    script.onload = function(){
+      if(typeof window.applyRouteResearchUpdates === 'function') window.applyRouteResearchUpdates();
+    };
+    script.onerror = function(){ console.warn('Could not load route research queue updates package.'); };
+    document.head.appendChild(script);
+  }
 
   function loadOpportunityTaxonomy(){
     if(taxonomyLoadStarted || window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY) return;
@@ -10,6 +24,7 @@
     script.async = false;
     script.onload = function(){
       if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
+      loadRouteResearchUpdates();
     };
     script.onerror = function(){ console.warn('Could not load opportunity taxonomy package.'); };
     document.head.appendChild(script);
@@ -37,11 +52,13 @@
 
   function scheduleApproximatePass(){
     loadOpportunityTaxonomy();
+    loadRouteResearchUpdates();
     if(running)return;
     running = true;
     setTimeout(function(){
       markApproximateDates(document);
       if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
+      if(typeof window.applyRouteResearchUpdates === 'function') window.applyRouteResearchUpdates();
       running = false;
     }, 0);
   }
