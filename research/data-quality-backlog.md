@@ -6,6 +6,32 @@ Purpose: Working list of active opportunity records that need data cleanup befor
 
 ---
 
+## Resolved — 2026-06-23 Data Cleanup Pass
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**Date bug fixed (Category 3):**
+- `crssd-2026` — endDate corrected from `2026-09-27` → `2026-03-15`. nextResearchActions updated to note fall edition needs a separate record.
+
+**Dates confirmed and filled (Category 1):**
+- `louder-than-life-2026` — Sep 17–20, 2026. Source: louderthanlifefestival.com
+- `welcome-to-rockville-2026` — May 7–10, 2026, Daytona International Speedway. Source: welcometorockville.com
+- `sonic-temple-2026` — May 14–17, 2026, Historic Crew Stadium, Columbus OH. Source: sonictemplefestival.com
+- `aftershock-2026` — Oct 1–4, 2026, Discovery Park, Sacramento CA. Source: aftershockfestival.com
+
+**Source URLs filled (Category 2):**
+- `breakaway-2026` — breakawayfestival.com/2026-season
+- `country-thunder-us-2026` — countrythunder.com/connect
+- `summerfest-2026` — summerfest.com
+- `new-orleans-jazz-heritage-2026` — nojazzfest.com
+- `lollapalooza-chicago-2026` — lollapalooza.com
+- `louder-than-life-2026` — louderthanlifefestival.com (also in Category 1)
+- `welcome-to-rockville-2026` — welcometorockville.com (also in Category 1)
+- `sonic-temple-2026` — sonictemplefestival.com (also in Category 1)
+- `aftershock-2026` — aftershockfestival.com (also in Category 1)
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
 These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
@@ -15,13 +41,9 @@ Priority order is by value score descending.
 ```
 breakaway-2026            Score 66  Multi-city run Apr–Nov; each market needs its own date
 country-thunder-us-2026   Score 62  Multi-market Apr–Jul; split into per-market records
-louder-than-life-2026     Score 38  DWP Louisville September; confirm official 2026 dates
-welcome-to-rockville-2026 Score 40  DWP Daytona Beach May; confirm official 2026 dates
-sonic-temple-2026         Score 38  DWP Columbus OH May; confirm official 2026 dates
 hinterland-2026           Score 36  Iowa August; confirm dates from official source
 governors-ball-2026       Score 36  Queens NY June; confirm 2026 dates
 inkcarceration-2026       Score 36  DWP Mansfield OH July; confirm dates
-aftershock-2026           Score 38  DWP Sacramento CA October; confirm dates
 bottlerock-napa-2026      Score 35  Napa Valley Expo May; confirm 2026 dates
 sea-hear-now-2026         Score 35  Asbury Park NJ September; confirm dates
 shaky-knees-2026          Score 35  Atlanta GA May; confirm venue AND dates
@@ -42,13 +64,8 @@ All non-source records should be treated as `unverified` until a public URL is a
 
 ```
 stagecoach-2026             Score 36  Country festival; find public 2026 confirmation
-summerfest-2026             Score 58  Major festival; find official or secondary source
-lollapalooza-chicago-2026   Score 42  Well-known event; attach Wikipedia or official source
 bourbon-and-beyond-2026     Score 42  DWP Louisville; attach secondary source
-welcome-to-rockville-2026   Score 40  DWP Daytona; attach secondary source
-sonic-temple-2026           Score 38  DWP Columbus; attach secondary source
 inkcarceration-2026         Score 36  DWP Mansfield; attach secondary source
-aftershock-2026             Score 38  DWP Sacramento; attach secondary source
 governors-ball-2026         Score 36  NYC festival; attach secondary source
 shaky-knees-2026            Score 35  Atlanta; attach secondary source
 portola-2026                Score 34  SF waterfront; attach secondary source
@@ -66,8 +83,8 @@ iii-points-2026             Score 34  Miami FL; attach secondary source
 hard-summer-2026            Score 34  Inglewood CA; attach secondary source
 beyond-wonderland-socal-2026 Score 34  San Bernardino CA; attach secondary source
 north-coast-2026            Score 36  Bridgeview IL; attach secondary source
-breakaway-2026              Score 66  Multi-city; attach secondary source
-country-thunder-us-2026     Score 62  Multi-market; attach secondary source
+breakaway-2026              Score 66  Multi-city; source attached — split per-market records still needed
+country-thunder-us-2026     Score 62  Multi-market; source attached — split per-market records still needed
 rock-fest-wisconsin-2026    Score 38  Cadott WI; attach secondary source
 hulaween-2026               Score 44  Suwannee FL; attach secondary source
 high-sierra-2026            Score 42  Grass Valley CA; attach secondary source
@@ -95,10 +112,8 @@ levitation-austin-2026      Score 38  Austin TX; attach secondary source
 These records have technical date issues that produce incorrect Gantt bars or filter behavior.
 
 ```
-crssd-2026   startDate: '2026-03-14', endDate: '2026-09-27'
-  Problem: endDate spans 6 months — this is a two-edition festival (spring + fall).
-  Fix: Split into crssd-spring-2026 and crssd-fall-2026, or set endDate to '2026-03-15'
-  and add a note about the fall edition.
+crssd-2026   FIXED 2026-06-23: endDate corrected to '2026-03-15'. Fall edition needs a
+  separate crssd-fall-2026 record when official fall dates are confirmed.
 
 breakaway-2026   startDate: '2026-04-10', endDate: '2026-11-14'
   This IS a 14-city run spanning April–November. The wide date range is correct
