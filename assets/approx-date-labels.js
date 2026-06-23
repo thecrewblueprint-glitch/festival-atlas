@@ -99,7 +99,7 @@
       return map;
     }, {});
     var matched = updates.filter(function(item){return item && item.id && activeIds[item.id];}).length;
-    return {matched: matched || updates.length, total: Array.isArray(active) && active.length ? active.length : 54, updates: updates.length};
+    return {matched: matched, total: Array.isArray(active) && active.length ? active.length : 54, updates: updates.length};
   }
 
   function manageAnalyticsNotices(){

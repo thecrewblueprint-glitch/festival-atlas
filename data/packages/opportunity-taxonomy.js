@@ -195,15 +195,14 @@
     var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY;
     var app = document.querySelector('#app');
     var page = document.body ? document.body.dataset.page : '';
-    if(app && ['opportunities','calendar','map','schedule','branches','sources','analytics'].indexOf(page) !== -1 && app.dataset.taxonomyNotice !== 'applied'){
+    if(app && ['opportunities','calendar','map','schedule','branches','sources','analytics'].indexOf(page) !== -1 && !app.querySelector('.taxonomy-page-note')){
       var pageNote = document.createElement('div');
       pageNote.className = 'notice taxonomy-page-note';
       pageNote.style.margin = '0 0 16px';
       pageNote.textContent = 'Public route intelligence: taxonomy language and active research queue source updates are live. This app maps public work routes and verification steps.';
       app.insertBefore(pageNote, app.firstChild);
-      app.dataset.taxonomyNotice = 'applied';
     }
-    if(app && page === 'analytics' && app.dataset.researchQueueUpdateNotice !== 'applied'){
+    if(app && page === 'analytics' && !app.querySelector('.research-queue-update-note')){
       var queueNote = document.createElement('div');
       queueNote.className = 'notice research-queue-update-note';
       queueNote.style.margin = '0 0 16px';

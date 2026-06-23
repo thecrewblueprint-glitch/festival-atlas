@@ -81,7 +81,7 @@ records.forEach(function(record, i) {
       `${label}: longTermValueScore must be a number, got ${typeof record.longTermValueScore}`);
   }
 
-  const isActive = record.visibleInActive2026View !== false;
+  const isActive = record.visibleInActive2026View === true;
   if (isActive) {
     activeCount++;
     if (record.active2026SourceUrl) {

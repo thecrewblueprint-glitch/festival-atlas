@@ -102,7 +102,8 @@
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
-  function plainLink(text,url){return url?'<a href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
+  function safeUrl(url){return url && /^https?:\/\//i.test(url) ? url : '';}
+  function plainLink(text,url){var safe=safeUrl(url);return safe?'<a href="'+esc(safe)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
 
   function loadScript(src){
     return new Promise(function(resolve){
