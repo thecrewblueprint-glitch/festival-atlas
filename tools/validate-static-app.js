@@ -26,6 +26,7 @@ const requiredSharedFiles = [
   'assets/atlas-core-v2.js',
   'assets/approx-date-labels.js',
   'data/packages/opportunity-taxonomy.js',
+  'data/packages/research-queue-route-updates.js',
   'data/packages/branch-research-manifest.js',
   'data/packages/production-branches.js',
   'data/packages/opportunities-2026.js',
@@ -105,6 +106,8 @@ check(approx.includes('Approx. planning window'), 'approx-date-labels.js does no
 check(approx.includes('verify before planning'), 'approx-date-labels.js does not add verification language');
 check(approx.includes('data/packages/opportunity-taxonomy.js'), 'approx-date-labels.js does not load the active opportunity taxonomy package');
 check(approx.includes('applyOpportunityTaxonomy'), 'approx-date-labels.js does not trigger active taxonomy display language');
+check(approx.includes('data/packages/research-queue-route-updates.js'), 'approx-date-labels.js does not load the active route research updates package');
+check(approx.includes('applyRouteResearchUpdates'), 'approx-date-labels.js does not trigger active route research updates');
 
 const taxonomy = exists('data/packages/opportunity-taxonomy.js') ? read('data/packages/opportunity-taxonomy.js') : '';
 check(taxonomy.includes('PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY'), 'opportunity-taxonomy.js does not export PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY');
@@ -134,6 +137,20 @@ check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js d
   'sick-new-world-2026'
 ].forEach(id => {
   check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
+});
+
+const routeUpdates = exists('data/packages/research-queue-route-updates.js') ? read('data/packages/research-queue-route-updates.js') : '';
+check(routeUpdates.includes('PRODUCTION_ATLAS_ROUTE_RESEARCH_UPDATES'), 'research-queue-route-updates.js does not expose route research updates');
+check(routeUpdates.includes('applyRouteResearchUpdates'), 'research-queue-route-updates.js does not expose applyRouteResearchUpdates');
+[
+  'summerfest-2026',
+  'breakaway-2026',
+  'country-thunder-us-2026',
+  'bottlerock-napa-2026',
+  'electric-forest-2026',
+  'lollapalooza-chicago-2026'
+].forEach(id => {
+  check(routeUpdates.includes(id), `research-queue-route-updates.js missing route research update for ${id}`);
 });
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
@@ -189,4 +206,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy and research queue target updates are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, and route research updates are active.`);
