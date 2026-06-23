@@ -129,7 +129,9 @@ check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js d
   'rock-fest-wisconsin-2026',
   'hulaween-2026',
   'high-sierra-2026',
-  'm3f-2026'
+  'm3f-2026',
+  'shaky-knees-2026',
+  'sick-new-world-2026'
 ].forEach(id => {
   check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
 });
