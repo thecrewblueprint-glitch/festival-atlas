@@ -1,6 +1,7 @@
 # Production Atlas
 
 Generated: 2026-06-22
+Updated: 2026-06-23
 
 Production Atlas is a static GitHub Pages research dashboard for scouting long-term live-event production work targets, employer/vendor routes, IATSE/local routes, and department-specific production branches.
 
@@ -8,7 +9,7 @@ Production Atlas is a static GitHub Pages research dashboard for scouting long-t
 
 - **Pages:** https://thecrewblueprint-glitch.github.io/festival-atlas/
 
-Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, or Pages path changes, update this README in the same commit as the change.
+Maintenance rule: if the GitHub Pages URL, publishing branch, repository name, Pages path, runtime loading model, active shared files, validation contract, major data state, page roles, or public-safety/source policy changes, update this README in the same work cycle as the change.
 
 ## Repository / branch
 
@@ -21,10 +22,27 @@ Live preview source branch: research-version
 Public site: https://thecrewblueprint-glitch.github.io/festival-atlas/
 ```
 
+## Source-of-truth rule
+
+When repo-visible documents disagree, resolve in this order:
+
+```text
+1. Actual files on research-version
+2. Validation scripts
+3. README.md
+4. Latest ai-communication handoff
+5. Current user instruction
+6. Older docs
+7. Chat memory
+```
+
+If actual files or validators show README drift, update README in the same work cycle. Do not leave source-of-truth drift for another assistant to discover.
+
 ## Active app pages
 
 ```text
-index.html
+index.html        Home: quick explanation, dashboard, and clear Guide link
+guide.html        Full Guide for Use and public-safe workflow
 calendar.html
 opportunities.html
 branches.html
@@ -33,7 +51,6 @@ iatse.html
 matrix.html
 analytics.html
 sources.html
-guide.html
 map.html
 schedule.html
 ```
@@ -47,6 +64,7 @@ assets/approx-date-labels.js
 assets/home-guide-page.js
 assets/guide-page.js
 data/packages/opportunity-taxonomy.js
+data/packages/research-queue-route-updates.js
 data/packages/branch-research-manifest.js
 ```
 
@@ -58,33 +76,58 @@ assets/atlas-core.js
 
 Long-term target: every active page should continue loading `assets/atlas-core-v2.js` directly. Retire the shim only after active page compatibility is verified.
 
+## Required runtime load order
+
+Every active HTML page must load the main data packages, then the public-safe research update packages, then the app runtime. Current validated order:
+
+```html
+<script src="data/packages/production-branches.js?v=multi1"></script>
+<script src="data/packages/opportunities-2026.js?v=multi1"></script>
+<script src="data/packages/us-employers.js?v=multi1"></script>
+<script src="data/iatse-us-local-directory.js?v=multi1"></script>
+<script src="data/packages/opportunity-taxonomy.js?v=taxonomy1"></script>
+<script src="data/packages/research-queue-route-updates.js?v=route1"></script>
+<script src="assets/atlas-core-v2.js?v=multi3"></script>
+<script src="assets/approx-date-labels.js?v=approx1"></script>
+```
+
+Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js` and `research-queue-route-updates.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES`.
+
 ## Important data files
 
 ```text
 data/packages/production-branches.js
 data/packages/opportunities-2026.js
 data/packages/us-employers.js
-data/packages/opportunity-taxonomy.js
 data/iatse-us-local-directory.js
+data/packages/opportunity-taxonomy.js
+data/packages/research-queue-route-updates.js
 data/packages/branch-research-manifest.js
 data/packages/branch-research-batch-*.js
 ```
 
-## Active opportunity taxonomy
-
-The public route taxonomy lives at:
+## Active taxonomy and route research packages
 
 ```text
-data/packages/opportunity-taxonomy.js
+data/packages/opportunity-taxonomy.js              18 source/date research queue updates
+data/packages/research-queue-route-updates.js      12 public producer/operator route leads
 ```
 
-It is loaded by the already-active shared helper:
+Both packages are loaded directly by all active HTML pages before `assets/atlas-core-v2.js`. `assets/approx-date-labels.js` may re-apply UI polish and guarded fallback behavior, but it is not the canonical first-load path for these packages.
+
+Route updates are public-safe route leads only. They do not confirm vendors, labor providers, private contacts, pay, lodging, or referrals.
+
+## IATSE / local jurisdiction wording rule
+
+Do not name specific IATSE local numbers in route research notes unless a direct current public source supports that exact jurisdiction claim and the context requires it.
+
+Preferred language:
 
 ```text
-assets/approx-date-labels.js
+verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
 ```
 
-The taxonomy must remain live. Do not leave replacement taxonomy or public-route language files outside the active loader path. The taxonomy currently provides visible public-route language on opportunity-style cards and selected pages, while preserving the existing opportunity data model.
+This is legally safer, user-friendly, and clear that jurisdiction must be verified before outreach.
 
 ## Branch research loading rule
 
@@ -101,13 +144,6 @@ When adding a new branch research batch:
 3. Add the data package filename to `data/packages/branch-research-manifest.js`.
 4. Keep the rule: one branch research data file equals one `window.*` export only.
 5. Run validation.
-
-Example data/report pair:
-
-```text
-data/packages/branch-research-batch-002-scenic.js
-research/branch-research-batch-002-scenic.md
-```
 
 ## Public-safety rules
 
@@ -159,6 +195,25 @@ npm run validate:all
 
 The Pages deploy workflow publishes the `research-version` branch through GitHub Actions.
 
+## Current data state
+
+```text
+Active opportunities: 54
+Active opportunity source URL coverage: 54 / 54
+Route research update records: 12
+Taxonomy source/date queue updates: 18
+Branch research packages: 56
+```
+
+Remaining intentional multi-market placeholders:
+
+```text
+breakaway-2026
+country-thunder-us-2026
+```
+
+These need city/market-level split records before exact per-market date, venue, vendor, or labor-route conclusions.
+
 ## Current research state
 
 Completed departments (batches 001–005):
@@ -194,9 +249,9 @@ Continue Scenic research starting at batch 006, or begin new department research
 
 ## Maintenance notes
 
-- Keep this README current when the Pages URL or deployment path changes.
+- Keep README current when significant app behavior, runtime loading, active pages, shared files, validation, research state, source-link policy, or public-safety boundaries change.
 - Keep the manifest current with every new branch research package.
 - Keep every data package paired with a matching research report.
-- Keep the active taxonomy live through `assets/approx-date-labels.js` unless a cleaner core-runtime integration replaces it in the same validated commit.
-- Do not bypass the one-export-per-file rule.
+- Keep the active taxonomy and route update packages live through explicit HTML script tags before `assets/atlas-core-v2.js` unless a validated refactor replaces that model.
+- Do not bypass the one-export-per-file rule for branch research packages.
 - Do not continue research until workflow failures are resolved.
