@@ -16,7 +16,9 @@ const requiredPages = [
   'matrix.html',
   'analytics.html',
   'sources.html',
-  'guide.html'
+  'guide.html',
+  'map.html',
+  'schedule.html'
 ];
 
 const requiredSharedFiles = [
