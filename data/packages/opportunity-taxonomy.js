@@ -1,6 +1,6 @@
 (function(){
   window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY = {
-    generatedAt: '2026-06-22',
+    generatedAt: '2026-06-23',
     purpose: 'Public route intelligence labels for Production Atlas.',
     sourceLinkRule: 'Source links stay centralized on sources.html.',
     fallbackLanguage: 'Unknown publicly. Human verification needed.',
@@ -53,6 +53,35 @@
         active2026CheckedDate: '2026-06-23',
         sourceQuality: 'official_public_source_attached',
         researchQueueNote: 'Official Portola source attached; continue SF labor/local route and LED/audio vendor research.'
+      },
+      {
+        id: 'edc-orlando-2026',
+        active2026SourceUrl: 'https://orlando.electricdaisycarnival.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_source_lead_needs_direct_page_review',
+        researchQueueNote: 'Official EDC Orlando site attached as active source lead; direct page verification still needed before changing dates or venue.',
+        nextResearchActions: ['verify Orlando labor route','verify Insomniac vendors','confirm official 2026 date page','research lodging/per diem potential']
+      },
+      {
+        id: 'railbird-2026',
+        active2026SourceUrl: 'https://railbirdfest.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_public_source_attached',
+        researchQueueNote: 'Official Railbird site attached; public listings indicate June 6-7, 2026 at The Red Mile. Continue Red Mile site vendor and Kentucky labor route research.'
+      },
+      {
+        id: 'oceans-calling-2026',
+        active2026SourceUrl: 'https://www.oceanscallingfestival.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_source_lead_with_public_media_confirmation',
+        researchQueueNote: 'Official Oceans Calling site attached and public media confirms September 25-27, 2026 at Ocean City Inlet Beach; continue coastal site ops and Maryland labor route research.'
+      },
+      {
+        id: 'roots-picnic-2026',
+        active2026SourceUrl: 'https://rootspicnic.com/',
+        active2026CheckedDate: '2026-06-23',
+        sourceQuality: 'official_source_lead_with_public_media_confirmation',
+        researchQueueNote: 'Official Roots Picnic site attached and public media confirms May 30-31, 2026 at Belmont Plateau; continue Philadelphia labor/local route and vendor stack research.'
       }
     ]
   };
@@ -93,7 +122,7 @@
       var pageNote = document.createElement('div');
       pageNote.className = 'notice taxonomy-page-note';
       pageNote.style.margin = '0 0 16px';
-      pageNote.textContent = 'Public route intelligence: taxonomy language and first research queue source updates are active. This app maps public work routes and verification steps.';
+      pageNote.textContent = 'Public route intelligence: taxonomy language and active research queue source updates are live. This app maps public work routes and verification steps.';
       app.insertBefore(pageNote, app.firstChild);
       app.dataset.taxonomyNotice = 'applied';
     }
@@ -101,7 +130,7 @@
       var queueNote = document.createElement('div');
       queueNote.className = 'notice research-queue-update-note';
       queueNote.style.margin = '0 0 16px';
-      queueNote.textContent = 'Research queue update applied: Stagecoach, Bourbon & Beyond, Inkcarceration, and Portola now have public source updates. Inkcarceration dates were also confirmed.';
+      queueNote.textContent = 'Research queue updates applied: Stagecoach, Bourbon & Beyond, Inkcarceration, Portola, EDC Orlando, Railbird, Oceans Calling, and Roots Picnic now have public source updates. Inkcarceration dates were confirmed.';
       app.insertBefore(queueNote, app.firstChild);
       app.dataset.researchQueueUpdateNotice = 'applied';
     }
