@@ -111,6 +111,11 @@ check(taxonomy.includes('PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY'), 'opportunity-t
 check(taxonomy.includes('applyOpportunityTaxonomy'), 'opportunity-taxonomy.js does not expose active display behavior');
 check(taxonomy.includes('taxonomy-page-note'), 'opportunity-taxonomy.js does not render visible taxonomy page language');
 check(taxonomy.includes('taxonomy-route-note'), 'opportunity-taxonomy.js does not render visible route-card language');
+check(taxonomy.includes('researchQueueUpdates'), 'opportunity-taxonomy.js does not define active research queue updates');
+check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js does not apply active research queue updates');
+['stagecoach-2026','bourbon-and-beyond-2026','inkcarceration-2026','portola-2026'].forEach(id => {
+  check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
+});
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
@@ -165,4 +170,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy is active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy and first research queue updates are active.`);
