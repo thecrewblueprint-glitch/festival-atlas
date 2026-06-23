@@ -25,6 +25,7 @@ const requiredSharedFiles = [
   'assets/atlas.css',
   'assets/atlas-core-v2.js',
   'assets/approx-date-labels.js',
+  'data/packages/opportunity-taxonomy.js',
   'data/packages/branch-research-manifest.js',
   'data/packages/production-branches.js',
   'data/packages/opportunities-2026.js',
@@ -102,6 +103,14 @@ const approx = exists('assets/approx-date-labels.js') ? read('assets/approx-date
 check(approx.includes('Approx. date window'), 'approx-date-labels.js does not label cards as approximate date windows');
 check(approx.includes('Approx. planning window'), 'approx-date-labels.js does not label modals as approximate planning windows');
 check(approx.includes('verify before planning'), 'approx-date-labels.js does not add verification language');
+check(approx.includes('data/packages/opportunity-taxonomy.js'), 'approx-date-labels.js does not load the active opportunity taxonomy package');
+check(approx.includes('applyOpportunityTaxonomy'), 'approx-date-labels.js does not trigger active taxonomy display language');
+
+const taxonomy = exists('data/packages/opportunity-taxonomy.js') ? read('data/packages/opportunity-taxonomy.js') : '';
+check(taxonomy.includes('PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY'), 'opportunity-taxonomy.js does not export PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY');
+check(taxonomy.includes('applyOpportunityTaxonomy'), 'opportunity-taxonomy.js does not expose active display behavior');
+check(taxonomy.includes('taxonomy-page-note'), 'opportunity-taxonomy.js does not render visible taxonomy page language');
+check(taxonomy.includes('taxonomy-route-note'), 'opportunity-taxonomy.js does not render visible route-card language');
 
 const css = exists('assets/atlas.css') ? read('assets/atlas.css') : '';
 check(!/\.chip\b/.test(css), 'assets/atlas.css still contains chip badge styles');
@@ -156,4 +165,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy is active.`);
