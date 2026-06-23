@@ -65,59 +65,80 @@ All 54 active records recalibrated. Top moves: summerfest 58→76, bottlerock 35
 
 ---
 
+## Resolved — 2026-06-23 Source URL Fill Pass
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**Source URLs filled (Category 2) — 24 records:**
+- `stagecoach-2026` — stagecoach.com
+- `bourbon-and-beyond-2026` — bourbonandbeyond.com
+- `inkcarceration-2026` — inkcarceration.com
+- `portola-2026` — portolafestival.com
+- `edc-orlando-2026` — electricdaisycarnival.com/orlando
+- `railbird-2026` — railbirdfestival.com
+- `oceans-calling-2026` — oceanscallingfest.com
+- `roots-picnic-2026` — rootspicnic.com
+- `iii-points-2026` — iiipoints.com
+- `hard-summer-2026` — hardfest.com/summer
+- `beyond-wonderland-socal-2026` — beyondwonderland.com/socal
+- `north-coast-2026` — northcoastfestival.com
+- `rock-fest-wisconsin-2026` — rock-fest.com
+- `hulaween-2026` — hulaween.com
+- `high-sierra-2026` — highsierramusic.com
+- `m3f-2026` — m3ffest.com
+- `levitate-2026` — levitatefestival.com
+- `treefort-2026` — treefortmusicfest.com
+- `capitol-hill-block-party-2026` — capitolhillblockparty.com
+- `pickathon-2026` — pickathon.com
+- `telluride-bluegrass-2026` — bluegrass.com/telluride
+- `rocklahoma-2026` — rocklahoma.com
+- `lights-all-night-2026` — lightsallnight.com
+- `levitation-austin-2026` — levitation.fm
+
+**Dates confirmed and filled (Category 1):**
+- `inkcarceration-2026` — Jul 17–19, 2026, Ohio State Reformatory, Mansfield OH. Source: inkcarceration.com
+
+---
+
+## Resolved — 2026-06-23 Final Research Pass
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**Dates confirmed and filled + venues updated (Category 1 / Category 4):**
+- `shaky-knees-2026` — Sep 18–20, 2026, Piedmont Park, Atlanta GA. Month corrected 5→9. Source: shakykneesfestival.com
+- `sick-new-world-2026` — Apr 25, 2026 (single day), Las Vegas Festival Grounds. Source: sicknewworldfest.com
+
+**Source URLs filled (Category 2):**
+- `countdown-nye-2026` — countdownnye.com
+- `dreamstate-socal-2026` — socal.dreamstateusa.com
+- `shaky-knees-2026` — shakykneesfestival.com (updated from Wikipedia to official site; also in dates above)
+- `sick-new-world-2026` — sicknewworldfest.com (also in dates above)
+
+**Venue updated (Category 4):**
+- `dreamstate-socal-2026` — venue corrected to Queen Mary Waterfront, Long Beach CA
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
 These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
 
-Priority order is by value score descending.
+All other records now have confirmed dates as of 2026-06-23.
 
 ```
 breakaway-2026            Score 74  Multi-city run Apr–Nov; each market needs its own date
 country-thunder-us-2026   Score 62  Multi-market Apr–Jul; split into per-market records
-inkcarceration-2026       Score 50  DWP Mansfield OH July; confirm dates
-shaky-knees-2026          Score 42  Atlanta GA May; confirm venue AND dates
-sick-new-world-2026       Score 48  Las Vegas NV April; confirm venue and dates
 ```
+
+Note: Both records have approximate season-span dates (breakaway Apr 10–Nov 14; country-thunder Apr 9–Jul 19). These are acceptable multi-market range placeholders. Per-market split records are the real fix.
 
 ---
 
 ## Category 2 — Missing Public Source URL
 
-These active records have no `active2026SourceUrl`. The research queue will flag them under "Source missing."
+**All active records now have source URLs as of 2026-06-23.** Category 2 is fully resolved.
 
-All non-source records should be treated as `unverified` until a public URL is attached.
-
-```
-stagecoach-2026             Score 54  Country festival; find public 2026 confirmation
-bourbon-and-beyond-2026     Score 56  DWP Louisville; attach secondary source
-inkcarceration-2026         Score 50  DWP Mansfield; attach secondary source
-portola-2026                Score 44  SF waterfront; attach secondary source
-edc-orlando-2026            Score 50  Orlando; attach secondary source
-railbird-2026               Score 38  Lexington KY; attach secondary source
-oceans-calling-2026         Score 48  Ocean City MD; attach secondary source
-roots-picnic-2026           Score 42  Philadelphia PA; attach secondary source
-iii-points-2026             Score 38  Miami FL; attach secondary source
-hard-summer-2026            Score 40  Inglewood CA; attach secondary source
-beyond-wonderland-socal-2026 Score 38  San Bernardino CA; attach secondary source
-north-coast-2026            Score 56  Bridgeview IL; attach secondary source
-breakaway-2026              Score 74  Multi-city; source attached — split per-market records still needed
-country-thunder-us-2026     Score 62  Multi-market; source attached — split per-market records still needed
-rock-fest-wisconsin-2026    Score 52  Cadott WI; attach secondary source
-hulaween-2026               Score 58  Suwannee FL; attach secondary source
-high-sierra-2026            Score 50  Grass Valley CA; attach secondary source
-m3f-2026                    Score 30  Phoenix AZ; attach secondary source
-levitate-2026               Score 34  Marshfield MA; attach secondary source
-treefort-2026               Score 50  Boise ID; attach secondary source
-capitol-hill-block-party-2026 Score 32  Seattle WA; attach secondary source
-pickathon-2026              Score 40  Happy Valley OR; attach secondary source
-telluride-bluegrass-2026    Score 54  Telluride CO; attach secondary source
-rocklahoma-2026             Score 48  Pryor OK; attach secondary source
-lights-all-night-2026       Score 32  Dallas TX; attach secondary source
-countdown-nye-2026          Score 36  San Bernardino CA; attach secondary source
-dreamstate-socal-2026       Score 44  Long Beach CA; attach secondary source
-sick-new-world-2026         Score 48  Las Vegas NV; attach secondary source
-levitation-austin-2026      Score 36  Austin TX; attach secondary source
-```
+Remaining action: breakaway-2026 and country-thunder-us-2026 have sources attached at the tour level; per-market records still needed when individual market dates are confirmed.
 
 ---
 
@@ -147,11 +168,11 @@ country-thunder-us-2026   startDate: '2026-04-09', endDate: '2026-07-19'
 These records have placeholder or unverified venue/region data.
 
 ```
-shaky-knees-2026         venue: 'Atlanta festival site TBD/verify' — find official 2026 venue
-sick-new-world-2026      venue: 'Las Vegas festival grounds' — verify specific site
 breakaway-2026           region: 'United States multi-market' — acceptable; each leg needs city
 country-thunder-us-2026  region: 'United States multi-market' — same; per-market split needed
 ```
+
+Note: shaky-knees (Piedmont Park) and sick-new-world (Las Vegas Festival Grounds) resolved 2026-06-23.
 
 ---
 
@@ -193,18 +214,14 @@ m3f-2026                    producer: M3F / nonprofit festival org, verify
 These records are in the active view but have a value score or presentation that may signal more certainty than the data supports. Review before using as outreach justification.
 
 ```
-breakaway-2026       Score 66 — multi-city, no source, no per-market dates. High score
-                     reflects potential, not confirmed work. Treat as speculative until
-                     per-market details are confirmed.
+breakaway-2026       Score 74 — multi-city, source attached at tour level, no per-market dates.
+                     High score reflects potential, not confirmed work. Treat as speculative
+                     until per-market dates and venues are confirmed.
 
-country-thunder-us-2026  Score 62 — same situation. High score, no source, no per-market split.
-
-crssd-2026           Score 46 — date bug makes it look like a 6-month engagement in Gantt.
-                     Fix the date bug before using in schedule planning.
-
-summerfest-2026      Score 58 — high score, no attached source URL (though it's a well-known
-                     event). Attach a source before treating as confirmed research lead.
+country-thunder-us-2026  Score 62 — same situation. Source attached, no per-market split.
 ```
+
+Note: crssd-2026 (date bug) and summerfest-2026 (missing source) resolved as of 2026-06-23.
 
 ---
 
