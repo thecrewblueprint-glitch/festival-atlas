@@ -1,5 +1,19 @@
 (function(){
   var running = false;
+  var taxonomyLoadStarted = false;
+
+  function loadOpportunityTaxonomy(){
+    if(taxonomyLoadStarted || window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY) return;
+    taxonomyLoadStarted = true;
+    var script = document.createElement('script');
+    script.src = 'data/packages/opportunity-taxonomy.js?v=taxonomy1';
+    script.async = false;
+    script.onload = function(){
+      if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
+    };
+    script.onerror = function(){ console.warn('Could not load opportunity taxonomy package.'); };
+    document.head.appendChild(script);
+  }
 
   function markApproximateDates(root){
     var scope = root || document;
@@ -22,10 +36,12 @@
   }
 
   function scheduleApproximatePass(){
+    loadOpportunityTaxonomy();
     if(running)return;
     running = true;
     setTimeout(function(){
       markApproximateDates(document);
+      if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
       running = false;
     }, 0);
   }
