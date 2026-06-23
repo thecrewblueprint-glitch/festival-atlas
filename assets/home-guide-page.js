@@ -3,10 +3,8 @@
   function card(title,body){return '<article class="card"><h3>'+title+'</h3><p>'+body+'</p></article>'}
   function step(n,title,body){return '<article class="card"><div class="eyebrow">Step '+n+'</div><h3>'+title+'</h3><p>'+body+'</p></article>'}
   function row(a,b,c){return '<tr><td><b>'+a+'</b></td><td>'+b+'</td><td>'+c+'</td></tr>'}
-  function guideWithStats(dashHtml){
-    return (dashHtml||'')+
-      '<h2 style="margin-top:36px">Guide for Use</h2>'+
-      '<p class="lead">Production Atlas is a public-safe scouting dashboard for live-event work targets. It helps identify events, venues, departments, vendor routes, employer leads, and local labor pathways worth researching. It is not a job board, a confirmed hiring list, or a private contact database.</p>'+
+  function guideBody(){
+    return '<p class="lead">Production Atlas is a public-safe scouting dashboard for live-event work targets. It helps identify events, venues, departments, vendor routes, employer leads, and local labor pathways worth researching. It is not a job board, a confirmed hiring list, or a private contact database.</p>'+ 
       '<div class="notice"><b>Core rule:</b> treat every record as a research lead until a current public source or direct official source confirms the actual vendor, labor provider, hiring route, date, and venue.</div>'+ 
       '<div class="grid">'+
         card('Primary purpose','Use the tool to fill work-year gaps by finding multi-day events, extended builds, touring-adjacent markets, camping festivals, arena/stadium runs, seasonal events, vendor ecosystems, and possible lodging/travel/per diem indicators.')+
@@ -65,6 +63,15 @@
       '</tbody></table></div>'+ 
       '<h3>What this tool is not</h3>'+ 
       '<p class="lead">This tool is not a guarantee of work, a wage database, a hotel list, a staffing promise, a confirmed vendor list, or a substitute for direct verification. It is a structured research dashboard for deciding where to spend your next outreach and research effort.</p>';
+  }
+  function guideWithStats(dashHtml){
+    return (dashHtml||'')+
+      '<section style="margin-top:28px">'+
+        '<details class="card" style="padding:18px" open>'+ 
+          '<summary style="cursor:pointer;font-weight:900;font-size:1.05rem">Guide for Use — public-safe research workflow</summary>'+ 
+          '<div style="margin-top:18px">'+guideBody()+'</div>'+ 
+        '</details>'+ 
+      '</section>';
   }
   function install(){
     if(document.body.dataset.page!=='home')return;
