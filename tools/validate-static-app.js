@@ -6,6 +6,7 @@ const root = path.resolve(__dirname, '..');
 const packagesDir = path.join(root, 'data', 'packages');
 const researchDir = path.join(root, 'research');
 const collaborationLogDir = path.join(root, 'ai-communication', 'collaboration-log');
+const incompleteCollaborationLogDir = path.join(collaborationLogDir, 'incomplete');
 
 const requiredPages = [
   'index.html',
@@ -34,7 +35,8 @@ const requiredSharedFiles = [
   'data/packages/us-employers.js',
   'data/iatse-us-local-directory.js',
   'archive/README.md',
-  'ai-communication/collaboration-log/README.md'
+  'ai-communication/collaboration-log/README.md',
+  'ai-communication/collaboration-log/incomplete/README.md'
 ];
 
 const retiredRuntimeReferences = [
@@ -76,6 +78,18 @@ function listBranchPackages() {
   return fs.readdirSync(packagesDir)
     .filter((name) => /^branch-research-batch-.*\.js$/.test(name))
     .sort();
+}
+
+function validateCollaborationEntry(relPath) {
+  const text = read(relPath);
+  check(/^Status: (complete|incomplete|blocked|superseded)$/m.test(text), `${relPath} missing valid Status metadata`);
+  check(/^Created: \d{4}-\d{2}-\d{2}$/m.test(text), `${relPath} missing Created date metadata`);
+  check(/^Review after: \d{4}-\d{2}-\d{2}$/m.test(text), `${relPath} missing Review after date metadata`);
+  check(/^Assistant: /m.test(text), `${relPath} missing Assistant metadata`);
+  check(/^Branch: research-version$/m.test(text), `${relPath} missing research-version branch metadata`);
+  check(/^Commit: /m.test(text), `${relPath} missing Commit metadata`);
+  check(text.includes('## Validation status'), `${relPath} missing Validation status section`);
+  check(text.includes('## Next action'), `${relPath} missing Next action section`);
 }
 
 requiredPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
@@ -175,6 +189,10 @@ check(readme.includes('Source-of-truth rule'), 'README.md missing source-of-trut
 check(readme.includes('Collaboration log rule'), 'README.md missing collaboration log rule');
 check(readme.includes('ai-communication/collaboration-log/'), 'README.md missing collaboration log folder path');
 check(readme.includes('one new file per commit'), 'README.md missing one-file-per-commit collaboration log rule');
+check(readme.includes('Status: complete | incomplete | blocked | superseded'), 'README.md missing collaboration log status metadata rule');
+check(readme.includes('Two-week cleanup rule'), 'README.md missing collaboration log two-week cleanup rule');
+check(readme.includes('ai-communication/collaboration-log/incomplete/'), 'README.md missing incomplete collaboration log folder path');
+check(readme.includes('incomplete or blocked logs must remain auditable'), 'README.md missing incomplete/blocked audit retention rule');
 check(readme.includes('data/packages/research-queue-route-updates.js'), 'README.md missing active route research update package');
 check(readme.includes('Required runtime load order'), 'README.md missing required runtime load order section');
 check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
@@ -185,14 +203,32 @@ check(readme.includes('README current when significant app behavior'), 'README.m
 const collaborationLogReadme = exists('ai-communication/collaboration-log/README.md') ? read('ai-communication/collaboration-log/README.md') : '';
 check(collaborationLogReadme.includes('one collaboration log file per commit'), 'collaboration-log README missing one-file-per-commit purpose');
 check(collaborationLogReadme.includes('YYYY-MM-DD-###-assistant-short-topic.md'), 'collaboration-log README missing filename pattern');
+check(collaborationLogReadme.includes('Status: complete | incomplete | blocked | superseded'), 'collaboration-log README missing status metadata options');
+check(collaborationLogReadme.includes('Review after: YYYY-MM-DD'), 'collaboration-log README missing review-after metadata');
+check(collaborationLogReadme.includes('Every two weeks'), 'collaboration-log README missing two-week review cadence');
 check(collaborationLogReadme.includes('Do not maintain one giant append-only ledger'), 'collaboration-log README missing no-giant-ledger rule');
+check(collaborationLogReadme.includes('Do not delete incomplete or blocked logs'), 'collaboration-log README missing incomplete retention rule');
+
+const incompleteReadme = exists('ai-communication/collaboration-log/incomplete/README.md') ? read('ai-communication/collaboration-log/incomplete/README.md') : '';
+check(incompleteReadme.includes('Incomplete Collaboration Logs'), 'incomplete collaboration log README missing title');
+check(incompleteReadme.includes('Do not delete files from this folder'), 'incomplete collaboration log README missing no-delete rule');
+check(incompleteReadme.includes('Aaron can manually delete'), 'incomplete collaboration log README missing manual deletion rule');
 
 if (fs.existsSync(collaborationLogDir)) {
   const logEntries = fs.readdirSync(collaborationLogDir)
     .filter(name => /^\d{4}-\d{2}-\d{2}-\d{3}-.*\.md$/.test(name));
   check(logEntries.length > 0, 'collaboration-log folder has no dated numbered log entries');
+  logEntries.forEach(name => validateCollaborationEntry(path.join('ai-communication', 'collaboration-log', name)));
 } else {
   fail.push('Missing collaboration-log folder');
+}
+
+if (fs.existsSync(incompleteCollaborationLogDir)) {
+  const incompleteEntries = fs.readdirSync(incompleteCollaborationLogDir)
+    .filter(name => /^\d{4}-\d{2}-\d{2}-\d{3}-.*\.md$/.test(name));
+  incompleteEntries.forEach(name => validateCollaborationEntry(path.join('ai-communication', 'collaboration-log', 'incomplete', name)));
+} else {
+  fail.push('Missing incomplete collaboration-log folder');
 }
 
 const employersData = exists('data/packages/us-employers.js') ? read('data/packages/us-employers.js') : '';
@@ -244,4 +280,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, and collaboration-log convention are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, and collaboration-log lifecycle are active.`);
