@@ -8,7 +8,7 @@
       ],
       nextResearchActions: [
         'check Milwaukee World Festival / Summerfest public hiring route',
-        'verify Milwaukee IATSE/local jurisdiction route',
+        'verify applicable IATSE/local jurisdiction for Milwaukee (research local number before outreach)',
         'research Henry Maier Festival Park approved vendor and stage support routes',
         'verify multi-week crew intake windows before outreach'
       ],
@@ -52,7 +52,7 @@
       nextResearchActions: [
         'verify Latitude 38 / BottleRock public hiring or vendor route',
         'research Napa Valley Expo site operations and approved vendor route',
-        'verify Bay Area/Napa labor route',
+        'verify applicable IATSE/local jurisdiction for Napa / Bay Area (research local number before outreach)',
         'research AfterDark venue production route separately from main festival'
       ],
       researchQueueNote: 'Route research update: BottleRock has a clear producer/site route lead through Latitude 38 and Napa Valley Expo context. Do not infer stage/audio vendors without separate evidence.'
@@ -66,7 +66,7 @@
       ],
       nextResearchActions: [
         'verify Insomniac / Madison House public hiring route',
-        'verify Michigan local/labor provider route',
+        'verify applicable IATSE/local jurisdiction for Rothbury / West Michigan (research local number before outreach)',
         'research Double JJ Resort site operations route',
         'research crew camping/lodging route separately from attendee camping'
       ],
@@ -81,7 +81,7 @@
       ],
       nextResearchActions: [
         'check C3 Presents / Live Nation public careers route',
-        'verify Chicago IATSE/local jurisdiction route',
+        'verify applicable IATSE/local jurisdiction for Chicago (research local number before outreach)',
         'research Grant Park site operations vendor route',
         'verify festival vendor stack before outreach'
       ],
@@ -96,7 +96,7 @@
       ],
       nextResearchActions: [
         'verify Goldenvoice / AEG Presents public hiring route',
-        'verify IATSE jurisdiction for Indio / Coachella Valley (Riverside County)',
+        'verify applicable IATSE/local jurisdiction for Indio / Coachella Valley (research local number before outreach)',
         'research Empire Polo Club site operations and approved vendor route',
         'verify two-weekend crew intake windows and changeover logistics',
         'research production vendor stack before outreach — do not infer without public source'
@@ -112,7 +112,7 @@
       ],
       nextResearchActions: [
         'verify Goldenvoice / AEG Presents public hiring route for country format',
-        'verify IATSE jurisdiction for Indio / Coachella Valley (Riverside County)',
+        'verify applicable IATSE/local jurisdiction for Indio / Coachella Valley (research local number before outreach)',
         'research Empire Polo Club site reset window between Coachella and Stagecoach',
         'verify country festival vendor stack differences from EDM/multi-genre format',
         'research travel crew potential across Coachella-to-Stagecoach production window'
@@ -143,7 +143,7 @@
       ],
       nextResearchActions: [
         'verify Ultra Enterprises / RC Events public hiring or vendor route',
-        'verify Miami-Dade IATSE jurisdiction and applicable local',
+        'verify applicable IATSE/local jurisdiction for Miami-Dade / Bayfront Park (research local number before outreach)',
         'research Bayfront Park city permit and production vendor route',
         'research downtown Miami site operations and load-in/out constraints',
         'verify multi-stage vendor stack via public sources only'
@@ -158,7 +158,7 @@
       ],
       nextResearchActions: [
         'verify C3 Presents / Live Nation public hiring route for Bonnaroo',
-        'verify IATSE jurisdiction for Manchester / Coffee County TN',
+        'verify applicable IATSE/local jurisdiction for Manchester / Coffee County TN (research local number before outreach)',
         'research The Farm permanent site operations and build crew route',
         'research multi-day camping event crew intake windows (June)',
         'verify recurring production vendor stack and infrastructure partners'
