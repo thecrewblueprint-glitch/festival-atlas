@@ -5,15 +5,6 @@
     });
   }
 
-  function valueTierLabel(score){
-    var s = Number(score || 0);
-    if(s >= 80) return 'Priority travel-work target';
-    if(s >= 60) return 'Strong opportunity';
-    if(s >= 40) return 'Track / research further';
-    if(s >= 20) return 'Local or speculative';
-    return 'Low current value';
-  }
-
   function valueTierClass(score){
     var s = Number(score || 0);
     if(s >= 80) return 'vtier-priority';
@@ -66,6 +57,18 @@
     return pattern.test(actionText(opportunity));
   }
 
+  function hasSupplementalTravelInfo(opportunity){
+    var accom = opportunity.accommodation || {};
+    var travel = opportunity.travelCompensation || {};
+    return Object.keys(accom).some(function(key){
+      var val = String(accom[key] || '').toLowerCase();
+      return val && val !== 'unknown' && val !== 'none';
+    }) || Object.keys(travel).some(function(key){
+      var val = String(travel[key] || '').toLowerCase();
+      return val && val !== 'unknown' && val !== 'none';
+    });
+  }
+
   function queueItem(opportunity){
     var action = (opportunity.nextResearchActions || [])[0] || opportunity.nextHumanAction || opportunity.researchQueueNote || 'Verify before outreach.';
     var route = opportunity.routeResearchStatus ? '<br><span style="color:var(--muted);font-size:.74rem">Route: '+esc(String(opportunity.routeResearchStatus).replaceAll('_',' '))+'</span>' : '';
@@ -111,8 +114,8 @@
     var needsDepartment = opportunities.filter(function(o){
       return !Array.isArray(o.departments) || !o.departments.length || bucketHas(o,/department coverage|venue type|multi-venue|city-specific|split .* records/i);
     });
-    var needsTravel = opportunities.filter(function(o){
-      return bucketHas(o,/travel|lodging|camping|per diem|camp-in|rural location/i);
+    var supplementalTravel = opportunities.filter(function(o){
+      return hasSupplementalTravelInfo(o) || bucketHas(o,/travel|lodging|camping|per diem|camp-in|rural location/i);
     });
     var hold = opportunities.filter(function(o){
       var confidence = confidenceLabel(o.confidence || o.sourceType);
@@ -122,7 +125,7 @@
       return o.startDate && o.active2026SourceUrl && o.routeResearchStatus && hold.indexOf(o) === -1;
     });
 
-    var totalOpen = unique([].concat(needsDate,needsSource,needsVendor,needsLabor,needsDepartment,needsTravel,hold)).length;
+    var totalOpen = unique([].concat(needsDate,needsSource,needsVendor,needsLabor,needsDepartment,hold)).length;
     var routeUpdated = opportunities.filter(function(o){return !!o.routeResearchStatus;}).length;
     var sourceUpdated = opportunities.filter(function(o){return !!o.active2026CheckedDate;}).length;
 
@@ -130,21 +133,21 @@
       '<h3 style="margin-top:26px">Action-first research queue</h3>'+ 
       '<p class="lead">Operational queue grouped by next verification step. This keeps route leads public-safe and does not publish private contacts, pay, lodging details, or referrals.</p>'+ 
       '<div class="stats" style="margin:0 0 18px">'+
-        '<div class="stat"><b>'+totalOpen+'</b><span>records with open queue work</span></div>'+ 
+        '<div class="stat"><b>'+totalOpen+'</b><span>records with core queue work</span></div>'+ 
         '<div class="stat"><b>'+routeUpdated+'</b><span>public route updates</span></div>'+ 
         '<div class="stat"><b>'+sourceUpdated+'</b><span>source/date updates</span></div>'+ 
         '<div class="stat"><b>'+ready.length+'</b><span>near outreach-planning ready</span></div>'+ 
       '</div>'+ 
-      '<div class="notice" style="margin-bottom:18px"><b>Use order:</b> verify source/date first, then route, then vendor stack, then travel/lodging potential. Raw source links remain on the Sources page.</div>'+ 
+      '<div class="notice" style="margin-bottom:18px"><b>Use order:</b> verify source/date first, then route, then vendor stack and department coverage. Lodging, travel, and per diem are supplemental when public information exists; they are not required to identify work routes.</div>'+ 
       '<div class="grid">'+
         bucketCard('Verify active date / status',needsDate,'Confirm current dates and active event status before planning around the record.')+
         bucketCard('Review or attach public sources',needsSource,'Use public or official sources; source links stay centralized on sources.html.')+
         bucketCard('Verify production vendor stack',needsVendor,'Identify staging, audio, lighting, video, power, site, or logistics vendors only from public evidence.')+
         bucketCard('Verify labor route',needsLabor,'Identify public union, local jurisdiction, labor broker, operator, or hiring route before outreach.')+
         bucketCard('Verify department coverage',needsDepartment,'Clarify split-market, multi-venue, or department coverage before treating the record as comparable.')+
-        bucketCard('Verify travel / lodging / per diem potential',needsTravel,'Check travel-work practicality without publishing private lodging, pay, or field-note details.')+
         bucketCard('Ready for outreach planning review',ready,'These have source/date and route signals; still verify details before contact or scheduling decisions.')+
         bucketCard('Low-confidence / hold',hold,'Keep these conservative until the conflicting, weak, or background-only source issue is resolved.')+
+        bucketCard('Supplemental travel / lodging context',supplementalTravel,'Optional context only. Missing lodging, travel, or per diem data does not reduce core work-route confidence.')+
       '</div>'+ 
       '</section>';
 
