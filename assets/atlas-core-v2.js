@@ -21,6 +21,7 @@
   var employers=[];
   var iatseLocals=[];
   var branchIndex={records:[],byKey:{}};
+  var branchDataReady=false;
   var _leafMap=null;
   var _leafLayer=null;
   var OPP_COORDS={
@@ -104,6 +105,7 @@
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
   function safeUrl(url){return url && /^https?:\/\//i.test(url) ? url : '';}
   function plainLink(text,url){var safe=safeUrl(url);return safe?'<a href="'+esc(safe)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
+  function debounce(fn,ms){var timer;return function(){var args=arguments,self=this;clearTimeout(timer);timer=setTimeout(function(){fn.apply(self,args)},ms)}}
 
   function loadScript(src){
     return new Promise(function(resolve){
@@ -126,12 +128,15 @@
     });
   }
 
-  function loadBranchResearch(){
-    return loadBranchManifest().then(function(){
-      return branchFiles.reduce(function(chain,file){
-        return chain.then(function(){return loadScript('data/packages/'+file+'?v=manifest1')});
-      },Promise.resolve());
+  var _branchResearchPromise=null;
+  function ensureBranchResearch(){
+    if(_branchResearchPromise)return _branchResearchPromise;
+    _branchResearchPromise=loadBranchManifest().then(function(){
+      return Promise.all(branchFiles.map(function(file){
+        return loadScript('data/packages/'+file+'?v=manifest1');
+      }));
     }).then(buildBranchIndex);
+    return _branchResearchPromise;
   }
 
   function buildBranchIndex(){
@@ -149,6 +154,7 @@
       branchIndex.byKey[norm(record.opportunityId)+'::'+record.branchId]=record;
       branchIndex.byKey[norm(record.opportunityName)+'::'+record.branchId]=record;
     });
+    branchDataReady=true;
   }
 
   function classify(opportunity){
@@ -242,7 +248,8 @@
     if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
     var tierSelect=$('#tierFilter');
     if(tierSelect){[['tier_60plus','Priority / Strong (60+)'],['tier_40to59','Track / Research (40–59)'],['tier_under40','Local / Low (<40)']].forEach(function(pair){tierSelect.innerHTML+='<option value="'+pair[0]+'">'+pair[1]+'</option>';});}
-    $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',renderPage)});
+    var debouncedRender=debounce(renderPage,150);
+    $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',input.tagName==='SELECT'?renderPage:debouncedRender)});
     var reset=$('#reset');
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
   }
@@ -575,7 +582,7 @@
   function renderBranches(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Production Branches</h2><p class="lead">Department dashboard. Open a branch for researched opportunities, route leads, and next actions.</p><div class="grid">'+branches.map(function(branch){
+    el.innerHTML='<h2>Production Branches</h2><p class="lead">Department dashboard. Open a branch for researched opportunities, route leads, and next actions.</p>'+(branchDataReady?'':'<p class="sub">Loading research records&hellip;</p>')+'<div class="grid">'+branches.map(function(branch){
       var count=branchIndex.records.filter(function(record){return record.branchId===branch.id}).length;
       return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3><p><b>'+esc(branch.question)+'</b></p><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><p><b>Active targets:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Research records:</b> '+count+'</p><p><b>Employer leads:</b> '+matchingEmployers(branch.id).length+'</p></article>';
     }).join('')+'</div>';
@@ -660,6 +667,7 @@
     var branchCount=filtered.filter(function(r){return r.type==='branch';}).length;
     el.innerHTML='<h2>Sources</h2>'+
       '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and branch popups stay clean.</p>'+
+      (branchDataReady?'':'<p class="sub">Loading branch source records&hellip;</p>')+
       '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
         '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
         '<div class="stat"><b>'+oppCount+'</b><span>opportunity sources</span></div>'+
@@ -704,6 +712,9 @@
   window.openOpportunity=function(id){
     var opportunity=opportunities.find(function(item){return item.id===id});
     if(!opportunity)return;
+    ensureBranchResearch().then(function(){renderOpportunityModal(opportunity)});
+  };
+  function renderOpportunityModal(opportunity){
     var hasSource=!!opportunity.active2026SourceUrl;
     var confText=confidenceLabel(opportunity.confidence||opportunity.sourceType);
     var branchHtml=(opportunity.departments||[]).map(function(dep){return branchCard(opportunity,dep)}).join('');
@@ -738,6 +749,9 @@
   window.openBranch=function(id){
     var branch=branches.find(function(item){return item.id===id});
     if(!branch)return;
+    ensureBranchResearch().then(function(){renderBranchModal(branch,id)});
+  };
+  function renderBranchModal(branch,id){
     var records=branchIndex.records.filter(function(record){return record.branchId===id});
     var cards=records.map(function(record){
       var fake=opportunities.find(function(opportunity){return norm(opportunity.id)===norm(record.opportunityId)||norm(opportunity.name)===norm(record.opportunityName)})||{id:record.opportunityId,name:record.opportunityName};
@@ -783,7 +797,10 @@
     var modal=$('#modal');
     if(modal)modal.addEventListener('click',function(event){if(event.target.id==='modal')window.closeModal()});
     document.addEventListener('keydown',function(event){if(event.key==='Escape'){var m=$('#modal');if(m&&m.classList.contains('open'))window.closeModal();}});
+    var page=document.body.dataset.page;
+    var branchDependentPages={home:1,branches:1,sources:1,analytics:1};
+    ensureBranchResearch().then(function(){if(branchDependentPages[page])renderPage();});
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){loadBranchResearch().then(init)});else loadBranchResearch().then(init);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
