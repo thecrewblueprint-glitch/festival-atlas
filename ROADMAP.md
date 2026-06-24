@@ -28,17 +28,21 @@ These are not bugs. They are the actual data state. Every user of this tool shou
 
 ### Data is in research/scouting state — not verified state
 
-| Field | Fill rate |
-|---|---|
-| Source URLs (event active) | 54 / 54 |
-| Confirmed start + end dates | 52 / 54 (breakaway, country-thunder are multi-market ranges) |
-| Accommodation data filled | 4 / 54 |
-| Travel compensation data filled | 0 / 54 |
-| Confirmed vendors | 0 / 54 |
-| Producer verified with public source | 0 / 54 |
-| Records with open next-research actions | 54 / 54 |
+| Field | Fill rate | Core work-finding status |
+|---|---:|---|
+| Source URLs (event active) | 54 / 54 | Core trust field |
+| Confirmed start + end dates | 52 / 54 (breakaway, country-thunder are multi-market ranges) | Core planning field |
+| Producer / promoter route verified with public source | 0 / 54 | Core route field |
+| Public labor / hiring route verified | 0 / 54 | Core route field |
+| Confirmed vendors | 0 / 54 | Useful route evidence, not always discoverable |
+| Production department coverage | 54 / 54 | Core work-mapping field |
+| Accommodation data filled | 4 / 54 | Supplemental only |
+| Travel compensation data filled | 0 / 54 | Supplemental only |
+| Records with open next-research actions | 54 / 54 | Expected research state |
 
 This means every record is a research lead, not a confirmed work opportunity. The app says this, but the gap between "says it" and "makes it unmissable to a first-time visitor" is a real public readiness gap.
+
+Accommodation, travel, lodging, per diem, and similar worker-support details are **supplemental**. They can improve a record when publicly available, but they are not core validation requirements for finding where work is, when it happens, which departments it touches, and what public route to research next. Missing lodging or per diem information should not block a record from being useful.
 
 ### Source quality flag
 
@@ -54,17 +58,23 @@ These are routing directories, not confirmed vendor lists. No employer record on
 
 ---
 
-## Phase 1 — Data verification pass *(highest impact before public)*
+## Phase 1 — Core data verification pass *(highest impact before public)*
 
-**Goal:** Get every active record to a state where a worker can open it and know exactly how much to trust it.
+**Goal:** Get every active record to a state where a worker can open it and know how much to trust the core work-finding signal.
 
 - [ ] Run a structured source verification pass: open each `active2026SourceUrl`, confirm it is current and still references the event, update `sourceQuality` to `source_attached_verified`
-- [ ] Fill `accommodation` data for the top 20 records by `longTermValueScore` — lodging likely, who provides it, source
-- [ ] Fill `travelCompensation` basics for the same 20 records where any public information exists
+- [ ] Verify producer / promoter names for the top 20 records — attach a public source link to the `producer` object and change status from `needs_source_link` to `confirmed` or `likely_from_public_source`
+- [ ] Verify the public labor / hiring route for the top 20 records where a public route exists: promoter careers, venue operator, union/local jurisdiction research note, labor provider, official contractor, or public vendor route
+- [ ] Add confirmed vendors only where a public source exists (permit filing, vendor credit, official announcement, public case study, or official partner list). Do not require a vendor for every record.
 - [ ] Split `breakaway-2026` into per-market records when individual city dates are confirmed publicly
 - [ ] Split `country-thunder-us-2026` into per-market records when individual city dates are confirmed publicly
-- [ ] Verify producer names for the top 20 records — attach a public source link to the `producer` object and change status from `needs_source_link` to `confirmed` or `likely_from_public_source`
-- [ ] Add at minimum one confirmed vendor per record where a public source (permit filing, vendor credit, official announcement) exists
+
+### Supplemental enrichment — not a launch blocker
+
+- [ ] Add accommodation notes only where public information exists and it is useful to the worker.
+- [ ] Add travel / per diem notes only where public information exists and it is useful to the worker.
+
+Missing accommodation, lodging, travel, or per diem data should not count against the core readiness of a record. Those fields are bonus context, not work-discovery requirements.
 
 ---
 
@@ -72,7 +82,8 @@ These are routing directories, not confirmed vendor lists. No employer record on
 
 **Goal:** Make the confidence and limitation signals impossible to miss for a first-time visitor.
 
-- [ ] **Confidence badge on every event card** — visible at-a-glance signal showing how many of the key fields (vendor, producer, accom, travel) are filled vs. unknown, without requiring the user to open the record
+- [ ] **Core confidence badge on every event card** — visible at-a-glance signal showing how many core work-finding fields are filled vs. unknown: active source/date, producer/promoter route, public labor/hiring route, and department coverage. Do not include lodging, travel, or per diem in the core badge score.
+- [ ] **Supplemental info badge where useful** — show lodging, travel, or per diem as optional supplemental context only when available. Missing supplemental info should not reduce the record's core confidence.
 - [ ] **"What this record means" explainer on first visit** — a one-time dismissible prompt or persistent notice on the Opportunities page that explains the difference between a research lead and a confirmed opportunity
 - [ ] **Data freshness indicator** — each record shows its `active2026CheckedDate` so users know when it was last reviewed
 - [ ] **Source quality label** — surface the `sourceQuality` value on every card and in every modal using plain language ("Source verified", "Source attached — not yet validated", "Source needed")
@@ -135,7 +146,7 @@ Marking this tool as "public" means the URL can be shared and new visitors can u
 
 - Records are confirmed hiring opportunities
 - Vendors listed are actively working those events
-- Pay, lodging, or travel information is accurate without independent verification
+- Pay, lodging, travel, or per diem information is required for a record to be useful
 - The tool replaces direct outreach to employers, locals, or production companies
 
 Every page and every record should reinforce this. If a first-time visitor can mistake a research lead for a confirmed job offer, the public launch is not ready.
@@ -144,12 +155,12 @@ Every page and every record should reinforce this. If a first-time visitor can m
 
 ## Priority order for the next development sprint
 
-1. Phase 2 — confidence badge + source quality labels on cards (highest trust impact, zero new data needed)
+1. Phase 2 — core confidence badge + source quality labels on cards (highest trust impact, zero new data needed)
 2. Phase 3 — mobile audit + home page onboarding copy (highest UX impact for new visitors)
-3. Phase 1 — source verification pass for top 20 records by score (highest data credibility impact)
+3. Phase 1 — source, producer/promoter, and public labor-route verification pass for top 20 records by score (highest data credibility impact)
 4. Phase 4 — App Feedback form creation in Airtable desktop + link in-app
 5. Phase 3 — meta descriptions and Open Graph tags (small lift, big impact for link sharing)
-6. Phase 1 — accommodation and travel fill for top 20 records
+6. Supplemental enrichment — accommodation, travel, and per diem notes only where public information is available
 
 ---
 
