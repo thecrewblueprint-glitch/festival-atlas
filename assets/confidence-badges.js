@@ -19,7 +19,6 @@
   function opportunityList(){return window.scopedOpportunities||window.RESOURCE_OPPORTUNITIES||[]}
   function employerList(){return window.employers||window.RESOURCE_EMPLOYERS||[]}
   function byOpportunityName(){var out={};opportunityList().forEach(function(o){out[norm(o.name)]=o});return out}
-  function findOpportunityByTitle(title){return byOpportunityName()[norm(title)]||null}
   function findOpportunityById(id){return opportunityList().find(function(o){return o.id===id})||null}
   function cardTitle(card){var node=card.querySelector('h3')||card.querySelector('b');return node?node.textContent.trim():''}
   function eventDates(o){return o.startDate?esc(o.startDate+(o.endDate?' to '+o.endDate:'')):esc(monthName(o.month)+' 2026')}
@@ -116,14 +115,21 @@
   function cleanFilters(){
     ['tierFilter','accommodationFilter'].forEach(function(id){
       var el=document.getElementById(id);
-      if(el){el.style.display='none';el.setAttribute('aria-hidden','true');}
+      if(el&&el.dataset.publicHidden!=='1'){
+        el.dataset.publicHidden='1';
+        el.style.display='none';
+        el.setAttribute('aria-hidden','true');
+      }
     });
   }
   function cleanHomeCopy(){
     if(document.body.dataset.page!=='home')return;
     var intro=document.querySelector('.section-intro');
-    if(intro)intro.textContent='Production Atlas shows when festivals happen, where they happen, approximate production windows, known producers, and public employer routes organized by production branch.';
+    var introText='Production Atlas shows when festivals happen, where they happen, approximate production windows, known producers, and public employer routes organized by production branch.';
+    if(intro&&intro.textContent!==introText)intro.textContent=introText;
     Array.prototype.slice.call(document.querySelectorAll('.step-card')).forEach(function(card,index){
+      if(card.dataset.publicClean==='1')return;
+      card.dataset.publicClean='1';
       if(index===0)card.innerHTML='<span class="step-n">1</span><h4>Pick a branch</h4><p>Choose staging, rigging, audio, lighting, video, site ops, or another production area.</p>';
       if(index===1)card.innerHTML='<span class="step-n">2</span><h4>Open a festival</h4><p>Check the public date, venue, producer, and estimated build/strike window.</p>';
       if(index===2)card.innerHTML='<span class="step-n">3</span><h4>Find companies</h4><p>Use the employer lists to find apply, careers, website, or contact routes by production branch.</p>';
