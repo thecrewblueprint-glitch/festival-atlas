@@ -13,7 +13,7 @@ This roadmap is honest about what the tool currently is, what it is not yet, and
 - **54 active 2026 opportunity records** across all US regions (West 19, South 19, Midwest 8, Northeast 6, multi-market 2)
 - **12 production branches** mapped per event: staging, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic, backline, stage management, production office
 - **56 branch research packages** covering 6 batches of 12 branches — ~270 individual branch-level research entries
-- **12 pages:** Home, Guide for Use, Calendar, Opportunities, Branches, Employers, IATSE Locals, Matrix, Analytics/Research Queue, Sources, Map, Personal Schedule
+- **12 pages:** Home, Guide for Use, Calendar, Opportunities, Branches, Employers, IATSE Locals, Matrix, Analytics, Sources, Map, Personal Schedule
 - **Career pathway home page** — branch-first entry point with event counts per trade
 - **Full validation suite** — data integrity, branch research, static app checks all pass clean
 - **URL deep-linking** — filter state preserved in query string for sharing specific views

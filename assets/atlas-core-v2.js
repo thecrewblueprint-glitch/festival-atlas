@@ -37,7 +37,6 @@
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
   function norm(value){return String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-  function label(value){return String(value||'unknown').replaceAll('_',' ')}
   function text(obj){return JSON.stringify(obj||{}).toLowerCase()}
   function sortOpportunities(list){return list.slice().sort(function(a,b){var d=(b.longTermValueScore||0)-(a.longTermValueScore||0);if(d)return d;var as=a.active2026SourceUrl?1:0,bs=b.active2026SourceUrl?1:0;if(bs-as)return bs-as;return (a.month||13)-(b.month||13);});}
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
@@ -144,15 +143,12 @@
     branchDataReady=true;
   }
 
+  // Attach the public source (if any) for the Sources page. Source links live only on
+  // sources.html, never in cards, popups, or modals.
   function classify(opportunity){
     var hasSource=!!opportunity.active2026SourceUrl;
     return Object.assign({
-      sourceType:hasSource?'public_secondary_source':'user_field_note',
-      visibility:'public',
-      confidence:hasSource?'likely':'unverified',
-      publishSafety:'public_safe',
-      nextHumanAction:'Verify vendors, labor route, travel logistics, and current event details before outreach.',
-      intelligence:{publicSources:hasSource?[{label:'active status source',url:opportunity.active2026SourceUrl}]:[],fieldNotes:[],crewReferrals:[],privateContacts:[],doNotPublish:[]}
+      intelligence:{publicSources:hasSource?[{label:'active status source',url:opportunity.active2026SourceUrl}]:[]}
     },opportunity);
   }
 
@@ -167,38 +163,17 @@
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
-      accommodation:(($('#accommodationFilter')||{}).value||''),
-      state:(($('#stateFilter')||{}).value||''),
-      tier:(($('#tierFilter')||{}).value||'')
+      state:(($('#stateFilter')||{}).value||'')
     };
-  }
-
-  function accFilterMatch(opportunity,val){
-    if(!val)return true;
-    var accom=opportunity.accommodation||{};
-    var travel=opportunity.travelCompensation||{};
-    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
-    var confirmed=['yes','confirmed','included'];
-    var positive=['possible','likely'].concat(confirmed);
-    if(val==='lodging_possible')return positive.indexOf(lodging)>-1||lodgingType.indexOf('camp')>-1;
-    if(val==='camping')return lodgingType.indexOf('camp')>-1||actions.indexOf('camping')>-1;
-    if(val==='lodging_research')return actions.indexOf('lodging')>-1||actions.indexOf('camping')>-1||actions.indexOf('per diem')>-1||actions.indexOf('travel')>-1;
-    if(val==='travel_possible')return positive.indexOf(String(travel.travelPaid||'unknown').toLowerCase())>-1;
-    if(val==='per_diem_possible')return positive.indexOf(String(travel.perDiem||'unknown').toLowerCase())>-1;
-    return true;
   }
 
   function activeOpportunities(){
     var filter=filterValues();
     var list=opportunities.filter(function(opportunity){
-      if(filter.tier){var s=Number(opportunity.longTermValueScore||0);if(filter.tier==='tier_60plus'&&s<60)return false;if(filter.tier==='tier_40to59'&&(s<40||s>=60))return false;if(filter.tier==='tier_under40'&&s>=40)return false;}
       return (!filter.q||text(opportunity).includes(filter.q)||(opportunity.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
         &&(!filter.month||String(opportunity.month)===filter.month)
-        &&accFilterMatch(opportunity,filter.accommodation)
         &&(!filter.state||opportunity.state===filter.state);
     });
     return sortOpportunities(list);
@@ -233,8 +208,6 @@
     uniq(employers.map(function(e){return e.type})).forEach(function(type){var select=$('#employerTypeFilter');if(select)select.innerHTML+='<option>'+esc(type)+'</option>'});
     var stateSelect=$('#stateFilter');
     if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
-    var tierSelect=$('#tierFilter');
-    if(tierSelect){[['tier_60plus','Priority / Strong (60+)'],['tier_40to59','Track / Research (40–59)'],['tier_under40','Local / Low (<40)']].forEach(function(pair){tierSelect.innerHTML+='<option value="'+pair[0]+'">'+pair[1]+'</option>';});}
     var debouncedRender=debounce(renderPage,150);
     $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',input.tagName==='SELECT'?renderPage:debouncedRender)});
     var reset=$('#reset');
@@ -244,7 +217,7 @@
   function applyUrlFilters(){
     if(!$('#filters'))return;
     var params=new URLSearchParams(window.location.search||'');
-    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['tier','#tierFilter'],['accommodation','#accommodationFilter'],['state','#stateFilter'],['type','#employerTypeFilter']].forEach(function(pair){
+    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter']].forEach(function(pair){
       var val=params.get(pair[0]);var input=$(pair[1]);
       if(val!=null&&input)input.value=val;
     });

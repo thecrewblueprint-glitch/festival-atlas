@@ -100,19 +100,10 @@ assets/atlas-core-v2.js
 assets/approx-date-labels.js
 assets/home-guide-page.js
 assets/guide-page.js
-assets/research-queue-page.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/branch-research-manifest.js
 ```
-
-Compatibility shim still present:
-
-```text
-assets/atlas-core.js
-```
-
-Long-term target: every active page should continue loading `assets/atlas-core-v2.js` directly. Retire the shim only after active page compatibility is verified.
 
 ## Required runtime load order
 
@@ -131,11 +122,14 @@ Every active HTML page must load the main data packages, then the public-safe re
 
 Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js` and `research-queue-route-updates.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES`.
 
-`analytics.html` also loads this page-specific enhancement after the runtime stack:
+## Internal research queue (Airtable, not in the repo)
 
-```html
-<script src="assets/research-queue-page.js?v=queue1"></script>
-```
+The internal research queue lives in the private **Production Atlas** Airtable base as the
+**Research Queue** table — one row per active 2026 festival, keyed on `Event ID` (matching
+`data/packages/opportunities-2026.js`). It ties into the human-input system (Human Submissions →
+Reviewed Summaries) via that shared key and its `Human Input Needed` / `Human Input Status`
+fields. The public app no longer renders a research queue; `analytics.html` shows a public
+festival-planning dashboard instead.
 
 ## Important data files
 
