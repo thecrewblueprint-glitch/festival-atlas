@@ -98,6 +98,7 @@ schedule.html
 assets/atlas.css
 assets/atlas-core-v2.js
 assets/approx-date-labels.js
+assets/confidence-badges.js
 assets/home-guide-page.js
 assets/guide-page.js
 assets/research-queue-page.js
@@ -131,9 +132,10 @@ Every active HTML page must load the main data packages, then the public-safe re
 
 Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js` and `research-queue-route-updates.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES`.
 
-`analytics.html` also loads this page-specific enhancement after the runtime stack:
+Active pages may also load page-specific UI enhancement scripts after the runtime stack, including:
 
 ```html
+<script src="assets/confidence-badges.js?v=conf1"></script>
 <script src="assets/research-queue-page.js?v=queue1"></script>
 ```
 
@@ -168,12 +170,14 @@ Core work-finding validation should focus on:
 ```text
 active source/date
 producer/promoter or operator route
-public labor/hiring route
+public work-route signal
 production department coverage
 source quality / last checked date
 ```
 
 Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which departments it touches, or what route to research next.
+
+`assets/confidence-badges.js` must score only core work-finding fields. It must not reduce the score because accommodation, travel, lodging, or per diem information is missing.
 
 ## IATSE / local jurisdiction wording rule
 
