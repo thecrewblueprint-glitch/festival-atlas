@@ -92,7 +92,7 @@
   function renderResearchQueueEnhancement(){
     if(!document.body || document.body.dataset.page !== 'analytics') return;
     var app = document.querySelector('#app');
-    if(!app || app.dataset.researchQueueEnhancement === 'applied') return;
+    if(!app || app.querySelector('.research-queue-enhancement')) return;
     var opportunities = Array.isArray(window.scopedOpportunities) ? window.scopedOpportunities : [];
     if(!opportunities.length) return;
 
@@ -154,7 +154,6 @@
     } else {
       app.insertAdjacentHTML('beforeend', html);
     }
-    app.dataset.researchQueueEnhancement = 'applied';
   }
 
   function waitForRuntime(attempt){
@@ -168,4 +167,5 @@
 
   document.addEventListener('DOMContentLoaded', function(){waitForRuntime(0);});
   document.addEventListener('click', function(){setTimeout(renderResearchQueueEnhancement, 0);}, true);
+  document.addEventListener('input', function(){setTimeout(renderResearchQueueEnhancement, 0);}, true);
 })();
