@@ -1,7 +1,7 @@
 # Production Atlas
 
 Generated: 2026-06-22
-Updated: 2026-06-23
+Updated: 2026-06-24
 
 Production Atlas is a static GitHub Pages research dashboard for scouting long-term live-event production work targets, employer/vendor routes, IATSE/local routes, and department-specific production branches.
 
@@ -86,7 +86,7 @@ branches.html
 employers.html
 iatse.html
 matrix.html
-analytics.html
+analytics.html    Analytics and action-first research queue
 sources.html
 map.html
 schedule.html
@@ -100,6 +100,7 @@ assets/atlas-core-v2.js
 assets/approx-date-labels.js
 assets/home-guide-page.js
 assets/guide-page.js
+assets/research-queue-page.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/branch-research-manifest.js
@@ -130,6 +131,12 @@ Every active HTML page must load the main data packages, then the public-safe re
 
 Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js` and `research-queue-route-updates.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES`.
 
+`analytics.html` also loads this page-specific enhancement after the runtime stack:
+
+```html
+<script src="assets/research-queue-page.js?v=queue1"></script>
+```
+
 ## Important data files
 
 ```text
@@ -153,6 +160,20 @@ data/packages/research-queue-route-updates.js      12 public producer/operator r
 Both packages are loaded directly by all active HTML pages before `assets/atlas-core-v2.js`. `assets/approx-date-labels.js` may re-apply UI polish and guarded fallback behavior, but it is not the canonical first-load path for these packages.
 
 Route updates are public-safe route leads only. They do not confirm vendors, labor providers, private contacts, pay, lodging, or referrals.
+
+## Core vs supplemental work-finding data
+
+Core work-finding validation should focus on:
+
+```text
+active source/date
+producer/promoter or operator route
+public labor/hiring route
+production department coverage
+source quality / last checked date
+```
+
+Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which departments it touches, or what route to research next.
 
 ## IATSE / local jurisdiction wording rule
 
