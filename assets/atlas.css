@@ -113,7 +113,15 @@ a.btn{text-decoration:none;display:inline-block}
 .pathway h4{margin:0 0 4px;color:var(--gold2);font-size:1.02rem}
 .pathway-skills{color:var(--muted);font-size:.75rem;line-height:1.42;margin:4px 0 0;flex:1}
 .pathway-count{display:inline-block;margin-top:10px;font-size:.73rem;font-weight:850;color:var(--gold);text-transform:uppercase;letter-spacing:.05em}
+.confidence-badge{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:7px 0 8px;padding:7px 8px;border-radius:12px;background:rgba(7,9,12,.42);border:1px solid rgba(168,178,189,.22);font-size:.72rem;line-height:1.25}
+.confidence-badge strong{width:100%;font-size:.74rem;letter-spacing:.04em;text-transform:uppercase}
+.confidence-low strong{color:#f4a261}
+.confidence-partial strong{color:#f5b400}
+.confidence-high strong{color:#48c778}
+.confidence-field{display:inline-flex;align-items:center;border-radius:999px;padding:2px 7px;font-weight:750;white-space:nowrap}
+.confidence-fill{background:rgba(72,199,120,.12);border:1px solid rgba(72,199,120,.32);color:#48c778}
+.confidence-missing{background:rgba(168,178,189,.08);border:1px solid rgba(168,178,189,.18);color:#a8b2bd}
 .nav a:focus-visible,.btn:focus-visible,a.pathway:focus-visible,.card.click:focus-visible,.event:focus-visible,.stat:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
 @media(max-width:960px){.grid,.calendar,.stats,.modalgrid{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr}.pathway-grid{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}}
-@media(max-width:560px){.filters{grid-template-columns:1fr}.hero h1{font-size:2.45rem}.pathway-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.filters{grid-template-columns:1fr}.hero h1{font-size:2.45rem}.pathway-grid{grid-template-columns:1fr 1fr}.confidence-badge{font-size:.68rem}.confidence-field{white-space:normal}}
 @media(max-width:760px){.nav{position:static;top:auto;backdrop-filter:none}.navInner{padding:10px 0}.filters{position:static;top:auto;max-height:none;overflow:visible;padding:10px 0 14px}.filters input,.filters select,.filters .btn{width:100%}.page{padding-top:18px}}
