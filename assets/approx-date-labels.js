@@ -206,7 +206,10 @@
       markApproximateDates(document);
       if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
       if(typeof window.applyRouteResearchUpdates === 'function') window.applyRouteResearchUpdates();
-      markRouteResearchCards(document);
+      // Public cards no longer show "route lead mapped" research indicators. The data update
+      // side-effects above (taxonomy + route research source/date patches) still run; only the
+      // visible research-language indicator is suppressed. markRouteResearchCards retained above
+      // for reference but intentionally not invoked on the public UI.
       manageAnalyticsNotices();
       running = false;
     }, 0);

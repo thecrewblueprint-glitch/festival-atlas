@@ -40,16 +40,60 @@
   function label(value){return String(value||'unknown').replaceAll('_',' ')}
   function text(obj){return JSON.stringify(obj||{}).toLowerCase()}
   function valueTierLabel(score){var s=Number(score||0);if(s>=80)return 'Priority travel-work target';if(s>=60)return 'Strong opportunity';if(s>=40)return 'Track / research further';if(s>=20)return 'Local or speculative';return 'Low current value';}
-  function valueTierClass(score){var s=Number(score||0);if(s>=80)return 'vtier-priority';if(s>=60)return 'vtier-strong';if(s>=40)return 'vtier-track';if(s>=20)return 'vtier-local';return 'vtier-low';}
   function sortOpportunities(list){return list.slice().sort(function(a,b){var d=(b.longTermValueScore||0)-(a.longTermValueScore||0);if(d)return d;var as=a.active2026SourceUrl?1:0,bs=b.active2026SourceUrl?1:0;if(bs-as)return bs-as;return (a.month||13)-(b.month||13);});}
-  function confidenceLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'confirmed';if(/^likely/.test(v)||v==='public_secondary_source')return 'likely';if(/^possible/.test(v)||v==='route_lead')return 'possible';if(/supplemental/.test(v))return 'supplemental route lead';if(/unconfirmed|unverified|vendor_unconfirmed|needs_source|user_field_note/.test(v))return 'unverified';return 'human verification needed';}
-  function statusLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'Confirmed vendor';if(/^likely/.test(v))return 'Likely route';if(v==='route_lead')return 'Route lead';if(/unconfirmed|vendor_unconfirmed/.test(v))return 'Vendor unconfirmed';return label(val);}
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
   function safeUrl(url){return url && /^https?:\/\//i.test(url) ? url : '';}
   function plainLink(text,url){var safe=safeUrl(url);return safe?'<a href="'+esc(safe)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
   function debounce(fn,ms){var timer;return function(){var args=arguments,self=this;clearTimeout(timer);timer=setTimeout(function(){fn.apply(self,args)},ms)}}
+
+  // --- Public display helpers (festival + employer-route focus only) ---
+  var SHORT_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function parseDate(str){if(!str)return null;var d=new Date(String(str)+'T00:00:00');return isNaN(d.getTime())?null:d;}
+  function fmtShort(d,withYear){if(!d)return '';return SHORT_MONTHS[d.getMonth()]+' '+d.getDate()+(withYear?', '+d.getFullYear():'');}
+  function festivalDates(opportunity){
+    var s=parseDate(opportunity.startDate),e=parseDate(opportunity.endDate);
+    if(!s)return '';
+    if(!e||e.getTime()===s.getTime())return fmtShort(s,true);
+    return fmtShort(s,false)+' – '+fmtShort(e,true);
+  }
+  // Approximate planning window computed from public event dates. Clearly labelled approximate; never implies exact load-in/out.
+  function productionWindow(opportunity){
+    var s=parseDate(opportunity.startDate);
+    if(!s)return '';
+    var e=parseDate(opportunity.endDate)||s;
+    var big=(opportunity.departments||[]).length>=9;
+    var buildLead=big?9:4;
+    var strikeTail=big?3:2;
+    var build=new Date(s.getTime()-buildLead*86400000);
+    var strike=new Date(e.getTime()+strikeTail*86400000);
+    return fmtShort(build,false)+' – '+fmtShort(strike,true);
+  }
+  // Only surface a producer when a real public name exists (no verify/unknown placeholders).
+  function knownProducer(opportunity){
+    var name=String(((opportunity.producer||{}).name)||'').trim();
+    if(!name)return '';
+    var low=name.toLowerCase();
+    if(low.indexOf('verify')>-1||low==='unknown'||low==='tbd')return '';
+    return name.replace(/\s*[,/]?\s*verify.*$/i,'').replace(/\s*\/\s*partners$/i,'').trim();
+  }
+  function branchSummary(opportunity,limit){
+    var names=(opportunity.departments||[]).map(branchName);
+    var shown=names.slice(0,limit||4);
+    var extra=Math.max(0,names.length-shown.length);
+    return esc(shown.join(' \xb7 ')+(extra?' +'+extra+' more':''));
+  }
+  // Neutral employer-route link: never upgrades a lead into a confirmed working vendor.
+  function employerRow(employer){
+    var links=employer.links||{};
+    var url=links.apply||links.careers||links.contact||links.directory||links.homepage||'';
+    var hasApply=!!(links.apply||links.careers);
+    var labelText=hasApply?'Apply / careers':'Website / contact';
+    var type=employer.type?'<span class="sub" style="font-size:.74rem">'+esc(employer.type)+'</span><br>':'';
+    return '<li style="margin:0 0 9px;list-style:none"><b>'+esc(employer.name)+'</b><br>'+type+plainLink(labelText,url)+'</li>';
+  }
+  function employerById(id){return employers.find(function(item){return item.id===id;});}
 
   function loadScript(src){
     return new Promise(function(resolve){
@@ -207,47 +251,21 @@
     });
   }
 
-  function accomChips(opportunity){
-    var accom=opportunity.accommodation||{};
-    var travel=opportunity.travelCompensation||{};
-    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
-    var confirmed=['yes','confirmed','included'];
-    var positive=['possible','likely'].concat(confirmed);
-    var chips=[];
-    if(lodgingType.indexOf('camp')>-1)chips.push('<span class="accom-tag accom-ok">Camping</span>');
-    else if(positive.indexOf(lodging)>-1)chips.push('<span class="accom-tag accom-ok">Lodging possible</span>');
-    else if(actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)chips.push('<span class="accom-tag accom-warn">Lodging — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Lodging unknown</span>');
-    var perDiem=String(travel.perDiem||'unknown').toLowerCase();
-    if(positive.indexOf(perDiem)>-1)chips.push('<span class="accom-tag accom-ok">Per diem</span>');
-    else if(actions.indexOf('per diem')>-1||actions.indexOf('perdiem')>-1)chips.push('<span class="accom-tag accom-warn">Per diem — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Per diem unknown</span>');
-    var travelPaid=String(travel.travelPaid||'unknown').toLowerCase();
-    if(positive.indexOf(travelPaid)>-1)chips.push('<span class="accom-tag accom-ok">Travel paid</span>');
-    else if(actions.indexOf('travel')>-1||actions.indexOf('flight')>-1||actions.indexOf('mileage')>-1)chips.push('<span class="accom-tag accom-warn">Travel — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Travel unknown</span>');
-    var allUnknown=chips.every(function(tag){return tag.indexOf('accom-muted')>-1;});
-    if(allUnknown)return '<div class="accom-tags"><span class="accom-tag accom-muted">Lodging &amp; travel — to verify</span></div>';
-    return '<div class="accom-tags">'+chips.join('')+'</div>';
-  }
 
   function opportunityCard(opportunity){
-    var depts=(opportunity.departments||[]).slice(0,4).map(branchName);
-    var extra=Math.max(0,(opportunity.departments||[]).length-4);
-    var hasSource=!!opportunity.active2026SourceUrl;
+    var venue=String(opportunity.venue||'').trim();
+    var hasVenue=venue&&venue.toLowerCase().indexOf('verify')===-1&&venue.toLowerCase()!=='unknown'&&venue.toLowerCase()!=='tbd';
+    var dates=festivalDates(opportunity);
+    var prodWindow=productionWindow(opportunity);
+    var producer=knownProducer(opportunity);
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
-      '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
-      '<p class="sub" style="font-size:.78rem;margin:3px 0 6px"><b>Depts:</b> '+esc(depts.join(', ')+(extra?' +'+extra+' more':''))+'</p>'+
-      accomChips(opportunity)+
-      '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
-      '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
-      '<p><b>Confidence:</b> '+(opportunity.sourceQuality==='source_attached_verified'?'<span style="color:#48c778">Verified — web-confirmed 2026</span>':hasSource?'<span style="color:#48c778">Likely — source attached</span>':'<span style="color:var(--muted)">Unverified — source needed</span>')+'</p>'+
-      '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
-      '<p><b>Next:</b> '+esc((opportunity.nextResearchActions||[])[0]||opportunity.nextHumanAction||'Verify before outreach')+'</p>'+
+      '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+(hasVenue?' • '+esc(venue):'')+'</div>'+
+      (dates?'<p class="oppline"><b>Festival dates:</b> '+esc(dates)+'</p>':'')+
+      (prodWindow?'<p class="oppline"><b>Approx. production window:</b> '+esc(prodWindow)+'</p>':'')+
+      (producer?'<p class="oppline"><b>Producer / promoter:</b> '+esc(producer)+'</p>':'')+
+      '<p class="oppline"><b>Branches:</b> '+branchSummary(opportunity,4)+'</p>'+
+      '<p class="oppline cardcta">Open employer routes →</p>'+
       '</article>';
   }
 
@@ -277,14 +295,9 @@
     if(!el)return;
     var L=window.L;
     if(!L){el.innerHTML='<h2>Festival Map</h2><p class="lead">Leaflet map library not available on this page.</p>';return;}
-    var positive=['yes','confirmed','included','possible','likely'];
     if(!_leafMap){
       el.innerHTML='<h2>Festival Map</h2>'+
-        '<div class="accom-tags" style="margin:0 0 14px">'+
-        '<span class="accom-tag accom-ok">&#9679; Lodging / camping likely</span>'+
-        '<span class="accom-tag accom-warn">&#9679; Accommodation research priority</span>'+
-        '<span class="accom-tag accom-muted">&#9679; Status unknown</span>'+
-        '</div>'+
+        '<p class="lead" style="margin:0 0 14px">Active 2026 festivals by location. Click a marker for dates and employer routes.</p>'+
         '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
         '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
         '<div id="mapList"></div>';
@@ -304,18 +317,13 @@
       var coords=OPP_COORDS[opportunity.id];
       if(!coords)return;
       placed.push(opportunity);
-      var accom=opportunity.accommodation||{};
-      var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-      var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-      var color=positive.indexOf(lodging)>-1?'#48c778':
-                (actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)?'#f5b400':'#a8b2bd';
-      var marker=L.circleMarker(coords,{radius:9,fillColor:color,color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
+      var mapDates=festivalDates(opportunity);
+      var marker=L.circleMarker(coords,{radius:9,fillColor:'#f5b400',color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
       marker.bindPopup(
         '<div style="min-width:190px">'+
         '<b style="font-size:.95rem">'+esc(opportunity.name)+'</b><br>'+
-        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</span><br>'+
-        accomChips(opportunity)+
-        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open detail ↗</button></p>'+
+        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+(mapDates?' • '+esc(mapDates):'')+'</span><br>'+
+        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open employer routes ↗</button></p>'+
         '</div>',
         {maxWidth:280}
       );
@@ -363,7 +371,6 @@
       ranges.forEach(function(r){if(s<=r[1]&&e>=r[0])overlaps++;});
       ranges.push([s,e]);
     });
-    var avgScore=scheduledOpps.length?Math.round(scheduledOpps.reduce(function(sum,o){return sum+(o.longTermValueScore||0);},0)/scheduledOpps.length):0;
     var monthSet={};scheduledOpps.forEach(function(o){if(o.month)monthSet[o.month]=1;});
     var regionSet={};scheduledOpps.forEach(function(o){if(o.region)regionSet[o.region]=1;});
     var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
@@ -376,13 +383,12 @@
     var browseData=activeOpportunities();
     var browseHtml=browseData.map(function(opportunity){
       var inSched=schedule.indexOf(opportunity.id)>-1;
+      var schDates=festivalDates(opportunity);
       return '<article class="card">'+
-        '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
         '<h3>'+esc(opportunity.name)+'</h3>'+
-        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</div>'+
-        accomChips(opportunity)+
-        '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
-        '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
+        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+'</div>'+
+        (schDates?'<p class="oppline"><b>Festival dates:</b> '+esc(schDates)+'</p>':'')+
+        '<p class="oppline"><b>Branches:</b> '+branchSummary(opportunity,3)+'</p>'+
         '<button class="btn '+(inSched?'sched-in':'sched-add')+'" onclick="'+(inSched?'removeGig':'addGig')+'(\''+esc(opportunity.id)+'\')">'+(inSched?'✓ In schedule':'+ Add to schedule')+'</button>'+
         '</article>';
     }).join('');
@@ -393,7 +399,6 @@
         '<div class="stat"><b>'+scheduledOpps.length+'</b><span>events planned</span></div>'+
         '<div class="stat"><b>~'+totalDays+'</b><span>approx event days</span></div>'+
         '<div class="stat"><b>'+overlaps+'</b><span>date overlaps</span></div>'+
-        '<div class="stat"><b>'+avgScore+'</b><span>avg value score</span></div>'+
         '<div class="stat"><b>'+Object.keys(monthSet).length+'</b><span>months covered</span></div>'+
         '<div class="stat"><b>'+Object.keys(regionSet).length+'</b><span>regions covered</span></div>'+
       '</div>'+
@@ -414,62 +419,44 @@
   function renderHome(){
     var el=$('#app');
     if(!el)return;
-    var sorted=sortOpportunities(opportunities);
-    var top=sorted.slice(0,5);
-    var needsDates=opportunities.filter(function(o){return !o.startDate;}).length;
-    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;}).length;
-    var topHtml=top.map(function(o){
-      return '<article class="card click" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
-        '<span class="vtier '+valueTierClass(o.longTermValueScore)+'">'+esc(valueTierLabel(o.longTermValueScore))+'</span>'+
-        '<h3>'+esc(o.name)+'</h3>'+
-        '<div class="sub">'+esc(o.city)+', '+esc(o.state)+' &bull; '+esc(MONTHS[(o.month||1)-1])+'</div>'+
-        '<p><b>Value:</b> '+esc(o.longTermValueScore)+'/100</p>'+
-        '<p><b>Next:</b> '+esc((o.nextResearchActions||[])[0]||'Verify before outreach')+'</p>'+
-        '</article>';
-    }).join('');
+    var upcoming=sortOpportunities(opportunities).slice(0,6);
+    var upcomingHtml=upcoming.map(opportunityCard).join('');
     var pathwayHtml=branches.map(function(branch){
       var count=matchingOpportunities(branch.id).length;
       var skills=(branch.workerFocus||[]).slice(0,3).join(' \xb7 ');
       return '<a class="pathway" href="opportunities.html?branch='+encodeURIComponent(branch.id)+'">'+
         '<h4>'+esc(branch.name)+'</h4>'+
         '<div class="pathway-skills">'+esc(skills)+'</div>'+
-        '<span class="pathway-count">'+count+' event'+(count===1?'':'s')+' →</span>'+
+        '<span class="pathway-count">'+count+' festival'+(count===1?'':'s')+' →</span>'+
         '</a>';
     }).join('');
     el.innerHTML=
       '<h2>Find Your Pathway</h2>'+
-      '<p class="section-intro">Production Atlas helps live-event production workers find where the work is and how to get routed into it. Pick your trade to jump straight to the 2026 events that need it, then open an event to inspect the hiring route, vendor stack, and local labor pathway.</p>'+
+      '<p class="section-intro">Production Atlas helps live-event production workers find festivals and the employer routes that hire each trade. Pick your branch to jump straight to the 2026 festivals that need it, then open a festival to see its dates, production window, producer, and the companies and apply links connected to your trade.</p>'+
       '<div class="steps">'+
-        '<div class="step-card"><span class="step-n">1</span><h4>Pick your trade</h4><p>Choose your department below to jump straight to the events that hire it.</p></div>'+
-        '<div class="step-card"><span class="step-n">2</span><h4>Open an event</h4><p>Review the work-year value, dates, mapped branches, vendor routes, and labor pathway.</p></div>'+
-        '<div class="step-card"><span class="step-n">3</span><h4>Verify &amp; reach out</h4><p>Confirm the route from a current public source, then use the careers or local-union path.</p></div>'+
+        '<div class="step-card"><span class="step-n">1</span><h4>Pick your branch</h4><p>Choose your production branch below to jump to the festivals that hire it.</p></div>'+
+        '<div class="step-card"><span class="step-n">2</span><h4>Open a festival</h4><p>See festival dates, the approximate production window, producer, and employer routes by branch.</p></div>'+
+        '<div class="step-card"><span class="step-n">3</span><h4>Apply</h4><p>Use the company careers links or the local-union route to reach out.</p></div>'+
       '</div>'+
-      '<h3>Your trade</h3>'+
+      '<h3>Your branch</h3>'+
       '<div class="pathway-grid">'+pathwayHtml+'</div>'+
       '<div class="home-dash">'+
-        '<h3 style="margin-top:28px">Top priority targets</h3>'+
-        '<p class="section-intro" style="margin-bottom:12px">Highest work-year value across all trades right now.</p>'+
-        '<div class="grid">'+topHtml+'</div>'+
-        '<h3 style="margin-top:26px">Verification snapshot</h3>'+
-        '<div class="notice">'+
-          needsDates+' of '+opportunities.length+' active opportunities still need confirmed dates. '+
-          noSource+' have no attached public source yet. '+
-          '<a href="analytics.html">Open research queue &nearr;</a>'+
-        '</div>'+
+        '<h3 style="margin-top:28px">Upcoming 2026 festivals</h3>'+
+        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by branch.</p>'+
+        '<div class="grid">'+upcomingHtml+'</div>'+
         '<div class="stats" style="margin-top:18px">'+
-          '<div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div>'+
-          '<div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div>'+
-          '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div>'+
-          '<div class="stat"><b>'+branches.length+'</b><span>trades / branches</span></div>'+
-          '<div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div>'+
+          '<div class="stat"><b>'+opportunities.length+'</b><span>active festivals</span></div>'+
+          '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
+          '<div class="stat"><b>'+branches.length+'</b><span>production branches</span></div>'+
+          '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE locals</span></div>'+
         '</div>'+
         '<h3 style="margin-top:22px">Quick links</h3>'+
         '<div class="home-links">'+
-          '<a href="opportunities.html" class="btn">Browse all opportunities</a>'+
-          '<a href="calendar.html" class="btn">Calendar view</a>'+
-          '<a href="map.html" class="btn">Open map</a>'+
-          '<a href="branches.html" class="btn">All trades</a>'+
-          '<a href="analytics.html" class="btn">Research queue</a>'+
+          '<a href="opportunities.html" class="btn">Browse festivals</a>'+
+          '<a href="calendar.html" class="btn">Calendar</a>'+
+          '<a href="map.html" class="btn">Map</a>'+
+          '<a href="branches.html" class="btn">Branches</a>'+
+          '<a href="employers.html" class="btn">Employers</a>'+
           '<a href="schedule.html" class="btn">My schedule</a>'+
         '</div>'+
       '</div>';
@@ -479,27 +466,26 @@
     var data=activeOpportunities();
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Long-Term Opportunity Calendar</h2><p class="lead">Month-by-month view of active public-safe work targets.</p><div class="calendar">'+MONTHS.map(function(month,index){
+    el.innerHTML='<h2>Festival Calendar</h2><p class="lead">Month-by-month view of active 2026 festivals.</p><div class="calendar">'+MONTHS.map(function(month,index){
       var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1});
       return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){
         var calDepts=(opportunity.departments||[]).slice(0,3).map(branchName);
         var calExtra=Math.max(0,(opportunity.departments||[]).length-3);
-        var hasCalSrc=!!opportunity.active2026SourceUrl;
+        var calDates=festivalDates(opportunity);
         return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-          '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="font-size:.62rem;padding:1px 7px;margin:0 0 4px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
           '<b style="display:block">'+esc(opportunity.name)+'</b>'+
           '<small>'+esc(opportunity.city)+', '+esc(opportunity.state)+'</small>'+
+          (calDates?'<div style="margin-top:3px;font-size:.69rem;color:var(--muted)">'+esc(calDates)+'</div>':'')+
           (calDepts.length?'<div style="margin-top:4px;font-size:.69rem;color:var(--muted)">'+esc(calDepts.join(' \xb7 ')+(calExtra?' +'+calExtra:''))+'</div>':'')+
-          (hasCalSrc?'<div style="margin-top:3px;font-size:.68rem;color:#48c778">&#9679; source</div>':'')+
           '</div>';
-      }).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
+      }).join(''):'<div class="sub">No festivals in current filter.</div>')+'</div></div>';
     }).join('')+'</div>';
   }
 
   function renderOpportunities(){
     var el=$('#app');
     var data=activeOpportunities();
-    if(el)el.innerHTML='<h2>Opportunity Profiles</h2><p class="lead">Compare events by city, venue, date, route value, and department coverage.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No opportunity profiles match the current filter.</p>')+'</div>';
+    if(el)el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
   }
 
   function renderEmployers(){
@@ -527,9 +513,9 @@
   function renderBranches(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Production Branches</h2><p class="lead">Department dashboard. Open a branch for researched opportunities, route leads, and next actions.</p>'+(branchDataReady?'':'<p class="sub">Loading research records&hellip;</p>')+'<div class="grid">'+branches.map(function(branch){
-      var count=branchIndex.records.filter(function(record){return record.branchId===branch.id}).length;
-      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3><p><b>'+esc(branch.question)+'</b></p><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><p><b>Active targets:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Research records:</b> '+count+'</p><p><b>Employer leads:</b> '+matchingEmployers(branch.id).length+'</p></article>';
+    el.innerHTML='<h2>Production Branches</h2><p class="lead">Employer and company routes organized by production branch. Open a branch to see the festivals using it and the companies that hire for it.</p><div class="grid">'+branches.map(function(branch){
+      var roles=(branch.workerFocus||[]).slice(0,4).join(' \xb7 ');
+      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employer routes:</b> '+matchingEmployers(branch.id).length+'</p></article>';
     }).join('')+'</div>';
   }
 
@@ -602,27 +588,29 @@
     ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap,schedule:renderSchedule}[page]||renderHome)();
   }
 
+  // Public employer-route block for one production branch. Shows company names + apply/contact
+  // links only. Never prints status, confidence, or research language, and never upgrades a
+  // public lead into a confirmed working vendor.
   function branchCard(opportunity,branchId){
-    var branch=branches.find(function(item){return item.id===branchId})||{name:branchId,question:'Verify route'};
+    var branch=branches.find(function(item){return item.id===branchId})||{name:branchId};
     var record=findBranchRecord(opportunity,branchId);
-    if(!record){
-      return '<div class="branch"><h4>'+esc(branch.name)+'</h4><p class="sub">'+esc(branch.question)+'</p><p>No event-specific branch record yet.</p></div>';
+    var routeLabel,ids=[];
+    if(record&&(record.confirmedVendors||[]).length){
+      ids=record.confirmedVendors.slice();routeLabel='Companies tied to this branch';
+    } else if(record&&(record.publicLeads||[]).length){
+      ids=record.publicLeads.slice();routeLabel='Public company routes';
+    } else {
+      ids=matchingEmployers(branchId).map(function(e){return e.id;});routeLabel='Industry companies in this branch';
     }
-    var employerLinks=(record.publicLeads||[]).slice(0,8).map(function(id){
-      var employer=employers.find(function(item){return item.id===id});
-      return employer?plainLink(employer.name,bestLink(employer)):esc(id);
-    }).join('<br>');
-    var stText=statusLabel(record.status);
-    var confText=confidenceLabel(record.confidence);
-    var isRouteOnly=confText==='unverified'||confText==='possible'||confText==='supplemental route lead';
+    var rows=ids.map(employerById).filter(Boolean).slice(0,8).map(employerRow).join('');
+    var name=esc((record&&record.branchName)||branch.name);
+    if(!rows){
+      return '<div class="branch"><h4>'+name+'</h4><p class="sub">No public company route listed yet.</p></div>';
+    }
     return '<div class="branch">'+
-      '<h4>'+esc(record.branchName||branch.name)+'</h4>'+
-      '<p><b>Status:</b> '+esc(stText)+'</p>'+
-      '<p><b>Confidence:</b> '+esc(confText)+'</p>'+
-      (isRouteOnly?'<p class="sub" style="color:var(--warn);font-size:.76rem">Route lead only — not a confirmed vendor. Verify before outreach.</p>':'')+
-      '<p><b>Route intelligence:</b> '+esc(record.branchDisplayText||record.evidenceSummary||'Research route stored.')+'</p>'+
-      '<p><b>Next action:</b> '+esc(record.nextAction||'Verify before outreach.')+'</p>'+
-      (employerLinks?'<p><b>Relevant public leads:</b><br>'+employerLinks+'</p>':'')+
+      '<h4>'+name+'</h4>'+
+      '<p class="sub" style="margin:0 0 8px">'+esc(routeLabel)+'</p>'+
+      '<ul style="margin:0;padding:0">'+rows+'</ul>'+
       '</div>';
   }
 
@@ -633,20 +621,22 @@
   };
   function renderOpportunityModal(opportunity){
     var hasSource=!!opportunity.active2026SourceUrl;
-    var confText=confidenceLabel(opportunity.confidence||opportunity.sourceType);
+    var venue=String(opportunity.venue||'').trim();
+    var hasVenue=venue&&venue.toLowerCase().indexOf('verify')===-1&&venue.toLowerCase()!=='unknown'&&venue.toLowerCase()!=='tbd';
+    var dates=festivalDates(opportunity);
+    var prodWindow=productionWindow(opportunity);
+    var producer=knownProducer(opportunity);
     var branchHtml=(opportunity.departments||[]).map(function(dep){return branchCard(opportunity,dep)}).join('');
     openModal(
-      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="display:inline-block;margin-bottom:8px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h2 style="margin:0 0 6px">'+esc(opportunity.name)+'</h2>'+
-      '<p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
+      '<p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+(hasVenue?' • '+esc(venue):'')+'</p>'+
       '<div class="modalgrid">'+
-        '<div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div>'+
-        '<div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100 — '+esc(valueTierLabel(opportunity.longTermValueScore))+'</div>'+
-        '<div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div>'+
-        '<div class="detail"><b>Confidence</b><br>'+esc(confText)+(opportunity.sourceQuality==='source_attached_verified'?' — web-confirmed 2026 (<a href="sources.html" onclick="event.stopPropagation()">Sources &nearr;</a>)':hasSource?' — source on <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a>':' — no public source yet')+'</div>'+
+        (dates?'<div class="detail"><b>Festival dates</b><br>'+esc(dates)+'</div>':'')+
+        (prodWindow?'<div class="detail"><b>Approx. build / strike window</b><br>'+esc(prodWindow)+' (approximate)</div>':'')+
+        (producer?'<div class="detail"><b>Producer / promoter</b><br>'+esc(producer)+'</div>':'')+
+        (hasSource?'<div class="detail"><b>Public source</b><br>Listed on the <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a></div>':'')+
       '</div>'+
-      '<p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||((opportunity.nextResearchActions||[])[0])||'Verify before outreach.')+'</p>'+
-      '<h3>Mapped production branches</h3>'+
+      '<h3>Employer routes by production branch</h3>'+
       branchHtml
     );
   };
@@ -672,9 +662,15 @@
     var records=branchIndex.records.filter(function(record){return record.branchId===id});
     var cards=records.map(function(record){
       var fake=opportunities.find(function(opportunity){return norm(opportunity.id)===norm(record.opportunityId)||norm(opportunity.name)===norm(record.opportunityName)})||{id:record.opportunityId,name:record.opportunityName};
-      return branchCard(fake,id);
+      var opp=opportunities.find(function(o){return norm(o.id)===norm(record.opportunityId)||norm(o.name)===norm(record.opportunityName)});
+      var title=esc((opp&&opp.name)||record.opportunityName||record.opportunityId);
+      return '<div style="margin:0 0 4px"><p class="sub" style="margin:0 0 4px;color:var(--muted)"><b>'+title+'</b></p>'+branchCard(fake,id)+'</div>';
     }).join('');
-    openModal('<h2>'+esc(branch.name)+'</h2><p><b>'+esc(branch.question)+'</b></p><div class="modalgrid"><div class="detail"><b>Event-specific records</b><br>'+records.length+'</div><div class="detail"><b>General employer leads</b><br>'+matchingEmployers(id).length+'</div></div><h3>Research needs</h3><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><h3>Worker focus</h3><p>'+esc((branch.workerFocus||[]).join(', '))+'</p><h3>Event-specific branch records</h3>'+(cards||'<p class="sub">No records yet.</p>'));
+    var roles=(branch.workerFocus||[]).join(' \xb7 ');
+    var general=matchingEmployers(id).slice(0,12).map(employerRow).join('');
+    openModal('<h2>'+esc(branch.name)+'</h2>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+
+      '<h3>Employer routes by festival</h3>'+(cards||'<p class="sub">No festival-specific company routes listed yet.</p>')+
+      (general?'<h3>Industry companies in this branch</h3><ul style="margin:0;padding:0">'+general+'</ul>':''));
   };
 
   var _lastFocus=null;
