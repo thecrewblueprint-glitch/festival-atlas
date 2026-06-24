@@ -5,7 +5,7 @@ Created: 2026-06-24
 Review after: 2026-07-08
 Assistant: ChatGPT
 Branch: research-version
-Commit: 9a74693df40f4331c11db1f587d860baa795519b..8dabe4583d8ccdb26abfa97fdd89a26b21df5a03
+Commit: 9a74693df40f4331c11db1f587d860baa795519b..8dabe4583d8ccdb26abfa97fdd89a26b21df5a03, plus validation log update
 
 ## User decision applied
 
@@ -69,9 +69,15 @@ Added `assets/confidence-badges.js` to active shared files and documented that c
 
 ## Validation status
 
-Validation not run locally in this session. Work was applied through the GitHub connector without a local checkout.
+User reported validation completed successfully on 2026-06-24 after the confidence badge update:
 
-Run before treating this as fully verified:
+```text
+validate:data             ✓  (77 records, 68 active, 9 hidden)
+validate:branch-research  ✓  (56 packages)
+validate:static-app       ✓
+```
+
+Equivalent project command:
 
 ```bash
 npm run validate:all
