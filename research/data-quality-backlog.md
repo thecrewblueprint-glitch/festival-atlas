@@ -259,33 +259,24 @@ Note: shaky-knees (Piedmont Park) and sick-new-world (Las Vegas Festival Grounds
 
 ## Category 5 — Producer Name Needs Verification
 
-These records have "verify" in the producer name, indicating the relationship is uncertain.
+**Resolved 2026-06-24 (Category 5 verification pass):**
+
+All 23 active records with "verify" language in producer names have been updated. Sources: official festival websites, Pollstar news, and web search verification.
+
+Key corrections:
+- rocklahoma: was "AEG / partners" → Danny Wimmer Presents (acquired 2024)
+- railbird: was "Live Nation / partners" → C3 Presents / Live Nation (Allison Barker, presented by C3)
+- sick-new-world: was "Live Nation / partners" → C3 Presents / Live Nation (Velvet Hammer Music co-creator)
+- okechobee: was "verify current status" → Soundslinger (OMF LLC) — Madison House no longer current
+- hulaween: was "Suwannee / partners" → Spirit of the Suwannee / Michael Berg (repurchased from Etix)
+- electric-forest: was "Insomniac / Madison House, verify current" → Insomniac / Madison House Presents ✓
+- breakaway: was "Breakaway / multi-city producer, verify markets" → Breakaway Presents (independent)
+- high-sierra: was "High Sierra / partners" → Dave Margulies / High Sierra Music Festival (also relocated to Grass Valley)
+
+Remaining 31 active records retain `needs_source_link` status but have clean producer names (no "verify" language). These are major well-known producers (Goldenvoice/AEG, C3 Presents, DWP, Insomniac, etc.) — status can be updated in a future pass with formal source citations.
 
 ```
-portola-2026                producer: Goldenvoice / AEG ecosystem — secondary, not primary
-bottlerock-napa-2026        producer: Latitude 38 Entertainment, verify partners
-kilby-block-party-2026      producer: S&S Presents — verify current event operator
-railbird-2026               producer: Live Nation / partners, verify
-sea-hear-now-2026           producer: C3 Presents / partners, verify
-dreamville-2026             producer: Dreamville / partners, verify
-roots-picnic-2026           producer: The Roots / Live Nation Urban, verify
-iii-points-2026             producer: III Points / partners, verify
-north-coast-2026            producer: North Coast / partners, verify
-breakaway-2026              producer: Breakaway / multi-city producer, verify markets
-country-thunder-us-2026     producer: Country Thunder Music Festivals — verify per market
-hulaween-2026               producer: Suwannee / partners, verify
-high-sierra-2026            producer: High Sierra / partners, verify
-floydfest-2026              producer: Across-the-Way Productions, verify
-rocklahoma-2026             producer: AEG / partners, verify
-lights-all-night-2026       producer: Disco Donnie Presents / partners, verify
-crssd-2026                  producer: FNGRS CRSSD, verify
-okechobee-2026              producer: verify current status
-sick-new-world-2026         producer: Live Nation / partners, verify
-levitation-austin-2026      producer: Levitation / partners, verify
-capitol-hill-block-party-2026 producer: CHBP / partners, verify
-levitate-2026               producer: Levitate, verify
-treefort-2026               producer: Treefort Music Fest — low-risk, but confirm operator
-m3f-2026                    producer: M3F / nonprofit festival org, verify
+dreamville-2026   (inactive — skip)
 ```
 
 ---
