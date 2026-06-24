@@ -56,10 +56,9 @@
   function applyBadges(){
     var byName=lookup();
     Array.prototype.slice.call(document.querySelectorAll('article.card,.event')).forEach(function(card){
+      if(card.querySelector('.confidence-badge'))return;
       var o=byName[norm(cardTitle(card))];
       if(!o)return;
-      var existing=card.querySelector('.confidence-badge');
-      if(existing)existing.remove();
       var holder=document.createElement('div');
       holder.innerHTML=buildBadge(o);
       var badge=holder.firstChild;
