@@ -3,11 +3,12 @@ name: Validate Production Atlas
 on:
   push:
     branches:
+      - main
       - research-version
   pull_request:
     branches:
-      - research-version
       - main
+      - research-version
 
 jobs:
   validate-production-atlas:

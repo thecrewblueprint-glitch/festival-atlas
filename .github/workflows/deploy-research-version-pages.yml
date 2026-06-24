@@ -1,9 +1,9 @@
-name: Deploy Research Version to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - research-version
+      - main
   workflow_dispatch:
 
 permissions:
@@ -24,10 +24,8 @@ jobs:
     name: Validate static app
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout research-version
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: research-version
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,17 +36,15 @@ jobs:
         run: npm run validate:all
 
   deploy:
-    name: Deploy research-version preview
+    name: Deploy to GitHub Pages
     needs: validate
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout research-version
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: research-version
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
