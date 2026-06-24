@@ -245,7 +245,7 @@
       accomChips(opportunity)+
       '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
       '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
-      '<p><b>Confidence:</b> '+(hasSource?'<span style="color:#48c778">Likely — source attached</span>':'<span style="color:var(--muted)">Unverified — source needed</span>')+'</p>'+
+      '<p><b>Confidence:</b> '+(opportunity.sourceQuality==='source_attached_verified'?'<span style="color:#48c778">Verified — web-confirmed 2026</span>':hasSource?'<span style="color:#48c778">Likely — source attached</span>':'<span style="color:var(--muted)">Unverified — source needed</span>')+'</p>'+
       '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
       '<p><b>Next:</b> '+esc((opportunity.nextResearchActions||[])[0]||opportunity.nextHumanAction||'Verify before outreach')+'</p>'+
       '</article>';
@@ -538,45 +538,14 @@
     if(!el)return;
     function counts(items,fn){return items.reduce(function(acc,item){var key=fn(item)||'Unknown';acc[key]=(acc[key]||0)+1;return acc},{})}
     function bars(obj){var max=Math.max(1,...Object.values(obj));return Object.entries(obj).sort(function(a,b){return b[1]-a[1]}).map(function(pair){return '<div class="bar"><span>'+esc(pair[0])+'</span><div class="track"><div class="fill" style="width:'+(pair[1]/max*100)+'%"></div></div><span>'+pair[1]+'</span></div>'}).join('');}
-    function hasAction(o,pattern){return (o.nextResearchActions||[]).some(function(a){return pattern.test(a);});}
-    function queueCard(title,items,note){
-      if(!items.length)return '';
-      return '<div class="card">'+
-        '<h3>'+esc(title)+' <span class="sub">('+items.length+')</span></h3>'+
-        '<p class="sub" style="margin:0 0 6px">'+esc(note)+'</p>'+
-        '<ul class="queue-list">'+
-        items.slice(0,8).map(function(o){
-          return '<li onclick="openOpportunity(\''+esc(o.id)+'\')">'+
-            '<span class="vtier '+valueTierClass(o.longTermValueScore)+'" style="font-size:.6rem;padding:1px 6px;margin:0 4px 0 0">'+esc(o.longTermValueScore)+'/100</span>'+
-            '<b>'+esc(o.name)+'</b><br>'+
-            '<span style="color:var(--muted);font-size:.78rem">'+esc((o.nextResearchActions||[])[0]||'verify')+'</span>'+
-            '</li>';
-        }).join('')+
-        (items.length>8?'<li class="sub">&hellip; and '+(items.length-8)+' more &mdash; <a href="opportunities.html">see all &nearr;</a></li>':'')+
-        '</ul></div>';
-    }
-    var needsDates=opportunities.filter(function(o){return !o.startDate;});
-    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;});
-    var needsVendor=opportunities.filter(function(o){return hasAction(o,/vendor/i);});
-    var needsLabor=opportunities.filter(function(o){return hasAction(o,/labor/i);});
-    var needsTravel=opportunities.filter(function(o){return hasAction(o,/lodging|travel|per diem/i);});
     el.innerHTML=
       '<h2>Analytics &amp; Research Queue</h2>'+
-      '<h3>Research Queue</h3>'+
-      '<p class="lead">Opportunities grouped by what still needs verification. Click any item to open detail.</p>'+
-      '<div class="grid">'+
-        queueCard('Dates unconfirmed',needsDates,'Confirm exact dates before travel or outreach decisions.')+
-        queueCard('Source missing',noSource,'Find a public source that confirms this event is active for 2026.')+
-        queueCard('Vendor stack unverified',needsVendor,'Research which companies handle production for this event.')+
-        queueCard('Labor route unverified',needsLabor,'Identify the union local or labor provider and hiring pathway.')+
-        queueCard('Travel / lodging unverified',needsTravel,'Check lodging, per diem, and travel coverage potential.')+
-      '</div>'+
-      '<h3 style="margin-top:26px">Dataset breakdown</h3>'+
+      '<h3>Dataset breakdown</h3>'+
       '<div class="grid">'+
         '<div class="card"><h3>By region</h3>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
         '<div class="card"><h3>By value tier</h3>'+bars(counts(opportunities,function(o){return valueTierLabel(o.longTermValueScore)}))+'</div>'+
         '<div class="card"><h3>By month</h3>'+bars(counts(opportunities,function(o){return MONTHS[(o.month||1)-1]}))+'</div>'+
-        '<div class="card"><h3>By confidence</h3>'+bars(counts(opportunities,function(o){return confidenceLabel(o.confidence||o.sourceType)}))+'</div>'+
+        '<div class="card"><h3>By state</h3>'+bars(counts(opportunities.filter(function(o){return o.state&&o.state!=='US';}),function(o){return o.state}))+'</div>'+
         '<div class="card"><h3>Branch records</h3>'+bars(counts(branchIndex.records,function(r){return r.branchName||branchName(r.branchId)}))+'</div>'+
         '<div class="card"><h3>Employers by type</h3>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
       '</div>';
@@ -671,7 +640,7 @@
         '<div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div>'+
         '<div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100 — '+esc(valueTierLabel(opportunity.longTermValueScore))+'</div>'+
         '<div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div>'+
-        '<div class="detail"><b>Confidence</b><br>'+esc(confText)+(hasSource?' — public source on <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a>':' — no public source yet')+'</div>'+
+        '<div class="detail"><b>Confidence</b><br>'+esc(confText)+(opportunity.sourceQuality==='source_attached_verified'?' — web-confirmed 2026 (<a href="sources.html" onclick="event.stopPropagation()">Sources &nearr;</a>)':hasSource?' — source on <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a>':' — no public source yet')+'</div>'+
       '</div>'+
       '<p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||((opportunity.nextResearchActions||[])[0])||'Verify before outreach.')+'</p>'+
       '<h3>Mapped production branches</h3>'+
