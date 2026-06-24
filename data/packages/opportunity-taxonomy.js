@@ -195,20 +195,15 @@
     var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY;
     var app = document.querySelector('#app');
     var page = document.body ? document.body.dataset.page : '';
-    if(app && page === 'analytics' && !app.querySelector('.taxonomy-page-note')){
+    // taxonomy-page-note class is retained for validation and optional internal debugging only.
+    // The public Analytics page now renders its own festival-planning dashboard, so the internal
+    // taxonomy/research-queue banners are no longer shown in the public UI.
+    if(window.PRODUCTION_ATLAS_SHOW_TAXONOMY_NOTE && app && page === 'analytics' && !app.querySelector('.taxonomy-page-note')){
       var pageNote = document.createElement('div');
       pageNote.className = 'notice taxonomy-page-note';
       pageNote.style.margin = '0 0 16px';
-      pageNote.textContent = 'Internal view: taxonomy language and active research queue source updates are live.';
+      pageNote.textContent = 'Taxonomy and route-research source updates are active.';
       app.insertBefore(pageNote, app.firstChild);
-    }
-    if(app && page === 'analytics' && !app.querySelector('.research-queue-update-note')){
-      var queueNote = document.createElement('div');
-      queueNote.className = 'notice research-queue-update-note';
-      queueNote.style.margin = '0 0 16px';
-      queueNote.textContent = 'Research queue updates applied: 18 active queue source/date updates are now patched through the active taxonomy package. Hulaween remains official-source verification open.';
-      app.insertBefore(queueNote, app.firstChild);
-      app.dataset.researchQueueUpdateNotice = 'applied';
     }
     Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(card){
       if(card.dataset.taxonomyNote === 'applied') return;
