@@ -247,6 +247,15 @@
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
   }
 
+  function applyUrlFilters(){
+    if(!$('#filters'))return;
+    var params=new URLSearchParams(window.location.search||'');
+    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['tier','#tierFilter'],['accommodation','#accommodationFilter'],['state','#stateFilter'],['type','#employerTypeFilter']].forEach(function(pair){
+      var val=params.get(pair[0]);var input=$(pair[1]);
+      if(val!=null&&input)input.value=val;
+    });
+  }
+
   function accomChips(opportunity){
     var accom=opportunity.accommodation||{};
     var travel=opportunity.travelCompensation||{};
@@ -268,6 +277,8 @@
     if(positive.indexOf(travelPaid)>-1)chips.push('<span class="accom-tag accom-ok">Travel paid</span>');
     else if(actions.indexOf('travel')>-1||actions.indexOf('flight')>-1||actions.indexOf('mileage')>-1)chips.push('<span class="accom-tag accom-warn">Travel — research</span>');
     else chips.push('<span class="accom-tag accom-muted">Travel unknown</span>');
+    var allUnknown=chips.every(function(tag){return tag.indexOf('accom-muted')>-1;});
+    if(allUnknown)return '<div class="accom-tags"><span class="accom-tag accom-muted">Lodging &amp; travel — to verify</span></div>';
     return '<div class="accom-tags">'+chips.join('')+'</div>';
   }
 
@@ -464,29 +475,48 @@
         '<p><b>Next:</b> '+esc((o.nextResearchActions||[])[0]||'Verify before outreach')+'</p>'+
         '</article>';
     }).join('');
+    var pathwayHtml=branches.map(function(branch){
+      var count=matchingOpportunities(branch.id).length;
+      var skills=(branch.workerFocus||[]).slice(0,3).join(' \xb7 ');
+      return '<a class="pathway" href="opportunities.html?branch='+encodeURIComponent(branch.id)+'">'+
+        '<h4>'+esc(branch.name)+'</h4>'+
+        '<div class="pathway-skills">'+esc(skills)+'</div>'+
+        '<span class="pathway-count">'+count+' event'+(count===1?'':'s')+' →</span>'+
+        '</a>';
+    }).join('');
     el.innerHTML=
-      '<h2>Dashboard Overview</h2>'+
-      '<div class="stats">'+
-        '<div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div>'+
-        '<div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div>'+
-        '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div>'+
-        '<div class="stat"><b>'+branches.length+'</b><span>branches</span></div>'+
-        '<div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div>'+
+      '<h2>Find Your Pathway</h2>'+
+      '<p class="section-intro">Production Atlas helps live-event production workers find where the work is and how to get routed into it. Pick your trade to jump straight to the 2026 events that need it, then open an event to inspect the hiring route, vendor stack, and local labor pathway.</p>'+
+      '<div class="steps">'+
+        '<div class="step-card"><span class="step-n">1</span><h4>Pick your trade</h4><p>Choose your department below to jump straight to the events that hire it.</p></div>'+
+        '<div class="step-card"><span class="step-n">2</span><h4>Open an event</h4><p>Review the work-year value, dates, mapped branches, vendor routes, and labor pathway.</p></div>'+
+        '<div class="step-card"><span class="step-n">3</span><h4>Verify &amp; reach out</h4><p>Confirm the route from a current public source, then use the careers or local-union path.</p></div>'+
       '</div>'+
+      '<h3>Your trade</h3>'+
+      '<div class="pathway-grid">'+pathwayHtml+'</div>'+
       '<div class="home-dash">'+
-        '<h3>Top priority targets</h3>'+
+        '<h3 style="margin-top:28px">Top priority targets</h3>'+
+        '<p class="section-intro" style="margin-bottom:12px">Highest work-year value across all trades right now.</p>'+
         '<div class="grid">'+topHtml+'</div>'+
-        '<h3 style="margin-top:22px">Verification snapshot</h3>'+
+        '<h3 style="margin-top:26px">Verification snapshot</h3>'+
         '<div class="notice">'+
-          needsDates+' of '+opportunities.length+' active opportunities are missing confirmed dates. '+
-          noSource+' have no attached public source. '+
+          needsDates+' of '+opportunities.length+' active opportunities still need confirmed dates. '+
+          noSource+' have no attached public source yet. '+
           '<a href="analytics.html">Open research queue &nearr;</a>'+
+        '</div>'+
+        '<div class="stats" style="margin-top:18px">'+
+          '<div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div>'+
+          '<div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div>'+
+          '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div>'+
+          '<div class="stat"><b>'+branches.length+'</b><span>trades / branches</span></div>'+
+          '<div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div>'+
         '</div>'+
         '<h3 style="margin-top:22px">Quick links</h3>'+
         '<div class="home-links">'+
           '<a href="opportunities.html" class="btn">Browse all opportunities</a>'+
           '<a href="calendar.html" class="btn">Calendar view</a>'+
           '<a href="map.html" class="btn">Open map</a>'+
+          '<a href="branches.html" class="btn">All trades</a>'+
           '<a href="analytics.html" class="btn">Research queue</a>'+
           '<a href="schedule.html" class="btn">My schedule</a>'+
         '</div>'+
@@ -716,15 +746,26 @@
     openModal('<h2>'+esc(branch.name)+'</h2><p><b>'+esc(branch.question)+'</b></p><div class="modalgrid"><div class="detail"><b>Event-specific records</b><br>'+records.length+'</div><div class="detail"><b>General employer leads</b><br>'+matchingEmployers(id).length+'</div></div><h3>Research needs</h3><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><h3>Worker focus</h3><p>'+esc((branch.workerFocus||[]).join(', '))+'</p><h3>Event-specific branch records</h3>'+(cards||'<p class="sub">No records yet.</p>'));
   };
 
+  var _lastFocus=null;
   function openModal(html){
     var modal=$('#modal');
     var content=$('#modalContent');
     if(!modal||!content)return;
     content.innerHTML=html;
     modal.classList.add('open');
+    modal.setAttribute('role','dialog');
+    modal.setAttribute('aria-modal','true');
+    _lastFocus=document.activeElement;
+    var box=modal.querySelector('.modalbox');
+    if(box){box.setAttribute('tabindex','-1');box.focus();}
   }
   window.openModal=openModal;
-  window.closeModal=function(){var modal=$('#modal');if(modal)modal.classList.remove('open')};
+  window.closeModal=function(){
+    var modal=$('#modal');
+    if(modal){modal.classList.remove('open');modal.removeAttribute('aria-modal');}
+    if(_lastFocus&&typeof _lastFocus.focus==='function'){_lastFocus.focus();}
+    _lastFocus=null;
+  };
 
   function init(){
     branches=window.RESOURCE_BRANCHES||[];
@@ -737,9 +778,11 @@
     window.scopedOpportunities=opportunities;
     window.iatseLocals=iatseLocals;
     fillFilters();
+    applyUrlFilters();
     renderPage();
     var modal=$('#modal');
     if(modal)modal.addEventListener('click',function(event){if(event.target.id==='modal')window.closeModal()});
+    document.addEventListener('keydown',function(event){if(event.key==='Escape'){var m=$('#modal');if(m&&m.classList.contains('open'))window.closeModal();}});
   }
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){loadBranchResearch().then(init)});else loadBranchResearch().then(init);
