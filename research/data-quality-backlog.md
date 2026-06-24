@@ -119,6 +119,39 @@ Fixed in `data/packages/opportunities-2026.js`:
 
 ---
 
+## Resolved — 2026-06-24 Source Verification Pass
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**sourceQuality updated to `source_attached_verified` — 20 records (top 20 by longTermValueScore):**
+- `summerfest-2026` (76) — summerfest.com confirmed current
+- `breakaway-2026` (74) — breakawayfestival.com/2026-season confirmed current
+- `bottlerock-napa-2026` (66) — bottlerocknapavalley.com confirmed current
+- `coachella-2026` (62) — **URL updated**: Wikipedia → coachella.com (official)
+- `electric-forest-2026` (62) — **URL updated**: Wikipedia → electricforest.com (official)
+- `country-thunder-us-2026` (62) — **URL updated**: countrythunder.com/connect → countrythunder.com (homepage)
+- `edc-las-vegas-2026` (60) — **URL updated**: businessinsider.com → lasvegas.electricdaisycarnival.com (official)
+- `louder-than-life-2026` (60) — louderthanlifefestival.com confirmed current
+- `new-orleans-jazz-heritage-2026` (60) — nojazzfest.com confirmed current
+- `cma-fest-2026` (58) — **URL updated**: axios.com article → cmafest.com (official)
+- `austin-city-limits-2026` (58) — **URL updated**: Wikipedia → aclfestival.com (official)
+- `welcome-to-rockville-2026` (58) — welcometorockville.com confirmed current
+- `hulaween-2026` (58) — hulaween.com confirmed current
+- `bonnaroo-2026` (56) — **URL updated**: pitchfork.com article → bonnaroo.com (official)
+- `bourbon-and-beyond-2026` (56) — bourbonandbeyond.com confirmed current
+- `aftershock-2026` (56) — aftershockfestival.com confirmed current
+- `hinterland-2026` (56) — hinterlandiowa.com confirmed current
+- `north-coast-2026` (56) — northcoastfestival.com confirmed current
+- `floydfest-2026` (56) — floydfest.com confirmed current
+- `stagecoach-2026` (54) — stagecoachfestival.com confirmed current
+
+**Dates confirmed via web search (all matched existing data file values):**
+All 20 records have correct dates already in the data file. No date corrections were needed.
+
+Remaining 34 active records still carry `user_report_or_prior_research_needs_source_attachment`. Source verification for records below score 54 is a future pass.
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
 These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
