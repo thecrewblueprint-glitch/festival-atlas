@@ -202,16 +202,31 @@ Wikipedia URLs upgraded to official sites (6 records):
 
 ## Category 1 — Missing Confirmed Dates
 
-These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
+**Resolved 2026-06-24 (per-market split pass):**
 
-All other records now have confirmed dates as of 2026-06-23.
+All 16 per-market records added with confirmed dates and venues. Parent multi-market records (`breakaway-2026`, `country-thunder-us-2026`) hidden from active views (`visibleInActive2026View: false`).
 
-```
-breakaway-2026            Score 74  Multi-city run Apr–Nov; each market needs its own date
-country-thunder-us-2026   Score 62  Multi-market Apr–Jul; split into per-market records
-```
+Breakaway 2026 — 13 per-market records (14th market not yet announced):
+- breakaway-dallas-2026: Apr 10–11, Fair Park, Dallas TX
+- breakaway-tampa-2026: Apr 17–18, Raymond James Stadium North Grounds, Tampa FL
+- breakaway-arizona-2026: Apr 24–25, Sloan Park Festival Grounds, Mesa AZ
+- breakaway-atlanta-2026: May 15–16, Center Parc Stadium, Atlanta GA
+- breakaway-ohio-2026: May 29–30, Historic Crew Stadium, Columbus OH
+- breakaway-minnesota-2026: Jun 26–27, Allianz Field Festival Grounds, St. Paul MN
+- breakaway-michigan-2026: Aug 14–15, Belknap Park, Grand Rapids MI
+- breakaway-mass-2026: Aug 21–22, Palladium Outdoors, Worcester MA
+- breakaway-philadelphia-2026: Sep 11–12, Subaru Park Festival Grounds, Chester PA
+- breakaway-carolina-2026: Sep 25–26, zMAX Dragway, Charlotte NC
+- breakaway-utah-2026: Oct 2–3, America First Field, Sandy UT
+- breakaway-norcal-2026: Oct 16–17, Cal Expo Center, Sacramento CA
+- breakaway-houston-2026: Nov 13–14, venue TBD (confirm when announced)
 
-Note: Both records have approximate season-span dates (breakaway Apr 10–Nov 14; country-thunder Apr 9–Jul 19). These are acceptable multi-market range placeholders. Per-market split records are the real fix.
+Country Thunder US 2026 — 3 per-market records:
+- country-thunder-arizona-2026: Apr 9–12, Country Thunder Arizona Grounds, Florence AZ
+- country-thunder-florida-2026: May 8–10, Coachman Park, Clearwater FL (new venue for 2026)
+- country-thunder-wisconsin-2026: Jul 16–19, Shadow Hill Ranch, Twin Lakes WI
+
+Remaining open: `breakaway-houston-2026` venue is TBD — update when Breakaway announces it.
 
 ---
 

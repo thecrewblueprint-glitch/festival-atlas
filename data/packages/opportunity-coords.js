@@ -54,4 +54,22 @@ window.RESOURCE_OPP_COORDS={
   'okechobee-2026':[27.2436,-80.8298],
   'sick-new-world-2026':[36.1699,-115.1398],
   'levitation-austin-2026':[30.2672,-97.7431]
+  // Breakaway per-market
+  'breakaway-dallas-2026':[32.7789,-96.7567],
+  'breakaway-tampa-2026':[27.9760,-82.5033],
+  'breakaway-arizona-2026':[33.4073,-111.8351],
+  'breakaway-atlanta-2026':[33.7350,-84.3898],
+  'breakaway-ohio-2026':[39.9612,-83.0174],
+  'breakaway-minnesota-2026':[44.9531,-93.1647],
+  'breakaway-michigan-2026':[42.9634,-85.6681],
+  'breakaway-mass-2026':[42.2626,-71.8023],
+  'breakaway-philadelphia-2026':[39.8315,-75.3774],
+  'breakaway-carolina-2026':[35.3830,-80.7192],
+  'breakaway-utah-2026':[40.5830,-111.8938],
+  'breakaway-norcal-2026':[38.5778,-121.4057],
+  'breakaway-houston-2026':[29.7604,-95.3698],
+  // Country Thunder US per-market
+  'country-thunder-arizona-2026':[33.0314,-111.3871],
+  'country-thunder-florida-2026':[27.9665,-82.7985],
+  'country-thunder-wisconsin-2026':[42.5278,-88.2490]
 };
