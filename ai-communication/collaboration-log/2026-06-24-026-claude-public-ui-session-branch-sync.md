@@ -4,7 +4,7 @@ Status: complete
 Created: 2026-06-24
 Review after: 2026-07-08
 Assistant: Claude
-Branch: claude/research-version-edits-z0gqw6
+Branch: research-version
 Commit: 99966c8
 
 ## Why

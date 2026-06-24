@@ -98,6 +98,7 @@ schedule.html
 assets/atlas.css
 assets/atlas-core-v2.js
 assets/approx-date-labels.js
+assets/confidence-badges.js
 assets/home-guide-page.js
 assets/guide-page.js
 data/packages/opportunity-taxonomy.js
@@ -162,12 +163,14 @@ Core work-finding validation should focus on:
 ```text
 active source/date
 producer/promoter or operator route
-public labor/hiring route
+public work-route signal
 production department coverage
 source quality / last checked date
 ```
 
 Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which departments it touches, or what route to research next.
+
+`assets/confidence-badges.js` must score only core work-finding fields. It must not reduce the score because accommodation, travel, lodging, or per diem information is missing.
 
 ## IATSE / local jurisdiction wording rule
 

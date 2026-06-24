@@ -5,7 +5,7 @@ Created: 2026-06-24
 Review after: 2026-07-08
 Assistant: ChatGPT
 Branch: research-version
-Commit: c75c3c7b6d7595d0f466474f433943afa8c02b49..2019c0f59be4fd909c166aa1397009510d546625
+Commit: c75c3c7b6d7595d0f466474f433943afa8c02b49..2019c0f59be4fd909c166aa1397009510d546625, plus log update after user-reported validation
 
 ## User decision
 
@@ -70,13 +70,15 @@ Added `assets/research-queue-page.js` to active shared files and documented the 
 
 ## Validation status
 
-Validation not run locally in this session. Work was applied through the GitHub connector without a local checkout.
+User reported validation completed on 2026-06-24 after the scope reset changes.
 
-Run before treating this as fully verified:
+Validation command presumed from project standard:
 
 ```bash
 npm run validate:all
 ```
+
+No local validation was run by ChatGPT in this session because the edits were applied through the GitHub connector.
 
 ## Next action
 
