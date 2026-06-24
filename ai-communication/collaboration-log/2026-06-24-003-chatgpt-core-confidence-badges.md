@@ -5,7 +5,7 @@ Created: 2026-06-24
 Review after: 2026-07-08
 Assistant: ChatGPT
 Branch: research-version
-Commit: 9a74693df40f4331c11db1f587d860baa795519b..73295b109d12ac4d267b6bbc70551887b4070ec2
+Commit: 9a74693df40f4331c11db1f587d860baa795519b..8dabe4583d8ccdb26abfa97fdd89a26b21df5a03
 
 ## User decision applied
 
@@ -60,6 +60,8 @@ Source attached — validate
 ```
 
 Accommodation/travel/per diem information is only shown as optional supplemental context when data exists. It does not affect the core confidence score.
+
+A follow-up patch restored the safer mutation behavior: existing badges are skipped instead of removed/re-added, preventing observer churn while still allowing newly rendered cards to receive badges.
 
 ### README.md
 
