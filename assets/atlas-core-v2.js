@@ -377,6 +377,7 @@
     var browseHtml=browseData.map(function(opportunity){
       var inSched=schedule.indexOf(opportunity.id)>-1;
       return '<article class="card">'+
+        '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
         '<h3>'+esc(opportunity.name)+'</h3>'+
         '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</div>'+
         accomChips(opportunity)+
