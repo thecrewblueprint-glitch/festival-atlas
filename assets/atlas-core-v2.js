@@ -564,17 +564,20 @@
     var rows=[];
     opportunities.forEach(function(opportunity){
       ((opportunity.intelligence||{}).publicSources||[]).forEach(function(source){
-        if(source.url)rows.push({type:'opportunity',item:opportunity.name,section:'Opportunity',label:source.label||'source',url:source.url,searchText:(opportunity.name+' '+(source.label||'')).toLowerCase(),branchIds:opportunity.departments||[]});
+        if(source.url)rows.push({type:'opportunity',item:opportunity.name,section:'Opportunity',label:source.label||'source',url:source.url,searchText:(opportunity.name+' '+(source.label||'')).toLowerCase(),branchIds:opportunity.departments||[],state:opportunity.state||null,region:opportunity.region||null});
       });
     });
     branchIndex.records.forEach(function(record){
+      var oppForBranch=opportunities.find(function(o){return o.id===record.opportunityId;});
       (record.sourceLinks||[]).forEach(function(source){
-        if(source.url)rows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,searchText:((record.opportunityName||record.opportunityId)+' '+(record.branchName||record.branchId)+' '+(source.label||'')).toLowerCase(),branchIds:[record.branchId]});
+        if(source.url)rows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,searchText:((record.opportunityName||record.opportunityId)+' '+(record.branchName||record.branchId)+' '+(source.label||'')).toLowerCase(),branchIds:[record.branchId],state:oppForBranch?(oppForBranch.state||null):null,region:oppForBranch?(oppForBranch.region||null):null});
       });
     });
     var filtered=rows.filter(function(row){
       if(filter.q&&!row.searchText.includes(filter.q))return false;
       if(filter.branch&&!row.branchIds.includes(filter.branch))return false;
+      if(filter.state&&row.state!==filter.state)return false;
+      if(filter.region&&row.region!==filter.region)return false;
       return true;
     });
     var oppCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
