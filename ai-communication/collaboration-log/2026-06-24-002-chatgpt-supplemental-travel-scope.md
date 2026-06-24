@@ -78,7 +78,7 @@ Run before treating this as fully verified:
 npm run validate:all
 ```
 
-## Next recommended work
+## Next action
 
 Continue the public-launch sprint with the corrected scope:
 
