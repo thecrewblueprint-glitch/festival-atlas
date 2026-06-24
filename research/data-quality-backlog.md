@@ -152,6 +152,54 @@ Remaining 34 active records still carry `user_report_or_prior_research_needs_sou
 
 ---
 
+## Resolved — 2026-06-24 Full Source Verification Pass (remaining 34 records)
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**sourceQuality updated to `source_attached_verified` — all 34 remaining active records (score < 54):**
+- `lollapalooza-chicago-2026` — lollapalooza.com confirmed current
+- `sonic-temple-2026` — sonictemplefestival.com confirmed current
+- `inkcarceration-2026` — inkcarceration.com confirmed current
+- `governors-ball-2026` — confirmed current; **URL updated**: Wikipedia → governorsballmusicfestival.com (official)
+- `shaky-knees-2026` — shakykneesfestival.com confirmed current
+- `portola-2026` — portolafestival.com confirmed current
+- `edc-orlando-2026` — electricdaisycarnival.com/orlando confirmed current
+- `hinterland-2026` — hinterlandiowa.com confirmed current
+- `kilby-block-party-2026` — confirmed current; **URL updated**: Wikipedia → kilbyblockparty.com (official)
+- `railbird-2026` — railbirdfestival.com confirmed current
+- `oceans-calling-2026` — oceanscallingfest.com confirmed current
+- `sea-hear-now-2026` — confirmed current; **URL updated**: Wikipedia → seahearnowfestival.com (official)
+- `roots-picnic-2026` — rootspicnic.com confirmed current
+- `iii-points-2026` — iiipoints.com confirmed current
+- `hard-summer-2026` — hardfest.com/summer confirmed current
+- `beyond-wonderland-socal-2026` — beyondwonderland.com/socal confirmed current
+- `rock-fest-wisconsin-2026` — rock-fest.com confirmed current
+- `high-sierra-2026` — highsierramusic.com confirmed current
+- `m3f-2026` — m3ffest.com confirmed current
+- `ultra-miami-2026` — confirmed current; **URL updated**: Wikipedia → ultramusicfestival.com (official)
+- `newport-folk-2026` — confirmed current; **URL updated**: Wikipedia → newportfolk.org (official)
+- `newport-jazz-2026` — confirmed current; **URL updated**: Wikipedia → newportjazz.org (official)
+- `levitate-2026` — levitatefestival.com confirmed current
+- `treefort-2026` — treefortmusicfest.com confirmed current
+- `capitol-hill-block-party-2026` — capitolhillblockparty.com confirmed current
+- `pickathon-2026` — pickathon.com confirmed current
+- `telluride-bluegrass-2026` — bluegrass.com/telluride confirmed current
+- `rocklahoma-2026` — rocklahoma.com confirmed current
+- `lights-all-night-2026` — lightsallnight.com confirmed current
+- `countdown-nye-2026` — countdownnye.com confirmed current
+- `dreamstate-socal-2026` — socal.dreamstateusa.com confirmed current
+- `crssd-2026` — crssdfest.com confirmed current (fall 2026 edition now confirmed; specific fall dates still TBD)
+- `okechobee-2026` — okeechobeefest.com confirmed current
+- `levitation-austin-2026` — levitation.fm confirmed current
+- `sick-new-world-2026` — sicknewworldfest.com confirmed current
+
+**All 54 active records now carry `sourceQuality:'source_attached_verified'` as of 2026-06-24.**
+
+Wikipedia URLs upgraded to official sites (6 records):
+- `ultra-miami-2026`, `governors-ball-2026`, `kilby-block-party-2026`, `sea-hear-now-2026`, `newport-folk-2026`, `newport-jazz-2026`
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
 These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
@@ -169,7 +217,7 @@ Note: Both records have approximate season-span dates (breakaway Apr 10–Nov 14
 
 ## Category 2 — Missing Public Source URL
 
-**All active records now have source URLs as of 2026-06-23.** Category 2 is fully resolved.
+**All active records now have source URLs and `sourceQuality:'source_attached_verified'` as of 2026-06-24.** Category 2 is fully resolved.
 
 Remaining action: breakaway-2026 and country-thunder-us-2026 have sources attached at the tour level; per-market records still needed when individual market dates are confirmed.
 
