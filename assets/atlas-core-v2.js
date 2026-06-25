@@ -442,7 +442,13 @@
     var el=$('#app');
     if(!el)return;
     el.innerHTML='<h2>Festival Calendar</h2><p class="lead">Month-by-month view of active 2026 festivals.</p><div class="calendar">'+MONTHS.map(function(month,index){
-      var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1});
+      var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1}).slice().sort(function(a,b){
+        var ad=parseDate(a.startDate),bd=parseDate(b.startDate);
+        if(ad&&bd){var diff=ad.getDate()-bd.getDate();if(diff)return diff;}
+        else if(ad&&!bd)return -1;
+        else if(!ad&&bd)return 1;
+        return a.name<b.name?-1:a.name>b.name?1:0;
+      });
       return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){
         var calDepts=(opportunity.departments||[]).slice(0,3).map(branchName);
         var calExtra=Math.max(0,(opportunity.departments||[]).length-3);
