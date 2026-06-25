@@ -12,7 +12,7 @@
           card('Keep private intel private','Names, referrals, pay, lodging, and direct contacts belong in a private tracker — never in this public app.')+
         '</div>'+
         '<div class="notice" style="margin-top:16px"><b>Need the full workflow?</b> Step-by-step instructions and safe outreach wording live on the <a href="guide.html">Guide for Use</a> page.</div>'+
-        '<p style="margin-top:14px"><a class="btn" href="guide.html">Open Guide for Use</a> <a class="btn" href="opportunities.html">Browse Opportunities</a> <a class="btn" href="analytics.html">Check Research Queue</a></p>'+
+        '<p style="margin-top:14px"><a class="btn" href="guide.html">Open Guide for Use</a> <a class="btn" href="opportunities.html">Browse Opportunities</a> <a class="btn" href="calendar.html">View calendar</a></p>'+
       '</section>';
   }
   function install(){
