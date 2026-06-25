@@ -243,21 +243,24 @@
 
   function employerCard(employer){
     var deptNames=(employer.departments||[]).slice(0,7).map(branchName).join(', ');
+    var hasApply=!!(employer.links&&(employer.links.apply||employer.links.careers));
     return '<article class="card click" onclick="openEmployer(\''+esc(employer.id)+'\')">'+
       '<h3>'+esc(employer.name)+'</h3>'+
       '<div class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</div>'+
-      '<p><b>Departments:</b> '+esc(deptNames||'verify')+'</p>'+
+      (deptNames?'<p><b>Departments:</b> '+esc(deptNames)+'</p>':'')+
       '<p>'+esc(employer.bestUse||'U.S. employer/vendor research lead.')+'</p>'+
-      '<p>'+plainLink(employer.linkStatus==='homepage_fallback'?'Company homepage':'Apply / careers',bestLink(employer))+'</p>'+
+      '<p>'+plainLink(hasApply?'Apply / careers':'Company website / contact',bestLink(employer))+'</p>'+
       '</article>';
   }
 
   function iatseCard(local){
+    var craft=local.craft||'';
+    var states=(local.states||[]).join(', ');
     return '<article class="card click" onclick="openLocal(\''+esc(local.local)+'\',\''+esc(local.district)+'\')">'+
       '<h3>IATSE Local '+esc(local.local)+'</h3>'+
       '<div class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</div>'+
-      '<p><b>Craft:</b> '+esc(local.craft||'verify')+'</p>'+
-      '<p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p>'+
+      (craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+
+      (states?'<p><b>States:</b> '+esc(states)+'</p>':'')+
       '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
       '</article>';
   }
@@ -634,13 +637,17 @@
   window.openEmployer=function(id){
     var employer=employers.find(function(item){return item.id===id});
     if(!employer)return;
-    openModal('<h2>'+esc(employer.name)+'</h2><p class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</p><p>'+esc(employer.bestUse||'Research lead')+'</p><p><b>Departments:</b> '+esc((employer.departments||[]).map(branchName).join(', ')||'verify')+'</p><p>'+plainLink(employer.linkStatus==='homepage_fallback'?'Company homepage':'Apply / careers',bestLink(employer))+'</p>');
+    var depts=(employer.departments||[]).map(branchName).join(', ');
+    var hasApply=!!(employer.links&&(employer.links.apply||employer.links.careers));
+    openModal('<h2>'+esc(employer.name)+'</h2><p class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</p><p>'+esc(employer.bestUse||'Research lead')+'</p>'+(depts?'<p><b>Departments:</b> '+esc(depts)+'</p>':'')+'<p>'+plainLink(hasApply?'Apply / careers':'Company website / contact',bestLink(employer))+'</p>');
   };
 
   window.openLocal=function(localId,district){
     var local=iatseLocals.find(function(item){return String(item.local)===String(localId)&&String(item.district)===String(district)});
     if(!local)return;
-    openModal('<h2>IATSE Local '+esc(local.local)+'</h2><p class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</p><p><b>Craft:</b> '+esc(local.craft||'verify')+'</p><p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p><p>Use as a jurisdiction routing aid. Verify before outreach.</p>');
+    var craft=local.craft||'';
+    var states=(local.states||[]).join(', ');
+    openModal('<h2>IATSE Local '+esc(local.local)+'</h2><p class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</p>'+(craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+(states?'<p><b>States:</b> '+esc(states)+'</p>':'')+'<p>Use as a jurisdiction routing aid. Verify applicable local before outreach.</p>');
   };
 
   window.openBranch=function(id){
