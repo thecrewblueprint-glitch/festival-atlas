@@ -3,7 +3,9 @@
 Generated: 2026-06-22
 Updated: 2026-06-24
 
-Production Atlas is a static GitHub Pages research dashboard for scouting long-term live-event production work targets, employer/vendor routes, IATSE/local routes, and department-specific production branches.
+Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand dates and production windows, map production departments, identify public employer/vendor/labor routes, find application/contact paths, and plan scheduling.
+
+The repository can contain deeper research and supplemental audit data, but the public-facing pages should stay concise and worker-useful.
 
 ## Live GitHub Pages site
 
@@ -75,22 +77,55 @@ incomplete or blocked logs must remain auditable and must not be deleted during 
 
 Use `ai-communication/` root for major handoffs, decision records, current-state summaries, and cross-assistant instructions. Use `ai-communication/collaboration-log/` for compact per-commit/per-change notes.
 
-## Active app pages
+## Public page strategy
+
+The public navigation should only show pages that directly support the worker goal:
+
+```text
+Where is the work?
+When is it happening?
+What is the approximate build/load-in and strike/load-out window?
+Which production departments does it touch?
+Which public companies, employers, vendors, or labor routes are relevant?
+Where can a worker apply, contact, or research those companies?
+How does this affect calendar, travel, and scheduling decisions?
+```
+
+### Core public navigation pages
 
 ```text
 index.html        Home: quick explanation, dashboard, and clear Guide link
+                    Public entry point for worker-facing job mapping.
 guide.html        Full Guide for Use and public-safe workflow
-calendar.html
+                    How to use the app to find work routes, sources, employers, and schedule windows.
 opportunities.html
-branches.html
-employers.html
-iatse.html
-matrix.html
-analytics.html    Analytics and action-first research queue
-sources.html
+                    Festival/event profiles focused on dates, locations, production windows, departments, producers, and employer routes.
+calendar.html
+                    Month-by-month planning view for event timing and availability.
 map.html
+                    Location view for routing, travel clustering, and nearby opportunities.
 schedule.html
+                    Local browser-only planning view for possible work windows and overlaps.
+branches.html
+                    Public production department routes. Display label: Departments.
+employers.html
+                    Public company, employer, vendor, producer, venue, and apply/contact routes.
+iatse.html
+                    Public IATSE/local jurisdiction routing aid. This is a core public page.
+sources.html
+                    Central public source list for auditability.
 ```
+
+### Supplemental retained pages
+
+These pages are retained because validation still expects them and they may be useful for deeper review, but they are not part of the primary public navigation:
+
+```text
+matrix.html       Supplemental department/employer matrix.
+analytics.html    Supplemental clustering/audit view.
+```
+
+Do not delete supplemental retained pages unless validation scripts and public workflow are updated in the same work cycle.
 
 ## Active shared files
 
@@ -123,14 +158,9 @@ Every active HTML page must load the main data packages, then the public-safe re
 
 Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js` and `research-queue-route-updates.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES`.
 
-## Internal research queue (Airtable, not in the repo)
+## Internal research queue
 
-The internal research queue lives in the private **Production Atlas** Airtable base as the
-**Research Queue** table — one row per active 2026 festival, keyed on `Event ID` (matching
-`data/packages/opportunities-2026.js`). It ties into the human-input system (Human Submissions →
-Reviewed Summaries) via that shared key and its `Human Input Needed` / `Human Input Status`
-fields. The public app no longer renders a research queue; `analytics.html` shows a public
-festival-planning dashboard instead.
+The internal research queue lives outside the public GitHub Pages app. Public pages should not render research queue tasks, internal next actions, confidence/audit language, empty branch research records, missing-data warnings, or source-needed filler as primary content.
 
 ## Important data files
 
@@ -148,8 +178,8 @@ data/packages/branch-research-batch-*.js
 ## Active taxonomy and route research packages
 
 ```text
-data/packages/opportunity-taxonomy.js              18 source/date research queue updates
-data/packages/research-queue-route-updates.js      12 public producer/operator route leads
+data/packages/opportunity-taxonomy.js              source/date research updates
+data/packages/research-queue-route-updates.js      public producer/operator route leads
 ```
 
 Both packages are loaded directly by all active HTML pages before `assets/atlas-core-v2.js`. `assets/approx-date-labels.js` may re-apply UI polish and guarded fallback behavior, but it is not the canonical first-load path for these packages.
@@ -158,19 +188,66 @@ Route updates are public-safe route leads only. They do not confirm vendors, lab
 
 ## Core vs supplemental work-finding data
 
-Core work-finding validation should focus on:
+Core public work-finding display should focus on:
 
 ```text
-active source/date
-producer/promoter or operator route
-public work-route signal
+event/festival name
+city, state, region
+venue/site when known
+event dates
+approximate production/build/load-in window
+approximate strike/load-out window
+producer/promoter/operator when publicly known
 production department coverage
-source quality / last checked date
+public employer/vendor/company/labor-route leads
+public apply/careers/contact/homepage routes
+source availability through sources.html
+```
+
+Supplemental data may remain in the repository for deeper research, validation, and source review. Missing supplemental fields should not be blasted publicly.
+
+Hide these from public cards, modals, map popups, schedule cards, and primary page copy:
+
+```text
+confidence labels or scores
+work-year value scores
+priority target labels
+next human action
+next research action
+research queue tasks
+route intelligence paragraphs
+branch confidence
+branch status values
+internal evidence summaries
+empty branch records
+No event-specific branch record yet
+unknown / verify / source needed filler
+lodging unknown / travel unknown / per diem unknown clutter
+verify before outreach repeated as public warning text
 ```
 
 Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which departments it touches, or what route to research next.
 
-`assets/confidence-badges.js` must score only core work-finding fields. It must not reduce the score because accommodation, travel, lodging, or per diem information is missing.
+## Calendar-cycle rule
+
+If a source site has rolled into the next public calendar cycle and the event month has passed in the current cycle, update the app data to reflect the new public cycle.
+
+If the event still falls in the current calendar cycle, keep the current-cycle record.
+
+Do not update exact dates unless the new public dates are visible from a reliable source. If a page says a future year is coming but does not publish dates, mark the record for review rather than inventing dates.
+
+## Employer-link rule
+
+Employer, vendor, producer, venue, and labor-route links are high priority. Prefer public links in this order:
+
+```text
+1. apply page
+2. careers/jobs page
+3. contact page
+4. official company homepage
+```
+
+A homepage is acceptable when it is the only reliable public route or when the contact/application path is embedded on the homepage. Do not use private contacts, personal emails, phone numbers, pay information, rumors, or private referrals.
 
 ## IATSE / local jurisdiction wording rule
 
@@ -182,7 +259,7 @@ Preferred language:
 verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
 ```
 
-This is legally safer, user-friendly, and clear that jurisdiction must be verified before outreach.
+This is legally safer, user-friendly, and clear that jurisdiction must be verified before outreach. The `iatse.html` page remains a core public worker-routing page.
 
 ## Branch research loading rule
 
@@ -202,7 +279,7 @@ When adding a new branch research batch:
 
 ## Public-safety rules
 
-Public data may include official/public links, employer homepages, confidence labels, public route notes, and next action notes.
+Public data may include official/public links, employer homepages, source records, public route notes, public company names, and public apply/careers/contact routes.
 
 Do **not** publish:
 
@@ -252,22 +329,24 @@ The Pages deploy workflow publishes the `research-version` branch through GitHub
 
 ## Current data state
 
+Latest validated state reported in collaboration/audit work:
+
 ```text
-Active opportunities: 54
-Active opportunity source URL coverage: 54 / 54
+Total opportunity records: 77
+Active opportunities: 68
+Hidden/inactive records: 9
+Active opportunity source URL coverage: 68 / 68
 Route research update records: 12
-Taxonomy source/date queue updates: 18
 Branch research packages: 56
 ```
 
-Remaining intentional multi-market placeholders:
+Breakaway and Country Thunder have market-level records for public planning. Their multi-market parent records are hidden from the active public view and retained as overview/supplemental records.
+
+Known public data watch item:
 
 ```text
-breakaway-2026
-country-thunder-us-2026
+breakaway-houston-2026 venue remains public-TBD until announced.
 ```
-
-These need city/market-level split records before exact per-market date, venue, vendor, or labor-route conclusions.
 
 ## Current research state
 
