@@ -427,12 +427,12 @@
         '</div>'+
         '<h3 style="margin-top:22px">Quick links</h3>'+
         '<div class="home-links">'+
-          '<a href="opportunities.html" class="btn">Browse festivals</a>'+
-          '<a href="calendar.html" class="btn">Calendar</a>'+
-          '<a href="map.html" class="btn">Map</a>'+
-          '<a href="branches.html" class="btn">Branches</a>'+
-          '<a href="employers.html" class="btn">Employers</a>'+
+          '<a href="iatse.html" class="btn">IATSE locals</a>'+
           '<a href="schedule.html" class="btn">My schedule</a>'+
+          '<a href="contribute.html" class="btn">Contribute</a>'+
+          '<a href="data-methodology.html" class="btn">How this works</a>'+
+          '<a href="employer-route-methodology.html" class="btn">Employer routes</a>'+
+          '<a href="date-work-window-disclaimer.html" class="btn">Date disclaimer</a>'+
         '</div>'+
       '</div>';
   }
