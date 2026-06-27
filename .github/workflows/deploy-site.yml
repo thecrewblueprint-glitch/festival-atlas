@@ -1,0 +1,25 @@
+name: Deploy Site to GitHub Pages
+
+on:
+  push:
+    branches: [claude/atlas-app-dev-sfd12k]
+    paths-ignore:
+      - worker/**
+      - .github/**
+      - handoffs/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: .
+          clean: true
