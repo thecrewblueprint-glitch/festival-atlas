@@ -53,7 +53,7 @@ window.RESOURCE_OPP_COORDS={
   'crssd-2026':[32.7157,-117.1611],
   'okechobee-2026':[27.2436,-80.8298],
   'sick-new-world-2026':[36.1699,-115.1398],
-  'levitation-austin-2026':[30.2672,-97.7431]
+  'levitation-austin-2026':[30.2672,-97.7431],
   // Breakaway per-market
   'breakaway-dallas-2026':[32.7789,-96.7567],
   'breakaway-tampa-2026':[27.9760,-82.5033],
