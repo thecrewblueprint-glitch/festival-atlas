@@ -1,12 +1,6 @@
 name: Deploy Site to GitHub Pages
 
 on:
-  push:
-    branches: [claude/atlas-app-dev-sfd12k]
-    paths-ignore:
-      - worker/**
-      - .github/**
-      - handoffs/**
   workflow_dispatch:
 
 permissions:
