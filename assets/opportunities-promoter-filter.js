@@ -88,33 +88,13 @@
     if(states.indexOf(current)>-1)select.value=current;
     forceVisible(select);
   }
-  function installFallbackStatePanel(){
-    var app=$('#app');
-    if(!app || $('#opportunityStateFallback'))return;
-    var panel=document.createElement('div');
-    panel.id='opportunityStateFallback';
-    panel.className='card';
-    panel.style.margin='0 0 16px';
-    panel.innerHTML='<label style="display:block;font-weight:800;margin-bottom:8px;color:#ffd66b">Filter by state</label><select id="stateFilterFallback" aria-label="Filter by state fallback" style="display:block;width:100%;max-width:360px"><option value="">All states</option></select>';
-    app.insertBefore(panel,app.firstChild);
-    var fallback=$('#stateFilterFallback');
-    if(fallback)fallback.addEventListener('change',function(){var state=$('#stateFilter');if(state){state.value=fallback.value;state.dispatchEvent(new Event('input',{bubbles:true}));}apply();});
-  }
-  function fillFallbackStatePanel(){
-    var fallback=$('#stateFilterFallback');
-    var source=$('#stateFilter');
-    if(!fallback || !source)return;
-    fallback.innerHTML=source.innerHTML;
-    fallback.value=source.value;
-  }
   function apply(){
     var producerSelect=$('#producerFilter');
     var stateSelect=$('#stateFilter');
-    var fallbackState=$('#stateFilterFallback');
     var app=$('#app');
     if(!producerSelect || !app)return;
     var selectedProducer=producerSelect.value;
-    var selectedState=(fallbackState&&fallbackState.value)|| (stateSelect?stateSelect.value:'');
+    var selectedState=stateSelect?stateSelect.value:'';
     var cards=$$('#app .grid .card');
     var shown=0;
     cards.forEach(function(card){
@@ -136,19 +116,17 @@
     installSelect();
     fillProducerSelect();
     fillStateSelect();
-    installFallbackStatePanel();
-    fillFallbackStatePanel();
     apply();
     var filters=$('#filters');
     if(filters && !filters.dataset.promoterFilterResetBound){
       filters.dataset.promoterFilterResetBound='true';
       var reset=$('#reset');
-      if(reset)reset.addEventListener('click',function(){setTimeout(function(){var producer=$('#producerFilter');if(producer)producer.value='';var state=$('#stateFilter');if(state)state.value='';var fallback=$('#stateFilterFallback');if(fallback)fallback.value='';fillStateSelect();fillFallbackStatePanel();apply();},0)});
+      if(reset)reset.addEventListener('click',function(){setTimeout(function(){var producer=$('#producerFilter');if(producer)producer.value='';var state=$('#stateFilter');if(state)state.value='';fillStateSelect();apply();},0)});
     }
     var app=$('#app');
     if(app && !app.dataset.promoterFilterObserver){
       app.dataset.promoterFilterObserver='true';
-      new MutationObserver(function(){installSelect();fillStateSelect();installFallbackStatePanel();fillFallbackStatePanel();setTimeout(apply,0);}).observe(app,{childList:true,subtree:true});
+      new MutationObserver(function(){installSelect();fillStateSelect();setTimeout(apply,0);}).observe(app,{childList:true,subtree:true});
     }
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
