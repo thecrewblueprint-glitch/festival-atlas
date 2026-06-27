@@ -1,18 +1,18 @@
 (function(){
   function $(s){return document.querySelector(s)}
-  function card(title,body){return '<article class="card"><h3>'+title+'</h3><p>'+body+'</p></article>'}
+  function card(title,body,link,label){return '<article class="card"><h3>'+title+'</h3><p>'+body+'</p>'+(link?'<p><a class="btn" href="'+link+'">'+label+'</a></p>':'')+'</article>'}
   function homeWithStats(dashHtml){
     return (dashHtml||'')+
-      '<section class="card" style="margin-top:6px">'+
-        '<div class="eyebrow">Before you reach out</div>'+
-        '<h3 style="margin:.2rem 0 8px">How to use these leads</h3>'+
+      '<section class="card" style="margin-top:10px">'+
+        '<div class="eyebrow">Public work map</div>'+
+        '<h3 style="margin:.2rem 0 8px">Start with the route you need</h3>'+
+        '<p class="section-intro">Production Atlas is built for workers who need fast answers: where the events are, when they happen, which departments are involved, and which public company or labor routes are worth checking.</p>'+
         '<div class="grid">'+
-          card('Who it is for','Stagehands, riggers, event technicians, and small production labor teams researching festivals, venues, producers, employers, and department routes.')+
-          card('Every record is a lead','Verify event details, route notes, employers, and current source information before making travel or outreach decisions.')+
-          card('Keep private intel private','Names, referrals, pay, lodging, and direct contacts belong in a private tracker — never in this public app.')+
+          card('Find events','Browse festivals by date, city, state, department, producer, and approximate production window.','opportunities.html','Open opportunities')+
+          card('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
+          card('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
         '</div>'+
-        '<div class="notice" style="margin-top:16px"><b>Need the full workflow?</b> Step-by-step instructions and safe outreach wording live on the <a href="guide.html">Guide for Use</a> page.</div>'+
-        '<p style="margin-top:14px"><a class="btn" href="guide.html">Open Guide for Use</a> <a class="btn" href="opportunities.html">Browse Opportunities</a> <a class="btn" href="calendar.html">View calendar</a></p>'+
+        '<div class="notice" style="margin-top:16px"><b>Public-safe rule:</b> the app shows useful public routes and hides missing/private categories instead of filling the page with unknowns.</div>'+
       '</section>';
   }
   function install(){
