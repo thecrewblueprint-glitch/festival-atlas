@@ -6,7 +6,7 @@
         '<span>Public work-mapping tool for live-event production contractors.</span>'+ 
       '</div>'+ 
       '<div class="site-footer-columns">'+
-        '<div><h4>Work map</h4><a href="./opportunities.html">Opportunities</a><a href="./calendar.html">Calendar</a><a href="./map.html">Map</a><a href="./branches.html">Departments</a><a href="./employers.html">Employers</a><a href="./sources.html">Sources</a></div>'+ 
+        '<div><h4>Work map</h4><a href="./opportunities.html">Opportunities</a><a href="./calendar.html">Calendar</a><a href="./map.html">Map</a><a href="./employers.html">Employers</a><a href="./sources.html">Sources</a></div>'+ 
         '<div><h4>White pages</h4><a href="./about.html">About</a><a href="./data-methodology.html">How the Data Works</a><a href="./employer-route-methodology.html">Employer Route Methodology</a><a href="./date-work-window-disclaimer.html">Date & Work Window Disclaimer</a></div>'+ 
         '<div><h4>Legal</h4><a href="./privacy-policy.html">Privacy Policy</a><a href="./terms-and-conditions.html">Terms & Conditions</a><a href="./limitation-of-liability.html">Limitation of Liability</a><a href="./cookie-notice.html">Cookie Notice</a><a href="./accessibility.html">Accessibility Statement</a><a href="./affiliate-disclosure.html">Affiliate Disclosure</a><a href="./contact-data-requests.html">Contact & Data Requests</a></div>'+ 
       '</div>'+ 
@@ -28,6 +28,7 @@
   }
   function install(){
     installStyles();
+    document.querySelectorAll('.navInner a[href$="branches.html"],.navInner a[href="./branches.html"]').forEach(function(link){link.remove();});
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
