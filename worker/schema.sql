@@ -1,5 +1,5 @@
--- Reference schema — already applied to D1 via MCP on 2026-06-26
--- Run manually: wrangler d1 execute festival-atlas-vault --file=schema.sql
+-- Applied automatically by deploy-worker.yml (wrangler d1 execute --remote)
+-- Safe to re-run: CREATE TABLE IF NOT EXISTS is idempotent
 
 CREATE TABLE IF NOT EXISTS documents (
   id TEXT PRIMARY KEY,
