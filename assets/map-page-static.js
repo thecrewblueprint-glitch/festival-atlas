@@ -46,6 +46,14 @@
       '<p class="cardcta">Open festival →</p>'+ 
     '</article>';
   }
+  function usSvg(){
+    return '<svg class="us-map-outline" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">'+
+      '<path class="us-land" d="M121 184 L162 153 L226 134 L292 125 L352 142 L416 132 L475 145 L544 137 L614 150 L684 146 L746 166 L813 189 L856 225 L890 270 L879 314 L835 340 L808 383 L748 408 L708 450 L650 450 L607 420 L548 441 L500 421 L444 434 L400 409 L337 423 L284 392 L223 398 L177 363 L134 336 L111 287 L92 244 Z" />'+
+      '<path class="us-border" d="M121 184 L162 153 L226 134 L292 125 L352 142 L416 132 L475 145 L544 137 L614 150 L684 146 L746 166 L813 189 L856 225 L890 270 L879 314 L835 340 L808 383 L748 408 L708 450 L650 450 L607 420 L548 441 L500 421 L444 434 L400 409 L337 423 L284 392 L223 398 L177 363 L134 336 L111 287 L92 244 Z" />'+
+      '<path class="state-lines" d="M206 145 L202 386 M292 126 L289 398 M376 136 L368 418 M458 143 L448 430 M541 140 L542 434 M623 151 L621 441 M705 154 L697 429 M780 180 L760 398 M117 286 L878 286 M157 220 L850 220 M177 350 L810 350" />'+
+      '<path class="coast-accent" d="M111 287 C91 320 93 354 122 382 C148 409 191 414 224 398 M813 189 C870 208 914 258 891 304 C874 340 832 347 808 383" />'+
+    '</svg>';
+  }
   function render(){
     var app=$('#app');
     if(!app)return;
@@ -54,11 +62,11 @@
     var unmapped=all.filter(function(row){return !Array.isArray(row.coords)||row.coords.length!==2});
     app.innerHTML='<section class="map-static-page">'+
       '<h2>Festival Map</h2>'+ 
-      '<p class="lead">Static clickable map for regional work planning. This version does not rely on Leaflet or any external map library.</p>'+ 
-      '<div class="notice"><b>Map note:</b> marker placement is approximate and intended for regional planning. Open each festival for dates and public details.</div>'+ 
+      '<p class="lead">Static clickable U.S. map for regional work planning. Marker placement is approximate.</p>'+ 
+      '<div class="notice"><b>Map note:</b> this is a simplified U.S. outline for work routing, not a precision geographic map. Open each festival for dates and public details.</div>'+ 
       '<div class="static-map-shell">'+
+        usSvg()+
         '<div class="static-map-label west">West</div><div class="static-map-label central">Central</div><div class="static-map-label east">East</div>'+ 
-        '<div class="static-map-grid-line v1"></div><div class="static-map-grid-line v2"></div><div class="static-map-grid-line h1"></div><div class="static-map-grid-line h2"></div>'+ 
         mapped.map(function(row){var p=projected(row.coords);return '<button class="static-map-marker" type="button" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+'%" onclick="openOpportunity(\''+esc(row.opportunity.id)+'\')" title="'+esc(row.opportunity.name)+'"><span>'+esc(row.opportunity.name)+'</span></button>';}).join('')+
       '</div>'+ 
       '<p class="sub" style="margin:10px 0 18px">'+mapped.length+' mapped festivals'+(unmapped.length?' · '+unmapped.length+' multi-market / unmapped records':'')+'</p>'+ 
@@ -73,12 +81,11 @@
     style.id='static-map-page-style';
     style.textContent=''+
       '.static-map-shell{position:relative;height:520px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 18% 55%,rgba(127,183,255,.16),transparent 22%),radial-gradient(circle at 76% 42%,rgba(242,183,5,.14),transparent 24%),linear-gradient(135deg,#0c1219,#182230);box-shadow:var(--shadow2);margin:14px 0 8px}'+
-      '.static-map-shell:before{content:"";position:absolute;inset:9% 8%;border:1px dashed rgba(170,181,194,.22);border-radius:48% 42% 44% 50%;transform:rotate(-5deg)}'+
+      '.us-map-outline{position:absolute;inset:3% 2% 5%;width:96%;height:92%;z-index:1;filter:drop-shadow(0 18px 25px rgba(0,0,0,.28))}.us-land{fill:rgba(127,183,255,.075);stroke:none}.us-border{fill:none;stroke:rgba(210,221,234,.42);stroke-width:3;stroke-linejoin:round}.state-lines{fill:none;stroke:rgba(210,221,234,.12);stroke-width:1.2}.coast-accent{fill:none;stroke:rgba(242,183,5,.22);stroke-width:2;stroke-linecap:round}'+
       '.static-map-marker{position:absolute;transform:translate(-50%,-50%);width:17px;height:17px;border-radius:999px;border:2px solid #071018;background:var(--gold2);box-shadow:0 0 0 4px rgba(242,183,5,.18),0 8px 18px rgba(0,0,0,.35);cursor:pointer;z-index:3}'+
       '.static-map-marker:hover{transform:translate(-50%,-50%) scale(1.25);z-index:10}.static-map-marker span{display:none;position:absolute;left:20px;top:-10px;min-width:140px;max-width:240px;background:#101720;border:1px solid var(--line);border-radius:10px;padding:7px 9px;color:#fff;font-size:.74rem;text-align:left}.static-map-marker:hover span{display:block}'+
-      '.static-map-label{position:absolute;color:rgba(255,255,255,.20);font-weight:900;text-transform:uppercase;letter-spacing:.12em}.static-map-label.west{left:12%;top:18%}.static-map-label.central{left:43%;top:42%}.static-map-label.east{right:10%;top:24%}'+
-      '.static-map-grid-line{position:absolute;background:rgba(255,255,255,.05)}.static-map-grid-line.v1{left:33%;top:0;bottom:0;width:1px}.static-map-grid-line.v2{left:66%;top:0;bottom:0;width:1px}.static-map-grid-line.h1{top:33%;left:0;right:0;height:1px}.static-map-grid-line.h2{top:66%;left:0;right:0;height:1px}'+
-      '@media(max-width:760px){.static-map-shell{height:360px}.static-map-marker span{display:none!important}}';
+      '.static-map-label{position:absolute;color:rgba(255,255,255,.24);font-weight:900;text-transform:uppercase;letter-spacing:.12em;z-index:2;text-shadow:0 2px 12px rgba(0,0,0,.45)}.static-map-label.west{left:14%;top:24%}.static-map-label.central{left:44%;top:49%}.static-map-label.east{right:12%;top:28%}'+
+      '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}.static-map-label{font-size:.78rem}}';
     document.head.appendChild(style);
   }
   function install(){
