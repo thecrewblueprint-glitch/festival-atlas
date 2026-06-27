@@ -23,6 +23,7 @@
       '.site-footer-columns{display:grid;grid-template-columns:1.1fr 1.25fr 1.65fr;gap:18px}'+
       '.site-footer-columns h4{margin:0 0 8px;color:#ffd66b;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}'+
       '.site-footer-columns a{display:inline-block;margin:0 14px 8px 0;color:#cfe4ff;text-decoration:none;font-weight:800}.site-footer-columns a:hover{text-decoration:underline;color:#fff}'+
+      '.contribute-hero-btn{display:inline-block;margin-top:18px}'+
       '.navInner{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;scrollbar-width:auto}.navInner a{flex:0 0 auto}.navInner::-webkit-scrollbar{height:8px}.navInner::-webkit-scrollbar-thumb{background:rgba(245,180,0,.55);border-radius:999px}.navInner::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}'+
       '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}}';
     document.head.appendChild(style);
@@ -53,10 +54,21 @@
     if(saved!==null)nav.scrollLeft=Number(saved)||0;
     nav.addEventListener('scroll',function(){sessionStorage.setItem(key,String(nav.scrollLeft));},{passive:true});
   }
+  function installContributeButton(){
+    if(document.body&&document.body.dataset.page==='contribute')return;
+    var wrap=document.querySelector('.hero .wrap');
+    if(!wrap||wrap.querySelector('.contribute-hero-btn'))return;
+    var btn=document.createElement('a');
+    btn.href='./contribute.html';
+    btn.className='btn contribute-hero-btn';
+    btn.textContent='Contribute';
+    wrap.appendChild(btn);
+  }
   function install(){
     installStyles();
     normalizeNav();
     persistSideScroll();
+    installContributeButton();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
