@@ -20,3 +20,4 @@ CREATE TABLE IF NOT EXISTS document_content (
   FOREIGN KEY (document_id) REFERENCES documents(id)
 );
 
+
