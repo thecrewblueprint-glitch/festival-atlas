@@ -62,7 +62,7 @@
       producer.id='producerFilter';
       producer.setAttribute('aria-label','Filter by promoter');
       producer.innerHTML='<option value="">All promoters</option>';
-      filters.insertBefore(producer,$('#stateFilter')||$('#reset')||null);
+      filters.insertBefore(producer,$('#stateFilter')||$('#monthFilter')||$('#reset')||null);
       producer.addEventListener('input',apply);
       producer.addEventListener('change',apply);
     }
@@ -89,7 +89,11 @@
     var select=$('#stateFilter');
     if(!select)return;
     var current=select.value;
-    var states=uniq((window.scopedOpportunities||[]).flatMap(opportunityStates));
+    var stateList=[];
+    (window.scopedOpportunities||[]).forEach(function(opportunity){
+      opportunityStates(opportunity).forEach(function(state){stateList.push(state)});
+    });
+    var states=uniq(stateList);
     select.innerHTML='<option value="">All states</option>'+states.map(function(state){return '<option value="'+esc(state)+'">'+esc(state)+'</option>';}).join('');
     if(states.indexOf(current)>-1)select.value=current;
   }
@@ -144,4 +148,5 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
   setTimeout(install,400);
+  setTimeout(install,1200);
 })();
