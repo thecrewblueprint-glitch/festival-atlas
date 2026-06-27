@@ -11,12 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy Worker + set API_KEY secret
+      - name: Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           workingDirectory: worker
-          secrets: |
-            API_KEY
-        env:
-          API_KEY: ${{ secrets.VAULT_API_KEY }}
