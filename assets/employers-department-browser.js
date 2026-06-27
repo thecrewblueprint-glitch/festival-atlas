@@ -56,6 +56,8 @@
       var ids=departmentIdsFromEmployers();
       deptSelect.innerHTML='<option value="">All departments</option>'+ids.map(function(id){return '<option value="'+esc(id)+'">'+esc(branchName(id))+'</option>';}).join('');
       if(ids.indexOf(current)>-1)deptSelect.value=current;
+      deptSelect.style.display='';
+      deptSelect.setAttribute('aria-label','Filter employers by department');
     }
     var regionSelect=$('#regionFilter');
     if(regionSelect && !regionSelect.dataset.employerBrowserFilled){
@@ -81,29 +83,14 @@
     var f=filters();
     var all=employers();
     var filtered=all.filter(matches).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
-    var deptIds=departmentIdsFromEmployers();
-    var summary='<div class="stats" style="margin:0 0 18px">'+
-      '<div class="stat"><b>'+filtered.length+'</b><span>employer routes shown</span></div>'+ 
-      '<div class="stat"><b>'+deptIds.length+'</b><span>departments represented</span></div>'+ 
-      '<div class="stat"><b>'+all.length+'</b><span>public employer routes</span></div>'+ 
-      '</div>';
     var intro='<h2>Employers by Department</h2>'+ 
-      '<p class="lead">Use this page to separate public employer and vendor routes by the production departments they hire in. Department fit is a research aid; it does not confirm that a company is working a specific festival.</p>'+summary;
-    var chips='<div class="home-links" style="margin:0 0 18px">'+
-      '<button class="btn" type="button" onclick="document.getElementById(\'branchFilter\').value=\'\';document.getElementById(\'branchFilter\').dispatchEvent(new Event(\'input\',{bubbles:true}))">All departments</button>'+ 
-      deptIds.map(function(id){return '<button class="btn" type="button" onclick="document.getElementById(\'branchFilter\').value=\''+esc(id)+'\';document.getElementById(\'branchFilter\').dispatchEvent(new Event(\'input\',{bubbles:true}))">'+esc(branchName(id))+'</button>';}).join('')+
-      '</div>';
-    if(!filtered.length){app.innerHTML=intro+chips+'<p>No employer routes match the current filters.</p>';return;}
+      '<p class="lead">Use the Department dropdown to separate public employer and vendor routes by the production departments they hire in. Department fit is a research aid; it does not confirm that a company is working a specific festival.</p>';
+    if(!filtered.length){app.innerHTML=intro+'<p>No employer routes match the current filters.</p>';return;}
     if(f.department){
-      app.innerHTML=intro+chips+'<h3>'+esc(branchName(f.department))+'</h3><div class="grid">'+filtered.map(function(employer){return employerCard(employer,branchName(f.department))}).join('')+'</div>';
+      app.innerHTML=intro+'<h3>'+esc(branchName(f.department))+'</h3><div class="grid">'+filtered.map(function(employer){return employerCard(employer,branchName(f.department))}).join('')+'</div>';
       return;
     }
-    var sections=deptIds.map(function(id){
-      var sectionEmployers=filtered.filter(function(employer){return employerDepartments(employer).indexOf(id)>-1});
-      if(!sectionEmployers.length)return '';
-      return '<section class="dept-employer-section"><h3>'+esc(branchName(id))+' <span class="sub">'+sectionEmployers.length+'</span></h3><div class="grid">'+sectionEmployers.map(function(employer){return employerCard(employer,branchName(id))}).join('')+'</div></section>';
-    }).join('');
-    app.innerHTML=intro+chips+sections;
+    app.innerHTML=intro+'<div class="grid">'+filtered.map(function(employer){return employerCard(employer)}).join('')+'</div>';
   }
   function install(){
     var month=$('#monthFilter');
