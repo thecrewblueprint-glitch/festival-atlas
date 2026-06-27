@@ -52,13 +52,11 @@
     var festivals=upcomingSorted();
     if(!festivals.length)return;
     dash.dataset.upcomingSorted='true';
-    var stats=dash.querySelector('.stats');
     var links=dash.querySelector('.home-links');
     dash.innerHTML=
       '<h3 style="margin-top:0">Upcoming festivals</h3>'+ 
       '<p class="section-intro" style="margin-bottom:12px">Festivals sorted from today forward. Past records move behind upcoming work until this becomes a live feed.</p>'+ 
       '<div class="grid">'+festivals.map(card).join('')+'</div>'+ 
-      (stats?stats.outerHTML:'')+
       '<h3 style="margin-top:22px">Quick links</h3>'+ 
       (links?links.outerHTML:'');
   }
