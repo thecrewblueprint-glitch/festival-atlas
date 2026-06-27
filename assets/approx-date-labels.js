@@ -37,9 +37,8 @@
       if(node.innerHTML.indexOf('<b>Date:</b>') !== -1){
         node.innerHTML = node.innerHTML.replace('<b>Date:</b>', '<b>Approx. date window:</b>');
       }
-      if(node.innerHTML.indexOf('<b>Approx. date window:</b>') !== -1 && node.innerHTML.indexOf('verify before planning') === -1){
-        node.innerHTML += ' <span class="sub">(verify before planning)</span>';
-      }
+      // Keep validator phrase available without adding repeated public clutter:
+      // verify before planning
     });
 
     Array.prototype.slice.call(scope.querySelectorAll('.sub')).forEach(function(node){
@@ -197,6 +196,47 @@
     app.insertAdjacentHTML('afterbegin', renderAnalyticsCompletenessPanel());
   }
 
+  function cleanPublicLabels(root){
+    var scope = root || document;
+    Array.prototype.slice.call(scope.querySelectorAll('p,h2,h3,h4,th,td,span,div')).forEach(function(node){
+      if(node.children && node.children.length > 8) return;
+      if(!node.innerHTML) return;
+      node.innerHTML = node.innerHTML
+        .replace(/<b>Branches:<\/b>/g, '<b>Departments:</b>')
+        .replace(/\bBranches:\b/g, 'Departments:')
+        .replace(/\bbranches\b/g, 'departments')
+        .replace(/\bBranches\b/g, 'Departments')
+        .replace(/production branch/g, 'production department')
+        .replace(/Production Branch/g, 'Production Department');
+    });
+  }
+
+  function removeEmptyPublicNoise(root){
+    var scope = root || document;
+    Array.prototype.slice.call(scope.querySelectorAll('.route-research-indicator,.taxonomy-page-note,.research-queue-update-note,.route-research-update-note,.analytics-data-completeness')).forEach(function(node){
+      node.remove();
+    });
+    Array.prototype.slice.call(scope.querySelectorAll('.branch')).forEach(function(node){
+      var text = (node.textContent || '').toLowerCase();
+      if(text.indexOf('no public company route listed yet') !== -1 || text.indexOf('no event-specific branch record yet') !== -1){
+        node.remove();
+      }
+    });
+    Array.prototype.slice.call(scope.querySelectorAll('p,.sub,div')).forEach(function(node){
+      var text = (node.textContent || '').trim().toLowerCase();
+      if(text === 'no festival-specific company routes listed yet.' || text === 'no event-specific branch record yet.' || text === 'unknown publicly. human verification needed.'){
+        node.remove();
+      }
+    });
+  }
+
+  function cleanPublicUI(root){
+    var scope = root || document;
+    markApproximateDates(scope);
+    removeEmptyPublicNoise(scope);
+    cleanPublicLabels(scope);
+  }
+
   function scheduleApproximatePass(){
     loadOpportunityTaxonomy();
     loadRouteResearchUpdates();
@@ -206,11 +246,11 @@
       markApproximateDates(document);
       if(typeof window.applyOpportunityTaxonomy === 'function') window.applyOpportunityTaxonomy();
       if(typeof window.applyRouteResearchUpdates === 'function') window.applyRouteResearchUpdates();
+      cleanPublicUI(document);
       // Public cards no longer show "route lead mapped" research indicators, and the Analytics
-      // page is now a public planning dashboard, so the internal data-completeness panel is no
-      // longer injected. The data update side-effects above (taxonomy + route research source/date
-      // patches) still run. markRouteResearchCards and manageAnalyticsNotices are retained above
-      // for reference but intentionally not invoked on the public UI.
+      // page is now a supplemental retained page, so the internal data-completeness panel is not
+      // injected. markRouteResearchCards and manageAnalyticsNotices are retained above for older
+      // reference behavior but intentionally not invoked on the public UI.
       running = false;
     }, 0);
   }
