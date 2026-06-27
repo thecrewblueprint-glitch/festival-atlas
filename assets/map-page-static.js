@@ -48,10 +48,10 @@
   }
   function usSvg(){
     return '<svg class="us-map-outline" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">'+
-      '<path class="us-land" d="M121 184 L162 153 L226 134 L292 125 L352 142 L416 132 L475 145 L544 137 L614 150 L684 146 L746 166 L813 189 L856 225 L890 270 L879 314 L835 340 L808 383 L748 408 L708 450 L650 450 L607 420 L548 441 L500 421 L444 434 L400 409 L337 423 L284 392 L223 398 L177 363 L134 336 L111 287 L92 244 Z" />'+
-      '<path class="us-border" d="M121 184 L162 153 L226 134 L292 125 L352 142 L416 132 L475 145 L544 137 L614 150 L684 146 L746 166 L813 189 L856 225 L890 270 L879 314 L835 340 L808 383 L748 408 L708 450 L650 450 L607 420 L548 441 L500 421 L444 434 L400 409 L337 423 L284 392 L223 398 L177 363 L134 336 L111 287 L92 244 Z" />'+
-      '<path class="state-lines" d="M206 145 L202 386 M292 126 L289 398 M376 136 L368 418 M458 143 L448 430 M541 140 L542 434 M623 151 L621 441 M705 154 L697 429 M780 180 L760 398 M117 286 L878 286 M157 220 L850 220 M177 350 L810 350" />'+
-      '<path class="coast-accent" d="M111 287 C91 320 93 354 122 382 C148 409 191 414 224 398 M813 189 C870 208 914 258 891 304 C874 340 832 347 808 383" />'+
+      '<path class="us-land" d="M5.1 38.2 L23.7 85.8 L13.6 143.1 L15.3 190.8 L20.3 224.2 L39.0 274.2 L55.9 317.2 L88.1 352.9 L111.9 381.5 L133.9 414.9 L172.9 412.5 L237.3 445.9 L284.7 443.5 L313.6 434.0 L345.8 484.1 L413.6 507.9 L471.2 577.1 L525.4 500.8 L593.2 498.4 L635.6 469.8 L678.0 481.7 L720.3 527.0 L745.8 591.4 L759.3 558.0 L762.7 500.8 L740.7 453.1 L766.1 414.9 L796.6 381.5 L830.5 321.9 L847.5 276.6 L864.4 224.2 L915.3 197.9 L927.1 162.2 L947.5 133.5 L979.7 119.2 L952.5 85.8 L910.2 112.1 L871.2 124.0 L816.9 152.6 L774.6 162.2 L728.8 181.2 L700.0 145.5 L654.2 119.2 L601.7 90.6 L550.8 71.5 L505.1 23.8 L423.7 23.8 L355.9 23.8 L237.3 23.8 L135.6 23.8 L72.9 26.2 L5.1 38.2 Z" />'+
+      '<path class="us-border" d="M5.1 38.2 L23.7 85.8 L13.6 143.1 L15.3 190.8 L20.3 224.2 L39.0 274.2 L55.9 317.2 L88.1 352.9 L111.9 381.5 L133.9 414.9 L172.9 412.5 L237.3 445.9 L284.7 443.5 L313.6 434.0 L345.8 484.1 L413.6 507.9 L471.2 577.1 L525.4 500.8 L593.2 498.4 L635.6 469.8 L678.0 481.7 L720.3 527.0 L745.8 591.4 L759.3 558.0 L762.7 500.8 L740.7 453.1 L766.1 414.9 L796.6 381.5 L830.5 321.9 L847.5 276.6 L864.4 224.2 L915.3 197.9 L927.1 162.2 L947.5 133.5 L979.7 119.2 L952.5 85.8 L910.2 112.1 L871.2 124.0 L816.9 152.6 L774.6 162.2 L728.8 181.2 L700.0 145.5 L654.2 119.2 L601.7 90.6 L550.8 71.5 L505.1 23.8 L423.7 23.8 L355.9 23.8 L237.3 23.8 L135.6 23.8 L72.9 26.2 L5.1 38.2 Z" />'+
+      '<path class="state-lines" d="M172 25 L172 413 M237 24 L237 446 M314 60 L314 434 M414 24 L414 508 M505 24 L505 501 M593 95 L593 498 M678 170 L678 482 M759 210 L759 558 M847 224 L847 277 M39 274 L864 274 M56 317 L831 322 M112 382 L797 382 M134 415 L766 415 M24 86 L953 86 M20 224 L864 224" />'+
+      '<path class="coast-accent" d="M5 38 C20 120 8 188 39 274 C58 333 95 390 173 413 M914 198 C950 185 982 139 980 119 M745 591 C755 560 766 524 741 453" />'+
     '</svg>';
   }
   function render(){
@@ -63,10 +63,9 @@
     app.innerHTML='<section class="map-static-page">'+
       '<h2>Festival Map</h2>'+ 
       '<p class="lead">Static clickable U.S. map for regional work planning. Marker placement is approximate.</p>'+ 
-      '<div class="notice"><b>Map note:</b> this is a simplified U.S. outline for work routing, not a precision geographic map. Open each festival for dates and public details.</div>'+ 
+      '<div class="notice"><b>Map note:</b> this local U.S. basemap is for route planning, not precision surveying. Open each festival for dates and public details.</div>'+ 
       '<div class="static-map-shell">'+
         usSvg()+
-        '<div class="static-map-label west">West</div><div class="static-map-label central">Central</div><div class="static-map-label east">East</div>'+ 
         mapped.map(function(row){var p=projected(row.coords);return '<button class="static-map-marker" type="button" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+'%" onclick="openOpportunity(\''+esc(row.opportunity.id)+'\')" title="'+esc(row.opportunity.name)+'"><span>'+esc(row.opportunity.name)+'</span></button>';}).join('')+
       '</div>'+ 
       '<p class="sub" style="margin:10px 0 18px">'+mapped.length+' mapped festivals'+(unmapped.length?' · '+unmapped.length+' multi-market / unmapped records':'')+'</p>'+ 
@@ -81,11 +80,10 @@
     style.id='static-map-page-style';
     style.textContent=''+
       '.static-map-shell{position:relative;height:520px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 18% 55%,rgba(127,183,255,.16),transparent 22%),radial-gradient(circle at 76% 42%,rgba(242,183,5,.14),transparent 24%),linear-gradient(135deg,#0c1219,#182230);box-shadow:var(--shadow2);margin:14px 0 8px}'+
-      '.us-map-outline{position:absolute;inset:3% 2% 5%;width:96%;height:92%;z-index:1;filter:drop-shadow(0 18px 25px rgba(0,0,0,.28))}.us-land{fill:rgba(127,183,255,.075);stroke:none}.us-border{fill:none;stroke:rgba(210,221,234,.42);stroke-width:3;stroke-linejoin:round}.state-lines{fill:none;stroke:rgba(210,221,234,.12);stroke-width:1.2}.coast-accent{fill:none;stroke:rgba(242,183,5,.22);stroke-width:2;stroke-linecap:round}'+
+      '.us-map-outline{position:absolute;inset:3% 2% 5%;width:96%;height:92%;z-index:1;filter:drop-shadow(0 18px 25px rgba(0,0,0,.28))}.us-land{fill:rgba(127,183,255,.085);stroke:none}.us-border{fill:none;stroke:rgba(224,234,245,.55);stroke-width:3;stroke-linejoin:round}.state-lines{fill:none;stroke:rgba(224,234,245,.14);stroke-width:1.1}.coast-accent{fill:none;stroke:rgba(242,183,5,.25);stroke-width:2;stroke-linecap:round}'+
       '.static-map-marker{position:absolute;transform:translate(-50%,-50%);width:17px;height:17px;border-radius:999px;border:2px solid #071018;background:var(--gold2);box-shadow:0 0 0 4px rgba(242,183,5,.18),0 8px 18px rgba(0,0,0,.35);cursor:pointer;z-index:3}'+
       '.static-map-marker:hover{transform:translate(-50%,-50%) scale(1.25);z-index:10}.static-map-marker span{display:none;position:absolute;left:20px;top:-10px;min-width:140px;max-width:240px;background:#101720;border:1px solid var(--line);border-radius:10px;padding:7px 9px;color:#fff;font-size:.74rem;text-align:left}.static-map-marker:hover span{display:block}'+
-      '.static-map-label{position:absolute;color:rgba(255,255,255,.24);font-weight:900;text-transform:uppercase;letter-spacing:.12em;z-index:2;text-shadow:0 2px 12px rgba(0,0,0,.45)}.static-map-label.west{left:14%;top:24%}.static-map-label.central{left:44%;top:49%}.static-map-label.east{right:12%;top:28%}'+
-      '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}.static-map-label{font-size:.78rem}}';
+      '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}}';
     document.head.appendChild(style);
   }
   function install(){
