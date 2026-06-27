@@ -7,6 +7,7 @@
   function $(selector){return document.querySelector(selector)}
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
+  function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function cleanProducer(opportunity){
     var name=String(((opportunity||{}).producer||{}).name||'').trim();
     if(!name)return UNKNOWN_LABEL;
@@ -20,6 +21,35 @@
     if(!value || value==='US')return false;
     var low=value.toLowerCase();
     return low!=='unknown' && low!=='tbd' && low.indexOf('verify')===-1;
+  }
+  function addState(list,value){
+    value=String(value||'').trim();
+    if(stateIsActiveFestivalState(value))list.push(value);
+  }
+  function familyKey(opportunity){
+    var id=String((opportunity||{}).id||'').replace(/-2026$/,'');
+    if(id.indexOf('breakaway-')===0)return 'breakaway';
+    if(id.indexOf('country-thunder-')===0)return 'country-thunder';
+    return '';
+  }
+  function opportunityStates(opportunity){
+    var states=[];
+    addState(states,opportunity&&opportunity.state);
+    ['marketStates','knownStates','states'].forEach(function(key){
+      var value=opportunity&&opportunity[key];
+      if(Array.isArray(value))value.forEach(function(state){addState(states,state)});
+    });
+    ['markets','locations','marketRecords'].forEach(function(key){
+      var value=opportunity&&opportunity[key];
+      if(Array.isArray(value))value.forEach(function(item){addState(states,item&&item.state)});
+    });
+    var key=familyKey(opportunity);
+    if(key){
+      (window.RESOURCE_OPPORTUNITIES||window.scopedOpportunities||[]).forEach(function(item){
+        if(familyKey(item)===key)addState(states,item.state);
+      });
+    }
+    return uniq(states);
   }
   function opportunityByTitle(title){
     return (window.scopedOpportunities||[]).find(function(opportunity){return String(opportunity.name||'').trim()===String(title||'').trim()});
@@ -59,22 +89,27 @@
     var select=$('#stateFilter');
     if(!select)return;
     var current=select.value;
-    var states=Array.from(new Set((window.scopedOpportunities||[]).map(function(opportunity){return String(opportunity.state||'').trim();}).filter(stateIsActiveFestivalState))).sort();
+    var states=uniq((window.scopedOpportunities||[]).flatMap(opportunityStates));
     select.innerHTML='<option value="">All states</option>'+states.map(function(state){return '<option value="'+esc(state)+'">'+esc(state)+'</option>';}).join('');
     if(states.indexOf(current)>-1)select.value=current;
   }
   function apply(){
-    var select=$('#producerFilter');
+    var producerSelect=$('#producerFilter');
+    var stateSelect=$('#stateFilter');
     var app=$('#app');
-    if(!select || !app)return;
-    var selected=select.value;
+    if(!producerSelect || !app)return;
+    var selectedProducer=producerSelect.value;
+    var selectedState=stateSelect?stateSelect.value:'';
     var cards=$$('#app .grid .card');
     var shown=0;
     cards.forEach(function(card){
       var titleEl=card.querySelector('h3');
       var opportunity=opportunityByTitle(titleEl?titleEl.textContent:'');
       var label=opportunity?cleanProducer(opportunity):UNKNOWN_LABEL;
-      var match=!selected || producerValue(label)===selected;
+      var states=opportunity?opportunityStates(opportunity):[];
+      var producerMatch=!selectedProducer || producerValue(label)===selectedProducer;
+      var stateMatch=!selectedState || states.indexOf(selectedState)>-1;
+      var match=producerMatch && stateMatch;
       card.style.display=match?'':'none';
       card.dataset.promoterFilterHidden=match?'false':'true';
       if(match)shown++;
@@ -88,7 +123,7 @@
       var grid=$('#app .grid');
       if(grid)grid.parentNode.insertBefore(notice,grid.nextSibling);
     }
-    notice.textContent=selected && cards.length && shown===0 ? 'No festivals match the selected promoter.' : '';
+    notice.textContent=(selectedProducer||selectedState) && cards.length && shown===0 ? 'No festivals match the selected filters.' : '';
   }
   function install(){
     installSelect();
@@ -99,7 +134,7 @@
     if(filters && !filters.dataset.promoterFilterResetBound){
       filters.dataset.promoterFilterResetBound='true';
       var reset=$('#reset');
-      if(reset)reset.addEventListener('click',function(){setTimeout(function(){var producer=$('#producerFilter');if(producer)producer.value='';fillStateSelect();apply();},0)});
+      if(reset)reset.addEventListener('click',function(){setTimeout(function(){var producer=$('#producerFilter');if(producer)producer.value='';var state=$('#stateFilter');if(state)state.value='';fillStateSelect();apply();},0)});
     }
     var app=$('#app');
     if(app && !app.dataset.promoterFilterObserver){
