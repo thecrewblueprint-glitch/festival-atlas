@@ -7,36 +7,49 @@
     var el=$('#app');
     if(!el)return;
     el.innerHTML=''+
-      '<h2>Guide</h2>'+
-      '<p class="lead">Production Atlas is a public work-mapping tool. Use it to find events, dates, locations, departments, employer routes, IATSE/local routes, and source trails without exposing private field notes.</p>'+
-      '<div class="notice"><b>Core idea:</b> every record is a starting point for research. The app should help you decide where to look next, not overload you with empty categories.</div>'+
-      '<h3>Fast workflow</h3>'+
+      '<h2>How to Use Production Atlas</h2>'+ 
+      '<p class="lead">Production Atlas is a public work-mapping tool for live-event production research. It helps workers compare active festival opportunities by timing, location, production department, public employer route, source trail, and planning window.</p>'+ 
+      '<div class="notice"><b>Use it as a public research map:</b> the app points to public routes and planning signals. It does not guarantee work, confirm private vendor lists, or replace current verification with official event, company, or union sources.</div>'+ 
+      '<h3>Fast workflow</h3>'+ 
       '<div class="steps">'+
-        step('1','Pick a planning view','Use Opportunities for detail, Calendar for timing, Map for geography, or Schedule for your personal year plan.')+
-        step('2','Filter by your trade','Use Departments to focus on staging, rigging, audio, lighting, video, power, site ops, logistics, scenic, backline, stage management, or production office work.')+
-        step('3','Check public routes','Use Employers and IATSE Locals to find public apply, careers, contact, company, and jurisdiction research paths.')+
-        step('4','Verify before acting','Open Sources when you need the public trail. Confirm date, venue, vendor, and hiring route before outreach or travel planning.')+
-      '</div>'+
-      '<h3>Primary pages</h3>'+
+        step('1','Start with Opportunities','Browse festival cards and use the Promoter, State, and Date filters to narrow the list. Open a festival to review public dates, location, production departments, and confirmed event-specific route notes when available.')+
+        step('2','Check timing in Calendar','Use Month or Week view to compare public festival show dates against approximate work windows. The muted blue outline is the planning window; the gold segment is the public festival show-date span.')+
+        step('3','Use Map for routing','Use the static U.S. map to compare regional work clusters and travel logic. Marker placement is approximate and intended for route planning, not surveying.')+
+        step('4','Use Departments and Employers','Use Departments to research work by trade, and Employers to review general public company, careers, apply, website, or contact routes. General employer routes are not treated as confirmed event-specific contracts.')+
+        step('5','Audit Sources before acting','Use Sources for public reference links. Confirm dates, venue, application route, labor path, and event status before outreach, travel planning, or schedule commitments.')+
+      '</div>'+ 
+      '<h3>Current primary pages</h3>'+ 
       '<div class="grid">'+
-        card('Opportunities','Festival cards with date, city, venue when known, approximate production window, producer when public, departments, and employer routes.')+
-        card('Calendar','Month-by-month work planning. Best for seeing where your year may fill up or where gaps remain.')+
-        card('Map','Location-first view for travel routing and nearby work clusters.')+
-        card('Schedule','Browser-local planning board. Add events and compare possible work-window overlaps.')+
-        card('Departments','Trade-first route view. Start here when you know the kind of work you want.')+
-        card('Employers','Company-first route view with public apply, careers, contact, and website links.')+
-        card('IATSE Locals','Union and jurisdiction research aid. Use it to identify possible local routes by market, then verify officially.')+
-        card('Sources','Central audit page for public source links. Sources stay here so popups stay clean.')+
-      '</div>'+
-      '<h3>What the app intentionally hides</h3>'+
-      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Hidden from public UI</th><th>Reason</th><th>Where it belongs</th></tr></thead><tbody>'+
-        row('Empty or unknown categories','They make the site look broken and do not help workers act.','Omit from public display until useful.')+
-        row('Confidence/internal research labels','They are workflow metadata, not worker-facing route information.','Repo notes, validation, or private tracking.')+
-        row('Private contacts, phone numbers, pay, lodging, referrals','Not public-safe and not appropriate for a public static app.','Private tracker only.')+
-        row('Raw source links inside popups','They clutter the work route view.','Sources page.')+
-      '</tbody></table></div>'+
-      '<h3>Outreach discipline</h3>'+
-      '<p class="lead">Use neutral language. Example: “I am researching possible production routes for this event. Is there a correct public hiring, vendor, or labor contact path?” Do not claim a company is working an event unless a current public source directly confirms it.</p>';
+        card('Opportunities','Festival opportunity cards with public dates, city/state, venue when known, approximate production window, producer or promoter when public, departments, and public route notes. Current filters include promoter, state, and date.')+
+        card('Calendar','Interactive Month and Week planning view. The outer muted blue bar represents the approximate work window; the inner gold bar represents public festival show days.')+
+        card('Map','Static clickable U.S. opportunity map for regional planning, nearby work clusters, and travel routing. Multi-market or unmapped records are handled separately where needed.')+
+        card('Departments','Trade-first view for staging, rigging, lighting, audio, video, power, site operations, logistics, scenic, backline, stage management, and production office routes.')+
+        card('Employers','Company-first public research view. Use it for official apply, careers, contact, directory, or company website routes. Do not treat a general employer record as event-specific unless the festival record says so.')+
+        card('Sources','Central audit page for public source links. Source links stay here so opportunity cards, map popups, calendar views, and modals stay focused on work mapping.')+
+      '</div>'+ 
+      '<h3>Additional public pages</h3>'+ 
+      '<div class="grid">'+
+        card('White pages','The footer links to public explanatory pages including About, How the Data Works, Employer Route Methodology, and Date & Work Window Disclaimer.')+
+        card('Legal and information pages','The footer also links to Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, and Contact & Data Requests.')+
+        card('Schedule and IATSE pages','Schedule and IATSE local-route pages may remain available from page links or the footer where useful, but the main navigation is focused on the core public work-map views.')+
+      '</div>'+ 
+      '<h3>How to read route information</h3>'+ 
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Label or page</th><th>Meaning</th><th>How to use it</th></tr></thead><tbody>'+ 
+        row('Confirmed event-specific route','A public record ties the company or route to that specific event.','Use as a stronger research lead, then verify current status before outreach.')+
+        row('General employer route','A public company, vendor, labor, venue, or organization route relevant to the department or market.','Use as a public starting point; do not assume the company is working a specific festival.')+
+        row('Approx. work window','A planning estimate around public show dates for possible build, show-call, and strike timing.','Use for rough calendar comparison only; verify actual call dates separately.')+
+        row('Public source','A reference link kept on Sources.','Use Sources for audit and verification instead of cluttering event popups.')+
+      '</tbody></table></div>'+ 
+      '<h3>What the public app intentionally does not show</h3>'+ 
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Hidden from public UI</th><th>Reason</th><th>Where it belongs</th></tr></thead><tbody>'+ 
+        row('Private contacts, phone numbers, personal emails','Not public-safe for a static public app.','Private records only.')+
+        row('Pay rates, lodging details, referrals, rumors','Sensitive or unverified information can mislead workers or expose private details.','Private tracker or direct verification only.')+
+        row('Internal research status, validation notes, roadmap notes','These are project workflow details, not public product copy.','ai-communication/ or internal repo notes.')+
+        row('Raw source links inside popups','They clutter the user flow and make public-safety review harder.','Sources page.')+
+      '</tbody></table></div>'+ 
+      '<h3>Outreach discipline</h3>'+ 
+      '<p class="lead">Use neutral public-research language. Example: “I am researching possible production routes for this event. Is there a correct public hiring, vendor, or labor contact path?” Do not claim that a company, vendor, or labor route is working an event unless a current public source directly confirms it.</p>'+ 
+      '<div class="notice"><b>Public verification rule:</b> when information is uncertain, treat it as unknown until a current official or public source confirms it.</div>';
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(render,300)});else setTimeout(render,300);
 })();
