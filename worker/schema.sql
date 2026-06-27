@@ -19,3 +19,4 @@ CREATE TABLE IF NOT EXISTS document_content (
   content TEXT NOT NULL,         -- base64-encoded file bytes
   FOREIGN KEY (document_id) REFERENCES documents(id)
 );
+
