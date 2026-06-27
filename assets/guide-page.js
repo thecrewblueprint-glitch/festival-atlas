@@ -15,7 +15,7 @@
         step('1','Start with Opportunities','Browse festival cards and use the Promoter, State, and Date filters to narrow the list. Open a festival to review public dates, location, production departments, and confirmed event-specific route notes when available.')+
         step('2','Check timing in Calendar','Use Month or Week view to compare public festival show dates against approximate work windows. The muted blue outline is the planning window; the gold segment is the public festival show-date span.')+
         step('3','Use Map for routing','Use the static U.S. map to compare regional work clusters and travel logic. Marker placement is approximate and intended for route planning, not surveying.')+
-        step('4','Use Departments and Employers','Use Departments to research work by trade, and Employers to review general public company, careers, apply, website, or contact routes. General employer routes are not treated as confirmed event-specific contracts.')+
+        step('4','Use Employers by department','Use Employers to search company routes and separate them by the departments they hire in. The department filter replaces the previous standalone Departments page.')+
         step('5','Audit Sources before acting','Use Sources for public reference links. Confirm dates, venue, application route, labor path, and event status before outreach, travel planning, or schedule commitments.')+
       '</div>'+ 
       '<h3>Current primary pages</h3>'+ 
@@ -23,15 +23,14 @@
         card('Opportunities','Festival opportunity cards with public dates, city/state, venue when known, approximate production window, producer or promoter when public, departments, and public route notes. Current filters include promoter, state, and date.')+
         card('Calendar','Interactive Month and Week planning view. The outer muted blue bar represents the approximate work window; the inner gold bar represents public festival show days.')+
         card('Map','Static clickable U.S. opportunity map for regional planning, nearby work clusters, and travel routing. Multi-market or unmapped records are handled separately where needed.')+
-        card('Departments','Trade-first view for staging, rigging, lighting, audio, video, power, site operations, logistics, scenic, backline, stage management, and production office routes.')+
-        card('Employers','Company-first public research view. Use it for official apply, careers, contact, directory, or company website routes. Do not treat a general employer record as event-specific unless the festival record says so.')+
+        card('Employers','Company-first public research view with department filtering. Use it for official apply, careers, contact, directory, or company website routes, organized by production department. Other or unknown department fit is labeled professionally as Other / Unknown.')+
         card('Sources','Central audit page for public source links. Source links stay here so opportunity cards, map popups, calendar views, and modals stay focused on work mapping.')+
       '</div>'+ 
       '<h3>Additional public pages</h3>'+ 
       '<div class="grid">'+
         card('White pages','The footer links to public explanatory pages including About, How the Data Works, Employer Route Methodology, and Date & Work Window Disclaimer.')+
         card('Legal and information pages','The footer also links to Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, and Contact & Data Requests.')+
-        card('Schedule and IATSE pages','Schedule and IATSE local-route pages may remain available from page links or the footer where useful, but the main navigation is focused on the core public work-map views.')+
+        card('Schedule and IATSE pages','Schedule and IATSE local-route pages may remain available from page links where useful, but the main navigation is focused on the core public work-map views.')+
       '</div>'+ 
       '<h3>How to read route information</h3>'+ 
       '<div class="tablewrap"><table class="matrix"><thead><tr><th>Label or page</th><th>Meaning</th><th>How to use it</th></tr></thead><tbody>'+ 
