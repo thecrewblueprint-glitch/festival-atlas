@@ -67,7 +67,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_003_SITE_OPS = {
       sourceLinks: [
         {label:'Aftershock official website', url:'https://aftershockfestival.com/'},
         {label:'Aftershock background and Discovery Park context', url:'https://en.wikipedia.org/wiki/Aftershock_Festival'},
-        {label:'Discovery Park Sacramento official park information', url:'https://regionalparks.saccounty.gov/Parks/Pages/DiscoveryPark.aspx'}
+        {label:'Discovery Park Sacramento official park information', url:'https://regionalparks.saccounty.gov/content/regionalparks/us/en/parks/american-river-parkway/discovery-park.html'}
       ],
       evidenceSummary: 'Public sources identify Aftershock as a DWP festival at Discovery Park in Sacramento. No public source in this pass confirmed site operations vendors.',
       branchDisplayText: 'Likely route: DWP production, Discovery Park operations, temporary infrastructure vendors, sanitation, waste, water, fencing, traffic, parking, credentials, camping/support areas, and public safety coordination. Park and river-adjacent conditions make site ops constraints important to verify.',

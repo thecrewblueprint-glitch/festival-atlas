@@ -33,7 +33,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_004_LIGHTING = {
       sourceLinks: [
         {label:'CRSSD background: Waterfront Park, FNGRS CRSSD, three stages', url:'https://en.wikipedia.org/wiki/CRSSD_Festival'},
         {label:'CRSSD official website', url:'https://www.crssdfest.com/'},
-        {label:'Waterfront Park San Diego context', url:'https://en.wikipedia.org/wiki/Waterfront_Park_(San_Diego)'}
+        {label:'San Diego waterfront / Embarcadero context', url:'https://en.wikipedia.org/wiki/Embarcadero_(San_Diego)'}
       ],
       evidenceSummary: 'Public sources identify CRSSD as a FNGRS CRSSD event at San Diego Waterfront Park with three stages and a 15,000-per-day capacity context. No public source in this pass confirmed the lighting vendor.',
       branchDisplayText: 'Likely route: FNGRS CRSSD production plus Waterfront Park site operations, three-stage lighting vendor, artist lighting packages, and San Diego labor route. Vendor still needs confirmation.',

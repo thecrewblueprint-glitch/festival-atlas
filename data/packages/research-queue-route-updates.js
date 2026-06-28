@@ -107,7 +107,7 @@
       id: 'stagecoach-2026',
       routeResearchStatus: 'producer_and_site_route_identified',
       publicSources: [
-        {label:'Stagecoach festival background',url:'https://en.wikipedia.org/wiki/Stagecoach_(music_festival)'},
+        {label:'Stagecoach festival background',url:'https://en.wikipedia.org/wiki/Stagecoach_Festival'},
         {label:'Goldenvoice producer background',url:'https://en.wikipedia.org/wiki/Goldenvoice'}
       ],
       nextResearchActions: [

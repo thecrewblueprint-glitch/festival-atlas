@@ -84,7 +84,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_002_POWER = {
       sourceLinks: [
         {label:'Bonnaroo official website', url:'https://www.bonnaroo.com/'},
         {label:'Bonnaroo background: The Farm / Manchester context', url:'https://en.wikipedia.org/wiki/Bonnaroo_Music_Festival'},
-        {label:'Bonnaroo venue official site', url:'https://thebonnaroofarm.com/'}
+        {label:'Bonnaroo venue official site', url:'https://www.bonnaroo.com/'}
       ],
       evidenceSummary: 'Public sources identify Bonnaroo as a large camping festival at The Farm in Manchester, Tennessee. No public source in this pass confirmed the temporary power vendor.',
       branchDisplayText: 'Likely route: Bonnaroo production, The Farm site operations, temporary generator/distribution vendor, fuel logistics, and Tennessee regional power labor. Large camping-farm layout makes generator placement, distribution runs, weatherproofing, load planning, and fuel access central to verification.',

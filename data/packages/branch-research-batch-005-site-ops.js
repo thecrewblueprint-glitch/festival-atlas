@@ -80,7 +80,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_005_SITE_OPS = {
       sourceLinks: [
         {label:'Telluride Bluegrass Festival background', url:'https://en.wikipedia.org/wiki/Telluride_Bluegrass_Festival'},
         {label:'Planet Bluegrass official website', url:'https://bluegrass.com/'},
-        {label:'Telluride Town Park information', url:'https://www.telluride-co.gov/181/Town-Park'}
+        {label:'Telluride Town Park information', url:'https://www.townoftelluride.com/parks-recreation/'}
       ],
       evidenceSummary: 'Public sources identify Telluride Bluegrass as a Planet Bluegrass festival in Telluride/Town Park context. No public source in this pass confirmed site operations vendors.',
       branchDisplayText: 'Likely route: Planet Bluegrass production, Telluride Town Park operations, site infrastructure vendors, sanitation, waste, water, gates, credentials, public safety, and Colorado mountain-market labor. Mountain-town access, tight footprint, weather, and limited load-in routes make site ops critical to verify.',
