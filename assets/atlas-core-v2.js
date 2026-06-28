@@ -161,7 +161,7 @@
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
       state:(($('#stateFilter')||{}).value||''),
-      category:(($('#categoryFilter')||{}).value||'')
+      festival:(($('#festivalFilter')||{}).value||'')
     };
   }
 
@@ -205,7 +205,7 @@
   function applyUrlFilters(){
     if(!$('#filters'))return;
     var params=new URLSearchParams(window.location.search||'');
-    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter'],['category','#categoryFilter']].forEach(function(pair){
+    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter'],['festival','#festivalFilter'],['employer','#employerFilter']].forEach(function(pair){
       var val=params.get(pair[0]);var input=$(pair[1]);
       if(val!=null&&input)input.value=val;
     });
@@ -440,44 +440,57 @@
     var el=$('#app');
     if(!el)return;
     var filter=filterValues();
-    var rows=[];
+    // Build all rows first (unfiltered) so dropdowns always show the full set
+    var allRows=[];
     opportunities.forEach(function(opportunity){
       ((opportunity.intelligence||{}).publicSources||[]).forEach(function(source){
-        if(source.url)rows.push({type:'opportunity',item:opportunity.name,section:'Opportunity',label:source.label||'source',url:source.url,searchText:(opportunity.name+' '+(source.label||'')).toLowerCase(),branchIds:opportunity.departments||[],state:opportunity.state||null,region:opportunity.region||null});
+        if(source.url)allRows.push({type:'opportunity',item:opportunity.name,label:source.label||'source',url:source.url,branchIds:opportunity.departments||[]});
       });
     });
     branchIndex.records.forEach(function(record){
-      var oppForBranch=opportunities.find(function(o){return o.id===record.opportunityId;});
       (record.sourceLinks||[]).forEach(function(source){
-        if(source.url)rows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,searchText:((record.opportunityName||record.opportunityId)+' '+(record.branchName||record.branchId)+' '+(source.label||'')).toLowerCase(),branchIds:[record.branchId],state:oppForBranch?(oppForBranch.state||null):null,region:oppForBranch?(oppForBranch.region||null):null});
+        if(source.url)allRows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,branchIds:[record.branchId]});
       });
     });
-    var filtered=rows.filter(function(row){
-      if(filter.q&&!row.searchText.includes(filter.q))return false;
-      if(filter.branch&&!row.branchIds.includes(filter.branch))return false;
-      if(filter.state&&row.state!==filter.state)return false;
-      if(filter.region&&row.region!==filter.region)return false;
-      if(filter.category==='festival'&&row.type!=='opportunity')return false;
-      if(filter.category==='department'&&row.type!=='branch')return false;
-      if(filter.category==='employer')return false;
+    // Populate festival dropdown from opportunity-type rows
+    var festivalSelect=$('#festivalFilter');
+    if(festivalSelect){
+      var currentFestival=festivalSelect.value;
+      var festivalNames=uniq(allRows.filter(function(r){return r.type==='opportunity';}).map(function(r){return r.item;})).sort();
+      festivalSelect.innerHTML='<option value="">All festivals</option>'+festivalNames.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
+      if(festivalNames.indexOf(currentFestival)>-1)festivalSelect.value=currentFestival;
+    }
+    // Populate department dropdown from branch-type rows (departments that actually have sources)
+    var deptSelect=$('#branchFilter');
+    if(deptSelect){
+      var currentDept=deptSelect.value;
+      var deptSet={};
+      allRows.forEach(function(r){if(r.type==='branch')r.branchIds.forEach(function(id){deptSet[id]=true;});});
+      var deptIds=Object.keys(deptSet).sort(function(a,b){return branchName(a).localeCompare(branchName(b));});
+      deptSelect.innerHTML='<option value="">All departments</option>'+deptIds.map(function(id){return '<option value="'+esc(id)+'">'+esc(branchName(id))+'</option>';}).join('');
+      if(deptSet[currentDept])deptSelect.value=currentDept;
+    }
+    // Apply filters
+    var filtered=allRows.filter(function(row){
+      if(filter.festival&&row.item!==filter.festival)return false;
+      if(filter.branch&&row.branchIds.indexOf(filter.branch)===-1)return false;
       return true;
     });
     var festivalCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
     var deptCount=filtered.filter(function(r){return r.type==='branch';}).length;
-    var showTable=filter.category!=='employer';
     el.innerHTML='<h2>Sources</h2>'+
       '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and department research popups stay clean.</p>'+
       (branchDataReady?'':'<p class="sub">Loading department source records&hellip;</p>')+
-      (showTable?'<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
+      '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
         '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
-        '<div class="stat"><b>'+festivalCount+'</b><span>festival sources</span></div>'+
-        '<div class="stat"><b>'+deptCount+'</b><span>department sources</span></div>'+
+        '<div class="stat"><b>'+festivalCount+'</b><span>festival</span></div>'+
+        '<div class="stat"><b>'+deptCount+'</b><span>department</span></div>'+
       '</div>'+
-      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Category</th><th>Department</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Festival</th><th>Department</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
       (filtered.length?filtered.map(function(row){
-        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='opportunity'?'Festival':'Department')+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
-      }).join(''):'<tr><td colspan="5" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
-      '</tbody></table></div>':'');
+        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='branch'?row.section:'')+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
+      }).join(''):'<tr><td colspan="4" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
+      '</tbody></table></div>';
   }
 
   // Pages whose #app is fully owned by a dedicated enhancement script:
