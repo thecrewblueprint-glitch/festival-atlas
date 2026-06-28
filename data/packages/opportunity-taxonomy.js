@@ -1,5 +1,5 @@
 (function(){
-  // taxonomy-page-note taxonomy-route-note
+  // taxonomy-page-note taxonomy-route-note bourbon-and-beyond-2026
   window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY={generatedAt:'2026-06-28',purpose:'Public route intelligence labels for Production Atlas.',sourceLinkRule:'Source links stay centralized on sources.html.',fallbackLanguage:'Unknown publicly. Human verification needed.',cardNote:'Check official public sources before outreach.',researchQueueUpdates:[]};
   function loadRollover(){
     if(window.applyOpportunityRollover2027){window.applyOpportunityRollover2027();return;}
