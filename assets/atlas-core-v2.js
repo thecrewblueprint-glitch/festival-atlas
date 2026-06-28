@@ -337,18 +337,7 @@
       return '<article class="card"><h3>'+esc(title)+'</h3><p>'+esc(body)+'</p><p><a class="btn" href="'+esc(link)+'">'+esc(label)+'</a></p></article>';
     }
     el.innerHTML=
-      '<div class="home-dash">'+
-        '<h3 style="margin-top:0">Upcoming 2026 festivals</h3>'+
-        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by production department.</p>'+
-        '<div class="grid">'+upcomingHtml+'</div>'+
-        '<h3 style="margin-top:22px">Quick links</h3>'+
-        '<div class="home-links">'+
-          '<a href="iatse.html" class="btn">IATSE locals</a>'+
-          '<a href="schedule.html" class="btn">My schedule</a>'+
-          '<a href="contribute.html" class="btn">Contribute</a>'+
-        '</div>'+
-      '</div>'+
-      '<section class="card" style="margin-top:10px">'+
+      '<section class="card">'+
         '<div class="eyebrow">Public work map</div>'+
         '<h3 style="margin:.2rem 0 8px">Start with the route you need</h3>'+
         '<p class="section-intro">Production Atlas is built for workers who need fast answers: where the events are, when they happen, which departments are involved, and which public company or labor routes are worth checking.</p>'+
@@ -357,8 +346,20 @@
           routeCard('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
           routeCard('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
         '</div>'+
-        '<div class="notice" style="margin-top:16px"><b>Public-safe rule:</b> the app shows useful public routes and hides missing/private categories instead of filling the page with unknowns.</div>'+
-      '</section>';
+        '<div class="notice" style="margin-top:16px"><b>Employer routes are still being mapped:</b> not every festival is matched to confirmed employer routes yet. If a festival shows no employer routes for your department, treat it as research still to be done on your end — verify the promoter, vendors, and hiring path directly from current public sources.</div>'+
+        '<div class="notice" style="margin-top:12px"><b>Public-safe rule:</b> the app shows useful public routes and hides missing/private categories instead of filling the page with unknowns.</div>'+
+      '</section>'+
+      '<div class="home-dash">'+
+        '<h3 style="margin-top:28px">Upcoming 2026 festivals</h3>'+
+        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by production department.</p>'+
+        '<div class="grid">'+upcomingHtml+'</div>'+
+        '<h3 style="margin-top:22px">Quick links</h3>'+
+        '<div class="home-links">'+
+          '<a href="iatse.html" class="btn">IATSE locals</a>'+
+          '<a href="schedule.html" class="btn">My schedule</a>'+
+          '<a href="contribute.html" class="btn">Contribute</a>'+
+        '</div>'+
+      '</div>';
   }
 
   function renderOpportunities(){
