@@ -84,7 +84,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_002_LOGISTICS = {
       sourceLinks: [
         {label:'Bonnaroo official website', url:'https://www.bonnaroo.com/'},
         {label:'Bonnaroo background and The Farm context', url:'https://en.wikipedia.org/wiki/Bonnaroo_Music_Festival'},
-        {label:'The Bonnaroo Farm official website', url:'https://thebonnaroofarm.com/'}
+        {label:'The Bonnaroo Farm official website', url:'https://www.bonnaroo.com/'}
       ],
       evidenceSummary: 'Public sources identify Bonnaroo as a large camping festival at The Farm in Manchester, Tennessee. No public source in this pass confirmed logistics vendors.',
       branchDisplayText: 'Likely route: Bonnaroo production logistics, The Farm operations, camping logistics, freight/trucking, equipment rentals, forklift/cart support, staging yards, tollbooth support, vendor deliveries, and Tennessee regional labor.',

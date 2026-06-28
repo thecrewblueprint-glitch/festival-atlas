@@ -79,7 +79,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_005_POWER = {
       publicLeads: ['aggreko-us','ces-power','united-rentals','sunbelt-rentals','iatse-locals'],
       sourceLinks: [
         {label:'Telluride Bluegrass background: Planet Bluegrass and Telluride location', url:'https://en.wikipedia.org/wiki/Telluride_Bluegrass_Festival'},
-        {label:'Town of Telluride Parks and Recreation', url:'https://www.telluride-co.gov/'}
+        {label:'Town of Telluride Parks and Recreation', url:'https://www.townoftelluride.com/'}
       ],
       evidenceSummary: 'Public sources identify Telluride Bluegrass as a Planet Bluegrass festival in Telluride. No public source in this pass confirmed the temporary power vendor.',
       branchDisplayText: 'Likely route: Planet Bluegrass production, Telluride Town Park operations, temporary power vendor, generator/distribution crew, fuel logistics, and Colorado mountain-market labor. Mountain-site constraints make access, altitude/weather, fuel delivery, and limited staging footprint important to verify.',

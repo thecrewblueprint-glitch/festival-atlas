@@ -84,7 +84,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_002_SITE_OPS = {
       sourceLinks: [
         {label:'Bonnaroo official website', url:'https://www.bonnaroo.com/'},
         {label:'Bonnaroo background and The Farm / Manchester context', url:'https://en.wikipedia.org/wiki/Bonnaroo_Music_Festival'},
-        {label:'Bonnaroo Farm official website', url:'https://thebonnaroofarm.com/'}
+        {label:'Bonnaroo Farm official website', url:'https://www.bonnaroo.com/'}
       ],
       evidenceSummary: 'Public sources identify Bonnaroo as a large camping festival at The Farm in Manchester, Tennessee. No public source in this pass confirmed site operations vendors.',
       branchDisplayText: 'Likely route: Bonnaroo production, The Farm operations, camping and parking operations, site infrastructure, sanitation, waste, water, traffic, tollbooths, credentials, and Tennessee regional event labor. Large camping farm layout makes site ops a major labor and vendor route.',

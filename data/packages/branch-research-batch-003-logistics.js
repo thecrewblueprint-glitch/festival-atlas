@@ -67,7 +67,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_003_LOGISTICS = {
       sourceLinks: [
         {label:'Aftershock official website', url:'https://aftershockfestival.com/'},
         {label:'Aftershock background and Discovery Park context', url:'https://en.wikipedia.org/wiki/Aftershock_Festival'},
-        {label:'Discovery Park Sacramento official information', url:'https://regionalparks.saccounty.gov/Parks/Pages/DiscoveryPark.aspx'}
+        {label:'Discovery Park Sacramento official information', url:'https://regionalparks.saccounty.gov/content/regionalparks/us/en/parks/american-river-parkway/discovery-park.html'}
       ],
       evidenceSummary: 'Public sources identify Aftershock as a DWP festival at Discovery Park in Sacramento. No public source in this pass confirmed logistics vendors.',
       branchDisplayText: 'Likely route: DWP production logistics, Discovery Park operations, equipment rentals, freight/trucking, forklifts/carts, park access control, vendor deliveries, and Northern California logistics labor. Park constraints and potential camping/support additions make delivery routes important to verify.',

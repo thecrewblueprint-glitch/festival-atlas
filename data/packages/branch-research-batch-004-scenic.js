@@ -33,7 +33,7 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_004_SCENIC = {
       sourceLinks: [
         {label: "CRSSD sponsorships page", url: "https://www.crssdfest.com/sponsorships/"},
         {label: "CRSSD official homepage", url: "https://www.crssdfest.com/"},
-        {label: "Waterfront Park San Diego context", url: "https://en.wikipedia.org/wiki/Waterfront_Park_(San_Diego)"}
+        {label: "San Diego waterfront / Embarcadero context", url: "https://en.wikipedia.org/wiki/Embarcadero_(San_Diego)"}
       ],
       evidenceSummary: "Low-mode Firecrawl reached CRSSD sponsorship and official site pages, supporting a public route for branded environments and activation research. No scenic vendor was confirmed.",
       branchDisplayText: "Likely route: FNGRS CRSSD production plus Waterfront Park operations, with scenic work focused on clean electronic-festival branding, sponsor activations, signage, VIP/brand environments, and waterfront site decor.",
