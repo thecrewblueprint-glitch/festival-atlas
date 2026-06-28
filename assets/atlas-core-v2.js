@@ -313,40 +313,34 @@
       '<div class="grid">'+(browseHtml||'<p>No opportunities match the current filter.</p>')+'</div>';
   }
 
+  // Upcoming festivals first (events still to come, soonest first), then past
+  // events most-recent first. Matches what the home page should surface for a
+  // worker planning ahead.
+  function upcomingByDate(){
+    var now=new Date();
+    var today=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+    return opportunities.filter(function(o){return parseDate(o.startDate);}).sort(function(a,b){
+      var as=parseDate(a.startDate).getTime(),bs=parseDate(b.startDate).getTime();
+      var ae=(parseDate(a.endDate)||parseDate(a.startDate)).getTime();
+      var be=(parseDate(b.endDate)||parseDate(b.startDate)).getTime();
+      var aUp=ae>=today,bUp=be>=today;
+      if(aUp!==bUp)return aUp?-1:1;
+      return aUp?as-bs:bs-as;
+    }).slice(0,6);
+  }
   function renderHome(){
     var el=$('#app');
     if(!el)return;
-    var upcoming=sortOpportunities(opportunities).slice(0,6);
-    var upcomingHtml=upcoming.map(opportunityCard).join('');
-    var pathwayHtml=branches.map(function(branch){
-      var count=matchingOpportunities(branch.id).length;
-      var skills=(branch.workerFocus||[]).slice(0,3).join(' \xb7 ');
-      return '<a class="pathway" href="opportunities.html?branch='+encodeURIComponent(branch.id)+'">'+
-        '<h4>'+esc(branch.name)+'</h4>'+
-        '<div class="pathway-skills">'+esc(skills)+'</div>'+
-        '<span class="pathway-count">'+count+' festival'+(count===1?'':'s')+' →</span>'+
-        '</a>';
-    }).join('');
+    var upcoming=upcomingByDate();
+    var upcomingHtml=upcoming.length?upcoming.map(opportunityCard).join(''):'<p class="sub">No upcoming festivals in the current data.</p>';
+    function routeCard(title,body,link,label){
+      return '<article class="card"><h3>'+esc(title)+'</h3><p>'+esc(body)+'</p><p><a class="btn" href="'+esc(link)+'">'+esc(label)+'</a></p></article>';
+    }
     el.innerHTML=
-      '<h2>Find Your Pathway</h2>'+
-      '<p class="section-intro">Production Atlas helps live-event production workers find festivals and the employer routes that hire each trade. Pick your branch to jump straight to the 2026 festivals that need it, then open a festival to see its dates, production window, producer, and the companies and apply links connected to your trade.</p>'+
-      '<div class="steps">'+
-        '<div class="step-card"><span class="step-n">1</span><h4>Pick your branch</h4><p>Choose your production branch below to jump to the festivals that hire it.</p></div>'+
-        '<div class="step-card"><span class="step-n">2</span><h4>Open a festival</h4><p>See festival dates, the approximate production window, producer, and employer routes by branch.</p></div>'+
-        '<div class="step-card"><span class="step-n">3</span><h4>Apply</h4><p>Use the company careers links or the local-union route to reach out.</p></div>'+
-      '</div>'+
-      '<h3>Your branch</h3>'+
-      '<div class="pathway-grid">'+pathwayHtml+'</div>'+
       '<div class="home-dash">'+
-        '<h3 style="margin-top:28px">Upcoming 2026 festivals</h3>'+
-        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by branch.</p>'+
+        '<h3 style="margin-top:0">Upcoming 2026 festivals</h3>'+
+        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by production department.</p>'+
         '<div class="grid">'+upcomingHtml+'</div>'+
-        '<div class="stats" style="margin-top:18px">'+
-          '<div class="stat"><b>'+opportunities.length+'</b><span>active festivals</span></div>'+
-          '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
-          '<div class="stat"><b>'+branches.length+'</b><span>production branches</span></div>'+
-          '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE locals</span></div>'+
-        '</div>'+
         '<h3 style="margin-top:22px">Quick links</h3>'+
         '<div class="home-links">'+
           '<a href="iatse.html" class="btn">IATSE locals</a>'+
@@ -356,7 +350,18 @@
           '<a href="employer-route-methodology.html" class="btn">Employer routes</a>'+
           '<a href="date-work-window-disclaimer.html" class="btn">Date disclaimer</a>'+
         '</div>'+
-      '</div>';
+      '</div>'+
+      '<section class="card" style="margin-top:10px">'+
+        '<div class="eyebrow">Public work map</div>'+
+        '<h3 style="margin:.2rem 0 8px">Start with the route you need</h3>'+
+        '<p class="section-intro">Production Atlas is built for workers who need fast answers: where the events are, when they happen, which departments are involved, and which public company or labor routes are worth checking.</p>'+
+        '<div class="grid">'+
+          routeCard('Find events','Browse festivals by date, city, state, department, producer, and approximate production window.','opportunities.html','Open opportunities')+
+          routeCard('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
+          routeCard('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
+        '</div>'+
+        '<div class="notice" style="margin-top:16px"><b>Public-safe rule:</b> the app shows useful public routes and hides missing/private categories instead of filling the page with unknowns.</div>'+
+      '</section>';
   }
 
   function renderOpportunities(){

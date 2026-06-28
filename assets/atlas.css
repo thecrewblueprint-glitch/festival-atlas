@@ -45,10 +45,6 @@ body[data-page="employers"] .filters #branchFilter,body[data-page="employers"] .
 .btn{cursor:pointer;font-weight:850;background:var(--gold2);color:#111827;border-color:var(--gold2);text-decoration:none;display:inline-block;text-align:center;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease,background .12s ease}
 .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow2);background:#ffd45a;color:#111827}
 .page{padding:30px 0 58px}
-body[data-page="home"] #app>h2:first-child,body[data-page="home"] #app>h2:first-child+.section-intro,body[data-page="home"] #app>.steps,body[data-page="home"] #app>.steps+h3,body[data-page="home"] #app>.pathway-grid{display:none!important}
-body[data-page="home"] .home-dash{margin-top:0}
-body[data-page="home"] .home-dash h3:first-child{margin-top:0!important}
-body[data-page="home"] .home-dash .stats{display:none!important}
 .page h2{margin:0 0 8px;font-size:clamp(1.72rem,3.5vw,2.35rem);letter-spacing:-.04em;line-height:1.05}
 .page h3{letter-spacing:-.02em}
 .grid,.calendar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
