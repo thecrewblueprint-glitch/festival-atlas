@@ -1,175 +1,147 @@
 # Production Atlas — Public Roadmap
 
-**Status as of June 2026 · research-version branch**
+**Status as of June 27, 2026 · research-version branch**
 
-Production Atlas is a public-safe scouting dashboard for live-event production workers. It maps festivals, venues, producers, and department routes so stagehands, riggers, audio techs, lighting crew, and other production laborers can find where the work is and how to research getting routed into it.
+Production Atlas is a public-safe scouting dashboard for live-event production workers. It maps festivals, public dates, approximate production windows, producers/promoters, public employer routes, source references, and planning views.
 
-This roadmap is honest about what the tool currently is, what it is not yet, and what needs to happen before it is ready for wide public use.
+This roadmap reflects the current product decision: the public app should be simple, public-safe, and worker-useful. Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
 
 ---
 
 ## Active UI scope decision
 
-The public event search bar should stay limited to date and producer/promoter. Department, region, state, employer type, confidence, and research-queue style filtering should not be exposed as primary public filters unless a later UX pass proves they are useful.
+The public event search/filter UI should stay limited to:
 
-The future schedule and travel planner is a separate planning layer, not part of the basic public filter bar. It should eventually connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
+```text
+date / month
+producer / promoter
+```
 
----
+Do not expose department, region, state, employer type, confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as the primary public filter bar unless Aaron explicitly reopens that UX decision.
 
-## What is built and working
-
-- **54 active 2026 opportunity records** across all US regions (West 19, South 19, Midwest 8, Northeast 6, multi-market 2)
-- **12 production branches** mapped per event: staging, rigging, lighting, audio, video/LED, power, site ops, logistics, scenic, backline, stage management, production office
-- **56 branch research packages** covering 6 batches of 12 branches — ~270 individual branch-level research entries
-- **12 pages:** Home, Guide for Use, Calendar, Opportunities, Branches, Employers, IATSE Locals, Matrix, Analytics, Sources, Map, Personal Schedule
-- **Career pathway home page** — branch-first entry point with event counts per trade
-- **Full validation suite** — data integrity, branch research, static app checks all pass clean
-- **URL deep-linking** — filter state preserved in query string for sharing specific views
-- **Keyboard-accessible modals** — Escape to close, focus management, ARIA roles
-- **Personal schedule builder** — localStorage-based Gantt for year planning
+The future schedule and travel planner is a separate planning layer, not part of the basic public filter bar. It can later connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
 
 ---
 
-## Current honest limitations
+## Current built state
 
-These are not bugs. They are the actual data state. Every user of this tool should understand them before the app is opened to a wider audience.
+Latest repo-visible state:
 
-### Data is in research/scouting state — not verified state
-
-| Field | Fill rate | Core work-finding status |
-|---|---:|---|
-| Source URLs (event active) | 54 / 54 | Core trust field |
-| Confirmed start + end dates | 52 / 54 (breakaway, country-thunder are multi-market ranges) | Core planning field |
-| Producer / promoter route verified with public source | 0 / 54 | Core route field |
-| Public labor / hiring route verified | 0 / 54 | Core route field |
-| Confirmed vendors | 0 / 54 | Useful route evidence, not always discoverable |
-| Production department coverage | 54 / 54 | Core work-mapping field |
-| Accommodation data filled | 4 / 54 | Supplemental only |
-| Travel compensation data filled | 0 / 54 | Supplemental only |
-| Records with open next-research actions | 54 / 54 | Expected research state |
-
-This means every record is a research lead, not a confirmed work opportunity. The app says this, but the gap between "says it" and "makes it unmissable to a first-time visitor" is a real public readiness gap.
-
-Accommodation, travel, lodging, per diem, and similar worker-support details are **supplemental**. They can improve a record when publicly available, but they are not core validation requirements for finding where work is, when it happens, which departments it touches, and what public route to research next. Missing lodging or per diem information should not block a record from being useful.
-
-### Source quality flag
-
-All 54 active records carry `sourceQuality: user_report_or_prior_research_needs_source_attachment`. The URLs attached are real, but the structured source verification pass — where each URL is confirmed current and the record is updated to reflect it — has not yet been completed.
-
-### Multi-market records
-
-`breakaway-2026` and `country-thunder-us-2026` represent tour runs covering multiple US cities. A single record spanning April–November or April–July is not useful for a worker deciding whether to travel to a specific city. These need per-market splits with confirmed city, venue, and dates before they are actionable.
-
-### Employer and IATSE data
-
-These are routing directories, not confirmed vendor lists. No employer record on the Employers or IATSE Locals pages should be treated as proof that a company or local is working a specific event without independent verification.
+- 77 total opportunity records
+- 68 active public opportunities
+- 9 hidden/inactive/supplemental records
+- 68 / 68 active opportunity source URL coverage
+- 12 public route research update records
+- 56 branch research packages
+- Core public pages: Home, Guide, Opportunities, Calendar, Map, Schedule, Employers, IATSE Locals, Sources, Contribute
+- White pages: About, How the Data Works, Employer Route Methodology, Date & Work Window Disclaimer
+- Legal/policy pages: Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, Contact & Data Requests
+- Supplemental retained pages: Branches/Departments, Matrix, Analytics
 
 ---
 
-## Phase 1 — Core data verification pass *(highest impact before public)*
+## Public readiness boundaries
 
-**Goal:** Get every active record to a state where a worker can open it and know how much to trust the core work-finding signal.
+Production Atlas helps identify where work may be worth researching. It does not guarantee employment, contracts, hiring, placement, vendor access, referral, call times, lodging, travel support, per diem, or any specific outcome.
 
-- [ ] Run a structured source verification pass: open each `active2026SourceUrl`, confirm it is current and still references the event, update `sourceQuality` to `source_attached_verified`
-- [ ] Verify producer / promoter names for the top 20 records — attach a public source link to the `producer` object and change status from `needs_source_link` to `confirmed` or `likely_from_public_source`
-- [ ] Verify the public labor / hiring route for the top 20 records where a public route exists: promoter careers, venue operator, union/local jurisdiction research note, labor provider, official contractor, or public vendor route
-- [ ] Add confirmed vendors only where a public source exists (permit filing, vendor credit, official announcement, public case study, or official partner list). Do not require a vendor for every record.
-- [ ] Split `breakaway-2026` into per-market records when individual city dates are confirmed publicly
-- [ ] Split `country-thunder-us-2026` into per-market records when individual city dates are confirmed publicly
+The Employers page and route notes identify public research routes. A company, venue, promoter, vendor, or local-jurisdiction reference should not be treated as a confirmed event-specific working relationship unless a public source directly supports that connection.
 
-### Supplemental enrichment — not a launch blocker
+Public event dates may be known, but build/load-in and strike/load-out windows are planning estimates unless a source confirms otherwise. The Date & Work Window Disclaimer page must remain linked in the footer.
 
-- [ ] Add accommodation notes only where public information exists and it is useful to the worker.
-- [ ] Add travel / per diem notes only where public information exists and it is useful to the worker.
-
-Missing accommodation, lodging, travel, or per diem data should not count against the core readiness of a record. Those fields are bonus context, not work-discovery requirements.
+Accommodation, lodging, travel, and per-diem information can be useful when public and reliable. Missing supplemental details should not count against a record’s core work-finding usefulness and should not create public clutter.
 
 ---
 
-## Phase 2 — Trust and transparency layer *(required for public credibility)*
+## Phase 1 — Stabilize public pages and documentation
 
-**Goal:** Make the confidence and limitation signals impossible to miss for a first-time visitor.
+Goal: keep actual pages, README, roadmaps, legal pages, white pages, and AI collaboration files aligned.
 
-- [ ] **Core confidence badge on every event card** — visible at-a-glance signal showing how many core work-finding fields are filled vs. unknown: active source/date, producer/promoter route, public labor/hiring route, and department coverage. Do not include lodging, travel, or per diem in the core badge score.
-- [ ] **Supplemental info badge where useful** — show lodging, travel, or per diem as optional supplemental context only when available. Missing supplemental info should not reduce the record's core confidence.
-- [ ] **"What this record means" explainer on first visit** — a one-time dismissible prompt or persistent notice on the Opportunities page that explains the difference between a research lead and a confirmed opportunity
-- [ ] **Data freshness indicator** — each record shows its `active2026CheckedDate` so users know when it was last reviewed
-- [ ] **Source quality label** — surface the `sourceQuality` value on every card and in every modal using plain language ("Source verified", "Source attached — not yet validated", "Source needed")
-- [ ] **Disclaimer on Map page** — map pins look confirmed; they need a visible notice that location is from the source URL, not independently verified
-- [ ] **Guide page linked from every modal** — add a persistent "How to use this record" footer link in every event detail modal
-
----
-
-## Phase 3 — User experience for new visitors *(needed before social sharing)*
-
-**Goal:** A person who has never heard of the tool can land on the home page and understand what to do within 30 seconds.
-
-- [ ] **Home page onboarding copy** — current home leads with "Find Your Pathway" and trade cards, but a new visitor does not know what Production Atlas is before they see that. Add a 2–3 sentence plain-language description above the pathway grid
-- [ ] **Guide for Use page reachable in one click from Home** — it currently requires knowing to click Guide in the nav; it should be the primary CTA on the home page for first-time visitors
-- [ ] **Mobile audit** — audit the pathway grid, calendar Gantt, event modals, and branch tables on a 375px screen; fix anything that breaks or requires horizontal scroll
-- [ ] **Schedule page added to nav** — the Personal Schedule page (`schedule.html`) exists and is functional but is not in the main navigation
-- [ ] **Empty state messages** — when a filter returns zero results, the page should tell the user what to try next, not just show a blank list
-- [ ] **Page titles and meta descriptions** — each HTML page has a basic `<title>` but no `<meta name="description">` and no Open Graph tags; add both so the tool looks credible when shared as a link
+- [x] Keep `research-version` as the current working branch.
+- [x] Keep source links centralized on `sources.html`.
+- [x] Keep public pages free of private contacts, pay rates, lodging details, rumors, private referrals, and NDA/client-sensitive information.
+- [x] Remove public confidence badge/value-tier/research-queue direction from current docs.
+- [x] Align public filters to date/month and producer/promoter.
+- [ ] Run `npm run validate:all` after the current connector-based updates in a local or GitHub Actions environment.
 
 ---
 
-## Phase 4 — Feedback and community input *(needed for continuous improvement)*
+## Phase 2 — Improve public worker usability
 
-**Goal:** Workers can tell us when a record is wrong, outdated, or missing something.
+Goal: a worker can quickly understand what the app does and how to use it without seeing internal research scaffolding.
 
-- [ ] **In-app feedback widget** — Airtable App Feedback table (`tblJmDO9heY7KYv9m`) is built; the form needs to be created on desktop (Airtable web, not mobile) and embedded or linked from the app. Fields: Subject, Feedback, Feedback Type, Page or Section
-- [ ] **"Flag this record" button in event modals** — a lightweight way to submit a correction or note for a specific opportunity without leaving the page; links to the feedback form pre-filled with the record ID
-- [ ] **Human intel intake form** — the Airtable Human Submissions table (`tblsw6AXH1I352fIw`) is built for private intel collection; a separate intake form (not the app feedback form) allows trusted contributors to submit route tips for private review before they affect any public record
-- [ ] **Changelog or update log visible in-app** — a simple public-facing "last updated" indicator on the home page so users know the dataset is being actively maintained
-
----
-
-## Phase 5 — Expanded data scope *(after core quality is solid)*
-
-**Goal:** Cover the full range of live-event production work, not just major music festivals.
-
-- [ ] **Event types beyond music festivals** — all 54 active records are `opportunityType: music_festival`. Arena/stadium tours, corporate events, convention production, sports production, and broadcast/event TV are separate labor ecosystems worth mapping
-- [ ] **Regional and local events** — current records skew toward nationally known festivals. Regional multi-day events (state fairs, amphitheater seasons, local festivals) may be more accessible entry points for workers new to touring
-- [ ] **Fall and winter inventory** — current records weight toward spring/summer. Q4 events, holiday activations, and arena season need dedicated research passes
-- [ ] **CRSSD fall edition** — a separate `crssd-fall-2026` record when official fall dates are confirmed publicly (spring edition is in the dataset; fall was removed to avoid a bad date range)
-- [ ] **Touring productions** — Broadway tours, theatrical productions, and large-scale touring shows involve the same labor skills but follow completely different routing. Separate dataset or clear cross-reference needed
-- [ ] **Venue-based seasonal work** — amphitheater seasons, arena residencies, and convention center calendars are not event-specific but are major labor sources; worth a separate page or filter
-- [ ] **Schedule + travel planner layer** — users should eventually enter preferred availability or a target work schedule, then compare it against event timing across the year. This should connect to the map and show travel sequence, estimated distance, estimated travel time, nearby clusters, schedule gaps, and location conflicts. Keep this separate from the basic public filter bar.
+- [ ] Tighten Home copy around where, when, producer/operator, employer route, and which page to use next.
+- [ ] Keep the Guide page as the main public instruction page.
+- [ ] Add or improve empty-state language when a date/producer filter returns no results.
+- [ ] Continue mobile audit for nav, filters, cards, calendar, map, schedule, and modals.
+- [ ] Keep footer navigation consistent across public, white, and legal pages.
 
 ---
 
-## Phase 6 — Performance and longevity *(before high-traffic use)*
+## Phase 3 — Improve core public data quality
 
-**Goal:** The app stays fast and maintainable as data grows.
+Goal: strengthen the public work-finding signal without publishing private or speculative details.
 
-- [ ] **Data package load audit** — the app currently loads 56+ branch research packages synchronously on every page load. Most pages only need a subset; lazy-loading or per-page manifests would reduce initial parse time on mobile
-- [ ] **2027 data migration plan** — the current architecture assumes a single `opportunities-2026.js` file. A plan for 2027 records (new file, versioned manifest, or archive strategy) is needed before the year turns
-- [ ] **Offline / PWA consideration** — the tool is useful in the field where connectivity is limited; a service worker and app manifest would allow offline access to already-loaded data
-- [ ] **Accessibility audit** — keyboard navigation and ARIA roles were improved in the last UX pass, but a full WCAG 2.1 AA audit has not been done; do this before the tool is used by a wide audience
+- [ ] Review active source URLs and confirm current public event pages where possible.
+- [ ] Verify public producer/promoter/operator names for priority records.
+- [ ] Add or refine public employer/apply/careers/contact links where reliable.
+- [ ] Add event-specific employer/vendor relationships only when a public source supports the exact connection.
+- [ ] Keep Breakaway and Country Thunder market-level records current as public dates and venues change.
+- [ ] Track `breakaway-houston-2026` venue until a public venue is announced.
 
 ---
 
-## What public launch does NOT mean
+## Phase 4 — Improve planning views
 
-Marking this tool as "public" means the URL can be shared and new visitors can understand what they are looking at. It does not mean:
+Goal: make Calendar, Map, and Schedule useful without turning the public app into a private workflow system.
 
-- Records are confirmed hiring opportunities
-- Vendors listed are actively working those events
-- Pay, lodging, travel, or per diem information is required for a record to be useful
-- The tool replaces direct outreach to employers, locals, or production companies
+- [ ] Calendar: keep month/date behavior clear and label approximate work windows.
+- [ ] Map: keep location pins public-safe and avoid implying certainty beyond sources.
+- [ ] Schedule: keep planning browser-local through localStorage only.
+- [ ] Improve overlap, month spread, and travel-gap summaries without server-side private plan storage.
+- [ ] Future planning layer: availability, routing distance, travel time, schedule gaps, and conflict flags.
 
-Every page and every record should reinforce this. If a first-time visitor can mistake a research lead for a confirmed job offer, the public launch is not ready.
+---
+
+## Phase 5 — Feedback and contributor flow
+
+Goal: accept corrections and field input without publishing sensitive material.
+
+- [x] Add public Contribute page with submission and feedback form embeds.
+- [x] Warn contributors not to submit private contacts, pay rates, hotel names, NDA material, or private referrals.
+- [ ] Review incoming submissions privately before any public record changes.
+- [ ] Use public-safe summaries only when updating the app.
+- [ ] Keep raw Airtable/human submission data out of the public repo and public app.
+
+---
+
+## Phase 6 — Expanded data scope after quality is stable
+
+Possible future research areas:
+
+- arena/stadium tours
+- corporate events
+- convention production
+- sports production
+- broadcast/event TV
+- amphitheater seasons
+- regional and local multi-day events
+- fairs and civic events
+- fall/winter event inventory
+- venue-based seasonal work
+- touring theatrical productions
+
+Do not expand into backend, login, payment, private contact databases, marketplace features, LMS integration, scraping automation, or Firecrawl restoration under this public static-app roadmap.
 
 ---
 
 ## Priority order for the next development sprint
 
-1. Phase 2 — core confidence badge + source quality labels on cards (highest trust impact, zero new data needed)
-2. Phase 3 — mobile audit + home page onboarding copy (highest UX impact for new visitors)
-3. Phase 1 — source, producer/promoter, and public labor-route verification pass for top 20 records by score (highest data credibility impact)
-4. Phase 4 — App Feedback form creation in Airtable desktop + link in-app
-5. Phase 3 — meta descriptions and Open Graph tags (small lift, big impact for link sharing)
-6. Supplemental enrichment — accommodation, travel, and per diem notes only where public information is available
+1. Run `npm run validate:all` after the documentation/page filter alignment pass.
+2. Fix any validation failures created by the page/filter changes.
+3. Spot-check public pages on mobile, especially the nav and filters.
+4. Improve date/producer filter empty states.
+5. Continue public source and producer/promoter verification for priority records.
+6. Keep white/legal pages aligned when page behavior changes.
 
 ---
 
