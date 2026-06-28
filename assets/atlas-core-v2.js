@@ -346,9 +346,6 @@
           '<a href="iatse.html" class="btn">IATSE locals</a>'+
           '<a href="schedule.html" class="btn">My schedule</a>'+
           '<a href="contribute.html" class="btn">Contribute</a>'+
-          '<a href="data-methodology.html" class="btn">How this works</a>'+
-          '<a href="employer-route-methodology.html" class="btn">Employer routes</a>'+
-          '<a href="date-work-window-disclaimer.html" class="btn">Date disclaimer</a>'+
         '</div>'+
       '</div>'+
       '<section class="card" style="margin-top:10px">'+
