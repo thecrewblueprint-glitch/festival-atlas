@@ -346,7 +346,7 @@
           routeCard('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
           routeCard('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
         '</div>'+
-        '<div class="notice" style="margin-top:16px"><b>Employer routes are still being mapped:</b> not every festival is matched to confirmed employer routes yet. If a festival shows no employer routes for your department, treat it as research still to be done on your end — verify the promoter, vendors, and hiring path directly from current public sources.</div>'+
+        '<div class="notice" style="margin-top:16px"><b>Employer routes are still being mapped:</b> not every festival is matched to confirmed employer routes yet. If a festival shows no employer routes for your department, treat it as research still to be done on your end — verify the promoter, vendors, and hiring path directly from current public sources. If you have information that can help, you can submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
         '<div class="notice" style="margin-top:12px"><b>Public-safe rule:</b> the app shows useful public routes and hides missing/private categories instead of filling the page with unknowns.</div>'+
       '</section>'+
       '<div class="home-dash">'+
