@@ -1,25 +1,26 @@
 # Production Atlas Work Research App Roadmap
 
 Generated: 2026-06-22  
+Updated: 2026-06-27  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary branch: `research-version`  
-Scope: Make the current work research app function well. Do not roadmap backend architecture, private workflow systems, payment, authentication, or unrelated future platform structure.
+Scope: Make the current static work research app function well. Do not roadmap backend architecture, private workflow systems, payment, authentication, scraping automation, or unrelated future platform structure.
 
 ## 1. Product Purpose
 
-Production Atlas is Aaron's work research app for scouting live-event production opportunities.
+Production Atlas is Aaron's public-safe work research app for scouting live-event production opportunities.
 
-The app should help answer five practical questions:
+The app should help answer:
 
 ```text
 1. Where is the work?
 2. When is it happening?
-3. Which production departments does it touch?
-4. Who are the public employer/vendor/labor-route leads?
-5. What action should Aaron take next?
+3. Who publicly produces, promotes, operates, or routes the work?
+4. Which public employer/vendor/labor-route leads are relevant?
+5. What public source or planning page should Aaron review next?
 ```
 
-The app is successful when Aaron can open it, filter the dataset, compare opportunities, review public sources, and decide what to research or pursue next without digging through raw research documents.
+The app is successful when Aaron can open it, filter by date and producer/promoter, compare public work-route leads, review sources, and decide what to research next without digging through raw research documents.
 
 ## 2. Current App Boundary
 
@@ -72,7 +73,18 @@ sources.html
 
 Do not move raw source links into opportunity, branch, map, or schedule popups.
 
-### 3.3 Manifest Is the Data Loading Authority
+### 3.3 Public Filter Scope
+
+Primary public filters should stay limited to:
+
+```text
+date / month
+producer / promoter
+```
+
+Do not reintroduce broad public filters for department, region, state, confidence, value tier, source quality, accommodation, travel, per diem, or public research-queue status unless Aaron explicitly reopens that UX decision.
+
+### 3.4 Manifest Is the Data Loading Authority
 
 Branch research package loading must stay controlled by:
 
@@ -82,11 +94,12 @@ data/packages/branch-research-manifest.js
 
 Do not rely on stale hardcoded fallback arrays.
 
-### 3.4 Validation Comes Before Feature Expansion
+### 3.5 Validation Comes Before Feature Expansion
 
 Any code or data change should keep these passing:
 
 ```bash
+npm run validate:data
 npm run validate:branch-research
 npm run validate:static-app
 npm run validate:all
@@ -97,29 +110,31 @@ npm run validate:all
 Only four stages matter for making the work research app function:
 
 ```text
-Stage 1 — Stabilize the app
-Stage 2 — Make the dashboard usable for daily work research
-Stage 3 — Make opportunity data clearer and more sortable
+Stage 1 — Stabilize pages, docs, runtime, and validation
+Stage 2 — Make the public dashboard useful for daily work research
+Stage 3 — Make public opportunity data clearer and safer
 Stage 4 — Make planning views useful
 ```
 
-No backend, private workflow, production architecture, LMS integration, or unrelated platform planning belongs in this roadmap.
+No backend, private workflow, production architecture, LMS integration, scraping automation, Firecrawl restoration, or unrelated platform planning belongs in this roadmap.
 
 ---
 
-# Stage 1 — Stabilize the App
+# Stage 1 — Stabilize Pages, Docs, Runtime, and Validation
 
 ## Goal
 
-Make the current static app load correctly, validate correctly, and show the same navigation/data structure across pages.
+Make the current static app load correctly, validate correctly, and match its repo-visible documentation.
 
 ## Done When
 
 ```text
 npm run validate:all passes.
-All active pages load the shared CSS and atlas-core-v2 runtime.
 README matches the real active page list.
-Navigation is consistent across all pages.
+ROADMAP.md and this AI roadmap match current public scope.
+Legal and white pages match public-safe app behavior.
+Navigation is consistent across public, white, and legal pages.
+Primary public filters are date/month and producer/promoter only.
 Manifest covers every branch research package.
 Every branch research package has a matching research report.
 No active Firecrawl/scraping runner exists.
@@ -127,290 +142,115 @@ No active Firecrawl/scraping runner exists.
 
 ## Tasks
 
-### 1.1 Run Baseline Validation
-
-Run:
-
-```bash
-npm run validate:all
-```
-
-If it fails, fix validation before adding new features.
-
-### 1.2 Confirm Active Page List
-
-Confirm and standardize app pages:
-
-```text
-index.html
-calendar.html
-opportunities.html
-branches.html
-employers.html
-iatse.html
-matrix.html
-analytics.html
-sources.html
-guide.html
-map.html
-schedule.html
-```
-
-Update README if it lists fewer pages.
-
-### 1.3 Normalize Navigation
-
-Every active page should show the same navigation set in the same order:
-
-```text
-Home / Guide
-Calendar
-Opportunities
-Branches
-Employers
-IATSE Locals
-Matrix
-Analytics
-Sources
-Map
-Schedule
-```
-
-Check active-page highlighting.
-
-### 1.4 Fix Runtime Fallback Drift
-
-`assets/atlas-core-v2.js` has a hardcoded fallback branch-file list. The manifest should be authoritative.
-
-Preferred fix:
-
-```text
-Keep only a safe minimal fallback or update the fallback comment to make clear it is not authoritative.
-Do not treat the fallback as the real package list.
-```
-
-### 1.5 Confirm Public-Safe Rendering
-
-Check cards and modals:
-
-```text
-Opportunity cards
-Opportunity modals
-Branch modals
-Employer modals
-Map popups
-Schedule cards
-Sources page
-```
-
-Confirm private/sensitive data is not rendered.
+1. Run baseline validation.
+2. Fix validation failures before new features.
+3. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned.
+4. Keep retired files out of public pages:
+   - `assets/confidence-badges.js`
+   - `assets/research-queue-page.js`
+5. Confirm public-safe rendering on cards, modals, map popups, schedule cards, Sources, Contribute, white pages, and legal pages.
 
 ---
 
-# Stage 2 — Make the Dashboard Useful for Daily Work Research
+# Stage 2 — Make the Public Dashboard Useful for Daily Work Research
 
 ## Goal
 
-Make the app useful as a work-research command center instead of just a static list of records.
+Make the app useful as a public work-research command center instead of an internal research queue.
 
 ## Done When
 
 Aaron can open the app and quickly answer:
 
 ```text
-What should I look at first?
-Which opportunities are highest value?
-Which ones need verification?
-Which page should I use next?
+Which events happen in the date/month I care about?
+Which producer/promoter/operator is publicly connected?
+Which public employer route should I research?
+Which source page should I review?
+Which planning page should I use next?
 ```
 
 ## Tasks
 
 ### 2.1 Improve Home / Guide
 
-Home should become the starting point for using the app.
+Home should explain the app quickly and route users to Guide, Opportunities, Calendar, Map, Employers, Sources, and Schedule.
 
-It should show:
+### 2.2 Keep Research Queue Private
 
-```text
-what the app does
-how to use it in 5 minutes
-dataset counts
-highest-value current targets
-records needing verification
-links to the key working pages
-public-safe warning
-```
+The internal research queue lives outside the public GitHub Pages app. Do not reintroduce a public research-queue panel or internal next-action dashboard.
 
-### 2.2 Add a Research Queue View
+### 2.3 Improve Date / Producer Filtering
 
-Create a clear queue for unfinished work research.
+Public filtering should focus on date/month and producer/promoter. Add useful empty states when filters return zero results.
 
-The queue should group opportunities by next action:
+### 2.4 Keep Sorting Practical but Not Publicly Scored
 
-```text
-Verify active date/status
-Verify production vendor stack
-Verify labor route
-Verify department coverage
-Verify travel/lodging/per diem potential
-Review or attach sources
-Ready for outreach planning
-Low-confidence / hold
-```
-
-This can start inside `analytics.html` or become a dedicated page later if needed.
-
-### 2.3 Add Practical Priority Sorting
-
-Default opportunity sort should prioritize usefulness.
-
-Recommended order:
-
-```text
-1. work-year value score
-2. source confidence
-3. upcoming date/month
-4. department coverage
-5. travel/lodging/per diem potential
-```
-
-### 2.4 Add Value Tier Labels
-
-Convert `longTermValueScore` into visible labels:
-
-```text
-80-100: Priority travel-work target
-60-79: Strong opportunity
-40-59: Track / research further
-20-39: Local or speculative
-0-19: Low current value
-```
-
-Use these labels consistently in cards, modals, analytics, and schedule views.
-
-### 2.5 Improve Filters
-
-Useful filters:
-
-```text
-keyword
-branch / department
-region
-state
-month
-value tier
-confidence
-source quality
-accommodation potential
-travel potential
-per diem potential
-```
-
-Do not add complex filters until the basic filters are reliable.
+Runtime sorting may use internal usefulness signals, but public cards should not show value scores, value tiers, confidence badges, or internal priority labels.
 
 ---
 
-# Stage 3 — Make Opportunity Data Clearer
+# Stage 3 — Make Public Opportunity Data Clearer and Safer
 
 ## Goal
 
-Make every opportunity record easy to understand, compare, and verify.
+Make every opportunity record easy to understand, compare, and verify without overstating certainty.
 
 ## Done When
 
-Each major opportunity clearly shows:
+Each major public opportunity clearly shows:
 
 ```text
 what it is
 where it is
 when it happens
-why it matters
-which departments it touches
-what route leads exist
-what public source supports it
-what still needs verification
+who publicly produces/promotes/operates it when known
+what public employer route exists
+what public source page supports it
+what remains approximate or must be verified outside the app
 ```
 
 ## Tasks
 
 ### 3.1 Standardize Opportunity Cards
 
-Each card should show, at minimum:
+Each card should emphasize:
 
 ```text
 name
-city/state/region
-month/date window
-venue
-value tier
-key departments
-confidence/source status
-next action
+city/state/venue
+public date window
+approximate planning/work window
+producer/promoter/operator when publicly known
+public employer route entry point
+link to details or Sources page
 ```
 
 ### 3.2 Standardize Opportunity Modals
 
-Each modal should show:
+Each modal should show public-safe event details and employer routes. Do not show raw internal audit fields, value score, confidence score, next human action, or research queue language.
+
+### 3.3 Standardize Employer Route Language
+
+Use neutral wording. Do not upgrade a public lead into a confirmed event-specific relationship unless a public source supports that exact connection.
+
+### 3.4 Keep Legal / White Pages Current
+
+When the app changes, update these as needed:
 
 ```text
-summary
-producer/promoter if known
-venue/date
-work-year value
-public-safe confidence boundary
-next human action
-mapped production branches
+about.html
+data-methodology.html
+employer-route-methodology.html
+date-work-window-disclaimer.html
+privacy-policy.html
+terms-and-conditions.html
+limitation-of-liability.html
+cookie-notice.html
+accessibility.html
+affiliate-disclosure.html
+contact-data-requests.html
 ```
-
-Do not show raw source links in the modal. Link users to `sources.html` or provide a clean source status note.
-
-### 3.3 Improve Department Branch Cards
-
-Branch cards should make route intelligence readable.
-
-Each branch section should show:
-
-```text
-branch name
-status
-confidence
-likely route / route lead
-public employer/vendor leads if safe
-next action
-```
-
-Avoid overstating vendor certainty.
-
-### 3.4 Standardize Confidence Language
-
-Use plain confidence labels:
-
-```text
-confirmed
-likely
-possible
-unverified
-supplemental route lead
-human verification needed
-```
-
-Every uncertain record should include a next verification action.
-
-### 3.5 Clean Up Weak or Confusing Records
-
-Create a working list of records that need cleanup:
-
-```text
-missing date
-missing source
-unclear department coverage
-unclear region/state
-low confidence but presented too strongly
-route lead needs safer wording
-```
-
-This list can live in `ai-communication/` as a task handoff or in `research/research-backlog.md` if it is research-specific.
 
 ---
 
@@ -418,11 +258,11 @@ This list can live in `ai-communication/` as a task handoff or in `research/rese
 
 ## Goal
 
-Make the app help Aaron plan which opportunities to track, compare, and possibly pursue.
+Make Calendar, Map, and Schedule help Aaron plan which opportunities to track, compare, and possibly pursue.
 
 ## Done When
 
-Aaron can use Calendar, Map, Schedule, and Analytics to understand work timing, geography, priority, and conflicts.
+Aaron can use Calendar, Map, Schedule, Sources, and Employers to understand public timing, geography, producer/operator route, employer route, and planning conflicts.
 
 ## Tasks
 
@@ -432,18 +272,9 @@ Calendar should help answer:
 
 ```text
 What happens each month?
-Which months are heavy?
-Which regions are active by month?
-Which high-value events are coming up?
-```
-
-Needed improvements:
-
-```text
-show value tier
-show confidence/source status
-show department chips/labels
-sort events in each month by value
+Which events overlap?
+Which approximate work windows matter?
+Which public event dates need source review?
 ```
 
 ### 4.2 Improve Map View
@@ -453,18 +284,8 @@ Map should help answer:
 ```text
 Where are the work targets?
 Which regions cluster together?
-Which events are unmapped or multi-market?
+Which events are unmapped or public-TBD?
 What should I inspect next?
-```
-
-Needed improvements:
-
-```text
-filter by department
-filter by month
-filter by value tier
-show unmapped/multi-market list
-make mobile behavior usable
 ```
 
 ### 4.3 Improve Schedule View
@@ -479,40 +300,23 @@ date overlap warnings
 approximate total event days
 month spread
 region spread
-value summary
 clear add/remove buttons
 ```
 
-Do not store private plans, contacts, pay, lodging, or outreach notes in this public static app.
+Do not store private plans, contacts, pay, lodging, outreach notes, or personal workflow data in this public static app.
 
-### 4.4 Improve Analytics View
+### 4.4 Improve Sources View
 
-Analytics should support decisions, not just counts.
+Sources page should remain the audit table.
 
-Useful analytics:
-
-```text
-opportunities by region
-opportunities by month
-opportunities by value tier
-records by confidence
-records needing verification
-branch research record counts
-employer lead counts by department
-```
-
-### 4.5 Improve Sources View
-
-Sources page should be the audit table.
-
-It should support:
+Useful support:
 
 ```text
 search by opportunity
-filter by section / branch
+filter by section if useful
 show source label
 open public source
-show confidence/source type if available
+avoid raw source links in popups
 ```
 
 ---
@@ -523,67 +327,13 @@ Use this order unless Aaron reprioritizes:
 
 ```text
 1. Run validation and fix failures.
-2. Normalize pages/navigation/README.
-3. Improve Home / Guide as the app starting point.
-4. Add Research Queue / Next Action view.
-5. Add value tiers and practical sorting.
-6. Improve filters.
-7. Standardize cards and modals.
-8. Improve Calendar, Map, Schedule, Analytics, and Sources.
-9. Re-run validation and write handoff.
-```
-
-## First Sprint
-
-```text
-Goal: make the app stable and easier to enter.
-Tasks:
-- run npm run validate:all
-- fix validation failures
-- update README page inventory if needed
-- normalize nav across pages
-- improve Home / Guide start flow
-```
-
-## Second Sprint
-
-```text
-Goal: make the app tell Aaron what to do next.
-Tasks:
-- add Research Queue / Next Action grouping
-- add value tier labels
-- improve default sorting
-- add confidence/source filters if data supports them
-```
-
-## Third Sprint
-
-```text
-Goal: make planning views useful.
-Tasks:
-- improve Calendar display
-- improve Map filters and unmapped list
-- improve Schedule summary and overlap warnings
-- improve Analytics decision panels
-- improve Sources search/filter table
-```
-
-## Required Handoff After Each Sprint
-
-After each sprint, create a short handoff in:
-
-```text
-ai-communication/YYYY-MM-DD-<assistant>-work-research-app-update.md
-```
-
-Include:
-
-```text
-files changed
-features improved
-validation run/result
-known issues
-next recommended task
+2. Normalize pages/navigation/README/roadmaps/legal/white pages.
+3. Keep public filters limited to date/month and producer/promoter.
+4. Improve Home and Guide entry flow.
+5. Improve date/producer filter empty states.
+6. Standardize public cards and modals.
+7. Improve Calendar, Map, Schedule, Employers, Sources, and Contribute.
+8. Re-run validation and write a collaboration log or handoff.
 ```
 
 ## What This Roadmap Excludes
@@ -599,7 +349,10 @@ job marketplace features
 LMS/training platform integration
 new scraping automation
 Firecrawl restoration
-large future platform migration
+public confidence badges
+public value-tier labels
+public research queue panels
+broad public filter bars
 ```
 
-Those may be separate decisions later. They are not part of making the current work research app function.
+Those may be separate decisions later. They are not part of making the current static work research app function.
