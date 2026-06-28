@@ -15,7 +15,8 @@
       q: val('#q'),
       branch: val('#branchFilter'),
       region: val('#regionFilter'),
-      type: val('#employerTypeFilter')
+      type: val('#employerTypeFilter'),
+      category: val('#categoryFilter')
     };
   }
 
@@ -49,6 +50,12 @@
     if(!document.body || document.body.dataset.page !== 'sources') return;
     var app=document.querySelector('#app');
     if(!app) return;
+    var cat=filterValues().category;
+    if(cat==='festival'||cat==='department'){
+      var existing=document.getElementById('employer-source-routes');
+      if(existing)existing.remove();
+      return;
+    }
     var id='employer-source-routes';
     var mount=document.getElementById(id);
     if(!mount){

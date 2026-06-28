@@ -160,7 +160,8 @@
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
-      state:(($('#stateFilter')||{}).value||'')
+      state:(($('#stateFilter')||{}).value||''),
+      category:(($('#categoryFilter')||{}).value||'')
     };
   }
 
@@ -204,7 +205,7 @@
   function applyUrlFilters(){
     if(!$('#filters'))return;
     var params=new URLSearchParams(window.location.search||'');
-    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter']].forEach(function(pair){
+    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter'],['category','#categoryFilter']].forEach(function(pair){
       var val=params.get(pair[0]);var input=$(pair[1]);
       if(val!=null&&input)input.value=val;
     });
@@ -456,23 +457,27 @@
       if(filter.branch&&!row.branchIds.includes(filter.branch))return false;
       if(filter.state&&row.state!==filter.state)return false;
       if(filter.region&&row.region!==filter.region)return false;
+      if(filter.category==='festival'&&row.type!=='opportunity')return false;
+      if(filter.category==='department'&&row.type!=='branch')return false;
+      if(filter.category==='employer')return false;
       return true;
     });
-    var oppCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
-    var branchCount=filtered.filter(function(r){return r.type==='branch';}).length;
+    var festivalCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
+    var deptCount=filtered.filter(function(r){return r.type==='branch';}).length;
+    var showTable=filter.category!=='employer';
     el.innerHTML='<h2>Sources</h2>'+
-      '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and branch popups stay clean.</p>'+
-      (branchDataReady?'':'<p class="sub">Loading branch source records&hellip;</p>')+
-      '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
+      '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and department research popups stay clean.</p>'+
+      (branchDataReady?'':'<p class="sub">Loading department source records&hellip;</p>')+
+      (showTable?'<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
         '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
-        '<div class="stat"><b>'+oppCount+'</b><span>opportunity sources</span></div>'+
-        '<div class="stat"><b>'+branchCount+'</b><span>branch sources</span></div>'+
+        '<div class="stat"><b>'+festivalCount+'</b><span>festival sources</span></div>'+
+        '<div class="stat"><b>'+deptCount+'</b><span>department sources</span></div>'+
       '</div>'+
-      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Type</th><th>Section</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Category</th><th>Department</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
       (filtered.length?filtered.map(function(row){
-        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='opportunity'?'Opportunity':'Branch')+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
+        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='opportunity'?'Festival':'Department')+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
       }).join(''):'<tr><td colspan="5" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
-      '</tbody></table></div>';
+      '</tbody></table></div>':'');
   }
 
   // Pages whose #app is fully owned by a dedicated enhancement script:
