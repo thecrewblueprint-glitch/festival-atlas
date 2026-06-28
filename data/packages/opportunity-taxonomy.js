@@ -1,228 +1,49 @@
 (function(){
+  var generatedAt = '2026-06-28';
+  var cutoffDate = '2026-06-28';
+
   window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY = {
-    generatedAt: '2026-06-23',
-    purpose: 'Public route intelligence labels for Production Atlas.',
+    generatedAt: generatedAt,
+    purpose: 'Public route intelligence labels and 2027 rollover rules for Production Atlas.',
     sourceLinkRule: 'Source links stay centralized on sources.html.',
     fallbackLanguage: 'Unknown publicly. Human verification needed.',
-    cardNote: 'Public event signal found. This is a public research route, not a guaranteed job opening. Check official public sources before outreach.',
-    confidenceLabels: {
-      confirmed: 'Confirmed public source',
-      likely: 'Likely public route',
-      possible: 'Possible route lead',
-      unverified: 'Human verification needed',
-      supplemental: 'Supplemental route lead'
-    },
+    cardNote: 'Public event signal found. Check official public sources before outreach.',
+    confidenceLabels: {confirmed:'Confirmed public source',likely:'Likely public route',possible:'Possible route lead',unverified:'Human verification needed',supplemental:'Supplemental route lead'},
     routeTypes: [
-      { id: 'venue-route', label: 'Venue route' },
-      { id: 'union-route', label: 'Union route' },
-      { id: 'labor-broker-route', label: 'Labor broker route' },
-      { id: 'vendor-route', label: 'Vendor route' },
-      { id: 'corporate-av-route', label: 'Corporate AV route' },
-      { id: 'official-contractor-route', label: 'Official contractor route' },
-      { id: 'procurement-route', label: 'Public procurement route' },
-      { id: 'unknown-publicly', label: 'Unknown publicly' }
+      {id:'venue-route',label:'Venue route'},
+      {id:'union-route',label:'Union route'},
+      {id:'labor-broker-route',label:'Labor broker route'},
+      {id:'vendor-route',label:'Vendor route'},
+      {id:'corporate-av-route',label:'Corporate AV route'},
+      {id:'official-contractor-route',label:'Official contractor route'},
+      {id:'procurement-route',label:'Public procurement route'},
+      {id:'unknown-publicly',label:'Unknown publicly'}
     ],
-    researchQueueUpdates: [
-      {
-        id: 'stagecoach-2026',
-        active2026SourceUrl: 'https://pitchfork.com/news/stagecoach-2026-livestream-schedule-and-details/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'public_media_source_attached',
-        researchQueueNote: 'Attached public 2026 Stagecoach source; continue vendor/labor/lodging research.'
-      },
-      {
-        id: 'bourbon-and-beyond-2026',
-        active2026SourceUrl: 'https://bourbonandbeyond.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official 2026 source confirms September 24-27, 2026 at Kentucky Expo Center; continue DWP vendor and Louisville labor route research.'
-      },
-      {
-        id: 'inkcarceration-2026',
-        startDate: '2026-07-17',
-        endDate: '2026-07-19',
-        active2026SourceUrl: 'https://inkcarceration.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official 2026 source confirms July 17-19, 2026 in Mansfield, Ohio; date queue item resolved, vendor/labor route still open.',
-        nextResearchActions: ['verify DWP vendor stack','verify Mansfield/Ohio labor route']
-      },
-      {
-        id: 'portola-2026',
-        active2026SourceUrl: 'https://portolamusicfestival.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official Portola source attached; continue SF labor/local route and LED/audio vendor research.'
-      },
-      {
-        id: 'edc-orlando-2026',
-        active2026SourceUrl: 'https://orlando.electricdaisycarnival.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_source_lead_needs_direct_page_review',
-        researchQueueNote: 'Official EDC Orlando site attached as active source lead; direct page verification still needed before changing dates or venue.',
-        nextResearchActions: ['verify Orlando labor route','verify Insomniac vendors','confirm official 2026 date page','research lodging/per diem potential']
-      },
-      {
-        id: 'railbird-2026',
-        active2026SourceUrl: 'https://railbirdfest.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official Railbird site attached; public listings indicate June 6-7, 2026 at The Red Mile. Continue Red Mile site vendor and Kentucky labor route research.'
-      },
-      {
-        id: 'oceans-calling-2026',
-        active2026SourceUrl: 'https://www.oceanscallingfestival.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_source_lead_with_public_media_confirmation',
-        researchQueueNote: 'Official Oceans Calling site attached and public media confirms September 25-27, 2026 at Ocean City Inlet Beach; continue coastal site ops and Maryland labor route research.'
-      },
-      {
-        id: 'roots-picnic-2026',
-        active2026SourceUrl: 'https://rootspicnic.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_source_lead_with_public_media_confirmation',
-        researchQueueNote: 'Official Roots Picnic site attached and public media confirms May 30-31, 2026 at Belmont Plateau; continue Philadelphia labor/local route and vendor stack research.'
-      },
-      {
-        id: 'iii-points-2026',
-        active2026SourceUrl: 'https://www.iiipoints.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official III Points source confirms III Points 2026, Mana Wynwood, and October 16-17. Continue Mana Wynwood labor route and stage/vendor research.'
-      },
-      {
-        id: 'hard-summer-2026',
-        active2026SourceUrl: 'https://www.hardsummer.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official HARD Summer source confirms August 1-2, 2026 Los Angeles and tickets on sale. Continue Hollywood Park/Inglewood labor route, Insomniac vendor stack, and parking/site ops vendor research.'
-      },
-      {
-        id: 'beyond-wonderland-socal-2026',
-        active2026SourceUrl: 'https://socal.beyondwonderland.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_source_conflicting_year_text',
-        researchQueueNote: 'Official Beyond SoCal page is active but has conflicting 2026/2027 page text; do not change existing 2026 dates until directly verified. Continue NOS labor route and Insomniac vendor research.'
-      },
-      {
-        id: 'north-coast-2026',
-        active2026SourceUrl: 'https://northcoastfestival.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official North Coast source confirms 2026 festival/lineup and Labor Day Weekend positioning. Continue SeatGeek Stadium site vendor and Chicago-area labor route research.'
-      },
-      {
-        id: 'rock-fest-wisconsin-2026',
-        active2026SourceUrl: 'https://rock-fest.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official Rock Fest source confirms July 16-18, 2026, 5 stages, 80+ bands, and 7,500 campsites. Continue camping/lodging route, Wisconsin labor route, and rock festival vendor stack research.'
-      },
-      {
-        id: 'hulaween-2026',
-        active2026SourceUrl: 'https://en.wikipedia.org/wiki/Suwannee_Hulaween',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'public_background_source_only',
-        researchQueueNote: 'Public background source confirms Hulaween as a Live Oak / Spirit of the Suwannee Music Park camping festival, but 2026 official source was not reachable in this pass. Keep official 2026 verification open.'
-      },
-      {
-        id: 'high-sierra-2026',
-        active2026SourceUrl: 'https://www.highsierramusic.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official High Sierra source attached and public reporting confirms July 2-5, 2026 at Nevada County Fairgrounds in Grass Valley. Continue new-venue staffing and local labor route research.'
-      },
-      {
-        id: 'm3f-2026',
-        active2026SourceUrl: 'https://www.m3ffest.com/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'official_public_source_attached',
-        researchQueueNote: 'Official M3F source confirms Steele Indian School Park, March 6-7, Phoenix AZ. Continue Phoenix labor route, site ops vendors, and apply/contact route research.'
-      },
-      {
-        id: 'shaky-knees-2026',
-        startDate: '2026-09-18',
-        endDate: '2026-09-20',
-        venue: 'Piedmont Park',
-        active2026SourceUrl: 'https://pitchfork.com/news/turnstile-geese-pavement-booked-for-atlanta-festival-shaky-knees/',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'public_media_source_attached',
-        researchQueueNote: 'Public media confirms Shaky Knees 2026 at Piedmont Park from September 18-20, 2026; official site direct verification remains useful before vendor/labor-route work.',
-        nextResearchActions: ['verify Atlanta labor/local route','verify vendor stack','verify official Shaky Knees source page']
-      },
-      {
-        id: 'sick-new-world-2026',
-        startDate: '2026-04-25',
-        endDate: '2026-04-25',
-        active2026SourceUrl: 'https://en.wikipedia.org/wiki/Sick_New_World',
-        active2026CheckedDate: '2026-06-23',
-        sourceQuality: 'public_listing_source_attached',
-        researchQueueNote: 'Public listings show Sick New World Las Vegas on April 25, 2026 at Las Vegas Festival Grounds; verify official festival page before vendor/labor-route research.',
-        nextResearchActions: ['verify Las Vegas labor route','verify rock festival vendor stack','verify official Sick New World source page']
-      }
-    ]
+    researchQueueUpdates: [],
+    rollover2027Updates: [
+      {id:'coachella-2026',month:4,startDate:'2027-04-09',endDate:'2027-04-18',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'public_2027_cycle_attached',active2026SourceUrl:'https://www.coachella.com/',publicCycleYear:2027,rolloverNote:'Rolled forward to Coachella 2027 weekends: Apr 9-11 and Apr 16-18, 2027.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']},
+      {id:'ultra-miami-2026',month:3,startDate:'2027-03-26',endDate:'2027-03-28',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'official_2027_cycle_attached',active2026SourceUrl:'https://ultramusicfestival.com/',publicCycleYear:2027,rolloverNote:'Official Ultra page shows March 26-28, 2027 at Bayfront Park.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']},
+      {id:'edc-las-vegas-2026',month:5,startDate:'2027-05-14',endDate:'2027-05-23',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'official_2027_cycle_attached',active2026SourceUrl:'https://lasvegas.edc.com/',publicCycleYear:2027,rolloverNote:'Official EDC Las Vegas page shows 2027 weekends: May 14-16 and May 21-23, 2027.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']},
+      {id:'welcome-to-rockville-2026',month:5,startDate:'2027-05-06',endDate:'2027-05-09',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'official_2027_cycle_attached',active2026SourceUrl:'https://welcometorockville.com/',publicCycleYear:2027,rolloverNote:'Official Welcome to Rockville page shows May 6-9, 2027 at Daytona International Speedway.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']},
+      {id:'beyond-wonderland-socal-2026',month:3,startDate:'2027-03-26',endDate:'2027-03-27',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'official_2027_cycle_attached',active2026SourceUrl:'https://socal.beyondwonderland.com/',publicCycleYear:2027,rolloverNote:'Official Beyond SoCal page shows March 26-27, 2027 at NOS Events Center.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']},
+      {id:'bottlerock-napa-2026',month:5,startDate:'2027-05-28',endDate:'2027-05-30',active2026Status:'rolled_to_2027_public_cycle',active2026CheckedDate:generatedAt,sourceQuality:'public_2027_cycle_attached',active2026SourceUrl:'https://www.bottlerocknapavalley.com/',publicCycleYear:2027,rolloverNote:'Public reporting says BottleRock announced May 28-30, 2027 at Napa Valley Expo.',nextResearchActions:['verify public 2027 work routes','verify production vendor stack','verify labor pathway']}
+    ],
+    rollover2027PendingIds: ['stagecoach-2026','bonnaroo-2026','cma-fest-2026','electric-forest-2026','summerfest-2026','governors-ball-2026','sonic-temple-2026','kilby-block-party-2026','railbird-2026','roots-picnic-2026','m3f-2026','treefort-2026','okechobee-2026','new-orleans-jazz-heritage-2026','country-thunder-arizona-2026','country-thunder-florida-2026','breakaway-dallas-2026','breakaway-tampa-2026','breakaway-arizona-2026','breakaway-atlanta-2026','breakaway-ohio-2026','breakaway-minnesota-2026']
   };
 
-  function patchOne(record, update){
-    if(!record || !update) return;
-    Object.keys(update).forEach(function(key){
-      if(key === 'id') return;
-      record[key] = update[key];
-    });
-    if(!record.intelligence) record.intelligence = {};
-    if(!Array.isArray(record.intelligence.publicSources)) record.intelligence.publicSources = [];
-    if(update.active2026SourceUrl && !record.intelligence.publicSources.some(function(source){return source.url === update.active2026SourceUrl;})){
-      record.intelligence.publicSources.push({label:'active 2026 public source',url:update.active2026SourceUrl});
-    }
-  }
-
-  function applyResearchQueueUpdates(){
-    var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY || {};
-    var updates = taxonomy.researchQueueUpdates || [];
-    var pools = [window.RESOURCE_OPPORTUNITIES, window.scopedOpportunities];
-    pools.forEach(function(pool){
-      if(!Array.isArray(pool)) return;
-      updates.forEach(function(update){
-        var record = pool.find(function(item){return item && item.id === update.id;});
-        patchOne(record, update);
-      });
-    });
-    window.PRODUCTION_ATLAS_RESEARCH_QUEUE_UPDATES = updates;
-  }
-
-  function applyOpportunityTaxonomy(){
-    applyResearchQueueUpdates();
-    var taxonomy = window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY;
-    var app = document.querySelector('#app');
-    var page = document.body ? document.body.dataset.page : '';
-    // taxonomy-page-note class is retained for validation and optional internal debugging only.
-    // The public Analytics page now renders its own festival-planning dashboard, so the internal
-    // taxonomy/research-queue banners are no longer shown in the public UI.
-    if(window.PRODUCTION_ATLAS_SHOW_TAXONOMY_NOTE && app && page === 'analytics' && !app.querySelector('.taxonomy-page-note')){
-      var pageNote = document.createElement('div');
-      pageNote.className = 'notice taxonomy-page-note';
-      pageNote.style.margin = '0 0 16px';
-      pageNote.textContent = 'Taxonomy and route-research source updates are active.';
-      app.insertBefore(pageNote, app.firstChild);
-    }
-    Array.prototype.slice.call(document.querySelectorAll('.card')).forEach(function(card){
-      if(card.dataset.taxonomyNote === 'applied') return;
-      var text = (card.textContent || '').toLowerCase();
-      if(text.indexOf('date:') === -1 && text.indexOf('confidence:') === -1 && text.indexOf('next:') === -1 && text.indexOf('value:') === -1) return;
-      var note = document.createElement('p');
-      note.className = 'sub taxonomy-route-note';
-      note.style.fontSize = '.74rem';
-      note.style.margin = '.45rem 0 0';
-      note.style.color = 'var(--muted)';
-      note.textContent = taxonomy.cardNote;
-      card.appendChild(note);
-      card.dataset.taxonomyNote = 'applied';
-    });
-  }
-
-  window.applyResearchQueueUpdates = applyResearchQueueUpdates;
-  window.applyOpportunityTaxonomy = applyOpportunityTaxonomy;
-  applyResearchQueueUpdates();
-  document.addEventListener('DOMContentLoaded', function(){ setTimeout(applyOpportunityTaxonomy, 0); });
-  document.addEventListener('click', function(){ setTimeout(applyOpportunityTaxonomy, 0); }, true);
+  function parseDate(value){if(!value)return null;var date=new Date(String(value)+'T00:00:00');return isNaN(date.getTime())?null:date;}
+  function pools(){return [window.RESOURCE_OPPORTUNITIES,window.scopedOpportunities].filter(function(pool){return Array.isArray(pool);});}
+  function findRecords(id){var found=[];pools().forEach(function(pool){pool.forEach(function(record){if(record&&record.id===id&&found.indexOf(record)===-1)found.push(record);});});return found;}
+  function mergePublicSource(record,url,label){if(!record||!url)return;if(!record.intelligence)record.intelligence={};if(!Array.isArray(record.intelligence.publicSources))record.intelligence.publicSources=[];if(!record.intelligence.publicSources.some(function(source){return source.url===url;})){record.intelligence.publicSources.push({label:label||'2027 rollover public source',url:url});}}
+  function patchOne(record,update){if(!record||!update)return;Object.keys(update).forEach(function(key){if(key!=='id')record[key]=update[key];});record.visibleInActive2026View=true;record.rolloverCutoffDate=cutoffDate;mergePublicSource(record,update.active2026SourceUrl,'2027 rollover public source');}
+  function markPending(record){if(!record)return;var start=parseDate(record.startDate),cutoff=parseDate(cutoffDate);if(start&&cutoff&&start.getTime()>cutoff.getTime())return;record.visibleInActive2026View=false;record.active2026Status='rolled_to_2027_dates_pending_public_verification';record.active2026CheckedDate=generatedAt;record.publicCycleYear=2027;record.rolloverCutoffDate=cutoffDate;record.rolloverNote='2026 festival window is no longer active for public planning. Keep out of active view until a public 2027 date/source is verified.';record.nextResearchActions=['verify public 2027 date/source','update date window and source URL if public source is available'];}
+  function applyResearchQueueUpdates(){window.PRODUCTION_ATLAS_RESEARCH_QUEUE_UPDATES=window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY.researchQueueUpdates;}
+  function applyOpportunityRollover2027(){var taxonomy=window.PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY;taxonomy.rollover2027Updates.forEach(function(update){findRecords(update.id).forEach(function(record){patchOne(record,update);});});taxonomy.rollover2027PendingIds.forEach(function(id){findRecords(id).forEach(markPending);});window.PRODUCTION_ATLAS_2027_ROLLOVER={generatedAt:generatedAt,cutoffDate:cutoffDate,verifiedIds:taxonomy.rollover2027Updates.map(function(item){return item.id;}),pendingIds:taxonomy.rollover2027PendingIds.slice()};}
+  function applyOpportunityTaxonomy(){applyResearchQueueUpdates();applyOpportunityRollover2027();}
+  window.applyResearchQueueUpdates=applyResearchQueueUpdates;
+  window.applyOpportunityRollover2027=applyOpportunityRollover2027;
+  window.applyOpportunityTaxonomy=applyOpportunityTaxonomy;
+  applyOpportunityTaxonomy();
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(applyOpportunityTaxonomy,0);});
+  document.addEventListener('click',function(){setTimeout(applyOpportunityTaxonomy,0);},true);
 })();
