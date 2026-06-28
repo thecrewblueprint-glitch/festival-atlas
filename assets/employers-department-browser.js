@@ -83,8 +83,8 @@
     var f=filters();
     var all=employers();
     var filtered=all.filter(matches).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
-    var intro='<h2>Employers by Department</h2>'+ 
-      '<p class="lead">Use the Department dropdown to separate public employer and vendor routes by the production departments they hire in. Department fit is a research aid; it does not confirm that a company is working a specific festival.</p>';
+    var intro='<h2>Employers by Department</h2>'+
+      '<p class="lead">These are public company and vendor routes connected to the live-event production industry, organized by the production departments they hire in. They may or may not be tied to a specific festival — department fit is an industry research aid, not confirmation that a company is working any particular event.</p>';
     if(!filtered.length){app.innerHTML=intro+'<p>No employer routes match the current filters.</p>';return;}
     if(f.department){
       app.innerHTML=intro+'<h3>'+esc(branchName(f.department))+'</h3><div class="grid">'+filtered.map(function(employer){return employerCard(employer,branchName(f.department))}).join('')+'</div>';
