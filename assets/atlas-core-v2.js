@@ -22,9 +22,6 @@
   var iatseLocals=[];
   var branchIndex={records:[],byKey:{}};
   var branchDataReady=false;
-  var _leafMap=null;
-  var _leafLayer=null;
-  var OPP_COORDS=window.RESOURCE_OPP_COORDS||{};
 
   var SCH_KEY='production-atlas-schedule-v1';
   function getSchedule(){try{return JSON.parse(localStorage.getItem(SCH_KEY)||'[]')}catch(e){return [];}}
@@ -179,16 +176,6 @@
     return sortOpportunities(list);
   }
 
-  function activeEmployers(){
-    var filter=filterValues();
-    return employers.filter(function(employer){
-      return (!filter.q||text(employer).includes(filter.q)||(employer.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
-        &&(!filter.branch||(employer.departments||[]).includes(filter.branch))
-        &&(!filter.region||String(employer.region||'').includes(filter.region)||employer.region===filter.region)
-        &&(!filter.type||employer.type===filter.type);
-    });
-  }
-
   function activeLocals(){
     var filter=filterValues();
     return iatseLocals.filter(function(local){
@@ -241,18 +228,6 @@
       '</article>';
   }
 
-  function employerCard(employer){
-    var deptNames=(employer.departments||[]).slice(0,7).map(branchName).join(', ');
-    var hasApply=!!(employer.links&&(employer.links.apply||employer.links.careers));
-    return '<article class="card click" onclick="openEmployer(\''+esc(employer.id)+'\')">'+
-      '<h3>'+esc(employer.name)+'</h3>'+
-      '<div class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</div>'+
-      (deptNames?'<p><b>Departments:</b> '+esc(deptNames)+'</p>':'')+
-      '<p>'+esc(employer.bestUse||'U.S. employer/vendor research lead.')+'</p>'+
-      '<p>'+plainLink(hasApply?'Apply / careers':'Company website / contact',bestLink(employer))+'</p>'+
-      '</article>';
-  }
-
   function iatseCard(local){
     var craft=local.craft||'';
     var states=(local.states||[]).join(', ');
@@ -263,59 +238,6 @@
       (states?'<p><b>States:</b> '+esc(states)+'</p>':'')+
       '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
       '</article>';
-  }
-
-  function renderMap(){
-    var el=$('#app');
-    if(!el)return;
-    var L=window.L;
-    if(!L){el.innerHTML='<h2>Festival Map</h2><p class="lead">Leaflet map library not available on this page.</p>';return;}
-    if(!_leafMap){
-      el.innerHTML='<h2>Festival Map</h2>'+
-        '<p class="lead" style="margin:0 0 14px">Active 2026 festivals by location. Click a marker for dates and employer routes.</p>'+
-        '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
-        '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
-        '<div id="mapList"></div>';
-      _leafMap=L.map('mapView').setView([38,-96],4);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom:18
-      }).addTo(_leafMap);
-      _leafLayer=L.layerGroup().addTo(_leafMap);
-    } else {
-      _leafLayer.clearLayers();
-      _leafMap.invalidateSize();
-    }
-    var data=activeOpportunities();
-    var placed=[];
-    data.forEach(function(opportunity){
-      var coords=OPP_COORDS[opportunity.id];
-      if(!coords)return;
-      placed.push(opportunity);
-      var mapDates=festivalDates(opportunity);
-      var marker=L.circleMarker(coords,{radius:9,fillColor:'#f5b400',color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
-      marker.bindPopup(
-        '<div style="min-width:190px">'+
-        '<b style="font-size:.95rem">'+esc(opportunity.name)+'</b><br>'+
-        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+(mapDates?' • '+esc(mapDates):'')+'</span><br>'+
-        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open employer routes ↗</button></p>'+
-        '</div>',
-        {maxWidth:280}
-      );
-      _leafLayer.addLayer(marker);
-    });
-    var noCoord=data.filter(function(o){return OPP_COORDS[o.id]===null||OPP_COORDS[o.id]===undefined;});
-    var meta=$('#mapMeta');
-    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market / unmapped':'');
-    var list=$('#mapList');
-    if(list){
-      if(!data.length){list.innerHTML='<p>No opportunities match the current filter.</p>';}
-      else{
-        list.innerHTML=
-          (placed.length?'<h3 style="margin:18px 0 10px">Mapped events ('+placed.length+')</h3><div class="grid">'+placed.map(opportunityCard).join('')+'</div>':'')+
-          (noCoord.length?'<h3 style="margin:22px 0 10px">Multi-market / unmapped ('+noCoord.length+')</h3><p class="sub" style="margin:0 0 10px;font-size:.82rem">These events span multiple cities or lack a single map coordinate.</p><div class="grid">'+noCoord.map(opportunityCard).join('')+'</div>':'');
-      }
-    }
   }
 
   function renderSchedule(){
@@ -437,42 +359,10 @@
       '</div>';
   }
 
-  function renderCalendar(){
-    var data=activeOpportunities();
-    var el=$('#app');
-    if(!el)return;
-    el.innerHTML='<h2>Festival Calendar</h2><p class="lead">Month-by-month view of active 2026 festivals.</p><div class="calendar">'+MONTHS.map(function(month,index){
-      var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1}).slice().sort(function(a,b){
-        var ad=parseDate(a.startDate),bd=parseDate(b.startDate);
-        if(ad&&bd){var diff=ad.getDate()-bd.getDate();if(diff)return diff;}
-        else if(ad&&!bd)return -1;
-        else if(!ad&&bd)return 1;
-        return a.name<b.name?-1:a.name>b.name?1:0;
-      });
-      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){
-        var calDepts=(opportunity.departments||[]).slice(0,3).map(branchName);
-        var calExtra=Math.max(0,(opportunity.departments||[]).length-3);
-        var calDates=festivalDates(opportunity);
-        return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-          '<b style="display:block">'+esc(opportunity.name)+'</b>'+
-          '<small>'+esc(opportunity.city)+', '+esc(opportunity.state)+'</small>'+
-          (calDates?'<div style="margin-top:3px;font-size:.69rem;color:var(--muted)">'+esc(calDates)+'</div>':'')+
-          (calDepts.length?'<div style="margin-top:4px;font-size:.69rem;color:var(--muted)">'+esc(calDepts.join(' \xb7 ')+(calExtra?' +'+calExtra:''))+'</div>':'')+
-          '</div>';
-      }).join(''):'<div class="sub">No festivals in current filter.</div>')+'</div></div>';
-    }).join('')+'</div>';
-  }
-
   function renderOpportunities(){
     var el=$('#app');
     var data=activeOpportunities();
     if(el)el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
-  }
-
-  function renderEmployers(){
-    var el=$('#app');
-    var data=activeEmployers();
-    if(el)el.innerHTML='<h2>United States Employer and Vendor Leads</h2><p class="lead">General public employer and vendor routes. These are not event-specific confirmations.</p><div class="grid">'+(data.length?data.map(employerCard).join(''):'<p>No employer leads match.</p>')+'</div>';
   }
 
   function renderIatse(){
@@ -582,9 +472,16 @@
       '</tbody></table></div>';
   }
 
+  // Pages whose #app is fully owned by a dedicated enhancement script:
+  // calendar -> calendar-interactive.js, map -> map-page-static.js,
+  // employers -> employers-department-browser.js. Core must not render or
+  // re-render these; otherwise its filter listeners race with and overwrite
+  // the enhancement view after a search/filter change.
+  var EXTERNAL_RENDER_PAGES={calendar:1,map:1,employers:1};
   function renderPage(){
     var page=document.body.dataset.page;
-    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap,schedule:renderSchedule}[page]||renderHome)();
+    if(EXTERNAL_RENDER_PAGES[page])return;
+    ({home:renderHome,opportunities:renderOpportunities,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,schedule:renderSchedule}[page]||renderHome)();
   }
 
   // Public employer-route block for one production branch. Shows company names + apply/contact
