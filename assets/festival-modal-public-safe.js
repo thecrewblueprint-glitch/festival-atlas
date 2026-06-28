@@ -29,7 +29,7 @@
     note.className='notice event-route-safety-note';
     note.innerHTML=kept
       ? '<b>Route note:</b> only confirmed public event-specific company routes are shown here. General employer leads remain on the Employers page.'
-      : '<b>No confirmed public employer/vendor route listed for this festival yet.</b> General company leads are kept on the Employers page and are not shown here unless a public source ties them to this specific event.';
+      : '<b>No confirmed public employer/vendor route listed for this festival yet.</b> General company leads are kept on the Employers page and are not shown here unless a public source ties them to this specific event. If you have information that can help, you can submit it on the <a href="contribute.html" onclick="event.stopPropagation()">Contribute page</a>.';
     heading.insertAdjacentElement('afterend',note);
   }
 
