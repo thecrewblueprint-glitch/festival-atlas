@@ -1,19 +1,17 @@
 # Project Chat Group Instructions — Production Atlas / Festival Atlas
 
 Generated: 2026-06-22  
+Updated: 2026-06-27  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
-Primary working branch: `research-version`  
-Purpose: Give every new AI chat/session a standard startup routine so Aaron does not have to re-explain the project.
+Primary working branch: `research-version`
 
-## 1. Instruction to Every New AI Chat
+## Core startup rule
 
-When Aaron opens a new chat about Production Atlas, Festival Atlas, the work research app, or this repository, do not ask him to restate the project context first.
-
-Instead, immediately connect to the repository context and catch up from repo-visible documentation.
+When Aaron opens a new chat about Production Atlas, Festival Atlas, the work research app, or this repository, do not ask him to restate the project context first. Connect to the repository context and catch up from repo-visible documentation.
 
 The repository is the shared memory.
 
-## 2. Repository to Use
+## Repository to use
 
 ```text
 Repository: thecrewblueprint-glitch/festival-atlas
@@ -21,12 +19,7 @@ Primary branch: research-version
 Default branch main is not the current working state unless Aaron explicitly says to use main.
 ```
 
-If using GitHub tools, fetch from:
-
-```text
-thecrewblueprint-glitch/festival-atlas
-ref: research-version
-```
+If using GitHub tools, fetch from `ref: research-version`.
 
 If using a local terminal, run:
 
@@ -36,16 +29,16 @@ git checkout research-version
 git pull origin research-version
 ```
 
-## 3. First Files to Read
+## First files to read
 
-Read these first, in this order:
+Read these first, in order:
 
 ```text
 1. ai-communication/PROJECT_CHAT_GROUP_INSTRUCTIONS.md
 2. ai-communication/AI_COLLABORATION_PROTOCOL.md
 3. ai-communication/PRODUCT_ROADMAP.md
-4. ai-communication/2026-06-22-chatgpt-to-claude-current-state.md
-5. README.md
+4. README.md
+5. ROADMAP.md
 6. package.json
 7. data/packages/branch-research-manifest.js
 8. assets/atlas-core-v2.js
@@ -53,33 +46,29 @@ Read these first, in this order:
 10. tools/validate-branch-research-packages.js
 ```
 
-Then inspect task-specific files only as needed.
+Then inspect task-specific files only as needed. Do not deep-read or cache the full `research/` archive unless Aaron asks for research restructuring, source verification, report conversion, or archive cleanup.
 
-Do not deep-read or cache the entire `research/` archive unless Aaron asks for research restructuring, source verification, or report conversion.
+## Current project summary
 
-## 4. Current Project Summary
-
-Production Atlas / Festival Atlas is Aaron's static work research app for scouting live-event production opportunities.
+Production Atlas / Festival Atlas is Aaron's static public-safe work research app for scouting live-event production opportunities.
 
 It should help answer:
 
 ```text
 Where is the work?
 When is it happening?
-Which production departments does it touch?
+Who publicly produces, promotes, operates, or routes the work?
 Who are the public employer/vendor/labor-route leads?
-What action should Aaron take next?
+Which source, map, calendar, employer, or schedule page should Aaron review next?
 ```
 
-The current goal is not to build a backend or future platform. The current goal is to make the static work research app function well.
+The current goal is to make the static work research app function well, not to build a backend or future platform.
 
-## 5. Current App Boundary
-
-The app is currently:
+## Current app boundary
 
 ```text
 Static GitHub Pages app
-Public-safe research dashboard
+Public-safe work research dashboard
 No backend
 No login
 No database
@@ -90,28 +79,42 @@ No scraping/network automation
 
 Do not introduce backend/auth/private workflow/payment/scraping architecture unless Aaron explicitly opens that topic.
 
-## 6. Current Roadmap Scope
+## Current public UI scope
 
-The active roadmap is:
+The current public filter/search direction is intentionally narrow:
 
 ```text
+Primary public filters: date / month and producer / promoter.
+```
+
+Do not reintroduce department, region, state, employer type, confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filters as primary public filters unless Aaron explicitly reopens that UX decision.
+
+Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
+
+## Current roadmap scope
+
+The active roadmaps are:
+
+```text
+README.md
+ROADMAP.md
 ai-communication/PRODUCT_ROADMAP.md
 ```
 
-It is intentionally limited to making the current work research app function.
+They are intentionally limited to making the current static work research app function.
 
-Roadmap stages:
+Current stages:
 
 ```text
-Stage 1 — Stabilize the app
-Stage 2 — Make the dashboard useful for daily work research
-Stage 3 — Make opportunity data clearer and more sortable
+Stage 1 — Stabilize pages, docs, runtime, and validation
+Stage 2 — Make the public dashboard useful for daily work research
+Stage 3 — Make public opportunity data clearer and safer
 Stage 4 — Make planning views useful
 ```
 
-Do not expand the roadmap into backend architecture, private user systems, LMS integration, or general business planning unless Aaron asks.
+Do not expand the roadmap into backend architecture, private user systems, LMS integration, scraping automation, Firecrawl restoration, or general business planning unless Aaron asks.
 
-## 7. Collaboration Protocol
+## Collaboration protocol
 
 The active collaboration protocol is:
 
@@ -124,19 +127,16 @@ Core rules:
 ```text
 Repo-visible files beat chat memory.
 research-version beats main unless Aaron says otherwise.
+README and current roadmaps beat older handoffs.
 Manifest beats fallback arrays.
 Validation beats assumption.
 Public safety beats convenience.
 Small verified updates beat large undocumented changes.
 ```
 
-Every meaningful AI update should leave a repo-visible handoff in:
+Routine commit notes belong in `ai-communication/collaboration-log/`. Major current-state handoffs and decision records belong in `ai-communication/` root.
 
-```text
-ai-communication/
-```
-
-## 8. Public Safety Rules
+## Public safety rules
 
 Do not publish or render:
 
@@ -153,16 +153,7 @@ client-sensitive information
 private referrals
 ```
 
-Public app may show:
-
-```text
-official/public source links
-general confidence labels
-public route notes
-public-safe employer/vendor leads
-next action notes
-human verification language
-```
+Public app may show official/public source links on `sources.html`, public producer/promoter/operator names, public route notes, public-safe employer/vendor leads, public apply/careers/contact/homepage routes, and plain human-verification language where needed.
 
 If uncertain, use language like:
 
@@ -170,26 +161,13 @@ If uncertain, use language like:
 Unknown publicly. Human verification needed.
 ```
 
-## 9. Source Link Rule
+## Source link rule
 
-Source links belong on:
+Source links belong on `sources.html`.
 
-```text
-sources.html
-```
+Do not put raw source links inside opportunity popups, branch popups, map popups, or schedule cards. Sources should remain centralized for auditability and public-safety control.
 
-Do not put raw source links inside:
-
-```text
-opportunity popups
-branch popups
-map popups
-schedule cards
-```
-
-Sources should remain centralized for auditability and public-safety control.
-
-## 10. Manifest Rule
+## Manifest rule
 
 Branch research packages are loaded through:
 
@@ -207,11 +185,12 @@ When adding or editing branch research packages:
 5. Run validation.
 ```
 
-## 11. Validation Commands
+## Validation commands
 
 Use these commands when relevant:
 
 ```bash
+npm run validate:data
 npm run validate:branch-research
 npm run validate:static-app
 npm run validate:all
@@ -223,23 +202,23 @@ For documentation-only changes, validation may be skipped, but say clearly:
 Validation not run; documentation-only change.
 ```
 
-For code/data changes, do not claim completion unless validation was run or the inability to run it is documented.
+For code/data/page changes, do not claim completion unless validation was run or the inability to run it is documented.
 
-## 12. How a New Chat Should Start
+## How a new chat should start
 
-A new assistant session should do this:
+A new assistant session should:
 
 ```text
-1. Identify the task Aaron is asking for.
-2. Use the GitHub repo and research-version branch as current context.
-3. Read the project chat instructions, collaboration protocol, product roadmap, latest current-state handoff, README, and relevant files.
-4. Confirm whether the task is docs, code, data, research, validation, or planning.
+1. Identify Aaron's requested task.
+2. Use GitHub repo and research-version branch as current context.
+3. Read the project instructions, collaboration protocol, product roadmap, README, root ROADMAP, and relevant files.
+4. Confirm whether the task is docs, code, data, research, validation, planning, legal/policy page, or public UI page work.
 5. Work from current repo files, not stale chat memory.
 6. If making changes, commit them to research-version unless Aaron gives a different branch instruction.
-7. Leave a handoff in ai-communication/ after meaningful changes.
+7. Leave a handoff or collaboration log after meaningful changes.
 ```
 
-## 13. If Claude or Another Assistant Cannot See a File
+## If Claude or another assistant cannot see a file
 
 Most likely cause:
 
@@ -262,38 +241,11 @@ Then check:
 cat ai-communication/PROJECT_CHAT_GROUP_INSTRUCTIONS.md
 cat ai-communication/PRODUCT_ROADMAP.md
 cat ai-communication/AI_COLLABORATION_PROTOCOL.md
+cat README.md
+cat ROADMAP.md
 ```
 
-## 14. Current Claude Work Direction
-
-Claude has been directed to commence early roadmap steps.
-
-Claude should work in stages, not ship everything at once:
-
-```text
-Stage 1 — Stabilize the app first.
-Stage 2 — Improve daily work research usability.
-Stage 3 — Clarify opportunity data.
-Stage 4 — Improve planning views.
-```
-
-After each stage, Claude should create:
-
-```text
-ai-communication/YYYY-MM-DD-claude-stage-N-update.md
-```
-
-Each stage handoff should include:
-
-```text
-files changed
-validation command/result
-what was fixed
-what still needs work
-next recommended roadmap step
-```
-
-## 15. What New Chats Should Not Do
+## What new chats should not do
 
 Do not:
 
@@ -305,31 +257,21 @@ Reintroduce Firecrawl or scraping automation.
 Add backend/login/database/private workflow scope to this app roadmap.
 Publish private/sensitive data.
 Move source links into popups.
+Reintroduce public confidence badges, value-tier labels, public research queue panels, or broad public filter bars.
 Make large undocumented changes.
 Skip handoff notes after meaningful repo updates.
 ```
 
-## 16. Standard Opening Response for New Chats
+## Standard opening response for new chats
 
-When Aaron says something like:
-
-```text
-connect to the Production Atlas repo
-pick up the work research app
-continue the Festival Atlas roadmap
-Claude made updates, catch up
-```
-
-A good assistant response is:
+When Aaron says something like `connect to the Production Atlas repo`, `pick up the work research app`, `continue the Festival Atlas roadmap`, or `Claude made updates, catch up`, a good assistant response is:
 
 ```text
-I’ll connect to the Production Atlas repository on research-version, read the project chat instructions, collaboration protocol, roadmap, current-state handoff, README, and the task-specific files. I’ll avoid the heavy research archive unless this task requires it, then I’ll report the current state and next step.
+I’ll connect to the Production Atlas repository on research-version, read the project chat instructions, collaboration protocol, roadmap, README, and task-specific files. I’ll avoid the heavy research archive unless this task requires it, then I’ll report the current state and next step.
 ```
 
 Then actually perform the repo catch-up.
 
-## 17. Final Rule
+## Final rule
 
-Aaron should not have to rebuild context manually.
-
-Every assistant must treat the repo documentation as the starting context and keep it updated enough that the next assistant can continue without requiring Aaron to repeat the project history.
+Aaron should not have to rebuild context manually. Every assistant must treat the repo documentation as the starting context and keep it updated enough that the next assistant can continue without requiring Aaron to repeat the project history.
