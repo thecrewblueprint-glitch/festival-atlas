@@ -4,64 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Production Atlas — Map</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="assets/atlas.css">
-</head>
+  <link rel="stylesheet" href="assets/atlas.css"><link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Static clickable festival opportunity map by city, state, month, and public work route for travel and scheduling planning."><meta property="og:title" content="Production Atlas — Opportunity Map"><meta property="og:description" content="Map festival opportunities by location, month, and public route."><meta property="og:url" content="https://atlas.thecrewblueprint.com/map.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Production Atlas"><link rel="canonical" href="https://atlas.thecrewblueprint.com/map.html"></head>
 <body data-page="map">
-  <header class="hero">
-    <div class="wrap">
-      <div class="eyebrow">Production Atlas</div>
-      <h1>Opportunity Map</h1>
-      <p>Active 2026 work targets by confirmed location. Filter by state or accommodation status. Click any marker to open details.</p>
-    </div>
-  </header>
-  <nav class="nav">
-    <div class="wrap">
-      <div class="navInner">
-        <a href="index.html">Home</a>
-        <a href="guide.html">Guide</a>
-        <a href="calendar.html">Calendar</a>
-        <a href="opportunities.html">Opportunities</a>
-        <a href="branches.html">Branches</a>
-        <a href="employers.html">Employers</a>
-        <a href="iatse.html">IATSE Locals</a>
-        <a href="matrix.html">Matrix</a>
-        <a href="analytics.html">Analytics</a>
-        <a href="sources.html">Sources</a>
-        <a class="active" href="map.html">Map</a>
-        <a href="schedule.html">Schedule</a>
-      </div>
-      <div id="filters" class="filters filters-compact">
-        <input id="q" placeholder="Search festival, city, state...">
-        <select id="stateFilter"><option value="">All states</option></select>
-        <select id="accommodationFilter">
-          <option value="">All accommodations</option>
-          <option value="lodging_possible">Lodging / camping possible</option>
-          <option value="camping">On-site camping</option>
-          <option value="lodging_research">Accommodation research priority</option>
-          <option value="travel_possible">Travel paid possible</option>
-          <option value="per_diem_possible">Per diem possible</option>
-        </select>
-        <button class="btn" id="reset">Reset</button>
-      </div>
-    </div>
-  </nav>
-  <main class="wrap page" id="app"></main>
-  <div id="stats" class="hiddenRuntime"></div>
-  <div id="calendarGrid" class="hiddenRuntime"></div>
-  <div id="modal" class="modal">
-    <div class="modalbox">
-      <button class="btn close" onclick="closeModal()">Close</button>
-      <div id="modalContent"></div>
-    </div>
-  </div>
-  <footer class="wrap">Production Atlas map page.</footer>
-  <script src="data/packages/production-branches.js?v=multi1"></script>
-  <script src="data/packages/opportunities-2026.js?v=multi1"></script>
-  <script src="data/packages/us-employers.js?v=multi1"></script>
-  <script src="data/iatse-us-local-directory.js?v=multi1"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="data/packages/opportunity-taxonomy.js?v=taxonomy1"></script><script src="data/packages/research-queue-route-updates.js?v=route1"></script><script src="assets/atlas-core-v2.js?v=multi3"></script>
-  <script src="assets/approx-date-labels.js?v=approx1"></script>
-</body>
-</html>
+  <header class="hero"><div class="wrap"><div class="eyebrow">Production Atlas</div><h1>Opportunity Map</h1><p>Map work targets by location so contractors can plan travel, routing, and nearby opportunities.</p></div></header>
+  <nav class="nav"><div class="wrap"><div class="navInner"><a href="index.html">Home</a><a href="guide.html">Guide</a><a href="opportunities.html">Opportunities</a><a href="calendar.html">Calendar</a><a class="active" href="map.html">Map</a><a href="employers.html">Employers</a><a href="sources.html">Sources</a></div><div id="filters" class="filters filters-compact"><select id="monthFilter"><option value="">All dates</option></select><button class="btn" id="reset">Reset</button></div></div></nav>
+  <main class="wrap page" id="app"></main><div id="stats" class="hiddenRuntime"></div><div id="calendarGrid" class="hiddenRuntime"></div>
+  <div id="modal" class="modal"><div class="modalbox"><button class="btn close" onclick="closeModal()">Close</button><div id="modalContent"></div></div></div>
+  <footer class="wrap"></footer>
+  <script src="data/packages/production-branches.js?v=multi1"></script><script src="data/packages/opportunities-2026.js?v=multi1"></script><script src="data/packages/us-employers.js?v=multi1"></script><script src="data/iatse-us-local-directory.js?v=multi1"></script><script src="data/packages/opportunity-taxonomy.js?v=taxonomy1"></script><script src="data/packages/research-queue-route-updates.js?v=route1"></script><script src="data/packages/opportunity-coords.js?v=coords2"></script><script src="assets/atlas-core-v2.js?v=multi9"></script><script src="assets/approx-date-labels.js?v=approx1"></script><script src="assets/festival-modal-public-safe.js?v=eventroutes2"></script><script src="assets/map-page-static.js?v=mapstatic4"></script><script src="assets/site-footer.js?v=footer4"></script>
+</body></html>

@@ -21,65 +21,7 @@
   var employers=[];
   var iatseLocals=[];
   var branchIndex={records:[],byKey:{}};
-  var _leafMap=null;
-  var _leafLayer=null;
-  var OPP_COORDS={
-    'coachella-2026':[33.7175,-116.2167],
-    'stagecoach-2026':[33.7205,-116.2167],
-    'ultra-miami-2026':[25.7742,-80.1869],
-    'edc-las-vegas-2026':[36.2719,-115.0104],
-    'bonnaroo-2026':[35.4823,-86.0880],
-    'cma-fest-2026':[36.1627,-86.7816],
-    'electric-forest-2026':[43.5253,-85.8744],
-    'summerfest-2026':[43.0386,-87.9031],
-    'lollapalooza-chicago-2026':[41.8657,-87.6215],
-    'austin-city-limits-2026':[30.2500,-97.7692],
-    'bourbon-and-beyond-2026':[38.2527,-85.7585],
-    'louder-than-life-2026':[38.2557,-85.7585],
-    'welcome-to-rockville-2026':[29.2108,-81.0228],
-    'sonic-temple-2026':[39.9612,-82.9988],
-    'inkcarceration-2026':[40.7586,-82.5154],
-    'aftershock-2026':[38.5816,-121.4944],
-    'governors-ball-2026':[40.7282,-73.7949],
-    'shaky-knees-2026':[33.7490,-84.3880],
-    'portola-2026':[37.7549,-122.3795],
-    'edc-orlando-2026':[28.5383,-81.3792],
-    'hinterland-2026':[41.2850,-93.8046],
-    'new-orleans-jazz-heritage-2026':[29.9858,-90.0908],
-    'bottlerock-napa-2026':[38.2975,-122.2869],
-    'kilby-block-party-2026':[40.7608,-111.8910],
-    'railbird-2026':[38.0406,-84.5037],
-    'oceans-calling-2026':[38.3365,-75.0849],
-    'sea-hear-now-2026':[40.2204,-74.0121],
-    'dreamville-2026':[35.7796,-78.6382],
-    'roots-picnic-2026':[39.9526,-75.1652],
-    'iii-points-2026':[25.7989,-80.2087],
-    'hard-summer-2026':[33.9617,-118.3531],
-    'beyond-wonderland-socal-2026':[34.1083,-117.2898],
-    'north-coast-2026':[41.7442,-87.8087],
-    'breakaway-2026':null,
-    'country-thunder-us-2026':null,
-    'rock-fest-wisconsin-2026':[44.9505,-91.1457],
-    'hulaween-2026':[30.3889,-82.9667],
-    'high-sierra-2026':[39.2191,-121.0608],
-    'm3f-2026':[33.4874,-112.0712],
-    'newport-folk-2026':[41.4901,-71.3128],
-    'newport-jazz-2026':[41.4931,-71.3128],
-    'levitate-2026':[42.0915,-70.7076],
-    'treefort-2026':[43.6150,-116.2023],
-    'capitol-hill-block-party-2026':[47.6130,-122.3198],
-    'pickathon-2026':[45.4426,-122.5271],
-    'telluride-bluegrass-2026':[37.9375,-107.8123],
-    'floydfest-2026':[37.0454,-80.0401],
-    'rocklahoma-2026':[36.3095,-95.3164],
-    'lights-all-night-2026':[32.7767,-96.7970],
-    'countdown-nye-2026':[34.1113,-117.2898],
-    'dreamstate-socal-2026':[33.7701,-118.1937],
-    'crssd-2026':[32.7157,-117.1611],
-    'okechobee-2026':[27.2436,-80.8298],
-    'sick-new-world-2026':[36.1699,-115.1398],
-    'levitation-austin-2026':[30.2672,-97.7431]
-  };
+  var branchDataReady=false;
 
   var SCH_KEY='production-atlas-schedule-v1';
   function getSchedule(){try{return JSON.parse(localStorage.getItem(SCH_KEY)||'[]')}catch(e){return [];}}
@@ -92,18 +34,61 @@
   function $$(selector){return Array.prototype.slice.call(document.querySelectorAll(selector))}
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
   function norm(value){return String(value||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-  function label(value){return String(value||'unknown').replaceAll('_',' ')}
   function text(obj){return JSON.stringify(obj||{}).toLowerCase()}
-  function valueTierLabel(score){var s=Number(score||0);if(s>=80)return 'Priority travel-work target';if(s>=60)return 'Strong opportunity';if(s>=40)return 'Track / research further';if(s>=20)return 'Local or speculative';return 'Low current value';}
-  function valueTierClass(score){var s=Number(score||0);if(s>=80)return 'vtier-priority';if(s>=60)return 'vtier-strong';if(s>=40)return 'vtier-track';if(s>=20)return 'vtier-local';return 'vtier-low';}
   function sortOpportunities(list){return list.slice().sort(function(a,b){var d=(b.longTermValueScore||0)-(a.longTermValueScore||0);if(d)return d;var as=a.active2026SourceUrl?1:0,bs=b.active2026SourceUrl?1:0;if(bs-as)return bs-as;return (a.month||13)-(b.month||13);});}
-  function confidenceLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'confirmed';if(/^likely/.test(v)||v==='public_secondary_source')return 'likely';if(/^possible/.test(v)||v==='route_lead')return 'possible';if(/supplemental/.test(v))return 'supplemental route lead';if(/unconfirmed|unverified|vendor_unconfirmed|needs_source|user_field_note/.test(v))return 'unverified';return 'human verification needed';}
-  function statusLabel(val){var v=String(val||'').toLowerCase();if(v==='confirmed'||/^confirmed_vendor/.test(v))return 'Confirmed vendor';if(/^likely/.test(v))return 'Likely route';if(v==='route_lead')return 'Route lead';if(/unconfirmed|vendor_unconfirmed/.test(v))return 'Vendor unconfirmed';return label(val);}
   function uniq(items){return Array.from(new Set(items)).filter(Boolean).sort()}
   function branchName(id){var branch=branches.find(function(item){return item.id===id});return branch?branch.name:id}
   function bestLink(employer){var links=employer.links||{};return links.apply||links.careers||links.directory||links.homepage||''}
   function safeUrl(url){return url && /^https?:\/\//i.test(url) ? url : '';}
   function plainLink(text,url){var safe=safeUrl(url);return safe?'<a href="'+esc(safe)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(text)+' ↗</a>':esc(text)}
+  function debounce(fn,ms){var timer;return function(){var args=arguments,self=this;clearTimeout(timer);timer=setTimeout(function(){fn.apply(self,args)},ms)}}
+
+  // --- Public display helpers (festival + employer-route focus only) ---
+  var SHORT_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function parseDate(str){if(!str)return null;var d=new Date(String(str)+'T00:00:00');return isNaN(d.getTime())?null:d;}
+  function fmtShort(d,withYear){if(!d)return '';return SHORT_MONTHS[d.getMonth()]+' '+d.getDate()+(withYear?', '+d.getFullYear():'');}
+  function festivalDates(opportunity){
+    var s=parseDate(opportunity.startDate),e=parseDate(opportunity.endDate);
+    if(!s)return '';
+    if(!e||e.getTime()===s.getTime())return fmtShort(s,true);
+    return fmtShort(s,false)+' – '+fmtShort(e,true);
+  }
+  // Approximate planning window computed from public event dates. Clearly labelled approximate; never implies exact load-in/out.
+  function productionWindow(opportunity){
+    var s=parseDate(opportunity.startDate);
+    if(!s)return '';
+    var e=parseDate(opportunity.endDate)||s;
+    var big=(opportunity.departments||[]).length>=9;
+    var buildLead=big?9:4;
+    var strikeTail=big?3:2;
+    var build=new Date(s.getTime()-buildLead*86400000);
+    var strike=new Date(e.getTime()+strikeTail*86400000);
+    return fmtShort(build,false)+' – '+fmtShort(strike,true);
+  }
+  // Only surface a producer when a real public name exists (no verify/unknown placeholders).
+  function knownProducer(opportunity){
+    var name=String(((opportunity.producer||{}).name)||'').trim();
+    if(!name)return '';
+    var low=name.toLowerCase();
+    if(low.indexOf('verify')>-1||low==='unknown'||low==='tbd')return '';
+    return name.replace(/\s*[,/]?\s*verify.*$/i,'').replace(/\s*\/\s*partners$/i,'').trim();
+  }
+  function branchSummary(opportunity,limit){
+    var names=(opportunity.departments||[]).map(branchName);
+    var shown=names.slice(0,limit||4);
+    var extra=Math.max(0,names.length-shown.length);
+    return esc(shown.join(' \xb7 ')+(extra?' +'+extra+' more':''));
+  }
+  // Neutral employer-route link: never upgrades a lead into a confirmed working vendor.
+  function employerRow(employer){
+    var links=employer.links||{};
+    var url=links.apply||links.careers||links.contact||links.directory||links.homepage||'';
+    var hasApply=!!(links.apply||links.careers);
+    var labelText=hasApply?'Apply / careers':'Website / contact';
+    var type=employer.type?'<span class="sub" style="font-size:.74rem">'+esc(employer.type)+'</span><br>':'';
+    return '<li style="margin:0 0 9px;list-style:none"><b>'+esc(employer.name)+'</b><br>'+type+plainLink(labelText,url)+'</li>';
+  }
+  function employerById(id){return employers.find(function(item){return item.id===id;});}
 
   function loadScript(src){
     return new Promise(function(resolve){
@@ -126,12 +111,15 @@
     });
   }
 
-  function loadBranchResearch(){
-    return loadBranchManifest().then(function(){
-      return branchFiles.reduce(function(chain,file){
-        return chain.then(function(){return loadScript('data/packages/'+file+'?v=manifest1')});
-      },Promise.resolve());
+  var _branchResearchPromise=null;
+  function ensureBranchResearch(){
+    if(_branchResearchPromise)return _branchResearchPromise;
+    _branchResearchPromise=loadBranchManifest().then(function(){
+      return Promise.all(branchFiles.map(function(file){
+        return loadScript('data/packages/'+file+'?v=manifest1');
+      }));
     }).then(buildBranchIndex);
+    return _branchResearchPromise;
   }
 
   function buildBranchIndex(){
@@ -149,17 +137,15 @@
       branchIndex.byKey[norm(record.opportunityId)+'::'+record.branchId]=record;
       branchIndex.byKey[norm(record.opportunityName)+'::'+record.branchId]=record;
     });
+    branchDataReady=true;
   }
 
+  // Attach the public source (if any) for the Sources page. Source links live only on
+  // sources.html, never in cards, popups, or modals.
   function classify(opportunity){
     var hasSource=!!opportunity.active2026SourceUrl;
     return Object.assign({
-      sourceType:hasSource?'public_secondary_source':'user_field_note',
-      visibility:'public',
-      confidence:hasSource?'likely':'unverified',
-      publishSafety:'public_safe',
-      nextHumanAction:'Verify vendors, labor route, travel logistics, and current event details before outreach.',
-      intelligence:{publicSources:hasSource?[{label:'active status source',url:opportunity.active2026SourceUrl}]:[],fieldNotes:[],crewReferrals:[],privateContacts:[],doNotPublish:[]}
+      intelligence:{publicSources:hasSource?[{label:'active status source',url:opportunity.active2026SourceUrl}]:[]}
     },opportunity);
   }
 
@@ -174,51 +160,21 @@
       region:(($('#regionFilter')||{}).value||''),
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
-      accommodation:(($('#accommodationFilter')||{}).value||''),
       state:(($('#stateFilter')||{}).value||''),
-      tier:(($('#tierFilter')||{}).value||'')
+      festival:(($('#festivalFilter')||{}).value||'')
     };
-  }
-
-  function accFilterMatch(opportunity,val){
-    if(!val)return true;
-    var accom=opportunity.accommodation||{};
-    var travel=opportunity.travelCompensation||{};
-    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
-    var confirmed=['yes','confirmed','included'];
-    var positive=['possible','likely'].concat(confirmed);
-    if(val==='lodging_possible')return positive.indexOf(lodging)>-1||lodgingType.indexOf('camp')>-1;
-    if(val==='camping')return lodgingType.indexOf('camp')>-1||actions.indexOf('camping')>-1;
-    if(val==='lodging_research')return actions.indexOf('lodging')>-1||actions.indexOf('camping')>-1||actions.indexOf('per diem')>-1||actions.indexOf('travel')>-1;
-    if(val==='travel_possible')return positive.indexOf(String(travel.travelPaid||'unknown').toLowerCase())>-1;
-    if(val==='per_diem_possible')return positive.indexOf(String(travel.perDiem||'unknown').toLowerCase())>-1;
-    return true;
   }
 
   function activeOpportunities(){
     var filter=filterValues();
     var list=opportunities.filter(function(opportunity){
-      if(filter.tier){var s=Number(opportunity.longTermValueScore||0);if(filter.tier==='tier_60plus'&&s<60)return false;if(filter.tier==='tier_40to59'&&(s<40||s>=60))return false;if(filter.tier==='tier_under40'&&s>=40)return false;}
       return (!filter.q||text(opportunity).includes(filter.q)||(opportunity.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
         &&(!filter.month||String(opportunity.month)===filter.month)
-        &&accFilterMatch(opportunity,filter.accommodation)
         &&(!filter.state||opportunity.state===filter.state);
     });
     return sortOpportunities(list);
-  }
-
-  function activeEmployers(){
-    var filter=filterValues();
-    return employers.filter(function(employer){
-      return (!filter.q||text(employer).includes(filter.q)||(employer.departments||[]).some(function(dep){return branchName(dep).toLowerCase().includes(filter.q)}))
-        &&(!filter.branch||(employer.departments||[]).includes(filter.branch))
-        &&(!filter.region||String(employer.region||'').includes(filter.region)||employer.region===filter.region)
-        &&(!filter.type||employer.type===filter.type);
-    });
   }
 
   function activeLocals(){
@@ -240,9 +196,8 @@
     uniq(employers.map(function(e){return e.type})).forEach(function(type){var select=$('#employerTypeFilter');if(select)select.innerHTML+='<option>'+esc(type)+'</option>'});
     var stateSelect=$('#stateFilter');
     if(stateSelect)uniq(opportunities.filter(function(o){return o.state&&o.state!=='US'}).map(function(o){return o.state})).forEach(function(state){stateSelect.innerHTML+='<option value="'+esc(state)+'">'+esc(state)+'</option>'});
-    var tierSelect=$('#tierFilter');
-    if(tierSelect){[['tier_60plus','Priority / Strong (60+)'],['tier_40to59','Track / Research (40–59)'],['tier_under40','Local / Low (<40)']].forEach(function(pair){tierSelect.innerHTML+='<option value="'+pair[0]+'">'+pair[1]+'</option>';});}
-    $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',renderPage)});
+    var debouncedRender=debounce(renderPage,150);
+    $$('#filters input,#filters select').forEach(function(input){input.addEventListener('input',input.tagName==='SELECT'?renderPage:debouncedRender)});
     var reset=$('#reset');
     if(reset)reset.onclick=function(){$$('#filters input,#filters select').forEach(function(input){input.value=''});renderPage()};
   }
@@ -250,138 +205,40 @@
   function applyUrlFilters(){
     if(!$('#filters'))return;
     var params=new URLSearchParams(window.location.search||'');
-    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['tier','#tierFilter'],['accommodation','#accommodationFilter'],['state','#stateFilter'],['type','#employerTypeFilter']].forEach(function(pair){
+    [['q','#q'],['branch','#branchFilter'],['region','#regionFilter'],['month','#monthFilter'],['state','#stateFilter'],['type','#employerTypeFilter'],['festival','#festivalFilter'],['employer','#employerFilter']].forEach(function(pair){
       var val=params.get(pair[0]);var input=$(pair[1]);
       if(val!=null&&input)input.value=val;
     });
   }
 
-  function accomChips(opportunity){
-    var accom=opportunity.accommodation||{};
-    var travel=opportunity.travelCompensation||{};
-    var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-    var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-    var lodgingType=String(accom.lodgingType||'unknown').toLowerCase();
-    var confirmed=['yes','confirmed','included'];
-    var positive=['possible','likely'].concat(confirmed);
-    var chips=[];
-    if(lodgingType.indexOf('camp')>-1)chips.push('<span class="accom-tag accom-ok">Camping</span>');
-    else if(positive.indexOf(lodging)>-1)chips.push('<span class="accom-tag accom-ok">Lodging possible</span>');
-    else if(actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)chips.push('<span class="accom-tag accom-warn">Lodging — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Lodging unknown</span>');
-    var perDiem=String(travel.perDiem||'unknown').toLowerCase();
-    if(positive.indexOf(perDiem)>-1)chips.push('<span class="accom-tag accom-ok">Per diem</span>');
-    else if(actions.indexOf('per diem')>-1||actions.indexOf('perdiem')>-1)chips.push('<span class="accom-tag accom-warn">Per diem — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Per diem unknown</span>');
-    var travelPaid=String(travel.travelPaid||'unknown').toLowerCase();
-    if(positive.indexOf(travelPaid)>-1)chips.push('<span class="accom-tag accom-ok">Travel paid</span>');
-    else if(actions.indexOf('travel')>-1||actions.indexOf('flight')>-1||actions.indexOf('mileage')>-1)chips.push('<span class="accom-tag accom-warn">Travel — research</span>');
-    else chips.push('<span class="accom-tag accom-muted">Travel unknown</span>');
-    var allUnknown=chips.every(function(tag){return tag.indexOf('accom-muted')>-1;});
-    if(allUnknown)return '<div class="accom-tags"><span class="accom-tag accom-muted">Lodging &amp; travel — to verify</span></div>';
-    return '<div class="accom-tags">'+chips.join('')+'</div>';
-  }
 
   function opportunityCard(opportunity){
-    var depts=(opportunity.departments||[]).slice(0,4).map(branchName);
-    var extra=Math.max(0,(opportunity.departments||[]).length-4);
-    var hasSource=!!opportunity.active2026SourceUrl;
+    var venue=String(opportunity.venue||'').trim();
+    var hasVenue=venue&&venue.toLowerCase().indexOf('verify')===-1&&venue.toLowerCase()!=='unknown'&&venue.toLowerCase()!=='tbd';
+    var dates=festivalDates(opportunity);
+    var prodWindow=productionWindow(opportunity);
+    var producer=knownProducer(opportunity);
     return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
-      '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.region)+' • '+esc(MONTHS[(opportunity.month||1)-1]||'Unknown')+'</div>'+
-      '<p class="sub" style="font-size:.78rem;margin:3px 0 6px"><b>Depts:</b> '+esc(depts.join(', ')+(extra?' +'+extra+' more':''))+'</p>'+
-      accomChips(opportunity)+
-      '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
-      '<p><b>Venue:</b> '+esc(opportunity.venue||'verify')+'</p>'+
-      '<p><b>Confidence:</b> '+(hasSource?'<span style="color:#48c778">Likely — source attached</span>':'<span style="color:var(--muted)">Unverified — source needed</span>')+'</p>'+
-      '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
-      '<p><b>Next:</b> '+esc((opportunity.nextResearchActions||[])[0]||opportunity.nextHumanAction||'Verify before outreach')+'</p>'+
-      '</article>';
-  }
-
-  function employerCard(employer){
-    var deptNames=(employer.departments||[]).slice(0,7).map(branchName).join(', ');
-    return '<article class="card click" onclick="openEmployer(\''+esc(employer.id)+'\')">'+
-      '<h3>'+esc(employer.name)+'</h3>'+
-      '<div class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</div>'+
-      '<p><b>Departments:</b> '+esc(deptNames||'verify')+'</p>'+
-      '<p>'+esc(employer.bestUse||'U.S. employer/vendor research lead.')+'</p>'+
-      '<p>'+plainLink(employer.linkStatus==='homepage_fallback'?'Company homepage':'Apply / careers',bestLink(employer))+'</p>'+
+      '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+(hasVenue?' • '+esc(venue):'')+'</div>'+
+      (dates?'<p class="oppline"><b>Festival dates:</b> '+esc(dates)+'</p>':'')+
+      (prodWindow?'<p class="oppline"><b>Approx. production window:</b> '+esc(prodWindow)+'</p>':'')+
+      (producer?'<p class="oppline"><b>Producer / promoter:</b> '+esc(producer)+'</p>':'')+
+      '<p class="oppline"><b>Branches:</b> '+branchSummary(opportunity,4)+'</p>'+
+      '<p class="oppline cardcta">Open employer routes →</p>'+
       '</article>';
   }
 
   function iatseCard(local){
+    var craft=local.craft||'';
+    var states=(local.states||[]).join(', ');
     return '<article class="card click" onclick="openLocal(\''+esc(local.local)+'\',\''+esc(local.district)+'\')">'+
       '<h3>IATSE Local '+esc(local.local)+'</h3>'+
       '<div class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</div>'+
-      '<p><b>Craft:</b> '+esc(local.craft||'verify')+'</p>'+
-      '<p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p>'+
+      (craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+
+      (states?'<p><b>States:</b> '+esc(states)+'</p>':'')+
       '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
       '</article>';
-  }
-
-  function renderMap(){
-    var el=$('#app');
-    if(!el)return;
-    var L=window.L;
-    if(!L){el.innerHTML='<h2>Festival Map</h2><p class="lead">Leaflet map library not available on this page.</p>';return;}
-    var positive=['yes','confirmed','included','possible','likely'];
-    if(!_leafMap){
-      el.innerHTML='<h2>Festival Map</h2>'+
-        '<div class="accom-tags" style="margin:0 0 14px">'+
-        '<span class="accom-tag accom-ok">&#9679; Lodging / camping likely</span>'+
-        '<span class="accom-tag accom-warn">&#9679; Accommodation research priority</span>'+
-        '<span class="accom-tag accom-muted">&#9679; Status unknown</span>'+
-        '</div>'+
-        '<div id="mapView" style="height:520px;border-radius:18px;overflow:hidden;border:1px solid var(--line);margin-bottom:20px"></div>'+
-        '<p id="mapMeta" style="color:var(--muted);font-size:.84rem;margin:0 0 18px"></p>'+
-        '<div id="mapList"></div>';
-      _leafMap=L.map('mapView').setView([38,-96],4);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        maxZoom:18
-      }).addTo(_leafMap);
-      _leafLayer=L.layerGroup().addTo(_leafMap);
-    } else {
-      _leafLayer.clearLayers();
-      _leafMap.invalidateSize();
-    }
-    var data=activeOpportunities();
-    var placed=[];
-    data.forEach(function(opportunity){
-      var coords=OPP_COORDS[opportunity.id];
-      if(!coords)return;
-      placed.push(opportunity);
-      var accom=opportunity.accommodation||{};
-      var actions=((opportunity.nextResearchActions)||[]).join(' ').toLowerCase();
-      var lodging=String(accom.lodgingLikely||'unknown').toLowerCase();
-      var color=positive.indexOf(lodging)>-1?'#48c778':
-                (actions.indexOf('camping')>-1||actions.indexOf('lodging')>-1)?'#f5b400':'#a8b2bd';
-      var marker=L.circleMarker(coords,{radius:9,fillColor:color,color:'#07090c',weight:2,opacity:1,fillOpacity:0.9});
-      marker.bindPopup(
-        '<div style="min-width:190px">'+
-        '<b style="font-size:.95rem">'+esc(opportunity.name)+'</b><br>'+
-        '<span style="font-size:.8rem;color:#a8b2bd">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</span><br>'+
-        accomChips(opportunity)+
-        '<p style="margin:8px 0 0"><button onclick="closeModal();openOpportunity(\''+esc(opportunity.id)+'\')" style="background:#f5b400;color:#141006;border:none;border-radius:8px;padding:5px 12px;cursor:pointer;font-weight:800;font-size:.8rem">Open detail ↗</button></p>'+
-        '</div>',
-        {maxWidth:280}
-      );
-      _leafLayer.addLayer(marker);
-    });
-    var noCoord=data.filter(function(o){return OPP_COORDS[o.id]===null||OPP_COORDS[o.id]===undefined;});
-    var meta=$('#mapMeta');
-    if(meta)meta.textContent=placed.length+' events mapped'+(noCoord.length?' • '+noCoord.length+' multi-market / unmapped':'');
-    var list=$('#mapList');
-    if(list){
-      if(!data.length){list.innerHTML='<p>No opportunities match the current filter.</p>';}
-      else{
-        list.innerHTML=
-          (placed.length?'<h3 style="margin:18px 0 10px">Mapped events ('+placed.length+')</h3><div class="grid">'+placed.map(opportunityCard).join('')+'</div>':'')+
-          (noCoord.length?'<h3 style="margin:22px 0 10px">Multi-market / unmapped ('+noCoord.length+')</h3><p class="sub" style="margin:0 0 10px;font-size:.82rem">These events span multiple cities or lack a single map coordinate.</p><div class="grid">'+noCoord.map(opportunityCard).join('')+'</div>':'');
-      }
-    }
   }
 
   function renderSchedule(){
@@ -412,7 +269,6 @@
       ranges.forEach(function(r){if(s<=r[1]&&e>=r[0])overlaps++;});
       ranges.push([s,e]);
     });
-    var avgScore=scheduledOpps.length?Math.round(scheduledOpps.reduce(function(sum,o){return sum+(o.longTermValueScore||0);},0)/scheduledOpps.length):0;
     var monthSet={};scheduledOpps.forEach(function(o){if(o.month)monthSet[o.month]=1;});
     var regionSet={};scheduledOpps.forEach(function(o){if(o.region)regionSet[o.region]=1;});
     var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
@@ -425,12 +281,12 @@
     var browseData=activeOpportunities();
     var browseHtml=browseData.map(function(opportunity){
       var inSched=schedule.indexOf(opportunity.id)>-1;
+      var schDates=festivalDates(opportunity);
       return '<article class="card">'+
         '<h3>'+esc(opportunity.name)+'</h3>'+
-        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(MONTHS[(opportunity.month||1)-1])+'</div>'+
-        accomChips(opportunity)+
-        '<p><b>Date:</b> '+esc(opportunity.startDate||'verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
-        '<p><b>Value:</b> '+esc(opportunity.longTermValueScore||0)+'/100</p>'+
+        '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+'</div>'+
+        (schDates?'<p class="oppline"><b>Festival dates:</b> '+esc(schDates)+'</p>':'')+
+        '<p class="oppline"><b>Branches:</b> '+branchSummary(opportunity,3)+'</p>'+
         '<button class="btn '+(inSched?'sched-in':'sched-add')+'" onclick="'+(inSched?'removeGig':'addGig')+'(\''+esc(opportunity.id)+'\')">'+(inSched?'✓ In schedule':'+ Add to schedule')+'</button>'+
         '</article>';
     }).join('');
@@ -441,7 +297,6 @@
         '<div class="stat"><b>'+scheduledOpps.length+'</b><span>events planned</span></div>'+
         '<div class="stat"><b>~'+totalDays+'</b><span>approx event days</span></div>'+
         '<div class="stat"><b>'+overlaps+'</b><span>date overlaps</span></div>'+
-        '<div class="stat"><b>'+avgScore+'</b><span>avg value score</span></div>'+
         '<div class="stat"><b>'+Object.keys(monthSet).length+'</b><span>months covered</span></div>'+
         '<div class="stat"><b>'+Object.keys(regionSet).length+'</b><span>regions covered</span></div>'+
       '</div>'+
@@ -459,101 +314,59 @@
       '<div class="grid">'+(browseHtml||'<p>No opportunities match the current filter.</p>')+'</div>';
   }
 
+  // Upcoming festivals first (events still to come, soonest first), then past
+  // events most-recent first. Matches what the home page should surface for a
+  // worker planning ahead.
+  function upcomingByDate(){
+    var now=new Date();
+    var today=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+    return opportunities.filter(function(o){return parseDate(o.startDate);}).sort(function(a,b){
+      var as=parseDate(a.startDate).getTime(),bs=parseDate(b.startDate).getTime();
+      var ae=(parseDate(a.endDate)||parseDate(a.startDate)).getTime();
+      var be=(parseDate(b.endDate)||parseDate(b.startDate)).getTime();
+      var aUp=ae>=today,bUp=be>=today;
+      if(aUp!==bUp)return aUp?-1:1;
+      return aUp?as-bs:bs-as;
+    }).slice(0,6);
+  }
   function renderHome(){
     var el=$('#app');
     if(!el)return;
-    var sorted=sortOpportunities(opportunities);
-    var top=sorted.slice(0,5);
-    var needsDates=opportunities.filter(function(o){return !o.startDate;}).length;
-    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;}).length;
-    var topHtml=top.map(function(o){
-      return '<article class="card click" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
-        '<span class="vtier '+valueTierClass(o.longTermValueScore)+'">'+esc(valueTierLabel(o.longTermValueScore))+'</span>'+
-        '<h3>'+esc(o.name)+'</h3>'+
-        '<div class="sub">'+esc(o.city)+', '+esc(o.state)+' &bull; '+esc(MONTHS[(o.month||1)-1])+'</div>'+
-        '<p><b>Value:</b> '+esc(o.longTermValueScore)+'/100</p>'+
-        '<p><b>Next:</b> '+esc((o.nextResearchActions||[])[0]||'Verify before outreach')+'</p>'+
-        '</article>';
-    }).join('');
-    var pathwayHtml=branches.map(function(branch){
-      var count=matchingOpportunities(branch.id).length;
-      var skills=(branch.workerFocus||[]).slice(0,3).join(' \xb7 ');
-      return '<a class="pathway" href="opportunities.html?branch='+encodeURIComponent(branch.id)+'">'+
-        '<h4>'+esc(branch.name)+'</h4>'+
-        '<div class="pathway-skills">'+esc(skills)+'</div>'+
-        '<span class="pathway-count">'+count+' event'+(count===1?'':'s')+' →</span>'+
-        '</a>';
-    }).join('');
+    var upcoming=upcomingByDate();
+    var upcomingHtml=upcoming.length?upcoming.map(opportunityCard).join(''):'<p class="sub">No upcoming festivals in the current data.</p>';
+    function routeCard(title,body,link,label){
+      return '<article class="card"><h3>'+esc(title)+'</h3><p>'+esc(body)+'</p><p><a class="btn" href="'+esc(link)+'">'+esc(label)+'</a></p></article>';
+    }
     el.innerHTML=
-      '<h2>Find Your Pathway</h2>'+
-      '<p class="section-intro">Production Atlas helps live-event production workers find where the work is and how to get routed into it. Pick your trade to jump straight to the 2026 events that need it, then open an event to inspect the hiring route, vendor stack, and local labor pathway.</p>'+
-      '<div class="steps">'+
-        '<div class="step-card"><span class="step-n">1</span><h4>Pick your trade</h4><p>Choose your department below to jump straight to the events that hire it.</p></div>'+
-        '<div class="step-card"><span class="step-n">2</span><h4>Open an event</h4><p>Review the work-year value, dates, mapped branches, vendor routes, and labor pathway.</p></div>'+
-        '<div class="step-card"><span class="step-n">3</span><h4>Verify &amp; reach out</h4><p>Confirm the route from a current public source, then use the careers or local-union path.</p></div>'+
-      '</div>'+
-      '<h3>Your trade</h3>'+
-      '<div class="pathway-grid">'+pathwayHtml+'</div>'+
+      '<section class="card">'+
+        '<div class="eyebrow">Public work map</div>'+
+        '<h3 style="margin:.2rem 0 8px">Start with the route you need</h3>'+
+        '<p class="section-intro">Production Atlas is built for workers who need fast answers: where the events are, when they happen, which departments are involved, and which public company or labor routes are worth checking.</p>'+
+        '<div class="grid">'+
+          routeCard('Find events','Browse festivals by date, city, state, department, producer, and approximate production window.','opportunities.html','Open opportunities')+
+          routeCard('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
+          routeCard('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
+        '</div>'+
+        '<div class="notice" style="margin-top:16px"><b>Employer routes are still being mapped:</b> not every festival is matched to confirmed employer routes yet. If a festival shows no employer routes for your department, treat it as research still to be done on your end — verify the promoter, vendors, and hiring path directly from current public sources. If you have information that can help, you can submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
+        '<div class="notice" style="margin-top:12px"><b>Publicly sourced:</b> Production Atlas lists publicly available routes and information. Details that cannot be publicly confirmed are omitted rather than estimated.</div>'+
+      '</section>'+
       '<div class="home-dash">'+
-        '<h3 style="margin-top:28px">Top priority targets</h3>'+
-        '<p class="section-intro" style="margin-bottom:12px">Highest work-year value across all trades right now.</p>'+
-        '<div class="grid">'+topHtml+'</div>'+
-        '<h3 style="margin-top:26px">Verification snapshot</h3>'+
-        '<div class="notice">'+
-          needsDates+' of '+opportunities.length+' active opportunities still need confirmed dates. '+
-          noSource+' have no attached public source yet. '+
-          '<a href="analytics.html">Open research queue &nearr;</a>'+
-        '</div>'+
-        '<div class="stats" style="margin-top:18px">'+
-          '<div class="stat"><b>'+opportunities.length+'</b><span>active opportunities</span></div>'+
-          '<div class="stat"><b>'+employers.length+'</b><span>employer leads</span></div>'+
-          '<div class="stat"><b>'+iatseLocals.length+'</b><span>IATSE records</span></div>'+
-          '<div class="stat"><b>'+branches.length+'</b><span>trades / branches</span></div>'+
-          '<div class="stat"><b>'+branchIndex.records.length+'</b><span>branch records</span></div>'+
-        '</div>'+
+        '<h3 style="margin-top:28px">Upcoming 2026 festivals</h3>'+
+        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by production department.</p>'+
+        '<div class="grid">'+upcomingHtml+'</div>'+
         '<h3 style="margin-top:22px">Quick links</h3>'+
         '<div class="home-links">'+
-          '<a href="opportunities.html" class="btn">Browse all opportunities</a>'+
-          '<a href="calendar.html" class="btn">Calendar view</a>'+
-          '<a href="map.html" class="btn">Open map</a>'+
-          '<a href="branches.html" class="btn">All trades</a>'+
-          '<a href="analytics.html" class="btn">Research queue</a>'+
+          '<a href="iatse.html" class="btn">IATSE locals</a>'+
           '<a href="schedule.html" class="btn">My schedule</a>'+
+          '<a href="contribute.html" class="btn">Contribute</a>'+
         '</div>'+
       '</div>';
-  }
-
-  function renderCalendar(){
-    var data=activeOpportunities();
-    var el=$('#app');
-    if(!el)return;
-    el.innerHTML='<h2>Long-Term Opportunity Calendar</h2><p class="lead">Month-by-month view of active public-safe work targets.</p><div class="calendar">'+MONTHS.map(function(month,index){
-      var events=data.filter(function(opportunity){return Number(opportunity.month)===index+1});
-      return '<div class="month"><h3>'+month+' <span class="sub">'+events.length+'</span></h3><div class="monthBody">'+(events.length?events.map(function(opportunity){
-        var calDepts=(opportunity.departments||[]).slice(0,3).map(branchName);
-        var calExtra=Math.max(0,(opportunity.departments||[]).length-3);
-        var hasCalSrc=!!opportunity.active2026SourceUrl;
-        return '<div class="event" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-          '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="font-size:.62rem;padding:1px 7px;margin:0 0 4px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
-          '<b style="display:block">'+esc(opportunity.name)+'</b>'+
-          '<small>'+esc(opportunity.city)+', '+esc(opportunity.state)+'</small>'+
-          (calDepts.length?'<div style="margin-top:4px;font-size:.69rem;color:var(--muted)">'+esc(calDepts.join(' \xb7 ')+(calExtra?' +'+calExtra:''))+'</div>':'')+
-          (hasCalSrc?'<div style="margin-top:3px;font-size:.68rem;color:#48c778">&#9679; source</div>':'')+
-          '</div>';
-      }).join(''):'<div class="sub">No work targets in current filter.</div>')+'</div></div>';
-    }).join('')+'</div>';
   }
 
   function renderOpportunities(){
     var el=$('#app');
     var data=activeOpportunities();
-    if(el)el.innerHTML='<h2>Opportunity Profiles</h2><p class="lead">Compare events by city, venue, date, route value, and department coverage.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No opportunity profiles match the current filter.</p>')+'</div>';
-  }
-
-  function renderEmployers(){
-    var el=$('#app');
-    var data=activeEmployers();
-    if(el)el.innerHTML='<h2>United States Employer and Vendor Leads</h2><p class="lead">General public employer and vendor routes. These are not event-specific confirmations.</p><div class="grid">'+(data.length?data.map(employerCard).join(''):'<p>No employer leads match.</p>')+'</div>';
+    if(el)el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
   }
 
   function renderIatse(){
@@ -575,58 +388,45 @@
   function renderBranches(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Production Branches</h2><p class="lead">Department dashboard. Open a branch for researched opportunities, route leads, and next actions.</p><div class="grid">'+branches.map(function(branch){
-      var count=branchIndex.records.filter(function(record){return record.branchId===branch.id}).length;
-      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3><p><b>'+esc(branch.question)+'</b></p><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><p><b>Active targets:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Research records:</b> '+count+'</p><p><b>Employer leads:</b> '+matchingEmployers(branch.id).length+'</p></article>';
+    el.innerHTML='<h2>Production Branches</h2><p class="lead">Employer and company routes organized by production branch. Open a branch to see the festivals using it and the companies that hire for it.</p><div class="grid">'+branches.map(function(branch){
+      var roles=(branch.workerFocus||[]).slice(0,4).join(' \xb7 ');
+      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employer routes:</b> '+matchingEmployers(branch.id).length+'</p></article>';
     }).join('')+'</div>';
   }
 
+  // Public planning dashboard: where and when 2026 festival production work clusters, and which
+  // trades each festival hires. No value scores, confidence, or research-queue language.
   function renderAnalytics(){
     var el=$('#app');
     if(!el)return;
     function counts(items,fn){return items.reduce(function(acc,item){var key=fn(item)||'Unknown';acc[key]=(acc[key]||0)+1;return acc},{})}
     function bars(obj){var max=Math.max(1,...Object.values(obj));return Object.entries(obj).sort(function(a,b){return b[1]-a[1]}).map(function(pair){return '<div class="bar"><span>'+esc(pair[0])+'</span><div class="track"><div class="fill" style="width:'+(pair[1]/max*100)+'%"></div></div><span>'+pair[1]+'</span></div>'}).join('');}
-    function hasAction(o,pattern){return (o.nextResearchActions||[]).some(function(a){return pattern.test(a);});}
-    function queueCard(title,items,note){
-      if(!items.length)return '';
-      return '<div class="card">'+
-        '<h3>'+esc(title)+' <span class="sub">('+items.length+')</span></h3>'+
-        '<p class="sub" style="margin:0 0 6px">'+esc(note)+'</p>'+
-        '<ul class="queue-list">'+
-        items.slice(0,8).map(function(o){
-          return '<li onclick="openOpportunity(\''+esc(o.id)+'\')">'+
-            '<span class="vtier '+valueTierClass(o.longTermValueScore)+'" style="font-size:.6rem;padding:1px 6px;margin:0 4px 0 0">'+esc(o.longTermValueScore)+'/100</span>'+
-            '<b>'+esc(o.name)+'</b><br>'+
-            '<span style="color:var(--muted);font-size:.78rem">'+esc((o.nextResearchActions||[])[0]||'verify')+'</span>'+
-            '</li>';
-        }).join('')+
-        (items.length>8?'<li class="sub">&hellip; and '+(items.length-8)+' more &mdash; <a href="opportunities.html">see all &nearr;</a></li>':'')+
-        '</ul></div>';
+    function monthBars(){
+      var nums=MONTHS.map(function(m,i){return opportunities.filter(function(o){return Number(o.month)===i+1;}).length;});
+      var max=Math.max(1,...nums);
+      return MONTHS.map(function(m,i){return '<div class="bar"><span>'+esc(m)+'</span><div class="track"><div class="fill" style="width:'+(nums[i]/max*100)+'%"></div></div><span>'+nums[i]+'</span></div>';}).join('');
     }
-    var needsDates=opportunities.filter(function(o){return !o.startDate;});
-    var noSource=opportunities.filter(function(o){return !o.active2026SourceUrl;});
-    var needsVendor=opportunities.filter(function(o){return hasAction(o,/vendor/i);});
-    var needsLabor=opportunities.filter(function(o){return hasAction(o,/labor/i);});
-    var needsTravel=opportunities.filter(function(o){return hasAction(o,/lodging|travel|per diem/i);});
+    var byBranch={};
+    branches.forEach(function(b){var c=matchingOpportunities(b.id).length;if(c)byBranch[b.name]=c;});
+    var monthEntries=Object.entries(counts(opportunities,function(o){return MONTHS[(o.month||1)-1]})).sort(function(a,b){return b[1]-a[1]});
+    var busiest=monthEntries.length?monthEntries[0][0]:'—';
+    var stateCount=uniq(opportunities.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
     el.innerHTML=
-      '<h2>Analytics &amp; Research Queue</h2>'+
-      '<h3>Research Queue</h3>'+
-      '<p class="lead">Opportunities grouped by what still needs verification. Click any item to open detail.</p>'+
-      '<div class="grid">'+
-        queueCard('Dates unconfirmed',needsDates,'Confirm exact dates before travel or outreach decisions.')+
-        queueCard('Source missing',noSource,'Find a public source that confirms this event is active for 2026.')+
-        queueCard('Vendor stack unverified',needsVendor,'Research which companies handle production for this event.')+
-        queueCard('Labor route unverified',needsLabor,'Identify the union local or labor provider and hiring pathway.')+
-        queueCard('Travel / lodging unverified',needsTravel,'Check lodging, per diem, and travel coverage potential.')+
+      '<h2>Festival Analytics</h2>'+
+      '<p class="lead">Where and when 2026 festival production work clusters — by month, region, state, and the production branches each festival hires.</p>'+
+      '<div class="stats" style="margin:0 0 20px">'+
+        '<div class="stat"><b>'+opportunities.length+'</b><span>active festivals</span></div>'+
+        '<div class="stat"><b>'+esc(busiest)+'</b><span>busiest month</span></div>'+
+        '<div class="stat"><b>'+stateCount+'</b><span>states with festivals</span></div>'+
+        '<div class="stat"><b>'+branches.length+'</b><span>production branches</span></div>'+
+        '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
       '</div>'+
-      '<h3 style="margin-top:26px">Dataset breakdown</h3>'+
       '<div class="grid">'+
-        '<div class="card"><h3>By region</h3>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
-        '<div class="card"><h3>By value tier</h3>'+bars(counts(opportunities,function(o){return valueTierLabel(o.longTermValueScore)}))+'</div>'+
-        '<div class="card"><h3>By month</h3>'+bars(counts(opportunities,function(o){return MONTHS[(o.month||1)-1]}))+'</div>'+
-        '<div class="card"><h3>By confidence</h3>'+bars(counts(opportunities,function(o){return confidenceLabel(o.confidence||o.sourceType)}))+'</div>'+
-        '<div class="card"><h3>Branch records</h3>'+bars(counts(branchIndex.records,function(r){return r.branchName||branchName(r.branchId)}))+'</div>'+
-        '<div class="card"><h3>Employers by type</h3>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
+        '<div class="card"><h3>Festivals by month</h3><p class="sub">When 2026 production work clusters across the year.</p>'+monthBars()+'</div>'+
+        '<div class="card"><h3>Festivals by region</h3><p class="sub">Where the festivals are concentrated.</p>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
+        '<div class="card"><h3>Festivals by state</h3><p class="sub">State-level concentration of 2026 festivals.</p>'+bars(counts(opportunities.filter(function(o){return o.state&&o.state!=='US';}),function(o){return o.state}))+'</div>'+
+        '<div class="card"><h3>Demand by production branch</h3><p class="sub">How many 2026 festivals hire each trade.</p>'+bars(byBranch)+'</div>'+
+        '<div class="card"><h3>Employer routes by type</h3><p class="sub">Public company routes by category.</p>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
       '</div>';
   }
 
@@ -640,85 +440,120 @@
     var el=$('#app');
     if(!el)return;
     var filter=filterValues();
-    var rows=[];
+    // Build all rows first (unfiltered) so dropdowns always show the full set
+    var allRows=[];
     opportunities.forEach(function(opportunity){
       ((opportunity.intelligence||{}).publicSources||[]).forEach(function(source){
-        if(source.url)rows.push({type:'opportunity',item:opportunity.name,section:'Opportunity',label:source.label||'source',url:source.url,searchText:(opportunity.name+' '+(source.label||'')).toLowerCase(),branchIds:opportunity.departments||[]});
+        if(source.url)allRows.push({type:'opportunity',item:opportunity.name,label:source.label||'source',url:source.url,branchIds:opportunity.departments||[]});
       });
     });
     branchIndex.records.forEach(function(record){
       (record.sourceLinks||[]).forEach(function(source){
-        if(source.url)rows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,searchText:((record.opportunityName||record.opportunityId)+' '+(record.branchName||record.branchId)+' '+(source.label||'')).toLowerCase(),branchIds:[record.branchId]});
+        if(source.url)allRows.push({type:'branch',item:record.opportunityName||record.opportunityId,section:record.branchName||record.branchId,label:source.label||'source',url:source.url,branchIds:[record.branchId]});
       });
     });
-    var filtered=rows.filter(function(row){
-      if(filter.q&&!row.searchText.includes(filter.q))return false;
-      if(filter.branch&&!row.branchIds.includes(filter.branch))return false;
+    // Populate festival dropdown from opportunity-type rows
+    var festivalSelect=$('#festivalFilter');
+    if(festivalSelect){
+      var currentFestival=festivalSelect.value;
+      var festivalNames=uniq(allRows.filter(function(r){return r.type==='opportunity';}).map(function(r){return r.item;})).sort();
+      festivalSelect.innerHTML='<option value="">All festivals</option>'+festivalNames.map(function(n){return '<option value="'+esc(n)+'">'+esc(n)+'</option>';}).join('');
+      if(festivalNames.indexOf(currentFestival)>-1)festivalSelect.value=currentFestival;
+    }
+    // Populate department dropdown from branch-type rows (departments that actually have sources)
+    var deptSelect=$('#branchFilter');
+    if(deptSelect){
+      var currentDept=deptSelect.value;
+      var deptSet={};
+      allRows.forEach(function(r){if(r.type==='branch')r.branchIds.forEach(function(id){deptSet[id]=true;});});
+      var deptIds=Object.keys(deptSet).sort(function(a,b){return branchName(a).localeCompare(branchName(b));});
+      deptSelect.innerHTML='<option value="">All departments</option>'+deptIds.map(function(id){return '<option value="'+esc(id)+'">'+esc(branchName(id))+'</option>';}).join('');
+      if(deptSet[currentDept])deptSelect.value=currentDept;
+    }
+    // Apply filters
+    var filtered=allRows.filter(function(row){
+      if(filter.festival&&row.item!==filter.festival)return false;
+      if(filter.branch&&row.branchIds.indexOf(filter.branch)===-1)return false;
       return true;
     });
-    var oppCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
-    var branchCount=filtered.filter(function(r){return r.type==='branch';}).length;
+    var festivalCount=filtered.filter(function(r){return r.type==='opportunity';}).length;
+    var deptCount=filtered.filter(function(r){return r.type==='branch';}).length;
     el.innerHTML='<h2>Sources</h2>'+
-      '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and branch popups stay clean.</p>'+
+      '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and department research popups stay clean.</p>'+
+      (branchDataReady?'':'<p class="sub">Loading department source records&hellip;</p>')+
       '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
         '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
-        '<div class="stat"><b>'+oppCount+'</b><span>opportunity sources</span></div>'+
-        '<div class="stat"><b>'+branchCount+'</b><span>branch sources</span></div>'+
+        '<div class="stat"><b>'+festivalCount+'</b><span>festival</span></div>'+
+        '<div class="stat"><b>'+deptCount+'</b><span>department</span></div>'+
       '</div>'+
-      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Item</th><th>Type</th><th>Section</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Festival</th><th>Department</th><th>Source label</th><th>Link</th></tr></thead><tbody>'+
       (filtered.length?filtered.map(function(row){
-        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='opportunity'?'Opportunity':'Branch')+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
-      }).join(''):'<tr><td colspan="5" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
+        return '<tr><td>'+esc(row.item)+'</td><td>'+esc(row.type==='branch'?row.section:'')+'</td><td>'+esc(row.label)+'</td><td>'+plainLink('Open source',row.url)+'</td></tr>';
+      }).join(''):'<tr><td colspan="4" style="color:var(--muted)">No sources match the current filter.</td></tr>')+
       '</tbody></table></div>';
   }
 
+  // Pages whose #app is fully owned by a dedicated enhancement script:
+  // calendar -> calendar-interactive.js, map -> map-page-static.js,
+  // employers -> employers-department-browser.js. Core must not render or
+  // re-render these; otherwise its filter listeners race with and overwrite
+  // the enhancement view after a search/filter change.
+  var EXTERNAL_RENDER_PAGES={calendar:1,map:1,employers:1};
   function renderPage(){
     var page=document.body.dataset.page;
-    ({home:renderHome,calendar:renderCalendar,opportunities:renderOpportunities,employers:renderEmployers,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,map:renderMap,schedule:renderSchedule}[page]||renderHome)();
+    if(EXTERNAL_RENDER_PAGES[page])return;
+    ({home:renderHome,opportunities:renderOpportunities,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,schedule:renderSchedule}[page]||renderHome)();
   }
 
+  // Public employer-route block for one production branch. Shows company names + apply/contact
+  // links only. Never prints status, confidence, or research language, and never upgrades a
+  // public lead into a confirmed working vendor.
   function branchCard(opportunity,branchId){
-    var branch=branches.find(function(item){return item.id===branchId})||{name:branchId,question:'Verify route'};
+    var branch=branches.find(function(item){return item.id===branchId})||{name:branchId};
     var record=findBranchRecord(opportunity,branchId);
-    if(!record){
-      return '<div class="branch"><h4>'+esc(branch.name)+'</h4><p class="sub">'+esc(branch.question)+'</p><p>No event-specific branch record yet.</p></div>';
+    var routeLabel,ids=[];
+    if(record&&(record.confirmedVendors||[]).length){
+      ids=record.confirmedVendors.slice();routeLabel='Companies tied to this branch';
+    } else if(record&&(record.publicLeads||[]).length){
+      ids=record.publicLeads.slice();routeLabel='Public company routes';
+    } else {
+      ids=matchingEmployers(branchId).map(function(e){return e.id;});routeLabel='Industry companies in this branch';
     }
-    var employerLinks=(record.publicLeads||[]).slice(0,8).map(function(id){
-      var employer=employers.find(function(item){return item.id===id});
-      return employer?plainLink(employer.name,bestLink(employer)):esc(id);
-    }).join('<br>');
-    var stText=statusLabel(record.status);
-    var confText=confidenceLabel(record.confidence);
-    var isRouteOnly=confText==='unverified'||confText==='possible'||confText==='supplemental route lead';
+    var rows=ids.map(employerById).filter(Boolean).slice(0,8).map(employerRow).join('');
+    var name=esc((record&&record.branchName)||branch.name);
+    if(!rows){
+      return '<div class="branch"><h4>'+name+'</h4><p class="sub">No public company route listed yet.</p></div>';
+    }
     return '<div class="branch">'+
-      '<h4>'+esc(record.branchName||branch.name)+'</h4>'+
-      '<p><b>Status:</b> '+esc(stText)+'</p>'+
-      '<p><b>Confidence:</b> '+esc(confText)+'</p>'+
-      (isRouteOnly?'<p class="sub" style="color:var(--warn);font-size:.76rem">Route lead only — not a confirmed vendor. Verify before outreach.</p>':'')+
-      '<p><b>Route intelligence:</b> '+esc(record.branchDisplayText||record.evidenceSummary||'Research route stored.')+'</p>'+
-      '<p><b>Next action:</b> '+esc(record.nextAction||'Verify before outreach.')+'</p>'+
-      (employerLinks?'<p><b>Relevant public leads:</b><br>'+employerLinks+'</p>':'')+
+      '<h4>'+name+'</h4>'+
+      '<p class="sub" style="margin:0 0 8px">'+esc(routeLabel)+'</p>'+
+      '<ul style="margin:0;padding:0">'+rows+'</ul>'+
       '</div>';
   }
 
   window.openOpportunity=function(id){
     var opportunity=opportunities.find(function(item){return item.id===id});
     if(!opportunity)return;
+    ensureBranchResearch().then(function(){renderOpportunityModal(opportunity)});
+  };
+  function renderOpportunityModal(opportunity){
     var hasSource=!!opportunity.active2026SourceUrl;
-    var confText=confidenceLabel(opportunity.confidence||opportunity.sourceType);
+    var venue=String(opportunity.venue||'').trim();
+    var hasVenue=venue&&venue.toLowerCase().indexOf('verify')===-1&&venue.toLowerCase()!=='unknown'&&venue.toLowerCase()!=='tbd';
+    var dates=festivalDates(opportunity);
+    var prodWindow=productionWindow(opportunity);
+    var producer=knownProducer(opportunity);
     var branchHtml=(opportunity.departments||[]).map(function(dep){return branchCard(opportunity,dep)}).join('');
     openModal(
-      '<span class="vtier '+valueTierClass(opportunity.longTermValueScore)+'" style="display:inline-block;margin-bottom:8px">'+esc(valueTierLabel(opportunity.longTermValueScore))+'</span>'+
       '<h2 style="margin:0 0 6px">'+esc(opportunity.name)+'</h2>'+
-      '<p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+' • '+esc(opportunity.venue||'venue verify')+' • '+esc(opportunity.startDate||'date verify')+(opportunity.endDate?' to '+esc(opportunity.endDate):'')+'</p>'+
+      '<p class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+(hasVenue?' • '+esc(venue):'')+'</p>'+
       '<div class="modalgrid">'+
-        '<div class="detail"><b>Producer/promoter</b><br>'+esc((opportunity.producer||{}).name||'verify')+'</div>'+
-        '<div class="detail"><b>Work-year value</b><br>'+esc(opportunity.longTermValueScore||0)+'/100 — '+esc(valueTierLabel(opportunity.longTermValueScore))+'</div>'+
-        '<div class="detail"><b>Public-safe boundary</b><br>Travel, lodging, pay, and direct-contact details must be verified and stored privately.</div>'+
-        '<div class="detail"><b>Confidence</b><br>'+esc(confText)+(hasSource?' — public source on <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a>':' — no public source yet')+'</div>'+
+        (dates?'<div class="detail"><b>Festival dates</b><br>'+esc(dates)+'</div>':'')+
+        (prodWindow?'<div class="detail"><b>Approx. build / strike window</b><br>'+esc(prodWindow)+' (approximate)</div>':'')+
+        (producer?'<div class="detail"><b>Producer / promoter</b><br>'+esc(producer)+'</div>':'')+
+        (hasSource?'<div class="detail"><b>Public source</b><br>Listed on the <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a></div>':'')+
       '</div>'+
-      '<p><b>Next human action:</b> '+esc(opportunity.nextHumanAction||((opportunity.nextResearchActions||[])[0])||'Verify before outreach.')+'</p>'+
-      '<h3>Mapped production branches</h3>'+
+      '<h3>Employer routes by production branch</h3>'+
       branchHtml
     );
   };
@@ -726,24 +561,37 @@
   window.openEmployer=function(id){
     var employer=employers.find(function(item){return item.id===id});
     if(!employer)return;
-    openModal('<h2>'+esc(employer.name)+'</h2><p class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</p><p>'+esc(employer.bestUse||'Research lead')+'</p><p><b>Departments:</b> '+esc((employer.departments||[]).map(branchName).join(', ')||'verify')+'</p><p>'+plainLink(employer.linkStatus==='homepage_fallback'?'Company homepage':'Apply / careers',bestLink(employer))+'</p>');
+    var depts=(employer.departments||[]).map(branchName).join(', ');
+    var hasApply=!!(employer.links&&(employer.links.apply||employer.links.careers));
+    openModal('<h2>'+esc(employer.name)+'</h2><p class="sub">'+esc(employer.type)+' • '+esc(employer.region)+'</p><p>'+esc(employer.bestUse||'Research lead')+'</p>'+(depts?'<p><b>Departments:</b> '+esc(depts)+'</p>':'')+'<p>'+plainLink(hasApply?'Apply / careers':'Company website / contact',bestLink(employer))+'</p>');
   };
 
   window.openLocal=function(localId,district){
     var local=iatseLocals.find(function(item){return String(item.local)===String(localId)&&String(item.district)===String(district)});
     if(!local)return;
-    openModal('<h2>IATSE Local '+esc(local.local)+'</h2><p class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</p><p><b>Craft:</b> '+esc(local.craft||'verify')+'</p><p><b>States:</b> '+esc((local.states||[]).join(', ')||'verify')+'</p><p>Use as a jurisdiction routing aid. Verify before outreach.</p>');
+    var craft=local.craft||'';
+    var states=(local.states||[]).join(', ');
+    openModal('<h2>IATSE Local '+esc(local.local)+'</h2><p class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</p>'+(craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+(states?'<p><b>States:</b> '+esc(states)+'</p>':'')+'<p>Use as a jurisdiction routing aid. Verify applicable local before outreach.</p>');
   };
 
   window.openBranch=function(id){
     var branch=branches.find(function(item){return item.id===id});
     if(!branch)return;
+    ensureBranchResearch().then(function(){renderBranchModal(branch,id)});
+  };
+  function renderBranchModal(branch,id){
     var records=branchIndex.records.filter(function(record){return record.branchId===id});
     var cards=records.map(function(record){
       var fake=opportunities.find(function(opportunity){return norm(opportunity.id)===norm(record.opportunityId)||norm(opportunity.name)===norm(record.opportunityName)})||{id:record.opportunityId,name:record.opportunityName};
-      return branchCard(fake,id);
+      var opp=opportunities.find(function(o){return norm(o.id)===norm(record.opportunityId)||norm(o.name)===norm(record.opportunityName)});
+      var title=esc((opp&&opp.name)||record.opportunityName||record.opportunityId);
+      return '<div style="margin:0 0 4px"><p class="sub" style="margin:0 0 4px;color:var(--muted)"><b>'+title+'</b></p>'+branchCard(fake,id)+'</div>';
     }).join('');
-    openModal('<h2>'+esc(branch.name)+'</h2><p><b>'+esc(branch.question)+'</b></p><div class="modalgrid"><div class="detail"><b>Event-specific records</b><br>'+records.length+'</div><div class="detail"><b>General employer leads</b><br>'+matchingEmployers(id).length+'</div></div><h3>Research needs</h3><p>'+esc((branch.researchNeeds||[]).join(', '))+'</p><h3>Worker focus</h3><p>'+esc((branch.workerFocus||[]).join(', '))+'</p><h3>Event-specific branch records</h3>'+(cards||'<p class="sub">No records yet.</p>'));
+    var roles=(branch.workerFocus||[]).join(' \xb7 ');
+    var general=matchingEmployers(id).slice(0,12).map(employerRow).join('');
+    openModal('<h2>'+esc(branch.name)+'</h2>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+
+      '<h3>Employer routes by festival</h3>'+(cards||'<p class="sub">No festival-specific company routes listed yet.</p>')+
+      (general?'<h3>Industry companies in this branch</h3><ul style="margin:0;padding:0">'+general+'</ul>':''));
   };
 
   var _lastFocus=null;
@@ -783,7 +631,10 @@
     var modal=$('#modal');
     if(modal)modal.addEventListener('click',function(event){if(event.target.id==='modal')window.closeModal()});
     document.addEventListener('keydown',function(event){if(event.key==='Escape'){var m=$('#modal');if(m&&m.classList.contains('open'))window.closeModal();}});
+    var page=document.body.dataset.page;
+    var branchDependentPages={home:1,branches:1,sources:1,analytics:1};
+    ensureBranchResearch().then(function(){if(branchDependentPages[page])renderPage();});
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){loadBranchResearch().then(init)});else loadBranchResearch().then(init);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

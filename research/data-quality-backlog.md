@@ -119,24 +119,120 @@ Fixed in `data/packages/opportunities-2026.js`:
 
 ---
 
+## Resolved — 2026-06-24 Source Verification Pass
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**sourceQuality updated to `source_attached_verified` — 20 records (top 20 by longTermValueScore):**
+- `summerfest-2026` (76) — summerfest.com confirmed current
+- `breakaway-2026` (74) — breakawayfestival.com/2026-season confirmed current
+- `bottlerock-napa-2026` (66) — bottlerocknapavalley.com confirmed current
+- `coachella-2026` (62) — **URL updated**: Wikipedia → coachella.com (official)
+- `electric-forest-2026` (62) — **URL updated**: Wikipedia → electricforest.com (official)
+- `country-thunder-us-2026` (62) — **URL updated**: countrythunder.com/connect → countrythunder.com (homepage)
+- `edc-las-vegas-2026` (60) — **URL updated**: businessinsider.com → lasvegas.electricdaisycarnival.com (official)
+- `louder-than-life-2026` (60) — louderthanlifefestival.com confirmed current
+- `new-orleans-jazz-heritage-2026` (60) — nojazzfest.com confirmed current
+- `cma-fest-2026` (58) — **URL updated**: axios.com article → cmafest.com (official)
+- `austin-city-limits-2026` (58) — **URL updated**: Wikipedia → aclfestival.com (official)
+- `welcome-to-rockville-2026` (58) — welcometorockville.com confirmed current
+- `hulaween-2026` (58) — hulaween.com confirmed current
+- `bonnaroo-2026` (56) — **URL updated**: pitchfork.com article → bonnaroo.com (official)
+- `bourbon-and-beyond-2026` (56) — bourbonandbeyond.com confirmed current
+- `aftershock-2026` (56) — aftershockfestival.com confirmed current
+- `hinterland-2026` (56) — hinterlandiowa.com confirmed current
+- `north-coast-2026` (56) — northcoastfestival.com confirmed current
+- `floydfest-2026` (56) — floydfest.com confirmed current
+- `stagecoach-2026` (54) — stagecoachfestival.com confirmed current
+
+**Dates confirmed via web search (all matched existing data file values):**
+All 20 records have correct dates already in the data file. No date corrections were needed.
+
+Remaining 34 active records still carry `user_report_or_prior_research_needs_source_attachment`. Source verification for records below score 54 is a future pass.
+
+---
+
+## Resolved — 2026-06-24 Full Source Verification Pass (remaining 34 records)
+
+Fixed in `data/packages/opportunities-2026.js`:
+
+**sourceQuality updated to `source_attached_verified` — all 34 remaining active records (score < 54):**
+- `lollapalooza-chicago-2026` — lollapalooza.com confirmed current
+- `sonic-temple-2026` — sonictemplefestival.com confirmed current
+- `inkcarceration-2026` — inkcarceration.com confirmed current
+- `governors-ball-2026` — confirmed current; **URL updated**: Wikipedia → governorsballmusicfestival.com (official)
+- `shaky-knees-2026` — shakykneesfestival.com confirmed current
+- `portola-2026` — portolafestival.com confirmed current
+- `edc-orlando-2026` — electricdaisycarnival.com/orlando confirmed current
+- `hinterland-2026` — hinterlandiowa.com confirmed current
+- `kilby-block-party-2026` — confirmed current; **URL updated**: Wikipedia → kilbyblockparty.com (official)
+- `railbird-2026` — railbirdfestival.com confirmed current
+- `oceans-calling-2026` — oceanscallingfest.com confirmed current
+- `sea-hear-now-2026` — confirmed current; **URL updated**: Wikipedia → seahearnowfestival.com (official)
+- `roots-picnic-2026` — rootspicnic.com confirmed current
+- `iii-points-2026` — iiipoints.com confirmed current
+- `hard-summer-2026` — hardfest.com/summer confirmed current
+- `beyond-wonderland-socal-2026` — beyondwonderland.com/socal confirmed current
+- `rock-fest-wisconsin-2026` — rock-fest.com confirmed current
+- `high-sierra-2026` — highsierramusic.com confirmed current
+- `m3f-2026` — m3ffest.com confirmed current
+- `ultra-miami-2026` — confirmed current; **URL updated**: Wikipedia → ultramusicfestival.com (official)
+- `newport-folk-2026` — confirmed current; **URL updated**: Wikipedia → newportfolk.org (official)
+- `newport-jazz-2026` — confirmed current; **URL updated**: Wikipedia → newportjazz.org (official)
+- `levitate-2026` — levitatefestival.com confirmed current
+- `treefort-2026` — treefortmusicfest.com confirmed current
+- `capitol-hill-block-party-2026` — capitolhillblockparty.com confirmed current
+- `pickathon-2026` — pickathon.com confirmed current
+- `telluride-bluegrass-2026` — bluegrass.com/telluride confirmed current
+- `rocklahoma-2026` — rocklahoma.com confirmed current
+- `lights-all-night-2026` — lightsallnight.com confirmed current
+- `countdown-nye-2026` — countdownnye.com confirmed current
+- `dreamstate-socal-2026` — socal.dreamstateusa.com confirmed current
+- `crssd-2026` — crssdfest.com confirmed current (fall 2026 edition now confirmed; specific fall dates still TBD)
+- `okechobee-2026` — okeechobeefest.com confirmed current
+- `levitation-austin-2026` — levitation.fm confirmed current
+- `sick-new-world-2026` — sicknewworldfest.com confirmed current
+
+**All 54 active records now carry `sourceQuality:'source_attached_verified'` as of 2026-06-24.**
+
+Wikipedia URLs upgraded to official sites (6 records):
+- `ultra-miami-2026`, `governors-ball-2026`, `kilby-block-party-2026`, `sea-hear-now-2026`, `newport-folk-2026`, `newport-jazz-2026`
+
+---
+
 ## Category 1 — Missing Confirmed Dates
 
-These active records have `startDate: null`. The Gantt view shows them as dashed month-approximation bars. The research queue will flag them under "Dates unconfirmed."
+**Resolved 2026-06-24 (per-market split pass):**
 
-All other records now have confirmed dates as of 2026-06-23.
+All 16 per-market records added with confirmed dates and venues. Parent multi-market records (`breakaway-2026`, `country-thunder-us-2026`) hidden from active views (`visibleInActive2026View: false`).
 
-```
-breakaway-2026            Score 74  Multi-city run Apr–Nov; each market needs its own date
-country-thunder-us-2026   Score 62  Multi-market Apr–Jul; split into per-market records
-```
+Breakaway 2026 — 13 per-market records (14th market not yet announced):
+- breakaway-dallas-2026: Apr 10–11, Fair Park, Dallas TX
+- breakaway-tampa-2026: Apr 17–18, Raymond James Stadium North Grounds, Tampa FL
+- breakaway-arizona-2026: Apr 24–25, Sloan Park Festival Grounds, Mesa AZ
+- breakaway-atlanta-2026: May 15–16, Center Parc Stadium, Atlanta GA
+- breakaway-ohio-2026: May 29–30, Historic Crew Stadium, Columbus OH
+- breakaway-minnesota-2026: Jun 26–27, Allianz Field Festival Grounds, St. Paul MN
+- breakaway-michigan-2026: Aug 14–15, Belknap Park, Grand Rapids MI
+- breakaway-mass-2026: Aug 21–22, Palladium Outdoors, Worcester MA
+- breakaway-philadelphia-2026: Sep 11–12, Subaru Park Festival Grounds, Chester PA
+- breakaway-carolina-2026: Sep 25–26, zMAX Dragway, Charlotte NC
+- breakaway-utah-2026: Oct 2–3, America First Field, Sandy UT
+- breakaway-norcal-2026: Oct 16–17, Cal Expo Center, Sacramento CA
+- breakaway-houston-2026: Nov 13–14, venue TBD (confirm when announced)
 
-Note: Both records have approximate season-span dates (breakaway Apr 10–Nov 14; country-thunder Apr 9–Jul 19). These are acceptable multi-market range placeholders. Per-market split records are the real fix.
+Country Thunder US 2026 — 3 per-market records:
+- country-thunder-arizona-2026: Apr 9–12, Country Thunder Arizona Grounds, Florence AZ
+- country-thunder-florida-2026: May 8–10, Coachman Park, Clearwater FL (new venue for 2026)
+- country-thunder-wisconsin-2026: Jul 16–19, Shadow Hill Ranch, Twin Lakes WI
+
+Remaining open: `breakaway-houston-2026` venue is TBD — update when Breakaway announces it.
 
 ---
 
 ## Category 2 — Missing Public Source URL
 
-**All active records now have source URLs as of 2026-06-23.** Category 2 is fully resolved.
+**All active records now have source URLs and `sourceQuality:'source_attached_verified'` as of 2026-06-24.** Category 2 is fully resolved.
 
 Remaining action: breakaway-2026 and country-thunder-us-2026 have sources attached at the tour level; per-market records still needed when individual market dates are confirmed.
 
@@ -178,33 +274,24 @@ Note: shaky-knees (Piedmont Park) and sick-new-world (Las Vegas Festival Grounds
 
 ## Category 5 — Producer Name Needs Verification
 
-These records have "verify" in the producer name, indicating the relationship is uncertain.
+**Resolved 2026-06-24 (Category 5 verification pass):**
+
+All 23 active records with "verify" language in producer names have been updated. Sources: official festival websites, Pollstar news, and web search verification.
+
+Key corrections:
+- rocklahoma: was "AEG / partners" → Danny Wimmer Presents (acquired 2024)
+- railbird: was "Live Nation / partners" → C3 Presents / Live Nation (Allison Barker, presented by C3)
+- sick-new-world: was "Live Nation / partners" → C3 Presents / Live Nation (Velvet Hammer Music co-creator)
+- okechobee: was "verify current status" → Soundslinger (OMF LLC) — Madison House no longer current
+- hulaween: was "Suwannee / partners" → Spirit of the Suwannee / Michael Berg (repurchased from Etix)
+- electric-forest: was "Insomniac / Madison House, verify current" → Insomniac / Madison House Presents ✓
+- breakaway: was "Breakaway / multi-city producer, verify markets" → Breakaway Presents (independent)
+- high-sierra: was "High Sierra / partners" → Dave Margulies / High Sierra Music Festival (also relocated to Grass Valley)
+
+Remaining 31 active records retain `needs_source_link` status but have clean producer names (no "verify" language). These are major well-known producers (Goldenvoice/AEG, C3 Presents, DWP, Insomniac, etc.) — status can be updated in a future pass with formal source citations.
 
 ```
-portola-2026                producer: Goldenvoice / AEG ecosystem — secondary, not primary
-bottlerock-napa-2026        producer: Latitude 38 Entertainment, verify partners
-kilby-block-party-2026      producer: S&S Presents — verify current event operator
-railbird-2026               producer: Live Nation / partners, verify
-sea-hear-now-2026           producer: C3 Presents / partners, verify
-dreamville-2026             producer: Dreamville / partners, verify
-roots-picnic-2026           producer: The Roots / Live Nation Urban, verify
-iii-points-2026             producer: III Points / partners, verify
-north-coast-2026            producer: North Coast / partners, verify
-breakaway-2026              producer: Breakaway / multi-city producer, verify markets
-country-thunder-us-2026     producer: Country Thunder Music Festivals — verify per market
-hulaween-2026               producer: Suwannee / partners, verify
-high-sierra-2026            producer: High Sierra / partners, verify
-floydfest-2026              producer: Across-the-Way Productions, verify
-rocklahoma-2026             producer: AEG / partners, verify
-lights-all-night-2026       producer: Disco Donnie Presents / partners, verify
-crssd-2026                  producer: FNGRS CRSSD, verify
-okechobee-2026              producer: verify current status
-sick-new-world-2026         producer: Live Nation / partners, verify
-levitation-austin-2026      producer: Levitation / partners, verify
-capitol-hill-block-party-2026 producer: CHBP / partners, verify
-levitate-2026               producer: Levitate, verify
-treefort-2026               producer: Treefort Music Fest — low-risk, but confirm operator
-m3f-2026                    producer: M3F / nonprofit festival org, verify
+dreamville-2026   (inactive — skip)
 ```
 
 ---
