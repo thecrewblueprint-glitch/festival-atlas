@@ -66,22 +66,11 @@
     banner.innerHTML='Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.';
     nav.parentNode.insertBefore(banner,nav);
   }
-  function installContributeButton(){
-    var pg=document.body&&document.body.dataset.page;if(pg==='contribute'||pg==='feedback'||pg==='home')return;
-    var wrap=document.querySelector('.hero .wrap');
-    if(!wrap||wrap.querySelector('.contribute-hero-btn'))return;
-    var btn=document.createElement('a');
-    btn.href='./contribute.html';
-    btn.className='btn contribute-hero-btn';
-    btn.textContent='Contribute';
-    wrap.appendChild(btn);
-  }
   function install(){
     installStyles();
     installSiteBanner();
     normalizeNav();
     persistSideScroll();
-    installContributeButton();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
