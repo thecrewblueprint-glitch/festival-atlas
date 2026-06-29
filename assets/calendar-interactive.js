@@ -211,6 +211,18 @@
       }).join('')+
     '</div>';
   }
+  function addSwipe(el){
+    var sx=null,sy=null;
+    el.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+    el.addEventListener('touchend',function(e){
+      if(sx===null)return;
+      var dx=e.changedTouches[0].clientX-sx;
+      var dy=e.changedTouches[0].clientY-sy;
+      sx=null;sy=null;
+      if(Math.abs(dx)<52||Math.abs(dx)<Math.abs(dy)*1.2)return;
+      shiftCalendar(dx>0?-1:1);
+    },{passive:true});
+  }
   function render(){
     var app=$('#app');
     if(!app)return;
@@ -225,7 +237,7 @@
       '<div class="cal-app-toolbar">'+
         '<div class="cal-title-block"><h2>'+esc(label)+'</h2><p class="lead">Festival calendar for public show dates, approximate work windows, overlaps, and durations.</p></div>'+
         '<div class="cal-control-stack">'+
-          '<div class="cal-nav-controls"><button class="btn" type="button" onclick="shiftCalendar(-1)">‹</button><button class="btn" type="button" onclick="calendarToday()">Today</button><button class="btn" type="button" onclick="shiftCalendar(1)">›</button></div>'+
+          '<div class="cal-nav-controls"><button class="btn cal-nav-arrow" type="button" onclick="shiftCalendar(-1)" aria-label="Previous">‹</button><button class="btn" type="button" onclick="calendarToday()">Today</button><button class="btn cal-nav-arrow" type="button" onclick="shiftCalendar(1)" aria-label="Next">›</button></div>'+
           '<div class="cal-segment"><button class="'+(state.view==='month'?'active':'')+'" type="button" onclick="setCalendarView(\'month\')">Month</button><button class="'+(state.view==='week'?'active':'')+'" type="button" onclick="setCalendarView(\'week\')">Week</button></div>'+
         '</div>'+
       '</div>'+
@@ -234,6 +246,8 @@
       '<div class="cal-scroll">'+calHtml+'</div>'+
       '<div class="notice"><b>Date disclaimer:</b> festival dates are based on public sources. Approximate work windows are planning estimates only and are subject to change; verify current dates with official sources before making travel, outreach, or availability decisions.</div>'+
       '</section>';
+    var swipeEl=app.querySelector('.calendar-app-frame,.cal-week-mobile');
+    if(swipeEl)addSwipe(swipeEl);
   }
   function installStyles(){
     if(document.getElementById('interactive-calendar-style'))return;
@@ -293,7 +307,8 @@
         '.cal-ev-dots{display:flex}'+
         '.cal-weekdays>div,.cal-weekdays>button{padding:8px 2px;font-size:.68rem;letter-spacing:0}'+
       '}'+
-      '@media(max-width:560px){.cal-nav-controls .btn{flex:1}.cal-nav-controls{width:100%}.cal-segment{width:100%}.cal-segment button{flex:1}}';
+      '@media(max-width:700px){.cal-nav-arrow{flex:0!important;min-width:0;width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06)!important;color:#aeb9c7!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:50%!important;font-size:1.1rem;box-shadow:none!important}}'+
+      '@media(max-width:560px){.cal-nav-controls{width:100%;display:flex;align-items:center;gap:8px}.cal-nav-controls .btn:not(.cal-nav-arrow){flex:1}.cal-segment{width:100%}.cal-segment button{flex:1}}';
     document.head.appendChild(style);
   }
   var resizeTimer;
