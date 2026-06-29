@@ -367,11 +367,9 @@
     var data=activeOpportunities();
     if(!el)return;
     var stateCount=uniq(data.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
-    var deptCount=uniq(data.flatMap(function(o){return o.departments||[];})).length;
-    var statsHtml='<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
+    var statsHtml='<div class="stats" style="grid-template-columns:repeat(2,1fr);margin:0 0 18px">'+
       '<div class="stat"><b>'+data.length+'</b><span>festivals</span></div>'+
       '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
-      '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
       '</div>';
     el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer contacts.</p>'+
       statsHtml+
@@ -436,26 +434,22 @@
       var max=Math.max(1,...nums);
       return MONTHS.map(function(m,i){return '<div class="bar"><span>'+esc(m)+'</span><div class="track"><div class="fill" style="width:'+(nums[i]/max*100)+'%"></div></div><span>'+nums[i]+'</span></div>';}).join('');
     }
-    var byBranch={};
-    branches.forEach(function(b){var c=matchingOpportunities(b.id).length;if(c)byBranch[b.name]=c;});
     var monthEntries=Object.entries(counts(opportunities,function(o){return MONTHS[(o.month||1)-1]})).sort(function(a,b){return b[1]-a[1]});
     var busiest=monthEntries.length?monthEntries[0][0]:'—';
     var stateCount=uniq(opportunities.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
     el.innerHTML=
       '<h2>Festival Analytics</h2>'+
-      '<p class="lead">Where and when 2026 festival production work clusters — by month, region, state, and the production branches each festival hires.</p>'+
+      '<p class="lead">Where and when 2026 festival production work clusters — by month, region, and state.</p>'+
       '<div class="stats" style="margin:0 0 20px">'+
         '<div class="stat"><b>'+opportunities.length+'</b><span>active festivals</span></div>'+
         '<div class="stat"><b>'+esc(busiest)+'</b><span>busiest month</span></div>'+
         '<div class="stat"><b>'+stateCount+'</b><span>states with festivals</span></div>'+
-        '<div class="stat"><b>'+branches.length+'</b><span>production branches</span></div>'+
         '<div class="stat"><b>'+employers.length+'</b><span>employers</span></div>'+
       '</div>'+
       '<div class="grid">'+
         '<div class="card"><h3>Festivals by month</h3><p class="sub">When 2026 production work clusters across the year.</p>'+monthBars()+'</div>'+
         '<div class="card"><h3>Festivals by region</h3><p class="sub">Where the festivals are concentrated.</p>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
         '<div class="card"><h3>Festivals by state</h3><p class="sub">State-level concentration of 2026 festivals.</p>'+bars(counts(opportunities.filter(function(o){return o.state&&o.state!=='US';}),function(o){return o.state}))+'</div>'+
-        '<div class="card"><h3>Demand by production branch</h3><p class="sub">How many 2026 festivals hire each trade.</p>'+bars(byBranch)+'</div>'+
         '<div class="card"><h3>Employers by type</h3><p class="sub">Public companies by category.</p>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
       '</div>';
   }
