@@ -161,8 +161,20 @@
       month:(($('#monthFilter')||{}).value||''),
       type:(($('#employerTypeFilter')||{}).value||''),
       state:(($('#stateFilter')||{}).value||''),
+      producer:(($('#producerFilter')||{}).value||''),
       festival:(($('#festivalFilter')||{}).value||'')
     };
+  }
+  // Mirrors cleanProducer() in opportunities-promoter-filter.js so the option
+  // values it puts in #producerFilter match what we filter on here. Unknown /
+  // placeholder producers collapse to a single sentinel.
+  var UNKNOWN_PRODUCER='__unknown_promoter__';
+  function producerKey(opportunity){
+    var name=String(((opportunity.producer||{}).name)||'').trim();
+    if(!name)return UNKNOWN_PRODUCER;
+    var low=name.toLowerCase();
+    if(low==='unknown'||low==='tbd'||low.indexOf('verify')>-1)return UNKNOWN_PRODUCER;
+    return name.replace(/\s*[,]?\s*verify.*$/i,'').replace(/\s*\/\s*partners$/i,'').trim()||UNKNOWN_PRODUCER;
   }
 
   function activeOpportunities(){
@@ -172,7 +184,8 @@
         &&(!filter.branch||(opportunity.departments||[]).includes(filter.branch))
         &&(!filter.region||opportunity.region===filter.region)
         &&(!filter.month||String(opportunity.month)===filter.month)
-        &&(!filter.state||opportunity.state===filter.state);
+        &&(!filter.state||opportunity.state===filter.state)
+        &&(!filter.producer||producerKey(opportunity)===filter.producer);
     });
     return sortOpportunities(list);
   }
@@ -529,6 +542,7 @@
     if(EXTERNAL_RENDER_PAGES[page])return;
     ({home:renderHome,opportunities:renderOpportunities,iatse:renderIatse,matrix:renderMatrix,branches:renderBranches,analytics:renderAnalytics,guide:renderGuide,sources:renderSources,schedule:renderSchedule}[page]||renderHome)();
   }
+  window.renderPage=renderPage;
 
   // Public employer-route block for one production branch. Shows company names + apply/contact
   // links only. Never prints status, confidence, or research language, and never upgrades a

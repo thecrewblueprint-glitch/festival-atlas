@@ -49,6 +49,14 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Strip internal-only research files from the deployment
+        run: |
+          # Keep these in the repo, but never serve them on the public site.
+          rm -f research/festival-research-master-list-2026.pdf
+          rm -f research/index.html
+          rm -rf research/notebooklm-public-research
+          rm -rf research/templates
+
       - name: Upload static site artifact
         uses: actions/upload-pages-artifact@v3
         with:

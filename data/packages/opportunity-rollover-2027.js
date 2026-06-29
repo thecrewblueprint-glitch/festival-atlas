@@ -166,7 +166,9 @@
   }
 
   window.applyOpportunityRollover2027 = applyRollover;
+  // Run once, synchronously, before atlas-core-v2.js builds its opportunity copies.
+  // This package must be loaded as an explicit <script> before the core on every
+  // page that renders opportunity data. No DOMContentLoaded or click-time reapply:
+  // those caused records to mutate after a page had already rendered.
   applyRollover();
-  document.addEventListener('DOMContentLoaded', function(){setTimeout(applyRollover,0);});
-  document.addEventListener('click', function(){setTimeout(applyRollover,0);}, true);
 })();

@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /research/
 Allow: /
 
 Sitemap: https://atlas.thecrewblueprint.com/sitemap.xml
