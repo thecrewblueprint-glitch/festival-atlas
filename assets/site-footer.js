@@ -55,7 +55,7 @@
     nav.addEventListener('scroll',function(){sessionStorage.setItem(key,String(nav.scrollLeft));},{passive:true});
   }
   function installContributeButton(){
-    var pg=document.body&&document.body.dataset.page;if(pg==='contribute'||pg==='feedback')return;
+    var pg=document.body&&document.body.dataset.page;if(pg==='contribute'||pg==='feedback'||pg==='home')return;
     var wrap=document.querySelector('.hero .wrap');
     if(!wrap||wrap.querySelector('.contribute-hero-btn'))return;
     var btn=document.createElement('a');
