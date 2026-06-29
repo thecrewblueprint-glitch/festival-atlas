@@ -333,33 +333,40 @@
     var el=$('#app');
     if(!el)return;
     var upcoming=upcomingByDate();
-    var upcomingHtml=upcoming.length?upcoming.map(opportunityCard).join(''):'<p class="sub">No upcoming festivals in the current data.</p>';
-    function routeCard(title,body,link,label){
-      return '<article class="card"><h3>'+esc(title)+'</h3><p>'+esc(body)+'</p><p><a class="btn" href="'+esc(link)+'">'+esc(label)+'</a></p></article>';
-    }
+    var active=activeOpportunities();
+    var stateCount=uniq(opportunities.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
+    var deptCount=uniq(opportunities.flatMap(function(o){return o.departments||[];})).length;
     el.innerHTML=
-      '<section class="card">'+
-        '<div class="eyebrow">Public work map</div>'+
-        '<h3 style="margin:.2rem 0 8px">Start with the route you need</h3>'+
-        '<p class="section-intro">Production Atlas is built for workers who need fast answers: where the events are, when they happen, which departments are involved, and which public company or labor routes are worth checking.</p>'+
-        '<div class="grid">'+
-          routeCard('Find events','Browse festivals by date, city, state, department, producer, and approximate production window.','opportunities.html','Open opportunities')+
-          routeCard('Find employers','Use public apply, careers, contact, and company routes organized by production department.','employers.html','Open employers')+
-          routeCard('Plan the year','Use the calendar, map, and schedule views to compare timing, geography, and possible work-window overlaps.','calendar.html','Open calendar')+
-        '</div>'+
-        '<div class="notice" style="margin-top:16px"><b>Employer routes are still being mapped:</b> not every festival is matched to confirmed employer routes yet. If a festival shows no employer routes for your department, treat it as research still to be done on your end — verify the promoter, vendors, and hiring path directly from current public sources. If you have information that can help, you can submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
-        '<div class="notice" style="margin-top:12px"><b>Publicly sourced:</b> Production Atlas lists publicly available routes and information. Details that cannot be publicly confirmed are omitted rather than estimated.</div>'+
-      '</section>'+
-      '<div class="home-dash">'+
-        '<h3 style="margin-top:28px">Upcoming 2026 festivals</h3>'+
-        '<p class="section-intro" style="margin-bottom:12px">A sample of active festivals — open any one for employer routes by production department.</p>'+
-        '<div class="grid">'+upcomingHtml+'</div>'+
-        '<h3 style="margin-top:22px">Quick links</h3>'+
-        '<div class="home-links">'+
-          '<a href="iatse.html" class="btn">IATSE locals</a>'+
-          '<a href="schedule.html" class="btn">My schedule</a>'+
-          '<a href="contribute.html" class="btn">Contribute</a>'+
-        '</div>'+
+      '<div class="stats" style="grid-template-columns:repeat(4,1fr);margin:0 0 18px">'+
+        '<div class="stat"><b>'+active.length+'</b><span>active festivals</span></div>'+
+        '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
+        '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
+        '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
+      '</div>'+
+      '<div class="pathway-grid">'+
+        '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival calendar with dates, departments, and employer routes.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
+        '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contact routes by production department.</p><span class="pathway-count">'+employers.length+' routes →</span></a>'+
+        '<a class="pathway" href="calendar.html"><h4>Calendar</h4><p class="pathway-skills">Month-by-month view for production window planning.</p><span class="pathway-count">Browse →</span></a>'+
+        '<a class="pathway" href="schedule.html"><h4>My schedule</h4><p class="pathway-skills">Personal Gantt planner — add festivals and compare windows.</p><span class="pathway-count">Open →</span></a>'+
+      '</div>'+
+      '<h3 style="margin:22px 0 10px;font-size:1.1rem;letter-spacing:-.02em">Upcoming festivals</h3>'+
+      (upcoming.length?
+        '<div style="display:grid;gap:7px">'+upcoming.map(function(o){
+          var dates=festivalDates(o);
+          return '<div class="card click" style="padding:12px 16px;display:flex;align-items:center;gap:12px" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(o.name)+'</div>'+
+              '<div class="sub" style="font-size:.8rem;margin-top:2px">'+esc(o.city)+', '+esc(o.state)+(dates?' · '+esc(dates):'')+'</div>'+
+            '</div>'+
+            '<span style="color:#ffd66b;font-size:.8rem;white-space:nowrap;flex-shrink:0">Open →</span>'+
+          '</div>';
+        }).join('')+'</div>'
+      :'<p class="sub">No upcoming festivals in the current data.</p>')+
+      '<div class="home-links" style="margin-top:14px">'+
+        '<a href="opportunities.html" class="btn">All festivals</a>'+
+        '<a href="iatse.html" class="btn">IATSE locals</a>'+
+        '<a href="map.html" class="btn">Map</a>'+
+        '<a href="contribute.html" class="btn">Contribute</a>'+
       '</div>';
   }
 
