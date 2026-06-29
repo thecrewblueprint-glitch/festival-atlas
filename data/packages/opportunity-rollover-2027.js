@@ -80,11 +80,24 @@
       publicCycleYear: 2027,
       rolloverNote: '2026 festival window has passed. Public reporting says BottleRock announced May 28-30, 2027 at Napa Valley Expo.',
       nextResearchActions: ['verify Latitude 38 / BottleRock public hiring or vendor route for 2027','research Napa Valley Expo site operations and approved vendor route','verify Bay Area labor jurisdiction before outreach','research AfterDark venue production route separately from main festival']
+    },
+    {
+      id: 'country-thunder-arizona-2026',
+      month: 4,
+      startDate: '2027-04-08',
+      endDate: '2027-04-11',
+      active2026Status: 'rolled_to_2027_public_cycle',
+      active2026CheckedDate: '2026-06-29',
+      sourceQuality: 'public_2027_cycle_attached',
+      active2026SourceUrl: 'https://www.countrythunder.com/',
+      publicCycleYear: 2027,
+      rolloverNote: '2026 festival window has passed. Public records confirm Country Thunder Arizona returns Apr 8-11, 2027 in Florence, AZ.',
+      nextResearchActions: ['verify Country Thunder public vendor or hiring route for 2027 Arizona cycle','research Florence AZ site operations and load-in access','verify Arizona labor jurisdiction before outreach']
     }
   ];
 
   var pending2027 = [
-    'stagecoach-2026','bonnaroo-2026','cma-fest-2026','electric-forest-2026','summerfest-2026','governors-ball-2026','sonic-temple-2026','kilby-block-party-2026','railbird-2026','roots-picnic-2026','m3f-2026','treefort-2026','okechobee-2026','new-orleans-jazz-heritage-2026','country-thunder-arizona-2026','country-thunder-florida-2026','breakaway-dallas-2026','breakaway-tampa-2026','breakaway-arizona-2026','breakaway-atlanta-2026','breakaway-ohio-2026','breakaway-minnesota-2026','crssd-2026','sick-new-world-2026'
+    'stagecoach-2026','bonnaroo-2026','cma-fest-2026','electric-forest-2026','summerfest-2026','governors-ball-2026','sonic-temple-2026','kilby-block-party-2026','railbird-2026','roots-picnic-2026','m3f-2026','treefort-2026','okechobee-2026','new-orleans-jazz-heritage-2026','country-thunder-florida-2026','breakaway-dallas-2026','breakaway-tampa-2026','breakaway-arizona-2026','breakaway-atlanta-2026','breakaway-ohio-2026','breakaway-minnesota-2026','crssd-2026','sick-new-world-2026'
   ];
 
   function parseDate(value){
