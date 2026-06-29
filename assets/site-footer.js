@@ -24,6 +24,8 @@
       '.site-footer-columns h4{margin:0 0 8px;color:#ffd66b;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}'+
       '.site-footer-columns a{display:inline-block;margin:0 14px 8px 0;color:#cfe4ff;text-decoration:none;font-weight:800}.site-footer-columns a:hover{text-decoration:underline;color:#fff}'+
       '.contribute-hero-btn{display:inline-block;margin-top:18px}'+
+      '.site-banner{background:rgba(245,180,0,.10);border-bottom:1px solid rgba(245,180,0,.22);padding:7px 20px;font-size:.82rem;color:var(--muted);text-align:center}'+
+      '.site-banner a{color:#ffd66b;font-weight:700;text-decoration:none}.site-banner a:hover{text-decoration:underline}'+
       '.navInner{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;scrollbar-width:auto}.navInner a{flex:0 0 auto}.navInner::-webkit-scrollbar{height:8px}.navInner::-webkit-scrollbar-thumb{background:rgba(245,180,0,.55);border-radius:999px}.navInner::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}'+
       '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}}';
     document.head.appendChild(style);
@@ -54,6 +56,16 @@
     if(saved!==null)nav.scrollLeft=Number(saved)||0;
     nav.addEventListener('scroll',function(){sessionStorage.setItem(key,String(nav.scrollLeft));},{passive:true});
   }
+  function installSiteBanner(){
+    if(document.getElementById('site-banner'))return;
+    var nav=document.querySelector('.nav');
+    if(!nav)return;
+    var banner=document.createElement('div');
+    banner.id='site-banner';
+    banner.className='site-banner';
+    banner.innerHTML='Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.';
+    nav.parentNode.insertBefore(banner,nav);
+  }
   function installContributeButton(){
     var pg=document.body&&document.body.dataset.page;if(pg==='contribute'||pg==='feedback'||pg==='home')return;
     var wrap=document.querySelector('.hero .wrap');
@@ -66,6 +78,7 @@
   }
   function install(){
     installStyles();
+    installSiteBanner();
     normalizeNav();
     persistSideScroll();
     installContributeButton();
