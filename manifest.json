@@ -1,0 +1,42 @@
+{
+  "name": "Production Atlas",
+  "short_name": "Atlas",
+  "description": "Public work-mapping tool for live-event production contractors. Find festival dates, departments, employers, and application routes.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#10141a",
+  "theme_color": "#f2b705",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Opportunities",
+      "short_name": "Opportunities",
+      "description": "Browse open festival opportunities",
+      "url": "/opportunities.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Calendar",
+      "short_name": "Calendar",
+      "description": "View festival calendar",
+      "url": "/calendar.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Employers",
+      "short_name": "Employers",
+      "description": "Browse employer routes by department",
+      "url": "/employers.html",
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}
