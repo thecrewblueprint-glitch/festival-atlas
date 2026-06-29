@@ -389,8 +389,28 @@
 
   function renderIatse(){
     var el=$('#app');
-    var data=activeLocals();
-    if(el)el.innerHTML='<h2>United States IATSE Local Directory</h2><p class="lead">Routing aid for jurisdiction research. Verify directly before outreach.</p><div class="grid">'+(data.length?data.map(iatseCard).join(''):'<p>No local records match.</p>')+'</div>';
+    if(!el)return;
+    var q=(filterValues().q||'').trim().toLowerCase();
+    var matched=!q?iatseLocals.slice():iatseLocals.filter(function(local){return text(local).includes(q);});
+    var primary=[],secondary=[];
+    matched.forEach(function(local){
+      if(local.district==='National'){
+        secondary.push(local);
+      } else if(!q){
+        primary.push(local);
+      } else {
+        var geoMatch=(local.states||[]).some(function(s){return s.toLowerCase().indexOf(q)!==-1;})
+          ||String(local.jurisdiction||'').toLowerCase().indexOf(q)!==-1;
+        if(geoMatch)primary.push(local);else secondary.push(local);
+      }
+    });
+    var primaryHtml=primary.length?'<div class="grid">'+primary.map(iatseCard).join('')+'</div>':'';
+    var secLabel=secondary.length&&primary.length?'<h3 style="margin:26px 0 10px;font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-weight:900">National &amp; regional</h3>':'';
+    var secondaryHtml=secondary.length?secLabel+'<div class="grid">'+secondary.map(iatseCard).join('')+'</div>':'';
+    var noResults=!matched.length?'<p class="sub">No locals match.</p>':'';
+    el.innerHTML='<h2>IATSE Local Directory</h2>'+
+      '<p class="lead">State-based locals appear first. National and regional locals follow. Verify directly before outreach.</p>'+
+      primaryHtml+secondaryHtml+noResults;
   }
 
   function renderMatrix(){
