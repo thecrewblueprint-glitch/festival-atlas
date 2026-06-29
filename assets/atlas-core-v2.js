@@ -334,15 +334,7 @@
     if(!el)return;
     var upcoming=upcomingByDate();
     var active=activeOpportunities();
-    var stateCount=uniq(opportunities.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
-    var deptCount=uniq(opportunities.flatMap(function(o){return o.departments||[];})).length;
     el.innerHTML=
-      '<div class="stats" style="grid-template-columns:repeat(4,1fr);margin:0 0 18px">'+
-        '<div class="stat"><b>'+active.length+'</b><span>active festivals</span></div>'+
-        '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
-        '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
-        '<div class="stat"><b>'+employers.length+'</b><span>employers</span></div>'+
-      '</div>'+
       '<div class="pathway-grid">'+
         '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival calendar with dates, departments, and employer contacts.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
         '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contacts by production department.</p><span class="pathway-count">'+employers.length+' employers →</span></a>'+
