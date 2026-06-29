@@ -45,17 +45,15 @@
       }
       Array.prototype.slice.call(nav.querySelectorAll('a')).forEach(function(link){link.classList.remove('active');});
       guide.classList.add('active');
-      setTimeout(function(){try{guide.scrollIntoView({inline:'center',block:'nearest'});}catch(e){}},80);
+    }
+    var active=nav.querySelector('a.active');
+    if(active){
+      setTimeout(function(){
+        try{nav.scrollLeft=active.offsetLeft-(nav.offsetWidth/2)+(active.offsetWidth/2);}catch(e){}
+      },60);
     }
   }
-  function persistSideScroll(){
-    var nav=document.querySelector('.navInner');
-    if(!nav)return;
-    var key='productionAtlas.navScroll.'+(document.body&&document.body.dataset.page||location.pathname);
-    var saved=sessionStorage.getItem(key);
-    if(saved!==null)nav.scrollLeft=Number(saved)||0;
-    nav.addEventListener('scroll',function(){sessionStorage.setItem(key,String(nav.scrollLeft));},{passive:true});
-  }
+  function persistSideScroll(){}
   function installSiteBanner(){
     if(document.getElementById('site-banner'))return;
     var nav=document.querySelector('.nav');
