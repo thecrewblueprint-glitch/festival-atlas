@@ -154,7 +154,7 @@
           '<div class="cal-week-day-grid">'+week.days.map(function(day){
             var showCount=eventsOnDay(events,day,showRange).length;
             var workCount=eventsOnDay(events,day,workRange).length;
-            var dots=showCount?'<div class="cal-ev-dots">'+Array(Math.min(showCount,3)+1).join('<i class="cal-ev-dot cal-ev-dot-show"></i>')+'</div>':(workCount?'<div class="cal-ev-dots"><i class="cal-ev-dot cal-ev-dot-work"></i></div>':'');
+            var dots=showCount?'<div class="cal-ev-dots">'+Array(showCount+1).join('<i class="cal-ev-dot cal-ev-dot-show"></i>')+'</div>':'';
             return '<div class="cal-date-cell '+(day.getMonth()===month?'':'muted-month')+' '+(dateKey(day)===todayKey?'today':'')+'" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
               '<span class="cal-day-num">'+day.getDate()+'</span>'+(showCount?'<span class="cal-dot-count show">'+showCount+'</span>':(workCount?'<span class="cal-dot-count work">'+workCount+'</span>':''))+dots+'</div>';
           }).join('')+'</div>'+
@@ -230,7 +230,7 @@
         '</div>'+
       '</div>'+
       '<div class="cal-status"><span>'+events.length+' festival'+(events.length===1?'':'s')+' in current filters</span>'+(mobile?'':'<span>Outer muted outline = approximate work window · inner bright segment = festival show days</span>')+'</div>'+
-      (!mobile?'<div class="cal-legend"><span><i class="legend-work"></i>Approx. work window</span><span><i class="legend-show"></i>Festival show days inside bar</span></div>':'')+
+      (!mobile?'<div class="cal-legend"><span><i class="legend-work"></i>Approx. work window</span><span><i class="legend-show"></i>Festival show days inside bar</span></div>':'<div class="cal-mobile-legend"><i class="cal-ev-dot cal-ev-dot-show"></i><span>Each dot = one festival on that day · tap a date to see all festivals</span></div>')+
       '<div class="cal-scroll">'+calHtml+'</div>'+
       '<div class="notice"><b>Date disclaimer:</b> festival dates are based on public sources. Approximate work windows are planning estimates only and are subject to change; verify current dates with official sources before making travel, outreach, or availability decisions.</div>'+
       '</section>';
@@ -253,7 +253,8 @@
       '.cal-month-weeks{display:grid}.cal-week-row{position:relative;min-height:176px;border-bottom:1px solid var(--line)}.cal-week-row:last-child{border-bottom:0}'+
       '.cal-week-day-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,1fr)}.cal-date-cell{position:relative;border-right:1px solid rgba(48,59,73,.8);padding:9px;cursor:pointer;background:rgba(21,29,39,.38)}.cal-date-cell:last-child{border-right:0}.cal-date-cell:hover{background:rgba(242,183,5,.08)}.cal-date-cell.muted-month{opacity:.42}.cal-date-cell.today{box-shadow:inset 0 0 0 2px rgba(242,183,5,.55)}'+
       '.cal-day-num{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;border-radius:999px;color:#ffd66b;font-weight:900}.cal-date-cell.today .cal-day-num{background:var(--gold2);color:#111827}.cal-dot-count{position:absolute;top:10px;right:10px;font-size:.72rem;font-weight:900}.cal-dot-count.show{color:#ffd66b}.cal-dot-count.work{color:#9dc8ff}'+
-      '.cal-ev-dots{display:none;position:absolute;bottom:5px;left:0;right:0;justify-content:center;gap:3px}.cal-ev-dot{display:inline-block;width:6px;height:6px;border-radius:999px}.cal-ev-dot-show{background:rgba(242,183,5,.95)}.cal-ev-dot-work{background:rgba(127,183,255,.7)}'+
+      '.cal-ev-dots{display:none;justify-content:center;flex-wrap:wrap;gap:3px;margin-top:5px}.cal-ev-dot{display:inline-block;width:7px;height:7px;border-radius:999px;flex-shrink:0}.cal-ev-dot-show{background:rgba(242,183,5,.95);box-shadow:0 0 3px rgba(242,183,5,.4)}'+
+      '.cal-mobile-legend{display:flex;align-items:center;gap:9px;margin:0 0 10px;padding:9px 13px;border:1px solid var(--line);background:#111720;border-radius:10px;color:var(--muted);font-size:.82rem}'+
       '.cal-week-event-grid{position:relative;display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:22px;gap:4px;padding:44px 8px 8px;pointer-events:none}'+
       '.cal-combined-bar{pointer-events:auto;position:relative;display:block;min-width:0;border:1px dashed rgba(127,183,255,.78);background:rgba(127,183,255,.12);color:#d9ebff;border-radius:8px;padding:3px 8px;font-size:.7rem;font-weight:850;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.16);overflow:hidden}.cal-combined-bar:hover{filter:brightness(1.16)}.cal-combined-bar.continues-in{border-top-left-radius:0;border-bottom-left-radius:0}.cal-combined-bar.continues-out{border-top-right-radius:0;border-bottom-right-radius:0}'+
       '.cal-work-label{position:absolute;z-index:1;top:50%;transform:translateY(-50%);color:#9dc8ff;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;opacity:.82;line-height:1;pointer-events:none;text-shadow:0 1px 2px #07101a}.cal-work-label-start{left:8px}.cal-work-label-end{right:8px}'+
@@ -284,9 +285,10 @@
         '.cal-scroll{overflow:visible;border:none;border-radius:0;background:transparent;box-shadow:none}'+
         '.calendar-app-frame{min-width:0}'+
         '.cal-week-event-grid{display:none}'+
-        '.cal-week-row{min-height:76px}'+
-        '.cal-date-cell{padding:7px 4px}'+
-        '.cal-day-num{min-width:22px;height:22px;font-size:.82rem}'+
+        '.cal-week-day-grid{position:relative;inset:auto}'+
+        '.cal-week-row{min-height:0;border-bottom:1px solid var(--line)}'+
+        '.cal-date-cell{display:flex;flex-direction:column;align-items:center;padding:8px 3px 9px}'+
+        '.cal-day-num{min-width:24px;height:24px;font-size:.84rem}'+
         '.cal-dot-count{display:none}'+
         '.cal-ev-dots{display:flex}'+
         '.cal-weekdays>div,.cal-weekdays>button{padding:8px 2px;font-size:.68rem;letter-spacing:0}'+
