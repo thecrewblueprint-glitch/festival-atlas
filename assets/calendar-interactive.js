@@ -5,6 +5,7 @@
   var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   var SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var state={view:'month',cursor:null};
+  var MOBILE_BREAK=700;
 
   function $(selector){return document.querySelector(selector)}
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
@@ -15,6 +16,7 @@
   function monthStart(date){return new Date(date.getFullYear(),date.getMonth(),1)}
   function fmt(date,year){return date?SHORT[date.getMonth()]+' '+date.getDate()+(year?', '+date.getFullYear():''):''}
   function branchName(id){var match=(window.branches||[]).find(function(b){return b.id===id});return match?match.name:id}
+  function isMobile(){return window.innerWidth<MOBILE_BREAK}
   function filterValues(){return {
     q:(($('#q')||{}).value||'').trim().toLowerCase(),
     branch:(($('#branchFilter')||{}).value||''),
@@ -92,11 +94,11 @@
         var sr=showRange(event), wr=workRange(event);
         var depts=(event.departments||[]).slice(0,4).map(branchName).join(' · ');
         return '<div class="detail cal-day-detail cal-show-detail" style="margin:10px 0;cursor:pointer" onclick="openOpportunity(\''+esc(event.id)+'\')">'+
-          '<b>'+esc(event.name)+'</b><br>'+ 
-          '<span class="sub">'+esc(event.city||'')+(event.state?', '+esc(event.state):'')+'</span><br>'+ 
-          '<span class="sub">Festival: '+esc(fmt(sr.start,false)+' – '+fmt(sr.end,true))+' · '+durationDays(sr)+' day'+(durationDays(sr)===1?'':'s')+'</span><br>'+ 
-          '<span class="sub">Approx. work window: '+esc(fmt(wr.start,false)+' – '+fmt(wr.end,true))+'</span>'+ 
-          (depts?'<br><span class="sub">'+esc(depts)+'</span>':'')+ 
+          '<b>'+esc(event.name)+'</b><br>'+
+          '<span class="sub">'+esc(event.city||'')+(event.state?', '+esc(event.state):'')+'</span><br>'+
+          '<span class="sub">Festival: '+esc(fmt(sr.start,false)+' – '+fmt(sr.end,true))+' · '+durationDays(sr)+' day'+(durationDays(sr)===1?'':'s')+'</span><br>'+
+          '<span class="sub">Approx. work window: '+esc(fmt(wr.start,false)+' – '+fmt(wr.end,true))+'</span>'+
+          (depts?'<br><span class="sub">'+esc(depts)+'</span>':'')+
         '</div>';
       }).join('');
     }
@@ -104,9 +106,9 @@
       body+='<h3>Approximate work-window estimates</h3>'+workItems.map(function(event){
         var wr=workRange(event), sr=showRange(event);
         return '<div class="detail cal-day-detail cal-work-detail" style="margin:10px 0;cursor:pointer" onclick="openOpportunity(\''+esc(event.id)+'\')">'+
-          '<b>'+esc(event.name)+'</b><br>'+ 
-          '<span class="sub">Approx. work window: '+esc(fmt(wr.start,false)+' – '+fmt(wr.end,true))+'</span><br>'+ 
-          '<span class="sub">Festival show dates: '+esc(fmt(sr.start,false)+' – '+fmt(sr.end,true))+'</span>'+ 
+          '<b>'+esc(event.name)+'</b><br>'+
+          '<span class="sub">Approx. work window: '+esc(fmt(wr.start,false)+' – '+fmt(wr.end,true))+'</span><br>'+
+          '<span class="sub">Festival show dates: '+esc(fmt(sr.start,false)+' – '+fmt(sr.end,true))+'</span>'+
         '</div>';
       }).join('');
     }
@@ -144,7 +146,7 @@
     var month=state.cursor.getMonth();
     var todayKey=dateKey(new Date());
     return '<div class="calendar-app-frame">'+
-      '<div class="cal-weekdays app-weekdays">'+DAYS.map(function(day){return '<div>'+day+'</div>'}).join('')+'</div>'+ 
+      '<div class="cal-weekdays app-weekdays">'+DAYS.map(function(day){return '<div>'+day+'</div>'}).join('')+'</div>'+
       '<div class="cal-month-weeks">'+monthWeeks(state.cursor).map(function(week){
         var inWeek=eventsInRange(events,week.start,week.end,workRange).slice(0,8);
         var allInWeek=eventsInRange(events,week.start,week.end,workRange);
@@ -154,10 +156,10 @@
             var workCount=eventsOnDay(events,day,workRange).length;
             return '<div class="cal-date-cell '+(day.getMonth()===month?'':'muted-month')+' '+(dateKey(day)===todayKey?'today':'')+'" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
               '<span class="cal-day-num">'+day.getDate()+'</span>'+(showCount?'<span class="cal-dot-count show">'+showCount+'</span>':(workCount?'<span class="cal-dot-count work">'+workCount+'</span>':''))+'</div>';
-          }).join('')+'</div>'+ 
-          '<div class="cal-week-event-grid">'+inWeek.map(function(event,index){return combinedBar(event,week.start,week.end,index+1)}).join('')+(allInWeek.length>8?'<div class="cal-week-more" style="grid-column:1 / 8;grid-row:9">+'+(allInWeek.length-8)+' more this week</div>':'')+'</div>'+ 
+          }).join('')+'</div>'+
+          '<div class="cal-week-event-grid">'+inWeek.map(function(event,index){return combinedBar(event,week.start,week.end,index+1)}).join('')+(allInWeek.length>8?'<div class="cal-week-more" style="grid-column:1 / 8;grid-row:9">+'+(allInWeek.length-8)+' more this week</div>':'')+'</div>'+
         '</section>';
-      }).join('')+'</div>'+ 
+      }).join('')+'</div>'+
     '</div>';
   }
   function renderWeek(events){
@@ -167,28 +169,69 @@
     var end=addDays(start,6);
     var rows=eventsInRange(events,start,end,workRange).slice(0,18);
     return '<div class="calendar-app-frame cal-week-app">'+
-      '<div class="cal-weekdays app-weekdays">'+days.map(function(day){return '<button type="button" onclick="openCalendarDay(\''+dateKey(day)+'\')"><b>'+DAYS[day.getDay()]+'</b><span>'+fmt(day,false)+'</span></button>'}).join('')+'</div>'+ 
-      '<div class="cal-week-track">'+(rows.length?rows.map(function(event,index){return combinedBar(event,start,end,index+1)}).join(''):'<p class="sub">No festivals or approximate work windows in this week under current filters.</p>')+'</div>'+ 
+      '<div class="cal-weekdays app-weekdays">'+days.map(function(day){return '<button type="button" onclick="openCalendarDay(\''+dateKey(day)+'\')"><b>'+DAYS[day.getDay()]+'</b><span>'+fmt(day,false)+'</span></button>'}).join('')+'</div>'+
+      '<div class="cal-week-track">'+(rows.length?rows.map(function(event,index){return combinedBar(event,start,end,index+1)}).join(''):'<p class="sub">No festivals or approximate work windows in this week under current filters.</p>')+'</div>'+
       '</div>';
+  }
+  function renderWeekMobile(events){
+    var start=startOfWeek(state.cursor);
+    var todayKey=dateKey(new Date());
+    var days=[];
+    for(var i=0;i<7;i++)days.push(addDays(start,i));
+    return '<div class="cal-week-mobile">'+
+      days.map(function(day){
+        var showItems=eventsOnDay(events,day,showRange);
+        var workItems=eventsOnDay(events,day,workRange).filter(function(e){return showItems.indexOf(e)<0;});
+        var total=showItems.length+workItems.length;
+        var isToday=dateKey(day)===todayKey;
+        return '<div class="cal-wm-day'+(isToday?' today':'')+(total===0?' cal-wm-empty':'')+'">'+
+          '<div class="cal-wm-header" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
+            '<span class="cal-wm-dayname">'+DAYS[day.getDay()]+'</span>'+
+            '<span class="cal-wm-date">'+fmt(day,false)+'</span>'+
+            (total?'<span class="cal-wm-count">'+total+'</span>':'')+
+          '</div>'+
+          (showItems.length||workItems.length?
+            '<div class="cal-wm-events">'+
+              showItems.map(function(e){
+                var sr=showRange(e);
+                return '<button class="cal-wm-pill cal-wm-show" onclick="openOpportunity(\''+esc(e.id)+'\')">'+
+                  '<b>'+esc(e.name)+'</b>'+
+                  '<span>'+fmt(sr.start,false)+' – '+fmt(sr.end,false)+'</span>'+
+                '</button>';
+              }).join('')+
+              workItems.map(function(e){
+                return '<button class="cal-wm-pill cal-wm-work" onclick="openOpportunity(\''+esc(e.id)+'\')">'+
+                  '<b>'+esc(e.name)+'</b>'+
+                  '<span>Approx. work window</span>'+
+                '</button>';
+              }).join('')+
+            '</div>':'')+
+        '</div>';
+      }).join('')+
+    '</div>';
   }
   function render(){
     var app=$('#app');
     if(!app)return;
     var events=allEvents();
     ensureCursor(events);
+    var mobile=isMobile();
     var label=state.view==='week'?'Week of '+fmt(startOfWeek(state.cursor),true):MONTHS[state.cursor.getMonth()]+' '+state.cursor.getFullYear();
+    var calHtml;
+    if(state.view==='week'){calHtml=mobile?renderWeekMobile(events):renderWeek(events);}
+    else{calHtml=renderMonth(events);}
     app.innerHTML='<section class="interactive-calendar">'+
       '<div class="cal-app-toolbar">'+
-        '<div class="cal-title-block"><h2>'+esc(label)+'</h2><p class="lead">Festival calendar for public show dates, approximate work windows, overlaps, and durations.</p></div>'+ 
+        '<div class="cal-title-block"><h2>'+esc(label)+'</h2><p class="lead">Festival calendar for public show dates, approximate work windows, overlaps, and durations.</p></div>'+
         '<div class="cal-control-stack">'+
-          '<div class="cal-nav-controls"><button class="btn" type="button" onclick="shiftCalendar(-1)">‹</button><button class="btn" type="button" onclick="calendarToday()">Today</button><button class="btn" type="button" onclick="shiftCalendar(1)">›</button></div>'+ 
-          '<div class="cal-segment"><button class="'+(state.view==='month'?'active':'')+'" type="button" onclick="setCalendarView(\'month\')">Month</button><button class="'+(state.view==='week'?'active':'')+'" type="button" onclick="setCalendarView(\'week\')">Week</button></div>'+ 
-        '</div>'+ 
-      '</div>'+ 
-      '<div class="cal-status"><span>'+events.length+' festival'+(events.length===1?'':'s')+' in current filters</span><span>Outer muted outline = approximate work window · inner bright segment = festival show days</span></div>'+ 
-      '<div class="cal-legend"><span><i class="legend-work"></i>Approx. work window</span><span><i class="legend-show"></i>Festival show days inside bar</span></div>'+ 
-      '<div class="cal-scroll">'+(state.view==='week'?renderWeek(events):renderMonth(events))+'</div>'+ 
-      '<div class="notice"><b>Date disclaimer:</b> festival dates are based on public sources. Approximate work windows are planning estimates only and are subject to change; verify current dates with official sources before making travel, outreach, or availability decisions.</div>'+ 
+          '<div class="cal-nav-controls"><button class="btn" type="button" onclick="shiftCalendar(-1)">‹</button><button class="btn" type="button" onclick="calendarToday()">Today</button><button class="btn" type="button" onclick="shiftCalendar(1)">›</button></div>'+
+          '<div class="cal-segment"><button class="'+(state.view==='month'?'active':'')+'" type="button" onclick="setCalendarView(\'month\')">Month</button><button class="'+(state.view==='week'?'active':'')+'" type="button" onclick="setCalendarView(\'week\')">Week</button></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="cal-status"><span>'+events.length+' festival'+(events.length===1?'':'s')+' in current filters</span>'+(mobile?'':'<span>Outer muted outline = approximate work window · inner bright segment = festival show days</span>')+'</div>'+
+      (!mobile?'<div class="cal-legend"><span><i class="legend-work"></i>Approx. work window</span><span><i class="legend-show"></i>Festival show days inside bar</span></div>':'')+
+      '<div class="cal-scroll">'+calHtml+'</div>'+
+      '<div class="notice"><b>Date disclaimer:</b> festival dates are based on public sources. Approximate work windows are planning estimates only and are subject to change; verify current dates with official sources before making travel, outreach, or availability decisions.</div>'+
       '</section>';
   }
   function installStyles(){
@@ -217,10 +260,44 @@
       '.cal-week-more{pointer-events:none;color:#ffd66b;font-size:.72rem;font-weight:900;padding:2px 8px}'+
       '.cal-week-app{padding-bottom:10px}.cal-week-track{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(26px,auto);gap:6px;min-height:380px;padding:12px;background:#0e141c}.cal-week-track .cal-combined-bar{min-height:26px}'+
       '.cal-day-detail:hover{border-color:rgba(242,183,5,.58)}.cal-show-detail{border-color:rgba(242,183,5,.42)}.cal-work-detail{border-color:rgba(127,183,255,.42)}'+
+      // Mobile week list
+      '.cal-week-mobile{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0e141c}'+
+      '.cal-wm-day{border-bottom:1px solid var(--line)}.cal-wm-day:last-child{border-bottom:0}'+
+      '.cal-wm-day.today .cal-wm-header{box-shadow:inset 0 0 0 2px rgba(242,183,5,.45)}'+
+      '.cal-wm-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;background:rgba(14,20,28,.8)}'+
+      '.cal-wm-header:hover{background:rgba(242,183,5,.06)}'+
+      '.cal-wm-dayname{color:#aeb9c7;font-size:.72rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;min-width:28px}'+
+      '.cal-wm-date{color:#e0e8f4;font-weight:700;flex:1;font-size:.9rem}'+
+      '.cal-wm-count{background:rgba(127,183,255,.18);color:#9dc8ff;font-size:.7rem;font-weight:900;padding:3px 8px;border-radius:999px}'+
+      '.cal-wm-events{padding:0 12px 10px}'+
+      '.cal-wm-pill{display:block;width:100%;text-align:left;border-radius:8px;padding:8px 10px;margin:4px 0;cursor:pointer;font-size:.82rem;line-height:1.4;font-family:inherit;background:transparent}'+
+      '.cal-wm-pill b{display:block;font-weight:900;margin-bottom:2px}'+
+      '.cal-wm-pill span{display:block;font-size:.74rem;opacity:.8}'+
+      '.cal-wm-show{border:1px solid rgba(242,183,5,.6);background:rgba(242,183,5,.1);color:#ffd66b}'+
+      '.cal-wm-work{border:1px dashed rgba(127,183,255,.5);background:rgba(127,183,255,.08);color:#9dc8ff}'+
+      '.cal-wm-empty{opacity:.5}'+
+      // Responsive
       '@media(max-width:900px){.cal-app-toolbar{display:block}.cal-control-stack{justify-items:start;margin-top:12px}.calendar-app-frame{min-width:860px}.cal-status{display:block}.cal-status span{display:block;margin:2px 0}.cal-week-row{min-height:174px}}'+
-      '@media(max-width:560px){.cal-nav-controls .btn{flex:1}.cal-nav-controls{width:100%}.cal-segment{width:100%}.cal-segment button{flex:1}.calendar-app-frame{min-width:820px}}';
+      '@media(max-width:700px){'+
+        '.cal-scroll{overflow:visible;border:none;border-radius:0;background:transparent;box-shadow:none}'+
+        '.calendar-app-frame{min-width:0}'+
+        '.cal-week-event-grid{display:none}'+
+        '.cal-week-row{min-height:68px}'+
+        '.cal-date-cell{padding:7px 4px}'+
+        '.cal-day-num{min-width:22px;height:22px;font-size:.82rem}'+
+        '.cal-dot-count{top:7px;right:4px;font-size:.68rem}'+
+        '.cal-weekdays>div,.cal-weekdays>button{padding:8px 2px;font-size:.68rem;letter-spacing:0}'+
+      '}'+
+      '@media(max-width:560px){.cal-nav-controls .btn{flex:1}.cal-nav-controls{width:100%}.cal-segment{width:100%}.cal-segment button{flex:1}}';
     document.head.appendChild(style);
   }
-  function init(){installStyles();render();['input','change'].forEach(function(type){document.addEventListener(type,function(event){if(event.target&&event.target.closest&&event.target.closest('#filters')){state.cursor=null;render();}},true);});}
+  var resizeTimer;
+  function onResize(){clearTimeout(resizeTimer);resizeTimer=setTimeout(render,120);}
+  function init(){
+    installStyles();
+    render();
+    window.addEventListener('resize',onResize);
+    ['input','change'].forEach(function(type){document.addEventListener(type,function(event){if(event.target&&event.target.closest&&event.target.closest('#filters')){state.cursor=null;render();}},true);});
+  }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
