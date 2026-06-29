@@ -49,8 +49,12 @@
     var active=nav.querySelector('a.active');
     if(active){
       setTimeout(function(){
-        try{nav.scrollLeft=active.offsetLeft-(nav.offsetWidth/2)+(active.offsetWidth/2);}catch(e){}
-      },60);
+        try{
+          var nr=nav.getBoundingClientRect();
+          var ar=active.getBoundingClientRect();
+          nav.scrollLeft+=(ar.left+ar.width/2)-(nr.left+nr.width/2);
+        }catch(e){}
+      },120);
     }
   }
   function persistSideScroll(){}
