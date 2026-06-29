@@ -69,7 +69,9 @@
       mount=document.createElement('section');
       mount.id=id;
       mount.className='card';
-      mount.style.marginTop='18px';
+      mount.style.marginTop='32px';
+      mount.style.borderTop='1px solid var(--line)';
+      mount.style.paddingTop='24px';
       app.appendChild(mount);
     }
     mount.innerHTML='<h2>Employer route sources</h2>'+

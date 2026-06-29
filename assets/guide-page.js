@@ -28,6 +28,8 @@
         card('Employers','Public company and vendor routes connected to the live-event production industry, organized by the departments they hire in. Department fit is an industry research aid, not confirmation that a company is working a specific festival.')+
         card('Sources','Central page for public source links, kept separate so cards, popups, and modals stay focused on work mapping.')+
         card('Contribute','Submit festival research data or feedback on the app. Submissions are reviewed before any information is used.')+
+        card('Schedule','Personal Gantt planner stored in your browser. Add festivals to your schedule to compare production windows, overlaps, and months covered.')+
+        card('IATSE Locals','Directory of U.S. IATSE local routes organized by state and jurisdiction. Use as a union contact research aid — verify directly before outreach.')+
       '</div>'+
       '<p class="section-intro">Additional explanatory and legal pages — including About, How the Data Works, Employer Route Methodology, the Date &amp; Work Window Disclaimer, and the privacy and terms pages — are linked in the footer. The Schedule and IATSE local-route pages are also available.</p>'+
       '<h3>How to read route information</h3>'+

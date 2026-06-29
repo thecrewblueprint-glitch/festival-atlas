@@ -366,7 +366,18 @@
   function renderOpportunities(){
     var el=$('#app');
     var data=activeOpportunities();
-    if(el)el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p><div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
+    if(!el)return;
+    var stateCount=uniq(data.filter(function(o){return o.state&&o.state!=='US';}).map(function(o){return o.state;})).length;
+    var deptCount=uniq(data.flatMap(function(o){return o.departments||[];})).length;
+    var statsHtml='<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
+      '<div class="stat"><b>'+data.length+'</b><span>festivals</span></div>'+
+      '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
+      '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
+      '</div>';
+    el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p>'+
+      statsHtml+
+      '<div class="notice">Know an active festival that belongs here? Submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
+      '<div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
   }
 
   function renderIatse(){
@@ -480,6 +491,7 @@
     var deptCount=filtered.filter(function(r){return r.type==='branch';}).length;
     el.innerHTML='<h2>Sources</h2>'+
       '<p class="lead">Organized public source list. Sources are kept here instead of inside popups so event and department research popups stay clean.</p>'+
+      '<div class="notice">Have a public source link that belongs here? Submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
       (branchDataReady?'':'<p class="sub">Loading department source records&hellip;</p>')+
       '<div class="stats" style="grid-template-columns:repeat(3,1fr);margin:0 0 18px">'+
         '<div class="stat"><b>'+filtered.length+'</b><span>sources shown</span></div>'+
@@ -632,7 +644,7 @@
     if(modal)modal.addEventListener('click',function(event){if(event.target.id==='modal')window.closeModal()});
     document.addEventListener('keydown',function(event){if(event.key==='Escape'){var m=$('#modal');if(m&&m.classList.contains('open'))window.closeModal();}});
     var page=document.body.dataset.page;
-    var branchDependentPages={home:1,branches:1,sources:1,analytics:1};
+    var branchDependentPages={home:1,branches:1,sources:1,analytics:1,opportunities:1};
     ensureBranchResearch().then(function(){if(branchDependentPages[page])renderPage();});
   }
 

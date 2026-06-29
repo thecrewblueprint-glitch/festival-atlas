@@ -1,10 +1,10 @@
 # Pending Camping Festival Target Queue
 
-Status: complete  
-Created: 2026-06-29  
-Review after: 2026-07-13  
-Assistant: ChatGPT  
-Branch: research-version  
+Status: complete
+Created: 2026-06-29
+Review after: 2026-07-13
+Assistant: ChatGPT
+Branch: research-version
 Commit: 67b2fe58c1b816a438ec1e6380d70f0a962d18d3
 
 ## Files changed
