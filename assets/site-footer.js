@@ -2,9 +2,9 @@
   function footerHtml(){
     return '<div class="site-footer-inner">'+
       '<div class="site-footer-brand">'+
-        '<b>Production Atlas</b>'+ 
-        '<span>Public work-mapping tool for live-event production contractors.</span>'+ 
-      '</div>'+ 
+        '<b>Production Atlas</b>'+
+        '<span>A public work-mapping tool for live-event production contractors, created by <a href="https://deadhanglaborllc.com" target="_blank" rel="noopener">Deadhang Labor LLC</a>.</span>'+
+      '</div>'+
       '<div class="site-footer-columns">'+
         '<div><h4>Work map</h4><a href="./opportunities.html">Opportunities</a><a href="./calendar.html">Calendar</a><a href="./map.html">Map</a><a href="./employers.html">Employers</a><a href="./sources.html">Sources</a><a href="./schedule.html">Schedule</a><a href="./iatse.html">IATSE Locals</a><a href="./contribute.html">Contribute</a><a href="./feedback.html">Feedback</a></div>'+
         '<div><h4>White pages</h4><a href="./about.html">About</a><a href="./guide.html">Guide</a><a href="./data-methodology.html">How the Data Works</a><a href="./employer-route-methodology.html">Employer Route Methodology</a><a href="./date-work-window-disclaimer.html">Date & Work Window Disclaimer</a></div>'+ 

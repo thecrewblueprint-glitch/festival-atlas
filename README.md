@@ -1,5 +1,7 @@
 # Production Atlas
 
+A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
+
 Generated: 2026-06-22
 Updated: 2026-06-27
 
