@@ -57,9 +57,9 @@
     var stateTag=employer.national?'National':((employer.states||[]).map(function(s){return STATE_NAMES[s]||s}).join(', '));
     return '<article class="card click" onclick="openEmployer(\''+esc(employer.id)+'\')">'+
       '<h3>'+esc(employer.name)+'</h3>'+
-      '<div class="sub">'+esc(employer.type||'Public employer route')+(stateTag?' • '+esc(stateTag):'')+'</div>'+
+      '<div class="sub">'+esc(employer.type||'Employer')+(stateTag?' • '+esc(stateTag):'')+'</div>'+
       '<p><b>Department fit:</b> '+esc(contextDepartment||depts||OTHER_LABEL)+'</p>'+
-      '<p>'+esc(employer.bestUse||'Public company route for live-event production research.')+'</p>'+
+      '<p>'+esc(employer.bestUse||'Public company for live-event production research.')+'</p>'+
       (url?'<p><a href="'+esc(url)+'" onclick="event.stopPropagation()" target="_blank" rel="noopener">'+esc(linkLabel(employer))+' ↗</a></p>':'')+
       '</article>';
   }
@@ -108,10 +108,10 @@
     var filtered=all.filter(matches).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
     var stateLabel=f.state?(STATE_NAMES[f.state]||f.state):null;
     var intro='<h2>Employers by Department</h2>'+
-      '<p class="lead">These are public company and vendor routes connected to the live-event production industry, organized by the production departments they hire in. They may or may not be tied to a specific festival — department fit is an industry research aid, not confirmation that a company is working any particular event.</p>'+
+      '<p class="lead">These are public companies and vendor contacts in the live-event production industry, organized by the production departments they hire in. They may or may not be tied to a specific festival — department fit is an industry research aid, not confirmation that a company is working any particular event.</p>'+
       (stateLabel?'<div class="notice">Showing employers that hire in <b>'+esc(stateLabel)+'</b> — includes national employers that operate in all states.</div>':'')+
-      '<div class="notice">Know a public company or route that belongs here? You can submit it on the <a href="contribute.html">Contribute page</a>.</div>';
-    if(!filtered.length){app.innerHTML=intro+'<p>No employer routes match the current filters.</p>';return;}
+      '<div class="notice">Know a public company or employer that belongs here? You can submit it on the <a href="contribute.html">Contribute page</a>.</div>';
+    if(!filtered.length){app.innerHTML=intro+'<p>No employers match the current filters.</p>';return;}
     if(f.department){
       app.innerHTML=intro+'<h3>'+esc(branchName(f.department))+'</h3><div class="grid">'+filtered.map(function(employer){return employerCard(employer,branchName(f.department))}).join('')+'</div>';
       return;

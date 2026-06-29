@@ -3,11 +3,11 @@
     var content=document.querySelector('#modalContent');
     if(!content)return;
     var heading=Array.prototype.slice.call(content.querySelectorAll('h3')).find(function(node){
-      return /Employer routes by production branch/i.test(node.textContent||'');
+      return /Employers by production branch/i.test(node.textContent||'');
     });
     if(!heading)return;
 
-    heading.textContent='Confirmed event-specific routes by production department';
+    heading.textContent='Confirmed event-specific contacts by production department';
 
     var branchCards=Array.prototype.slice.call(content.querySelectorAll('.branch'));
     var kept=0;
@@ -16,7 +16,7 @@
       if(/Companies tied to this branch/i.test(text)){
         kept++;
         var sub=card.querySelector('.sub');
-        if(sub)sub.textContent='Confirmed public event-specific company route';
+        if(sub)sub.textContent='Confirmed event-specific company contact';
         return;
       }
       card.remove();
@@ -28,8 +28,8 @@
     var note=document.createElement('div');
     note.className='notice event-route-safety-note';
     note.innerHTML=kept
-      ? '<b>Route note:</b> only confirmed public event-specific company routes are shown here. General employer leads remain on the Employers page.'
-      : '<b>No confirmed public employer/vendor route listed for this festival yet.</b> General company leads are kept on the Employers page and are not shown here unless a public source ties them to this specific event. If you have information that can help, you can submit it on the <a href="contribute.html" onclick="event.stopPropagation()">Contribute page</a>.';
+      ? '<b>Note:</b> only confirmed event-specific company contacts are shown here. General employer leads remain on the Employers page.'
+      : '<b>No confirmed employer or vendor contact listed for this festival yet.</b> General company leads are kept on the Employers page and are not shown here unless a public source ties them to this specific event. If you have information that can help, you can submit it on the <a href="contribute.html" onclick="event.stopPropagation()">Contribute page</a>.';
     heading.insertAdjacentElement('afterend',note);
   }
 

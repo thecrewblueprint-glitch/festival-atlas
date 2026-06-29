@@ -225,7 +225,7 @@
       (prodWindow?'<p class="oppline"><b>Approx. production window:</b> '+esc(prodWindow)+'</p>':'')+
       (producer?'<p class="oppline"><b>Producer / promoter:</b> '+esc(producer)+'</p>':'')+
       '<p class="oppline"><b>Branches:</b> '+branchSummary(opportunity,4)+'</p>'+
-      '<p class="oppline cardcta">Open employer routes →</p>'+
+      '<p class="oppline cardcta">Open employer contacts →</p>'+
       '</article>';
   }
 
@@ -237,7 +237,7 @@
       '<div class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</div>'+
       (craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+
       (states?'<p><b>States:</b> '+esc(states)+'</p>':'')+
-      '<p><b>Use case:</b> check possible local jurisdiction and contact route.</p>'+
+      '<p><b>Use case:</b> find contact information for this local.</p>'+
       '</article>';
   }
 
@@ -341,11 +341,11 @@
         '<div class="stat"><b>'+active.length+'</b><span>active festivals</span></div>'+
         '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
         '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
-        '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
+        '<div class="stat"><b>'+employers.length+'</b><span>employers</span></div>'+
       '</div>'+
       '<div class="pathway-grid">'+
-        '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival calendar with dates, departments, and employer routes.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
-        '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contact routes by production department.</p><span class="pathway-count">'+employers.length+' routes →</span></a>'+
+        '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival calendar with dates, departments, and employer contacts.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
+        '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contacts by production department.</p><span class="pathway-count">'+employers.length+' employers →</span></a>'+
         '<a class="pathway" href="calendar.html"><h4>Calendar</h4><p class="pathway-skills">Month-by-month view for production window planning.</p><span class="pathway-count">Browse →</span></a>'+
         '<a class="pathway" href="schedule.html"><h4>My schedule</h4><p class="pathway-skills">Personal Gantt planner — add festivals and compare windows.</p><span class="pathway-count">Open →</span></a>'+
       '</div>'+
@@ -381,7 +381,7 @@
       '<div class="stat"><b>'+stateCount+'</b><span>states</span></div>'+
       '<div class="stat"><b>'+deptCount+'</b><span>departments</span></div>'+
       '</div>';
-    el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer routes.</p>'+
+    el.innerHTML='<h2>Festivals</h2><p class="lead">Browse festivals by date, city, venue, producer, production window, and public employer contacts.</p>'+
       statsHtml+
       '<div class="notice">Know an active festival that belongs here? Submit it on the <a href="contribute.html">Contribute page</a>.</div>'+
       '<div class="grid">'+(data.length?data.map(opportunityCard).join(''):'<p>No festivals match the current filter.</p>')+'</div>';
@@ -426,9 +426,9 @@
   function renderBranches(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Production Branches</h2><p class="lead">Employer and company routes organized by production branch. Open a branch to see the festivals using it and the companies that hire for it.</p><div class="grid">'+branches.map(function(branch){
+    el.innerHTML='<h2>Production Branches</h2><p class="lead">Employers and companies organized by production branch. Open a branch to see the festivals using it and the companies that hire for it.</p><div class="grid">'+branches.map(function(branch){
       var roles=(branch.workerFocus||[]).slice(0,4).join(' \xb7 ');
-      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employer routes:</b> '+matchingEmployers(branch.id).length+'</p></article>';
+      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employers:</b> '+matchingEmployers(branch.id).length+'</p></article>';
     }).join('')+'</div>';
   }
 
@@ -457,21 +457,21 @@
         '<div class="stat"><b>'+esc(busiest)+'</b><span>busiest month</span></div>'+
         '<div class="stat"><b>'+stateCount+'</b><span>states with festivals</span></div>'+
         '<div class="stat"><b>'+branches.length+'</b><span>production branches</span></div>'+
-        '<div class="stat"><b>'+employers.length+'</b><span>employer routes</span></div>'+
+        '<div class="stat"><b>'+employers.length+'</b><span>employers</span></div>'+
       '</div>'+
       '<div class="grid">'+
         '<div class="card"><h3>Festivals by month</h3><p class="sub">When 2026 production work clusters across the year.</p>'+monthBars()+'</div>'+
         '<div class="card"><h3>Festivals by region</h3><p class="sub">Where the festivals are concentrated.</p>'+bars(counts(opportunities,function(o){return o.region}))+'</div>'+
         '<div class="card"><h3>Festivals by state</h3><p class="sub">State-level concentration of 2026 festivals.</p>'+bars(counts(opportunities.filter(function(o){return o.state&&o.state!=='US';}),function(o){return o.state}))+'</div>'+
         '<div class="card"><h3>Demand by production branch</h3><p class="sub">How many 2026 festivals hire each trade.</p>'+bars(byBranch)+'</div>'+
-        '<div class="card"><h3>Employer routes by type</h3><p class="sub">Public company routes by category.</p>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
+        '<div class="card"><h3>Employers by type</h3><p class="sub">Public companies by category.</p>'+bars(counts(employers,function(e){return e.type}))+'</div>'+
       '</div>';
   }
 
   function renderGuide(){
     var el=$('#app');
     if(!el)return;
-    el.innerHTML='<h2>Guide for Use</h2><p class="lead">Production Atlas is a scouting dashboard. Use records as research leads until verified by current public or official sources.</p><div class="notice"><b>Core rule:</b> do not treat route leads as confirmed vendors.</div>';
+    el.innerHTML='<h2>Guide for Use</h2><p class="lead">Production Atlas is a scouting dashboard. Use records as research leads until verified by current public or official sources.</p><div class="notice"><b>Core rule:</b> do not treat research leads as confirmed vendors.</div>';
   }
 
   function renderSources(){
@@ -554,14 +554,14 @@
     if(record&&(record.confirmedVendors||[]).length){
       ids=record.confirmedVendors.slice();routeLabel='Companies tied to this branch';
     } else if(record&&(record.publicLeads||[]).length){
-      ids=record.publicLeads.slice();routeLabel='Public company routes';
+      ids=record.publicLeads.slice();routeLabel='Public companies';
     } else {
       ids=matchingEmployers(branchId).map(function(e){return e.id;});routeLabel='Industry companies in this branch';
     }
     var rows=ids.map(employerById).filter(Boolean).slice(0,8).map(employerRow).join('');
     var name=esc((record&&record.branchName)||branch.name);
     if(!rows){
-      return '<div class="branch"><h4>'+name+'</h4><p class="sub">No public company route listed yet.</p></div>';
+      return '<div class="branch"><h4>'+name+'</h4><p class="sub">No public company listed yet.</p></div>';
     }
     return '<div class="branch">'+
       '<h4>'+name+'</h4>'+
@@ -592,7 +592,7 @@
         (producer?'<div class="detail"><b>Producer / promoter</b><br>'+esc(producer)+'</div>':'')+
         (hasSource?'<div class="detail"><b>Public source</b><br>Listed on the <a href="sources.html" onclick="event.stopPropagation()">Sources page &nearr;</a></div>':'')+
       '</div>'+
-      '<h3>Employer routes by production branch</h3>'+
+      '<h3>Employers by production branch</h3>'+
       branchHtml
     );
   };
@@ -629,7 +629,7 @@
     var roles=(branch.workerFocus||[]).join(' \xb7 ');
     var general=matchingEmployers(id).slice(0,12).map(employerRow).join('');
     openModal('<h2>'+esc(branch.name)+'</h2>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+
-      '<h3>Employer routes by festival</h3>'+(cards||'<p class="sub">No festival-specific company routes listed yet.</p>')+
+      '<h3>Employers by festival</h3>'+(cards||'<p class="sub">No festival-specific companies listed yet.</p>')+
       (general?'<h3>Industry companies in this branch</h3><ul style="margin:0;padding:0">'+general+'</ul>':''));
   };
 

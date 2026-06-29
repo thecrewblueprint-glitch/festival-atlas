@@ -34,7 +34,7 @@
       ].forEach(function(pair){
         if(!pair[1]) return;
         if(rows.some(function(row){return row.url===pair[1] && row.name===employer.name;})) return;
-        rows.push({name:employer.name,id:employer.id,type:employer.type||'Employer route',section:pair[0],url:pair[1],status:employer.linkStatus||'public route'});
+        rows.push({name:employer.name,id:employer.id,type:employer.type||'Employer',section:pair[0],url:pair[1],status:employer.linkStatus||'public listing'});
       });
     });
     return rows;
@@ -53,7 +53,7 @@
       var currentEmployer=employerSelect.value;
       var employers=Array.isArray(window.RESOURCE_EMPLOYERS)?window.RESOURCE_EMPLOYERS:[];
       var names=employers.map(function(e){return {id:e.id,name:e.name};}).sort(function(a,b){return a.name.localeCompare(b.name);});
-      employerSelect.innerHTML='<option value="">All employer routes</option>'+names.map(function(e){return '<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>';}).join('');
+      employerSelect.innerHTML='<option value="">All employers</option>'+names.map(function(e){return '<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>';}).join('');
       if(names.some(function(e){return e.id===currentEmployer;}))employerSelect.value=currentEmployer;
     }
 
@@ -74,14 +74,14 @@
       mount.style.paddingTop='24px';
       app.appendChild(mount);
     }
-    mount.innerHTML='<h2>Employer route sources</h2>'+
-      '<p class="lead">Public employer, careers, application, contact, and directory links from the employer-route package. These links are kept on Sources instead of opportunity popups.</p>'+
+    mount.innerHTML='<h2>Employer links</h2>'+
+      '<p class="lead">Public employer, careers, application, contact, and directory links from the employer package. These links are kept on Sources instead of opportunity popups.</p>'+
       '<div class="stats" style="grid-template-columns:repeat(2,1fr);margin:0 0 18px">'+
-      '<div class="stat"><b>'+rows.length+'</b><span>employer route links</span></div>'+
+      '<div class="stat"><b>'+rows.length+'</b><span>employer links</span></div>'+
       '<div class="stat"><b>'+new Set(rows.map(function(row){return row.name;})).size+'</b><span>employers shown</span></div>'+
       '</div>'+
-      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Employer</th><th>Type</th><th>Route</th><th>Status</th><th>Link</th></tr></thead><tbody>'+
-      (rows.length ? rows.map(function(row){return '<tr><td>'+esc(row.name)+'</td><td>'+esc(row.type)+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.status)+'</td><td>'+link('Open route',row.url)+'</td></tr>';}).join('') : '<tr><td colspan="5" style="color:var(--muted)">No employer route links match the current filter.</td></tr>')+
+      '<div class="tablewrap"><table class="matrix"><thead><tr><th>Employer</th><th>Type</th><th>Section</th><th>Status</th><th>Link</th></tr></thead><tbody>'+
+      (rows.length ? rows.map(function(row){return '<tr><td>'+esc(row.name)+'</td><td>'+esc(row.type)+'</td><td>'+esc(row.section)+'</td><td>'+esc(row.status)+'</td><td>'+link('Visit',row.url)+'</td></tr>';}).join('') : '<tr><td colspan="5" style="color:var(--muted)">No employer links match the current filter.</td></tr>')+
       '</tbody></table></div>';
   }
 
