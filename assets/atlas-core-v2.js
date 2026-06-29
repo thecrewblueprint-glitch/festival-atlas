@@ -336,8 +336,8 @@
     var active=activeOpportunities();
     el.innerHTML=
       '<div class="pathway-grid">'+
-        '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival calendar with dates, departments, and employer contacts.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
-        '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contacts by production department.</p><span class="pathway-count">'+employers.length+' employers →</span></a>'+
+        '<a class="pathway" href="opportunities.html"><h4>Opportunities</h4><p class="pathway-skills">Festival profiles with dates, locations, and employer contacts.</p><span class="pathway-count">'+active.length+' festivals →</span></a>'+
+        '<a class="pathway" href="employers.html"><h4>Employers</h4><p class="pathway-skills">Public apply, careers, and contacts for live-event production employers.</p><span class="pathway-count">'+employers.length+' employers →</span></a>'+
         '<a class="pathway" href="calendar.html"><h4>Calendar</h4><p class="pathway-skills">Month-by-month view for production window planning.</p><span class="pathway-count">Browse →</span></a>'+
         '<a class="pathway" href="schedule.html"><h4>My schedule</h4><p class="pathway-skills">Personal Gantt planner — add festivals and compare windows.</p><span class="pathway-count">Open →</span></a>'+
       '</div>'+
