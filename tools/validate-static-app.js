@@ -165,7 +165,7 @@ headerNavPages.filter(exists).forEach(page => {
   check(content.includes('map.html'), `${page} missing Map header nav link`);
   check(content.includes('employers.html'), `${page} missing Employers header nav link`);
   check(content.includes('iatse.html'), `${page} missing IATSE header nav link`);
-  check(content.includes('schedule.html'), `${page} missing Schedule header nav link`);
+  // Schedule feature temporarily removed (to be rebuilt); no header nav link required.
   check(content.includes('contribute.html'), `${page} missing Contribute header nav link`);
   check(!/<nav[\s\S]*href="(?:\.\/)?guide\.html"[\s\S]*<\/nav>/i.test(content), `${page} puts Guide in header nav; Guide belongs on home top and footer`);
   check(!/<nav[\s\S]*href="(?:\.\/)?sources\.html"[\s\S]*<\/nav>/i.test(content), `${page} puts Sources in header nav; Sources belongs in footer/contextual links`);

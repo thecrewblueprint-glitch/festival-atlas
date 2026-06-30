@@ -6,7 +6,7 @@
         '<span>A public work-mapping tool for live-event production contractors, created by <a href="https://deadhanglaborllc.com" target="_blank" rel="noopener">Deadhang Labor LLC</a>.</span>'+
       '</div>'+
       '<div class="site-footer-columns">'+
-        '<div><h4>Work map</h4><a href="./opportunities.html">Opportunities</a><a href="./calendar.html">Calendar</a><a href="./map.html">Map</a><a href="./employers.html">Employers</a><a href="./iatse.html">IATSE Organizations</a><a href="./schedule.html">Schedule</a><a href="./contribute.html">Contribute</a><a href="./feedback.html">Feedback</a></div>'+
+        '<div><h4>Work map</h4><a href="./opportunities.html">Opportunities</a><a href="./calendar.html">Calendar</a><a href="./map.html">Map</a><a href="./employers.html">Employers</a><a href="./iatse.html">IATSE Organizations</a><a href="./contribute.html">Contribute</a><a href="./feedback.html">Feedback</a></div>'+
         '<div><h4>Reference</h4><a href="./guide.html">Guide</a><a href="./sources.html">Sources</a><a href="./about.html">About</a><a href="./data-methodology.html">How the Data Works</a><a href="./employer-route-methodology.html">Employer Methodology</a><a href="./date-work-window-disclaimer.html">Date & Work Window Disclaimer</a></div>'+ 
         '<div><h4>Legal</h4><a href="./privacy-policy.html">Privacy Policy</a><a href="./terms-and-conditions.html">Terms & Conditions</a><a href="./limitation-of-liability.html">Limitation of Liability</a><a href="./cookie-notice.html">Cookie Notice</a><a href="./accessibility.html">Accessibility Statement</a><a href="./affiliate-disclosure.html">Affiliate Disclosure</a><a href="./contact-data-requests.html">Contact & Data Requests</a></div>'+ 
       '</div>'+ 
