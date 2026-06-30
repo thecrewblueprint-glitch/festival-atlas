@@ -71,5 +71,13 @@ window.RESOURCE_OPP_COORDS={
   // Country Thunder US per-market
   'country-thunder-arizona-2026':[33.0314,-111.3871],
   'country-thunder-florida-2026':[27.9665,-82.7985],
-  'country-thunder-wisconsin-2026':[42.5278,-88.2490]
+  'country-thunder-wisconsin-2026':[42.5278,-88.2490],
+  // Verified 2027 public-cycle records
+  'coachella-2027':[33.7175,-116.2167],
+  'ultra-miami-2027':[25.7742,-80.1869],
+  'edc-las-vegas-2027':[36.2719,-115.0104],
+  'welcome-to-rockville-2027':[29.2108,-81.0228],
+  'beyond-wonderland-socal-2027':[34.1083,-117.2898],
+  'bottlerock-napa-2027':[38.2975,-122.2869],
+  'country-thunder-arizona-2027':[33.0314,-111.3871]
 };
