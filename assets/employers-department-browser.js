@@ -79,15 +79,6 @@
     var defs=[['LinkedIn','linkedin'],['Instagram','instagram'],['Facebook','facebook'],['YouTube','youtube'],['TikTok','tiktok'],['X / Twitter','x'],['X / Twitter','twitter']];
     return defs.map(function(pair){return links[pair[1]]?linkButton(pair[0],links[pair[1]]):''}).filter(Boolean).join(' ');
   }
-  function nextSteps(employer){
-    var links=employer.links||{};
-    var steps=[];
-    if(links.careers||links.apply)steps.push('Review open roles on the careers/apply page.');
-    else steps.push('Start with the website and look for careers, hiring, freelance, or vendor language.');
-    steps.push('Match your department fit: '+departmentLabel(employer)+'.');
-    if(links.contact&&!links.careers&&!links.apply)steps.push('Use the public contact page for hiring-route questions.');
-    return steps.map(function(step){return '<li>'+esc(step)+'</li>'}).join('');
-  }
   function employerCard(employer,contextDepartment){
     var depts=employerDepartments(employer).map(branchName).join(', ');
     var url=bestLink(employer);
@@ -116,7 +107,6 @@
       '<h3>Public links</h3>'+
       (publicLinkHtml?'<p class="home-links">'+publicLinkHtml+'</p>':'<p class="sub">No public website/career/contact link is recorded yet.</p>')+
       (socialHtml?'<h3>Social / public channels</h3><p class="home-links">'+socialHtml+'</p>':'')+
-      '<h3>Next steps</h3><ul>'+nextSteps(employer)+'</ul>'+
       '<p class="sub">Public research lead. Verify current openings directly.</p>';
     if(typeof window.openModal==='function')window.openModal(html);
   };
