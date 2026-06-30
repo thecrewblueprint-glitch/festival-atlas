@@ -1,23 +1,12 @@
 (function(){
+  if(!document.body || document.body.dataset.page !== 'sources') return;
+
   function esc(value){
     return String(value == null ? '' : value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});
   }
-
   function link(label,url){
     if(!url) return '';
-    var safe=esc(url);
-    return '<a href="'+safe+'" target="_blank" rel="noopener">'+esc(label)+'</a>';
-  }
-
-  function filterValues(){
-    function val(id){var el=document.querySelector(id);return el ? String(el.value||'').toLowerCase() : '';}
-    return {
-      q: val('#q'),
-      branch: val('#branchFilter'),
-      region: val('#regionFilter'),
-      type: val('#employerTypeFilter'),
-      employer: val('#employerFilter')
-    };
+    return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>';
   }
 
   function allEmployerRows(){
@@ -40,34 +29,29 @@
     return rows;
   }
 
+  function populateEmployerSelect(){
+    var employerSelect=document.querySelector('#employerFilter');
+    if(!employerSelect || employerSelect.dataset.filled==='true') return;
+    var current=employerSelect.value;
+    var employers=Array.isArray(window.RESOURCE_EMPLOYERS)?window.RESOURCE_EMPLOYERS:[];
+    var names=employers.map(function(e){return {id:e.id,name:e.name};}).sort(function(a,b){return a.name.localeCompare(b.name);});
+    employerSelect.innerHTML='<option value="">All employers</option>'+names.map(function(e){return '<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>';}).join('');
+    if(names.some(function(e){return e.id===current;}))employerSelect.value=current;
+    employerSelect.dataset.filled='true';
+  }
+
   function renderEmployerSources(){
-    if(!document.body || document.body.dataset.page !== 'sources') return;
     var app=document.querySelector('#app');
     if(!app) return;
+    populateEmployerSelect();
 
-    var allRows=allEmployerRows();
+    var employerVal=String((document.querySelector('#employerFilter')||{}).value||'');
+    var rows=allEmployerRows().filter(function(row){return !employerVal || row.id===employerVal;});
 
-    // Populate employer dropdown
-    var employerSelect=document.querySelector('#employerFilter');
-    if(employerSelect){
-      var currentEmployer=employerSelect.value;
-      var employers=Array.isArray(window.RESOURCE_EMPLOYERS)?window.RESOURCE_EMPLOYERS:[];
-      var names=employers.map(function(e){return {id:e.id,name:e.name};}).sort(function(a,b){return a.name.localeCompare(b.name);});
-      employerSelect.innerHTML='<option value="">All employers</option>'+names.map(function(e){return '<option value="'+esc(e.id)+'">'+esc(e.name)+'</option>';}).join('');
-      if(names.some(function(e){return e.id===currentEmployer;}))employerSelect.value=currentEmployer;
-    }
-
-    var filter=filterValues();
-    var rows=allRows.filter(function(row){
-      if(filter.employer&&row.id!==filter.employer)return false;
-      return true;
-    });
-
-    var id='employer-source-routes';
-    var mount=document.getElementById(id);
+    var mount=document.getElementById('employer-source-routes');
     if(!mount){
       mount=document.createElement('section');
-      mount.id=id;
+      mount.id='employer-source-routes';
       mount.className='card';
       mount.style.marginTop='32px';
       mount.style.borderTop='1px solid var(--line)';
@@ -75,7 +59,7 @@
       app.appendChild(mount);
     }
     mount.innerHTML='<h2>Employer links</h2>'+
-      '<p class="lead">Public employer, careers, application, contact, and directory links from the employer package. These links are kept on Sources instead of opportunity popups.</p>'+
+      '<p class="lead">Public employer, careers, application, contact, and directory links from the employer package. Use the employer dropdown above to narrow this section. These links are kept on Sources instead of opportunity popups.</p>'+
       '<div class="stats" style="grid-template-columns:repeat(2,1fr);margin:0 0 18px">'+
       '<div class="stat"><b>'+rows.length+'</b><span>employer links</span></div>'+
       '<div class="stat"><b>'+new Set(rows.map(function(row){return row.name;})).size+'</b><span>employers shown</span></div>'+
@@ -85,10 +69,18 @@
       '</tbody></table></div>';
   }
 
-  function schedule(){setTimeout(renderEmployerSources,0);setTimeout(renderEmployerSources,200);}
-  document.addEventListener('DOMContentLoaded',schedule);
-  document.addEventListener('input',schedule,true);
-  document.addEventListener('change',schedule,true);
-  document.addEventListener('click',schedule,true);
-  schedule();
+  // Core's renderSources() owns #app and rebuilds it (on load, on festival/branch
+  // filter changes, and once after branch data loads). Each rebuild wipes our
+  // appended section, so we watch #app and re-append whenever it goes missing —
+  // instead of the old approach of re-rendering on every document click.
+  function install(){
+    var app=document.querySelector('#app');
+    if(!app) return;
+    if(!document.getElementById('employer-source-routes')) renderEmployerSources();
+    new MutationObserver(function(){
+      if(!document.getElementById('employer-source-routes')) renderEmployerSources();
+    }).observe(app,{childList:true});
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();

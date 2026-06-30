@@ -51,5 +51,5 @@
       '<p class="lead">Use neutral public-research language. Example: "I am researching this event. Is there a correct public hiring, vendor, or labor contact path?" Do not claim that a company, vendor, or labor contact is confirmed for an event unless a current public source directly confirms it.</p>'+
       '<div class="notice"><b>Verification:</b> when information is uncertain, treat it as unconfirmed until an official or public source confirms it.</div>';
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(render,300)});else setTimeout(render,300);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
 })();

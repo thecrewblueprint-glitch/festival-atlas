@@ -533,10 +533,11 @@
 
   // Pages whose #app is fully owned by a dedicated enhancement script:
   // calendar -> calendar-interactive.js, map -> map-page-static.js,
-  // employers -> employers-department-browser.js. Core must not render or
-  // re-render these; otherwise its filter listeners race with and overwrite
-  // the enhancement view after a search/filter change.
-  var EXTERNAL_RENDER_PAGES={calendar:1,map:1,employers:1};
+  // employers -> employers-department-browser.js, guide -> guide-page.js.
+  // Core must not render or re-render these; otherwise its filter listeners
+  // race with and overwrite the enhancement view after a search/filter change
+  // (and, for guide, it would paint a throwaway stub before guide-page.js runs).
+  var EXTERNAL_RENDER_PAGES={calendar:1,map:1,employers:1,guide:1};
   function renderPage(){
     var page=document.body.dataset.page;
     if(EXTERNAL_RENDER_PAGES[page])return;
