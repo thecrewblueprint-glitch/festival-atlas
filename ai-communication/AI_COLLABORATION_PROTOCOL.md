@@ -1,7 +1,7 @@
 # AI Collaboration Protocol — ChatGPT and Claude
 
 Generated: 2026-06-22  
-Updated: 2026-06-27  
+Updated: 2026-06-29  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary working branch: `research-version`
 
@@ -42,7 +42,7 @@ When documents disagree, resolve in this order:
 3. README.md
 4. ROADMAP.md
 5. ai-communication/PRODUCT_ROADMAP.md
-6. Latest collaboration log or handoff
+6. Latest collaboration log, decision record, or handoff
 7. Current user instruction
 8. Older handoff docs
 9. Chat memory
@@ -67,13 +67,22 @@ Firecrawl has been removed and must not be reintroduced.
 
 ## Current public UI decision
 
-The public filter/search scope is intentionally narrow:
+Aaron intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
+
+Current page-specific filter direction:
 
 ```text
-Primary public filters: date / month and producer / promoter.
+opportunities.html: state, department, producer/promoter, date/month
+calendar.html: date/month, plus page-specific calendar controls
+map.html: department, state, date/month
+employers.html: department, state, employer type
+sources.html: festival, department, employer route
+schedule.html: date/month
 ```
 
-Do not reintroduce broad department, region, state, employer type, confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filters as primary public filters unless Aaron explicitly reopens that UX decision.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as a primary public filter unless Aaron explicitly reopens those items.
+
+`Sources` remains the central source/audit page. Source links belong there, but the Sources page does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
 
 Do not reintroduce public confidence badges, public value-tier labels, public research queue panels, or internal next-action dashboards.
 
@@ -114,6 +123,14 @@ sources.html
 ```
 
 Do not place raw source links in opportunity popups, branch popups, map popups, schedule cards, or legal/white-page explanatory copy unless the page is specifically a source/audit page.
+
+## Festival research intake rule
+
+`data/packages/festival-research-master-list.js` is an active repo asset for future festival verification work. It is not active opportunity data. Records from it must stay `unverified-intake` until individually verified from public sources and promoted into app data.
+
+## 2026/2027 rollover rule
+
+`data/packages/opportunity-rollover-2027.js` is active but still needs a product decision discussion before deeper schedule work. Do not silently redesign rollover architecture, rename event IDs, or expand rollover behavior without Aaron confirming the intended model.
 
 ## Collaboration folders
 
@@ -170,6 +187,7 @@ Before modifying code or data, read or inspect:
 8. assets/atlas-core-v2.js
 9. tools/validate-static-app.js
 10. tools/validate-branch-research-packages.js
+11. tools/validate-data.js
 ```
 
 Then inspect task-specific files only as needed.
@@ -228,39 +246,3 @@ Also update a collaboration log or handoff.
 - Never edit a file unless you fetched or inspected the latest version from `research-version` in the current session.
 - Prefer small coherent commits.
 - Do not delete research packages, reports, schemas, workflows, or handoff documents unless validation proves they are obsolete and Aaron approves, or the file is clearly a generated temporary artifact.
-- If touching `data/packages/branch-research-manifest.js`, verify every manifest file exists and every package has a matching research report.
-
-## What not to do
-
-```text
-Do not assume main is current.
-Do not reintroduce Firecrawl or scraping automation.
-Do not publish private/sensitive data.
-Do not move source links into popups.
-Do not add backend/login/database/private workflow scope to the static app roadmap.
-Do not reintroduce public confidence badges, value-tier labels, public research queue panels, or broad public filter bars.
-Do not skip validation notes after code/page/data changes.
-Do not skip collaboration logs or handoffs after meaningful updates.
-```
-
-## Standard handoff contents
-
-A handoff or collaboration log should include:
-
-```text
-Date
-Assistant
-Branch
-Commit SHA or range
-Files changed
-Files inspected
-Validation commands run
-Validation result or reason not run
-Known risks
-Next recommended action
-Things not to do
-```
-
-## Final rule
-
-Repo-visible files beat chat memory. Keep the repo current enough that Aaron does not need to rebuild context manually in the next session.
