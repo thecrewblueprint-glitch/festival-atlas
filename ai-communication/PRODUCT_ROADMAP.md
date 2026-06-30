@@ -1,7 +1,7 @@
 # Production Atlas Work Research App Roadmap
 
 Generated: 2026-06-22  
-Updated: 2026-06-27  
+Updated: 2026-06-29  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary branch: `research-version`  
 Scope: Make the current static work research app function well. Do not roadmap backend architecture, private workflow systems, payment, authentication, scraping automation, or unrelated future platform structure.
@@ -20,7 +20,7 @@ The app should help answer:
 5. What public source or planning page should Aaron review next?
 ```
 
-The app is successful when Aaron can open it, filter by date and producer/promoter, compare public work-route leads, review sources, and decide what to research next without digging through raw research documents.
+The app is successful when Aaron can open it, filter by the current page-specific controls, compare public work-route leads, review sources, and decide what to research next without digging through raw research documents.
 
 ## 2. Current App Boundary
 
@@ -73,16 +73,24 @@ sources.html
 
 Do not move raw source links into opportunity, branch, map, or schedule popups.
 
+`Sources` remains the central source/audit page. Source links belong there, but the Sources page does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
+
 ### 3.3 Public Filter Scope
 
-Primary public filters should stay limited to:
+Aaron intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
+
+Current page-specific filter direction:
 
 ```text
-date / month
-producer / promoter
+opportunities.html: state, department, producer/promoter, date/month
+calendar.html: date/month, plus page-specific calendar controls
+map.html: department, state, date/month
+employers.html: department, state, employer type
+sources.html: festival, department, employer route
+schedule.html: date/month
 ```
 
-Do not reintroduce broad public filters for department, region, state, confidence, value tier, source quality, accommodation, travel, per diem, or public research-queue status unless Aaron explicitly reopens that UX decision.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
 ### 3.4 Manifest Is the Data Loading Authority
 
@@ -130,11 +138,11 @@ Make the current static app load correctly, validate correctly, and match its re
 
 ```text
 npm run validate:all passes.
-README matches the real active page list.
+README matches the real active page list and current page-specific filter scope.
 ROADMAP.md and this AI roadmap match current public scope.
 Legal and white pages match public-safe app behavior.
-Navigation is consistent across public, white, and legal pages.
-Primary public filters are date/month and producer/promoter only.
+Navigation is consistent with the intended UI placement for each page.
+Current page-specific filters are preserved unless Aaron changes them.
 Manifest covers every branch research package.
 Every branch research package has a matching research report.
 No active Firecrawl/scraping runner exists.
@@ -149,6 +157,7 @@ No active Firecrawl/scraping runner exists.
    - `assets/confidence-badges.js`
    - `assets/research-queue-page.js`
 5. Confirm public-safe rendering on cards, modals, map popups, schedule cards, Sources, Contribute, white pages, and legal pages.
+6. Keep `data/packages/festival-research-master-list.js` as an intake asset until individual records are verified.
 
 ---
 
@@ -165,8 +174,7 @@ Aaron can open the app and quickly answer:
 ```text
 Which events happen in the date/month I care about?
 Which producer/promoter/operator is publicly connected?
-Which public employer route should I research?
-Which source page should I review?
+Which state, department, employer route, or source page should I inspect next when the current page supports that filter?
 Which planning page should I use next?
 ```
 
@@ -174,15 +182,15 @@ Which planning page should I use next?
 
 ### 2.1 Improve Home / Guide
 
-Home should explain the app quickly and route users to Guide, Opportunities, Calendar, Map, Employers, Sources, and Schedule.
+Home should explain the app quickly and route users to Guide, Opportunities, Calendar, Map, Employers, Sources, and Schedule as appropriate for the current UI.
 
 ### 2.2 Keep Research Queue Private
 
 The internal research queue lives outside the public GitHub Pages app. Do not reintroduce a public research-queue panel or internal next-action dashboard.
 
-### 2.3 Improve Date / Producer Filtering
+### 2.3 Improve Current Filters
 
-Public filtering should focus on date/month and producer/promoter. Add useful empty states when filters return zero results.
+Improve empty states and counts for the current page-specific filters. Do not remove state or department filters from Opportunities/Map unless Aaron explicitly changes that decision.
 
 ### 2.4 Keep Sorting Practical but Not Publicly Scored
 
@@ -223,7 +231,7 @@ public date window
 approximate planning/work window
 producer/promoter/operator when publicly known
 public employer route entry point
-link to details or Sources page
+link to details or Sources page when appropriate
 ```
 
 ### 3.2 Standardize Opportunity Modals
@@ -305,7 +313,11 @@ clear add/remove buttons
 
 Do not store private plans, contacts, pay, lodging, outreach notes, or personal workflow data in this public static app.
 
-### 4.4 Improve Sources View
+### 4.4 Discuss 2026/2027 Rollover Model
+
+The rollover package is active, but the long-term model is not yet settled. Before deeper schedule or date-cycle work, discuss whether the app should mutate 2026 IDs into 2027 cycles, create separate 2027 records, or use a base-opportunity plus event-year model.
+
+### 4.5 Improve Sources View
 
 Sources page should remain the audit table.
 
@@ -327,13 +339,14 @@ Use this order unless Aaron reprioritizes:
 
 ```text
 1. Run validation and fix failures.
-2. Normalize pages/navigation/README/roadmaps/legal/white pages.
-3. Keep public filters limited to date/month and producer/promoter.
-4. Improve Home and Guide entry flow.
-5. Improve date/producer filter empty states.
-6. Standardize public cards and modals.
-7. Improve Calendar, Map, Schedule, Employers, Sources, and Contribute.
-8. Re-run validation and write a collaboration log or handoff.
+2. Normalize pages/navigation/README/roadmaps/legal/white pages to current decisions.
+3. Preserve the current page-specific filters unless Aaron changes them.
+4. Discuss and settle the 2026/2027 rollover model before deeper schedule changes.
+5. Improve Home and Guide entry flow.
+6. Improve filter empty states.
+7. Standardize public cards and modals.
+8. Improve Calendar, Map, Schedule, Employers, Sources, and Contribute.
+9. Re-run validation and write a collaboration log or handoff.
 ```
 
 ## What This Roadmap Excludes
@@ -352,7 +365,6 @@ Firecrawl restoration
 public confidence badges
 public value-tier labels
 public research queue panels
-broad public filter bars
 ```
 
 Those may be separate decisions later. They are not part of making the current static work research app function.
