@@ -1,6 +1,6 @@
 # 2026/2027 Rollover Model Decision
 
-Status: decided
+Status: decided and initial bridge implemented
 Date: 2026-06-29
 Decision owner: Aaron
 Branch: research-version
@@ -29,7 +29,7 @@ Separate year records are easier to reason about for:
 - future festival additions
 - avoiding confusion where an ID says 2026 but the visible record shows 2027
 
-This is cleaner than the current rollover patch and less disruptive than a full base-event plus yearly-instance refactor.
+This is cleaner than the previous runtime mutation patch and less disruptive than a full base-event plus yearly-instance refactor.
 
 ## Implementation direction
 
@@ -43,15 +43,49 @@ Use this migration direction for future work:
 6. Do not invent future dates.
 7. Do not publish private contacts, pay, lodging, private referrals, or crew notes.
 
+## Initial implementation
+
+`data/packages/opportunity-rollover-2027.js` now uses a separate-year-record bridge model.
+
+For verified 2027 public cycles, it creates active `*-2027` records and archives the corresponding old `*-2026` records from the active public view.
+
+Current bridge-created 2027 records:
+
+```text
+coachella-2027
+ultra-miami-2027
+edc-las-vegas-2027
+welcome-to-rockville-2027
+beyond-wonderland-socal-2027
+bottlerock-napa-2027
+country-thunder-arizona-2027
+```
+
+The bridge exports:
+
+```text
+model: separate_year_records
+sourceIds: old *-2026 records
+createdIds: new *-2027 records
+pendingIds: old records waiting for verified public 2027 dates
+```
+
 ## Current code impact
 
-`data/packages/opportunity-rollover-2027.js` currently mutates some `*-2026` records into visible 2027-cycle records at runtime. That package should be treated as a temporary bridge until the separate-record migration is done.
+The old behavior mutated selected `*-2026` records into visible 2027 records. That behavior has been replaced for the verified rollover set.
 
-Do not expand the runtime rollover approach. Future work should replace verified rollover entries with separate `*-2027` records.
+The current bridge still runs at runtime so the large opportunity package does not have to be manually rewritten all at once. Future cleanup can move these `*-2027` records directly into the main opportunity data package and retire the bridge entries.
 
 ## Validation implications
 
-After the migration starts, update validation so it accepts separate `*-2027` records and eventually warns or fails if active public 2027 records are represented by mutated `*-2026` IDs.
+Validation now checks that active 2027-cycle records:
+
+- use `*-2027` IDs
+- include a `previousCycleId` ending in `*-2026`
+- have 2027 start dates
+- include public source URLs
+- include rollover notes
+- identify 2027 source quality
 
 Recommended commands after implementation work:
 
@@ -63,9 +97,4 @@ npm run validate:all
 
 ## Next recommended step
 
-Create a small migration batch for the currently verified public 2027 rollover records. Suggested first pass:
-
-- create separate `*-2027` records for verified 2027 cycles already present in `opportunity-rollover-2027.js`
-- hide or archive the corresponding old `*-2026` records where appropriate
-- remove those entries from the runtime rollover package after confirming the active app still renders correctly
-- run validation
+Run validation, then inspect any validation failures. After the bridge is stable, move the verified `*-2027` records directly into the canonical opportunity data package and shrink or retire the runtime bridge.
