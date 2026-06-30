@@ -99,11 +99,16 @@
       typeSelect.dataset.employerBrowserFilled='true';
     }
   }
+  var EMP_PER_PAGE=10;
+  var empPage=0,empSig='__init';
+  function empPager(page,pages,total,per){if(pages<=1)return '';var start=page*per,end=Math.min(total,start+per);return '<div class="pager"><button class="btn" type="button"'+(page<=0?' disabled':'')+' onclick="empPageGo(-1)" aria-label="Previous results">‹ Prev</button><span class="pager-info">Showing '+(start+1)+'–'+end+' of '+total+' · Page '+(page+1)+' of '+pages+'</span><button class="btn" type="button"'+(page>=pages-1?' disabled':'')+' onclick="empPageGo(1)" aria-label="Next results">Next ›</button></div>'}
   function render(){
     var app=$('#app');
     if(!app)return;
     populateFilters();
     var f=filters();
+    var sig=JSON.stringify(f);
+    if(sig!==empSig){empSig=sig;empPage=0;}
     var all=employers();
     var filtered=all.filter(matches).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
     var stateLabel=f.state?(STATE_NAMES[f.state]||f.state):null;
@@ -112,12 +117,15 @@
       (stateLabel?'<div class="notice">Showing employers that hire in <b>'+esc(stateLabel)+'</b> — includes national employers that operate in all states.</div>':'')+
       '<div class="notice">Know a public company or employer that belongs here? You can submit it on the <a href="contribute.html">Contribute page</a>.</div>';
     if(!filtered.length){app.innerHTML=intro+'<p>No employers match the current filters.</p>';return;}
-    if(f.department){
-      app.innerHTML=intro+'<h3>'+esc(branchName(f.department))+'</h3><div class="grid">'+filtered.map(function(employer){return employerCard(employer,branchName(f.department))}).join('')+'</div>';
-      return;
-    }
-    app.innerHTML=intro+'<div class="grid">'+filtered.map(function(employer){return employerCard(employer)}).join('')+'</div>';
+    var pages=Math.max(1,Math.ceil(filtered.length/EMP_PER_PAGE));
+    if(empPage>=pages)empPage=pages-1;if(empPage<0)empPage=0;
+    var pageData=filtered.slice(empPage*EMP_PER_PAGE,empPage*EMP_PER_PAGE+EMP_PER_PAGE);
+    var pg=empPager(empPage,pages,filtered.length,EMP_PER_PAGE);
+    var heading=f.department?'<h3>'+esc(branchName(f.department))+'</h3>':'';
+    var ctx=f.department?branchName(f.department):'';
+    app.innerHTML=intro+heading+pg+'<div class="grid">'+pageData.map(function(employer){return employerCard(employer,ctx)}).join('')+'</div>'+pg;
   }
+  window.empPageGo=function(d){empPage+=Number(d)||0;render();var app=$('#app');if(app&&app.scrollIntoView)try{app.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
   function install(){
     var month=$('#monthFilter');
     if(month)month.remove();

@@ -123,6 +123,10 @@ footer{border-top:1px solid var(--line);color:var(--muted);padding:24px 20px;fon
 a.btn{text-decoration:none;display:inline-block}
 .home-dash{margin:22px 0}
 .home-links{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:14px 0}
+.pager .btn{min-width:108px}
+.pager .btn:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none;background:#141a22;color:var(--muted);border-color:var(--line2)}
+.pager-info{color:var(--muted);font-size:.85rem;font-weight:800;text-align:center;flex:1}
 .section-intro{color:#c6d0dc;max-width:920px;line-height:1.62;margin:0 0 18px}
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:6px 0 26px}
 .step-card{background:#171d25;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow2)}
