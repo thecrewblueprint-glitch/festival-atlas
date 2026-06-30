@@ -4,7 +4,17 @@
 
 Production Atlas is a public-safe scouting dashboard for live-event production workers. It maps festivals, public dates, approximate production windows, producers/promoters, public employer routes, source references, and planning views.
 
-This roadmap reflects the current product decision: the public app should be simple, public-safe, and worker-useful. Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
+This roadmap reflects the current product decision: the public app should be simple, public-safe, worker-useful, and deployed from `research-version`. Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
+
+---
+
+## Active branch / deployment decision
+
+`research-version` is the intended live working branch.
+
+`main` must not be edited, patched, merged into, or used as a shortcut unless Aaron explicitly says to touch `main`.
+
+If the live site does not reflect `research-version`, fix deployment/validation/source drift. Do not patch `main` as a hotfix.
 
 ---
 
@@ -25,7 +35,20 @@ schedule.html: date/month
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as a primary public filter unless Aaron explicitly reopens those items.
 
-`Sources` remains the central audit/source page. Source links belong there, but the page does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
+Current header nav:
+
+```text
+Home
+Opportunities
+Calendar
+Map
+Employers
+IATSE
+Schedule
+Contribute
+```
+
+`Guide` and `Sources` are footer/reference links. Guide also appears as a top home-page callout below the nav and above the first home card.
 
 The future schedule and travel planner is a separate planning layer. It can later connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
 
@@ -35,12 +58,13 @@ The future schedule and travel planner is a separate planning layer. It can late
 
 Latest repo-visible state:
 
-- 77 total opportunity records before runtime rollover mutation.
-- Active public opportunities are loaded from `data/packages/opportunities-2026.js`, then may be adjusted by `data/packages/opportunity-rollover-2027.js`.
+- Active public opportunities are loaded from `data/packages/opportunities-2026.js`, then adjusted by `data/packages/opportunity-rollover-2027.js`.
+- The 2027 rollover decision is now separate year-specific records.
+- The rollover bridge creates verified `*-2027` records at runtime and archives the corresponding active `*-2026` records from the public active view.
 - Festival research intake master list exists at `data/packages/festival-research-master-list.js` and is not active opportunity data.
 - Public route research update records exist in `data/packages/research-queue-route-updates.js`.
 - Branch research packages load through `data/packages/branch-research-manifest.js`.
-- Primary work-flow pages: Home, Guide, Opportunities, Calendar, Map, Schedule, Employers, IATSE Locals, Contribute.
+- Primary work-flow pages: Home, Guide, Opportunities, Calendar, Map, Schedule, Employers, IATSE, Contribute, Feedback.
 - Source/audit page: Sources.
 - White pages: About, How the Data Works, Employer Route Methodology, Date & Work Window Disclaimer.
 - Legal/policy pages: Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, Contact & Data Requests.
@@ -56,20 +80,23 @@ The Employers page and route notes identify public research routes. A company, v
 
 Public event dates may be known, but build/load-in and strike/load-out windows are planning estimates unless a source confirms otherwise. The Date & Work Window Disclaimer page must remain linked in the footer.
 
-Accommodation, lodging, travel, and per-diem information can be useful when public and reliable. Missing supplemental details should not count against a record’s core work-finding usefulness and should not create public clutter.
+Accommodation, lodging, travel, and per-diem information can be useful when public and reliable. Missing supplemental details should not count against a record's core work-finding usefulness and should not create public clutter.
 
 ---
 
-## Phase 1 — Stabilize public pages and documentation
+## Phase 1 — Stabilize public pages, validation, deployment, and documentation
 
-Goal: keep actual pages, README, roadmaps, legal pages, white pages, and AI collaboration files aligned.
+Goal: keep actual pages, README, roadmaps, legal pages, white pages, validation scripts, deployment workflow, and AI collaboration files aligned.
 
 - [x] Keep `research-version` as the current working branch.
+- [x] Keep `main` protected unless Aaron explicitly says to touch it.
 - [x] Keep source links centralized on `sources.html`.
+- [x] Keep Guide and Sources out of header nav; keep them in the footer/reference flow.
 - [x] Keep public pages free of private contacts, pay rates, lodging details, rumors, private referrals, and NDA/client-sensitive information.
 - [x] Remove public confidence badge/value-tier/research-queue direction from current docs.
 - [x] Document current page-specific filters instead of reverting to date/promoter only.
 - [ ] Run `npm run validate:all` after the current connector-based updates in a local or GitHub Actions environment.
+- [ ] Confirm GitHub Pages deploys current `research-version` output.
 
 ---
 
@@ -78,7 +105,7 @@ Goal: keep actual pages, README, roadmaps, legal pages, white pages, and AI coll
 Goal: a worker can quickly understand what the app does and how to use it without seeing internal research scaffolding.
 
 - [ ] Tighten Home copy around where, when, producer/operator, employer route, and which page to use next.
-- [ ] Keep the Guide page as the main public instruction page.
+- [x] Keep the Guide page as the main public instruction page and add a home-page Guide callout.
 - [ ] Add or improve empty-state language when current page filters return no results.
 - [ ] Continue mobile audit for nav, filters, cards, calendar, map, schedule, and modals.
 - [ ] Keep footer navigation consistent across public, white, and legal pages.
@@ -106,13 +133,24 @@ Goal: make Calendar, Map, and Schedule useful without turning the public app int
 - [ ] Calendar: keep month/date behavior clear and label approximate work windows.
 - [ ] Map: keep location pins public-safe and avoid implying certainty beyond sources.
 - [ ] Schedule: keep planning browser-local through localStorage only.
-- [ ] Improve overlap, month spread, and travel-gap summaries without server-side private plan storage.
-- [ ] Discuss and decide the 2026/2027 rollover model before deeper schedule work.
-- [ ] Future planning layer: availability, routing distance, travel time, schedule gaps, and conflict flags.
+- [ ] Improve Schedule mobile usability first: selected-event cards, overlap warnings, month spread, region spread, add/remove clarity, and links back to Map/Calendar/Opportunity details.
+- [ ] Future planning layer: selected festival workspace, map location, show dates, approximate work window, add/remove from schedule, routing distance, travel time, schedule gaps, and conflict flags.
 
 ---
 
-## Phase 5 — Feedback and contributor flow
+## Phase 5 — 2027 rollover cleanup
+
+Goal: finish the separate-record model cleanly.
+
+- [x] Decide on separate year-specific records.
+- [x] Add bridge behavior that creates verified `*-2027` records and archives source `*-2026` records from active view.
+- [ ] Move verified `*-2027` records into canonical opportunity data.
+- [ ] Shrink or retire `data/packages/opportunity-rollover-2027.js` after canonical data migration.
+- [ ] Keep pending future-year records hidden until public source dates are verified.
+
+---
+
+## Phase 6 — Feedback and contributor flow
 
 Goal: accept corrections and field input without publishing sensitive material.
 
@@ -124,7 +162,7 @@ Goal: accept corrections and field input without publishing sensitive material.
 
 ---
 
-## Phase 6 — Expanded data scope after quality is stable
+## Phase 7 — Expanded data scope after quality is stable
 
 Possible future research areas:
 
@@ -146,14 +184,16 @@ Do not expand into backend, login, payment, private contact databases, marketpla
 
 ## Priority order for the next development sprint
 
-1. Discuss and decide the 2026/2027 rollover model.
-2. Run `npm run validate:all` after the current connector-based updates.
-3. Fix any validation failures created by the page/filter/doc changes.
-4. Spot-check public pages on mobile, especially the nav and filters.
-5. Improve filter empty states.
-6. Continue public source and producer/promoter verification for priority records.
-7. Keep white/legal pages aligned when page behavior changes.
+1. Fix validation/deploy drift created by current nav/runtime decisions.
+2. Run or trigger `npm run validate:all` after the current connector-based updates.
+3. Confirm the live site is serving `research-version` output.
+4. Spot-check public pages on mobile, especially the nav, filters, IATSE page, and Schedule.
+5. Improve Schedule mobile usability.
+6. Improve filter empty states.
+7. Continue public source and producer/promoter verification for priority records.
+8. Canonicalize verified 2027 records after validation/deploy are stable.
+9. Keep white/legal pages aligned when page behavior changes.
 
 ---
 
-*This roadmap is updated as milestones are completed. It lives at `ROADMAP.md` in the project root. Development branch: `research-version`. Stable baseline: `main`.*
+*This roadmap is updated as milestones are completed. It lives at `ROADMAP.md` in the project root. Development branch: `research-version`. Stable baseline: `main`, but do not touch `main` unless Aaron explicitly says so.*
