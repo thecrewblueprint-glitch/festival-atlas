@@ -57,11 +57,11 @@
   function companyOverview(employer){
     var type=String(employer.type||'Live-event production employer').replace(/^U\.S\.\s*/,'');
     var coverage=stateLabel(employer)||employer.region||'publicly listed markets';
-    return employer.name+' is a '+type.toLowerCase()+' route in '+coverage+'. Use this profile to understand what kind of work the company touches, which departments appear relevant, and which public application or contact path should be checked first.';
+    return employer.name+' is a '+type.toLowerCase()+' route serving '+coverage+'.';
   }
   function employmentAngle(employer){
     if(employer.bestUse)return cleanSentence(employer.bestUse);
-    return 'Research the official website, careers page, and public contact route before outreach.';
+    return 'Check the official website, careers page, and public contact route.';
   }
   function linkButton(label,url){return url?'<a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(label)+' ↗</a>':''}
   function publicLinks(employer){
@@ -82,11 +82,10 @@
   function nextSteps(employer){
     var links=employer.links||{};
     var steps=[];
-    if(links.careers||links.apply)steps.push('Check the official careers/apply page for open production, warehouse, touring, technician, coordinator, or event-support roles.');
-    else steps.push('Start with the official website and look for careers, hiring, freelance, vendor, or contact language.');
-    if(links.contact)steps.push('Use the public contact page only for appropriate business or hiring-route questions.');
-    steps.push('Compare the company departments here against the kind of work you want: '+departmentLabel(employer)+'.');
-    steps.push('Verify current openings and market coverage directly on the official site before outreach.');
+    if(links.careers||links.apply)steps.push('Review open roles on the careers/apply page.');
+    else steps.push('Start with the website and look for careers, hiring, freelance, or vendor language.');
+    steps.push('Match your department fit: '+departmentLabel(employer)+'.');
+    if(links.contact&&!links.careers&&!links.apply)steps.push('Use the public contact page for hiring-route questions.');
     return steps.map(function(step){return '<li>'+esc(step)+'</li>'}).join('');
   }
   function employerCard(employer,contextDepartment){
@@ -106,7 +105,6 @@
     if(!employer)return;
     var publicLinkHtml=publicLinks(employer);
     var socialHtml=socialLinks(employer);
-    var status=employer.linkStatus?String(employer.linkStatus).replace(/_/g,' '):'public route listed';
     var html='<h2 style="margin:0 0 6px">'+esc(employer.name)+'</h2>'+
       '<p class="sub">'+esc(employer.type||'Live-event employer')+(employer.region?' • '+esc(employer.region):'')+'</p>'+
       '<div class="modalgrid">'+
@@ -116,11 +114,10 @@
         '<div class="detail"><b>Market coverage</b><br>'+esc(stateLabel(employer)||'Unknown publicly. Human verification needed.')+'</div>'+
       '</div>'+
       '<h3>Public links</h3>'+
-      (publicLinkHtml?'<p class="home-links">'+publicLinkHtml+'</p>':'<p class="sub">No public website/career/contact link is recorded yet. Human verification needed.</p>')+
-      '<h3>Known social / public channels</h3>'+
-      (socialHtml?'<p class="home-links">'+socialHtml+'</p>':'<p class="sub">No verified social media channels are recorded in this atlas entry yet. Check the official website footer or company careers page before relying on social search results.</p>')+
-      '<h3>How to use this lead</h3><ul>'+nextSteps(employer)+'</ul>'+
-      '<p class="sub"><b>Route status:</b> '+esc(status)+'. This is a public research lead, not a job guarantee or private referral.</p>';
+      (publicLinkHtml?'<p class="home-links">'+publicLinkHtml+'</p>':'<p class="sub">No public website/career/contact link is recorded yet.</p>')+
+      (socialHtml?'<h3>Social / public channels</h3><p class="home-links">'+socialHtml+'</p>':'')+
+      '<h3>Next steps</h3><ul>'+nextSteps(employer)+'</ul>'+
+      '<p class="sub">Public research lead. Verify current openings directly.</p>';
     if(typeof window.openModal==='function')window.openModal(html);
   };
   function populateFilters(){
