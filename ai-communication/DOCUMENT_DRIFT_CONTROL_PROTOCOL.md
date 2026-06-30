@@ -17,6 +17,12 @@ If a change can make any repo-visible instruction, roadmap, handoff, README, val
 
 If an assistant says this is too much to track, the assistant is using the wrong process. The fix is not to skip documentation. The fix is to narrow the change, identify the affected documents, and update only the documents that can drift.
 
+## Branch protection
+
+main must never be edited directly; it is frozen and protected, and no assistant pushes commits to it.
+
+research-version is the intended live working branch: all development, validation, and GitHub Pages deployment happen on research-version.
+
 ## Required access-mode statement
 
 Before meaningful repo work, the assistant must identify its access mode:

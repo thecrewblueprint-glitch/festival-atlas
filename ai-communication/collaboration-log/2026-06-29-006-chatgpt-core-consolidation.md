@@ -62,3 +62,7 @@ npm run validate:all
 ## README impact
 
 README active shared-file list still needs a cleanup pass to remove retired helper scripts and add `data/iatse-organization-info.js` as the only new IATSE data asset. Runtime files now reflect the intended ownership: core page behavior belongs in `assets/atlas-core-v2.js`, except deliberately external page renderers such as Calendar, Map, and Employers.
+
+## Next action
+
+Run `npm run validate:all` locally on research-version and complete the browser smoke tests listed above; if green, the core-consolidation cleanup is settled and the README active shared-file list pass can follow.
