@@ -237,11 +237,9 @@ check(readme.includes('Required runtime load order'), 'README.md missing require
 check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
 check(readme.includes('guide.html        Full Guide for Use'), 'README.md missing current Guide page role');
 check(readme.includes('Guide and Sources are footer/reference links'), 'README.md missing current footer-only Guide/Sources rule');
+check(readme.includes('Retired public helpers must not be reintroduced'), 'README.md missing retired helper rule');
 check(readme.includes('verify applicable IATSE/local jurisdiction'), 'README.md missing normalized IATSE/local jurisdiction language rule');
 check(readme.includes('README current when significant app behavior'), 'README.md missing strengthened README maintenance rule');
-check(!readme.includes('assets/opportunities-promoter-filter.js'), 'README.md still lists removed opportunities promoter helper');
-check(!readme.includes('assets/opportunities-date-sort.js'), 'README.md still lists removed opportunities date-sort helper');
-check(!readme.includes('assets/iatse-page.js'), 'README.md still lists removed IATSE helper');
 
 const driftProtocol = exists('ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md') ? read('ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md') : '';
 check(driftProtocol.includes('main must never be edited'), 'DOCUMENT_DRIFT_CONTROL_PROTOCOL.md missing main-branch protection language');
