@@ -1,7 +1,7 @@
 {
   "name": "Production Atlas",
   "short_name": "Atlas",
-  "description": "Public work-mapping tool for live-event production contractors. Find festival dates, departments, employers, and application routes.",
+  "description": "Public work-mapping tool for live-event production contractors. Find festival dates, employers, and public application links.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
@@ -34,7 +34,7 @@
     {
       "name": "Employers",
       "short_name": "Employers",
-      "description": "Browse employer routes by department",
+      "description": "Browse public employers",
       "url": "/employers.html",
       "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
     }

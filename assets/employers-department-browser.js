@@ -107,7 +107,7 @@
     var all=employers();
     var filtered=all.filter(matches).sort(function(a,b){return String(a.name).localeCompare(String(b.name))});
     var stateLabel=f.state?(STATE_NAMES[f.state]||f.state):null;
-    var intro='<h2>Employers by Department</h2>'+
+    var intro='<h2>Employers</h2>'+
       '<p class="lead">These are public companies and vendor contacts in the live-event production industry, organized by the production departments they hire in. They may or may not be tied to a specific festival — department fit is an industry research aid, not confirmation that a company is working any particular event.</p>'+
       (stateLabel?'<div class="notice">Showing employers that hire in <b>'+esc(stateLabel)+'</b> — includes national employers that operate in all states.</div>':'')+
       '<div class="notice">Know a public company or employer that belongs here? You can submit it on the <a href="contribute.html">Contribute page</a>.</div>';
