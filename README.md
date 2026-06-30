@@ -11,9 +11,12 @@ The repository can contain deeper research and supplemental audit data, but the 
 
 ## Live GitHub Pages site
 
-- **Pages:** https://thecrewblueprint-glitch.github.io/festival-atlas/
+- **Custom domain:** https://atlas.thecrewblueprint.com/
+- **GitHub Pages URL:** https://thecrewblueprint-glitch.github.io/festival-atlas/
 
 Maintenance rule: keep this README current when significant app behavior, public navigation, public filter scope, runtime loading, active shared files, validation contract, data state, page roles, collaboration-log convention, public-safety policy, or source-link policy changes.
+
+README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
 
 ## Repository / branch
 
@@ -23,8 +26,10 @@ Active research branch: research-version
 Default branch: main
 Pages source: GitHub Actions
 Live preview source branch: research-version
-Public site: https://thecrewblueprint-glitch.github.io/festival-atlas/
+Public site: https://atlas.thecrewblueprint.com/
 ```
+
+`research-version` is the intended live working branch. `main` must not be edited, patched, or used as a live hotfix unless Aaron explicitly says to touch `main`.
 
 ## Source-of-truth rule
 
@@ -32,15 +37,18 @@ When repo-visible documents disagree, resolve in this order:
 
 ```text
 1. Actual files on research-version
-2. Validation scripts
-3. README.md
-4. Latest ai-communication handoff, decision record, or collaboration log
-5. Current user instruction
-6. Older docs
-7. Chat memory
+2. Aaron's latest explicit instruction
+3. ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md
+4. Validation scripts
+5. README.md
+6. ROADMAP.md
+7. ai-communication/AI_COLLABORATION_PROTOCOL.md
+8. ai-communication/PROJECT_CHAT_GROUP_INSTRUCTIONS.md
+9. ai-communication/PRODUCT_ROADMAP.md
+10. Latest topic-specific decision record
+11. Latest collaboration log for the affected file/topic
+12. Older handoffs and chat memory
 ```
-
-If actual files or validators show README drift, update README in the same work cycle. Do not leave source-of-truth drift for another assistant to discover.
 
 ## Collaboration log rule
 
@@ -68,6 +76,8 @@ Assistant: ChatGPT | Claude | Claude Code | other
 Branch: research-version
 Commit: <sha or range>
 ```
+
+For current work, logs should also include access mode, files changed, files deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status where applicable, known risks, and next action.
 
 Two-week cleanup rule:
 
@@ -106,8 +116,26 @@ map.html          Location view for routing, travel clustering, and nearby oppor
 schedule.html     Local browser-only planning view for possible work windows and overlaps.
 employers.html    Public company, employer, vendor, producer, venue, and apply/contact routes.
 iatse.html        Public IATSE/local jurisdiction routing aid. Core public reference page.
-contribute.html   Public-safe feedback and human-submission route; all submissions require review.
+contribute.html   Public-safe human-submission route; all submissions require review.
+feedback.html     Public app feedback route.
 ```
+
+### Header / footer navigation rule
+
+Current header nav:
+
+```text
+Home
+Opportunities
+Calendar
+Map
+Employers
+IATSE
+Schedule
+Contribute
+```
+
+Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
 
 ### Source / audit page
 
@@ -115,7 +143,7 @@ contribute.html   Public-safe feedback and human-submission route; all submissio
 sources.html      Central public source list for auditability.
 ```
 
-`Sources` is a support/audit page. Source links still belong there, but it does not have to be treated as a mandatory primary top-nav item on every page. Footer access and contextual links are acceptable when the current UI places it there.
+Source links still belong on `sources.html`, not inside opportunity popups, branch popups, map popups, or schedule cards.
 
 ### White pages
 
@@ -144,7 +172,7 @@ contact-data-requests.html
 
 ### Supplemental retained pages
 
-These pages are retained because validation still expects them and they may be useful for deeper review, but they are not part of the primary public navigation:
+These pages are retained because validation expects them and they may be useful for deeper review, but they are not part of the primary public navigation:
 
 ```text
 branches.html      Supplemental department/research view. Public nav currently hides it.
@@ -180,12 +208,14 @@ assets/atlas.css
 assets/atlas-core-v2.js
 assets/approx-date-labels.js
 assets/festival-modal-public-safe.js
-assets/opportunities-promoter-filter.js
 assets/calendar-interactive.js
 assets/map-page-static.js
 assets/employers-department-browser.js
 assets/sources-employer-links.js
 assets/site-footer.js
+assets/icons.js
+data/iatse-us-local-directory.js
+data/iatse-organization-info.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
@@ -194,11 +224,35 @@ data/packages/festival-research-master-list.js
 data/packages/branch-research-manifest.js
 ```
 
-`assets/confidence-badges.js` and `assets/research-queue-page.js` are retired and must not be reintroduced to public pages.
+Retired public helpers must not be reintroduced:
+
+```text
+assets/confidence-badges.js
+assets/research-queue-page.js
+assets/opportunities-promoter-filter.js
+assets/opportunities-date-sort.js
+assets/iatse-page.js
+```
+
+## Runtime ownership
+
+`assets/atlas-core-v2.js` owns core public rendering, opportunity date sorting, producer/promoter filter population and filtering, IATSE organization rendering, modals, Sources rendering, and the current Schedule renderer.
+
+External page renderers remain acceptable only where they are intentionally page-owned:
+
+```text
+assets/calendar-interactive.js       Calendar
+assets/map-page-static.js            Map
+assets/employers-department-browser.js Employers
+assets/sources-employer-links.js     Sources support
+assets/guide-page.js                 Guide content
+```
+
+Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
 
 ## Required runtime load order
 
-Every active HTML page must load the main data packages, then the public-safe research update packages, then the app runtime. Current validated order for primary app pages:
+Every active core HTML page must load the main data packages, then the public-safe research update packages, then the app runtime. Current order for primary app pages:
 
 ```html
 <script src="data/packages/production-branches.js?v=multi1"></script>
@@ -208,11 +262,11 @@ Every active HTML page must load the main data packages, then the public-safe re
 <script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script>
 <script src="data/packages/research-queue-route-updates.js?v=route1"></script>
 <script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script>
-<script src="assets/atlas-core-v2.js?v=multi14"></script>
+<script src="assets/atlas-core-v2.js?v=multi16"></script>
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
 
-`map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `opportunities.html` also loads `assets/opportunities-promoter-filter.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
+`iatse.html` also loads `data/iatse-organization-info.js` and may use a newer `atlas-core-v2.js` cache-bust value when IATSE copy changes. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
 
 Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js`, `research-queue-route-updates.js`, and `opportunity-rollover-2027.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES` when a page depends on rollover state.
 
@@ -227,6 +281,7 @@ data/packages/production-branches.js
 data/packages/opportunities-2026.js
 data/packages/us-employers.js
 data/iatse-us-local-directory.js
+data/iatse-organization-info.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
@@ -241,7 +296,7 @@ data/packages/branch-research-batch-*.js
 ```text
 data/packages/opportunity-taxonomy.js              source/date research updates
 data/packages/research-queue-route-updates.js      public producer/operator route leads
-data/packages/opportunity-rollover-2027.js         public calendar-cycle rollover updates
+data/packages/opportunity-rollover-2027.js         separate-year 2027 public-cycle bridge
 ```
 
 These packages are loaded directly by active HTML pages before `assets/atlas-core-v2.js` when those pages need them. `assets/approx-date-labels.js` may re-apply UI polish and guarded fallback behavior, but it is not the canonical first-load path for these packages.
@@ -289,11 +344,13 @@ verify before outreach repeated as public warning text
 
 Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which public producer/employer route exists, or what official route to research next.
 
-## Calendar-cycle rule
+## Calendar-cycle and 2027 rollover rule
 
-If a source site has rolled into the next public calendar cycle and the event month has passed in the current cycle, update the app data to reflect the new public cycle.
+The chosen rollover model is separate year-specific records.
 
-If the event still falls in the current calendar cycle, keep the current-cycle record.
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view.
+
+Do not expand the older mutation model where a visible `*-2026` record becomes a 2027 opportunity. Long-term cleanup should move verified `*-2027` records into canonical opportunity data and then shrink or retire the bridge.
 
 Do not update exact dates unless the new public dates are visible from a reliable source. If a page says a future year is coming but does not publish dates, mark the record for review rather than inventing dates.
 
@@ -318,15 +375,15 @@ A homepage is acceptable when it is the only reliable public route or when the c
 
 ## IATSE / local jurisdiction wording rule
 
-Do not name specific IATSE local numbers in route research notes unless a direct current public source supports that exact jurisdiction claim and the context requires it.
+Do not name specific IATSE local numbers in event route research notes unless a direct current public source supports that exact jurisdiction claim and the context requires it.
 
-Preferred language:
+Preferred event-route language:
 
 ```text
 verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
 ```
 
-This is legally safer, user-friendly, and clear that jurisdiction must be verified before outreach. The `iatse.html` page remains a core public worker-routing reference page.
+The `iatse.html` page itself may show public IATSE local and craft organization directory records as worker-routing reference data. It should provide useful research guidance, not repeat generic warning text on every card.
 
 ## Branch research loading rule
 
@@ -342,7 +399,7 @@ When adding a new branch research batch:
 2. Create one matching report in `research/`.
 3. Add the data package filename to `data/packages/branch-research-manifest.js`.
 4. Keep the rule: one branch research data file equals one `window.*` export only.
-5. Run validation.
+5. Run validation when possible, or document inability to run validation if using connector-only access and Aaron says continue.
 
 ## Public-safety rules
 
@@ -382,9 +439,11 @@ npm run validate:all
 
 `validate:all` currently runs all three validation layers.
 
-GitHub Actions workflow:
+GitHub Actions workflows:
 
 ```text
 .github/workflows/validate-branch-research.yml
 .github/workflows/deploy-research-version-pages.yml
 ```
+
+When Aaron says continue from a connector-only environment, continue making requested edits, state that validation was not run from the environment, and treat human live visual review as the immediate review gate. Do not claim validation passed unless it actually ran.
