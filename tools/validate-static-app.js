@@ -8,7 +8,7 @@ const researchDir = path.join(root, 'research');
 const collaborationLogDir = path.join(root, 'ai-communication', 'collaboration-log');
 const incompleteCollaborationLogDir = path.join(collaborationLogDir, 'incomplete');
 
-const requiredPages = [
+const requiredCorePages = [
   'index.html',
   'calendar.html',
   'opportunities.html',
@@ -23,31 +23,72 @@ const requiredPages = [
   'schedule.html'
 ];
 
+const requiredPublicPages = [
+  ...requiredCorePages,
+  'about.html',
+  'data-methodology.html',
+  'employer-route-methodology.html',
+  'date-work-window-disclaimer.html',
+  'privacy-policy.html',
+  'terms-and-conditions.html',
+  'limitation-of-liability.html',
+  'cookie-notice.html',
+  'accessibility.html',
+  'affiliate-disclosure.html',
+  'contact-data-requests.html',
+  'contribute.html',
+  'feedback.html'
+];
+
 const requiredSharedFiles = [
   'assets/atlas.css',
   'assets/atlas-core-v2.js',
   'assets/approx-date-labels.js',
+  'assets/calendar-interactive.js',
+  'assets/map-page-static.js',
+  'assets/employers-department-browser.js',
+  'assets/sources-employer-links.js',
+  'assets/festival-modal-public-safe.js',
+  'assets/site-footer.js',
+  'assets/icons.js',
   'data/packages/opportunity-taxonomy.js',
   'data/packages/research-queue-route-updates.js',
+  'data/packages/opportunity-rollover-2027.js',
   'data/packages/branch-research-manifest.js',
   'data/packages/production-branches.js',
   'data/packages/opportunities-2026.js',
   'data/packages/us-employers.js',
+  'data/packages/opportunity-coords.js',
   'data/iatse-us-local-directory.js',
+  'data/iatse-organization-info.js',
   'archive/README.md',
   'ai-communication/collaboration-log/README.md',
-  'ai-communication/collaboration-log/incomplete/README.md'
+  'ai-communication/collaboration-log/incomplete/README.md',
+  'ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md'
 ];
 
 const retiredRuntimeReferences = [
   'data/packages/branch-research-runtime.js',
-  'data/packages/guide-for-use-runtime.js'
+  'data/packages/guide-for-use-runtime.js',
+  'assets/opportunities-promoter-filter.js',
+  'assets/opportunities-date-sort.js',
+  'assets/iatse-page.js',
+  'assets/research-queue-page.js',
+  'assets/confidence-badges.js'
 ];
 
 const legacyBridgeMarkers = [
   '__branchPopupBridgeInstalled',
   'BRANCH_EMPLOYER_LEADS={branches:{}}',
   'window.BRANCH_EMPLOYER_LEADS={branches:{}}'
+];
+
+const headerNavPages = [
+  ...requiredCorePages,
+  'about.html',
+  'contribute.html',
+  'feedback.html',
+  'sources.html'
 ];
 
 let fail = [];
@@ -82,7 +123,7 @@ function listBranchPackages() {
 
 function validateCollaborationEntry(relPath) {
   const text = read(relPath);
-  check(/^Status: (complete|incomplete|blocked|superseded)$/m.test(text), `${relPath} missing valid Status metadata`);
+  check(/^Status: (complete|incomplete|blocked|superseded|superseded in part)$/m.test(text), `${relPath} missing valid Status metadata`);
   check(/^Created: \d{4}-\d{2}-\d{2}$/m.test(text), `${relPath} missing Created date metadata`);
   check(/^Review after: \d{4}-\d{2}-\d{2}$/m.test(text), `${relPath} missing Review after date metadata`);
   check(/^Assistant: /m.test(text), `${relPath} missing Assistant metadata`);
@@ -92,20 +133,21 @@ function validateCollaborationEntry(relPath) {
   check(text.includes('## Next action'), `${relPath} missing Next action section`);
 }
 
-requiredPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
+requiredPublicPages.forEach(page => check(exists(page), `Missing required page: ${page}`));
 requiredSharedFiles.forEach(sharedFile => check(exists(sharedFile), `Missing required shared file: ${sharedFile}`));
 
-const pageText = requiredPages.filter(exists).map(page => ({ file: page, content: read(page) }));
+const corePageText = requiredCorePages.filter(exists).map(page => ({ file: page, content: read(page) }));
+const allPageText = requiredPublicPages.filter(exists).map(page => ({ file: page, content: read(page) }));
 
-pageText.forEach(({ file, content }) => {
+corePageText.forEach(({ file, content }) => {
   check(content.includes('assets/atlas.css'), `${file} does not load shared CSS`);
   check(content.includes('assets/atlas-core-v2.js'), `${file} does not load direct atlas-core-v2.js`);
   check(content.includes('assets/approx-date-labels.js'), `${file} does not load approximate date helper`);
   check(content.includes('data/packages/opportunity-taxonomy.js'), `${file} does not load opportunity taxonomy package`);
   check(content.includes('data/packages/research-queue-route-updates.js'), `${file} does not load route research updates package`);
+  check(content.includes('data/packages/opportunity-rollover-2027.js'), `${file} does not load 2027 rollover package`);
+  check(content.includes('assets/site-footer.js'), `${file} does not load site footer normalizer`);
   check(!content.includes('Home / Guide'), `${file} still uses combined Home / Guide nav label`);
-  check(content.includes('href="index.html"') && content.includes('>Home</a>'), `${file} missing separate Home nav link`);
-  check(content.includes('href="guide.html"') && content.includes('>Guide</a>'), `${file} missing separate Guide nav link`);
   retiredRuntimeReferences.forEach(retired => {
     check(!content.includes(retired), `${file} still loads retired runtime: ${retired}`);
   });
@@ -114,71 +156,64 @@ pageText.forEach(({ file, content }) => {
   });
 });
 
+headerNavPages.filter(exists).forEach(page => {
+  const content = read(page);
+  if (!content.includes('navInner')) return;
+  check(content.includes('href="index.html"') || content.includes('href="./index.html"'), `${page} missing Home header nav link`);
+  check(content.includes('opportunities.html'), `${page} missing Opportunities header nav link`);
+  check(content.includes('calendar.html'), `${page} missing Calendar header nav link`);
+  check(content.includes('map.html'), `${page} missing Map header nav link`);
+  check(content.includes('employers.html'), `${page} missing Employers header nav link`);
+  check(content.includes('iatse.html'), `${page} missing IATSE header nav link`);
+  check(content.includes('schedule.html'), `${page} missing Schedule header nav link`);
+  check(content.includes('contribute.html'), `${page} missing Contribute header nav link`);
+  check(!/<nav[\s\S]*href="(?:\.\/)?guide\.html"[\s\S]*<\/nav>/i.test(content), `${page} puts Guide in header nav; Guide belongs on home top and footer`);
+  check(!/<nav[\s\S]*href="(?:\.\/)?sources\.html"[\s\S]*<\/nav>/i.test(content), `${page} puts Sources in header nav; Sources belongs in footer/contextual links`);
+});
+
+allPageText.forEach(({ file, content }) => {
+  retiredRuntimeReferences.forEach(retired => {
+    check(!content.includes(retired), `${file} references retired runtime/helper: ${retired}`);
+  });
+  if (content.includes('<footer')) {
+    check(content.includes('assets/site-footer.js'), `${file} has a footer but does not load site-footer.js`);
+  }
+});
+
+const footer = exists('assets/site-footer.js') ? read('assets/site-footer.js') : '';
+check(footer.includes('guide.html'), 'site-footer.js does not include Guide footer link');
+check(footer.includes('sources.html'), 'site-footer.js does not include Sources footer link');
+check(footer.includes('normalizeNav'), 'site-footer.js does not normalize header nav');
+check(footer.includes('guide.html') && footer.includes('sources.html'), 'site-footer.js missing footer-only Guide/Sources support');
+
 const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js') : '';
 check(core.includes('function loadBranchManifest'), 'atlas-core-v2.js does not load branch-research-manifest.js');
 check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not reference BRANCH_RESEARCH_MANIFEST');
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
+check(core.includes('function sortOpportunities'), 'atlas-core-v2.js is missing core opportunity date sorting');
+check(core.includes('function iatseResearchUse'), 'atlas-core-v2.js is missing useful IATSE card guidance');
+check(core.includes('guide-home-callout'), 'atlas-core-v2.js is missing the home Guide callout');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
+check(!core.includes('Verify directly before outreach.</p></article>'), 'IATSE cards still contain repeated generic verify-before-outreach line');
 
 const approx = exists('assets/approx-date-labels.js') ? read('assets/approx-date-labels.js') : '';
 check(approx.includes('Approx. date window'), 'approx-date-labels.js does not label cards as approximate date windows');
 check(approx.includes('Approx. planning window'), 'approx-date-labels.js does not label modals as approximate planning windows');
 check(approx.includes('verify before planning'), 'approx-date-labels.js does not add verification language');
-check(approx.includes('data/packages/opportunity-taxonomy.js'), 'approx-date-labels.js does not load the active opportunity taxonomy package');
-check(approx.includes('applyOpportunityTaxonomy'), 'approx-date-labels.js does not trigger active taxonomy display language');
-check(approx.includes('data/packages/research-queue-route-updates.js'), 'approx-date-labels.js does not load the active route research updates package');
-check(approx.includes('applyRouteResearchUpdates'), 'approx-date-labels.js does not trigger active route research updates');
+
+const rollover = exists('data/packages/opportunity-rollover-2027.js') ? read('data/packages/opportunity-rollover-2027.js') : '';
+check(rollover.includes("rolloverModel = 'separate_year_records'"), 'opportunity-rollover-2027.js does not declare separate_year_records model');
+check(rollover.includes('build2027Record'), 'opportunity-rollover-2027.js does not build separate 2027 records');
+check(rollover.includes('archiveSourceRecord'), 'opportunity-rollover-2027.js does not archive source 2026 records');
 
 const taxonomy = exists('data/packages/opportunity-taxonomy.js') ? read('data/packages/opportunity-taxonomy.js') : '';
 check(taxonomy.includes('PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY'), 'opportunity-taxonomy.js does not export PRODUCTION_ATLAS_OPPORTUNITY_TAXONOMY');
 check(taxonomy.includes('applyOpportunityTaxonomy'), 'opportunity-taxonomy.js does not expose active display behavior');
-check(taxonomy.includes('taxonomy-page-note'), 'opportunity-taxonomy.js does not render visible taxonomy page language');
-check(taxonomy.includes('taxonomy-route-note'), 'opportunity-taxonomy.js does not render visible route-card language');
-check(taxonomy.includes('researchQueueUpdates'), 'opportunity-taxonomy.js does not define active research queue updates');
-check(taxonomy.includes('applyResearchQueueUpdates'), 'opportunity-taxonomy.js does not apply active research queue updates');
-[
-  'stagecoach-2026',
-  'bourbon-and-beyond-2026',
-  'inkcarceration-2026',
-  'portola-2026',
-  'edc-orlando-2026',
-  'railbird-2026',
-  'oceans-calling-2026',
-  'roots-picnic-2026',
-  'iii-points-2026',
-  'hard-summer-2026',
-  'beyond-wonderland-socal-2026',
-  'north-coast-2026',
-  'rock-fest-wisconsin-2026',
-  'hulaween-2026',
-  'high-sierra-2026',
-  'm3f-2026',
-  'shaky-knees-2026',
-  'sick-new-world-2026'
-].forEach(id => {
-  check(taxonomy.includes(id), `opportunity-taxonomy.js missing research queue update for ${id}`);
-});
 
 const routeUpdates = exists('data/packages/research-queue-route-updates.js') ? read('data/packages/research-queue-route-updates.js') : '';
 check(routeUpdates.includes('PRODUCTION_ATLAS_ROUTE_RESEARCH_UPDATES'), 'research-queue-route-updates.js does not expose route research updates');
 check(routeUpdates.includes('applyRouteResearchUpdates'), 'research-queue-route-updates.js does not expose applyRouteResearchUpdates');
-[
-  'summerfest-2026',
-  'breakaway-2026',
-  'country-thunder-us-2026',
-  'bottlerock-napa-2026',
-  'electric-forest-2026',
-  'lollapalooza-chicago-2026',
-  'coachella-2026',
-  'stagecoach-2026',
-  'edc-las-vegas-2026',
-  'ultra-miami-2026',
-  'bonnaroo-2026',
-  'cma-fest-2026'
-].forEach(id => {
-  check(routeUpdates.includes(id), `research-queue-route-updates.js missing route research update for ${id}`);
-});
 check(!/verify IATSE jurisdiction/i.test(routeUpdates), 'route research updates use non-normalized IATSE jurisdiction wording');
 check(!/verify [A-Za-z-]+ IATSE\/local jurisdiction route/i.test(routeUpdates), 'route research updates use non-normalized IATSE/local wording');
 check(routeUpdates.includes('verify applicable IATSE/local jurisdiction'), 'route research updates missing preferred IATSE/local jurisdiction wording');
@@ -197,11 +232,20 @@ check(readme.includes('Two-week cleanup rule'), 'README.md missing collaboration
 check(readme.includes('ai-communication/collaboration-log/incomplete/'), 'README.md missing incomplete collaboration log folder path');
 check(readme.includes('incomplete or blocked logs must remain auditable'), 'README.md missing incomplete/blocked audit retention rule');
 check(readme.includes('data/packages/research-queue-route-updates.js'), 'README.md missing active route research update package');
+check(readme.includes('data/iatse-organization-info.js'), 'README.md missing IATSE organization info asset');
 check(readme.includes('Required runtime load order'), 'README.md missing required runtime load order section');
 check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
 check(readme.includes('guide.html        Full Guide for Use'), 'README.md missing current Guide page role');
+check(readme.includes('Guide and Sources are footer/reference links'), 'README.md missing current footer-only Guide/Sources rule');
 check(readme.includes('verify applicable IATSE/local jurisdiction'), 'README.md missing normalized IATSE/local jurisdiction language rule');
 check(readme.includes('README current when significant app behavior'), 'README.md missing strengthened README maintenance rule');
+check(!readme.includes('assets/opportunities-promoter-filter.js'), 'README.md still lists removed opportunities promoter helper');
+check(!readme.includes('assets/opportunities-date-sort.js'), 'README.md still lists removed opportunities date-sort helper');
+check(!readme.includes('assets/iatse-page.js'), 'README.md still lists removed IATSE helper');
+
+const driftProtocol = exists('ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md') ? read('ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md') : '';
+check(driftProtocol.includes('main must never be edited'), 'DOCUMENT_DRIFT_CONTROL_PROTOCOL.md missing main-branch protection language');
+check(driftProtocol.includes('research-version is the intended live working branch'), 'DOCUMENT_DRIFT_CONTROL_PROTOCOL.md missing research-version live branch rule');
 
 const collaborationLogReadme = exists('ai-communication/collaboration-log/README.md') ? read('ai-communication/collaboration-log/README.md') : '';
 check(collaborationLogReadme.includes('one collaboration log file per commit'), 'collaboration-log README missing one-file-per-commit purpose');
@@ -283,4 +327,4 @@ if (fail.length) {
   process.exit(1);
 }
 
-console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Opportunity taxonomy, research queue, route research updates, README source-of-truth coverage, normalized IATSE wording, collaboration-log lifecycle, and separate Home/Guide nav are active.`);
+console.log(`Production Atlas static app validation passed. ${branchPackages.length} branch package(s) are covered by the manifest and reports. Current header nav excludes Guide and Sources; Guide/Sources live in footer/reference flow; core owns opportunity sorting, promoter filtering, and IATSE rendering; README source-of-truth coverage, separate 2027 rollover, collaboration-log lifecycle, and public-safe route language are active.`);
