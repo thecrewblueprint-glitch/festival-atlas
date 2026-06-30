@@ -1,6 +1,6 @@
 # Production Atlas — Public Roadmap
 
-**Status as of June 27, 2026 · research-version branch**
+**Status as of June 29, 2026 · research-version branch**
 
 Production Atlas is a public-safe scouting dashboard for live-event production workers. It maps festivals, public dates, approximate production windows, producers/promoters, public employer routes, source references, and planning views.
 
@@ -10,16 +10,24 @@ This roadmap reflects the current product decision: the public app should be sim
 
 ## Active UI scope decision
 
-The public event search/filter UI should stay limited to:
+Aaron intentionally reopened the filter decision. Do not revert the app to a date/promoter-only model.
+
+Current page-specific filter direction:
 
 ```text
-date / month
-producer / promoter
+opportunities.html: state, department, producer/promoter, date/month
+calendar.html: date/month, plus page-specific calendar controls
+map.html: department, state, date/month
+employers.html: department, state, employer type
+sources.html: festival, department, employer route
+schedule.html: date/month
 ```
 
-Do not expose department, region, state, employer type, confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as the primary public filter bar unless Aaron explicitly reopens that UX decision.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as a primary public filter unless Aaron explicitly reopens those items.
 
-The future schedule and travel planner is a separate planning layer, not part of the basic public filter bar. It can later connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
+`Sources` remains the central audit/source page. Source links belong there, but the page does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
+
+The future schedule and travel planner is a separate planning layer. It can later connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
 
 ---
 
@@ -27,16 +35,16 @@ The future schedule and travel planner is a separate planning layer, not part of
 
 Latest repo-visible state:
 
-- 77 total opportunity records
-- 68 active public opportunities
-- 9 hidden/inactive/supplemental records
-- 68 / 68 active opportunity source URL coverage
-- 12 public route research update records
-- 56 branch research packages
-- Core public pages: Home, Guide, Opportunities, Calendar, Map, Schedule, Employers, IATSE Locals, Sources, Contribute
-- White pages: About, How the Data Works, Employer Route Methodology, Date & Work Window Disclaimer
-- Legal/policy pages: Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, Contact & Data Requests
-- Supplemental retained pages: Branches/Departments, Matrix, Analytics
+- 77 total opportunity records before runtime rollover mutation.
+- Active public opportunities are loaded from `data/packages/opportunities-2026.js`, then may be adjusted by `data/packages/opportunity-rollover-2027.js`.
+- Festival research intake master list exists at `data/packages/festival-research-master-list.js` and is not active opportunity data.
+- Public route research update records exist in `data/packages/research-queue-route-updates.js`.
+- Branch research packages load through `data/packages/branch-research-manifest.js`.
+- Primary work-flow pages: Home, Guide, Opportunities, Calendar, Map, Schedule, Employers, IATSE Locals, Contribute.
+- Source/audit page: Sources.
+- White pages: About, How the Data Works, Employer Route Methodology, Date & Work Window Disclaimer.
+- Legal/policy pages: Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, Contact & Data Requests.
+- Supplemental retained pages: Branches/Departments, Matrix, Analytics.
 
 ---
 
@@ -60,7 +68,7 @@ Goal: keep actual pages, README, roadmaps, legal pages, white pages, and AI coll
 - [x] Keep source links centralized on `sources.html`.
 - [x] Keep public pages free of private contacts, pay rates, lodging details, rumors, private referrals, and NDA/client-sensitive information.
 - [x] Remove public confidence badge/value-tier/research-queue direction from current docs.
-- [x] Align public filters to date/month and producer/promoter.
+- [x] Document current page-specific filters instead of reverting to date/promoter only.
 - [ ] Run `npm run validate:all` after the current connector-based updates in a local or GitHub Actions environment.
 
 ---
@@ -71,7 +79,7 @@ Goal: a worker can quickly understand what the app does and how to use it withou
 
 - [ ] Tighten Home copy around where, when, producer/operator, employer route, and which page to use next.
 - [ ] Keep the Guide page as the main public instruction page.
-- [ ] Add or improve empty-state language when a date/producer filter returns no results.
+- [ ] Add or improve empty-state language when current page filters return no results.
 - [ ] Continue mobile audit for nav, filters, cards, calendar, map, schedule, and modals.
 - [ ] Keep footer navigation consistent across public, white, and legal pages.
 
@@ -87,6 +95,7 @@ Goal: strengthen the public work-finding signal without publishing private or sp
 - [ ] Add event-specific employer/vendor relationships only when a public source supports the exact connection.
 - [ ] Keep Breakaway and Country Thunder market-level records current as public dates and venues change.
 - [ ] Track `breakaway-houston-2026` venue until a public venue is announced.
+- [ ] Use `data/packages/festival-research-master-list.js` only as an unverified intake queue until records are source-verified.
 
 ---
 
@@ -98,6 +107,7 @@ Goal: make Calendar, Map, and Schedule useful without turning the public app int
 - [ ] Map: keep location pins public-safe and avoid implying certainty beyond sources.
 - [ ] Schedule: keep planning browser-local through localStorage only.
 - [ ] Improve overlap, month spread, and travel-gap summaries without server-side private plan storage.
+- [ ] Discuss and decide the 2026/2027 rollover model before deeper schedule work.
 - [ ] Future planning layer: availability, routing distance, travel time, schedule gaps, and conflict flags.
 
 ---
@@ -136,12 +146,13 @@ Do not expand into backend, login, payment, private contact databases, marketpla
 
 ## Priority order for the next development sprint
 
-1. Run `npm run validate:all` after the documentation/page filter alignment pass.
-2. Fix any validation failures created by the page/filter changes.
-3. Spot-check public pages on mobile, especially the nav and filters.
-4. Improve date/producer filter empty states.
-5. Continue public source and producer/promoter verification for priority records.
-6. Keep white/legal pages aligned when page behavior changes.
+1. Discuss and decide the 2026/2027 rollover model.
+2. Run `npm run validate:all` after the current connector-based updates.
+3. Fix any validation failures created by the page/filter/doc changes.
+4. Spot-check public pages on mobile, especially the nav and filters.
+5. Improve filter empty states.
+6. Continue public source and producer/promoter verification for priority records.
+7. Keep white/legal pages aligned when page behavior changes.
 
 ---
 
