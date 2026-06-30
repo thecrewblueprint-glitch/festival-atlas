@@ -3,7 +3,7 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-06-29
+Updated: 2026-06-30
 
 Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter and employer-route leads, review source references, and plan scheduling.
 
@@ -113,9 +113,13 @@ opportunities.html
                   department, producer/promoter, and date/month.
 calendar.html     Month-by-month planning view for event timing and availability.
 map.html          Location view for routing, travel clustering, and nearby opportunities.
-schedule.html     Local browser-only planning view for possible work windows and overlaps.
+schedule.html     Local browser-only planning view. Temporarily off public navigation
+                  (unlinked, noindex, robots-disallowed); still functional by direct URL,
+                  saved schedules preserved, pending a rebuild.
 employers.html    Public company, employer, vendor, producer, venue, and apply/contact routes.
-iatse.html        Public IATSE/local jurisdiction routing aid. Core public reference page.
+iatse.html        How to join IATSE: union-join guidance (overhire-to-membership path,
+                  permit vs. member, other ways in), official IATSE resources, and a
+                  searchable local directory with per-local join steps. Core public reference page.
 contribute.html   Public-safe human-submission route; all submissions require review.
 feedback.html     Public app feedback route.
 ```
@@ -131,11 +135,10 @@ Calendar
 Map
 Employers
 IATSE
-Schedule
 Contribute
 ```
 
-Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
+Schedule is temporarily off public navigation (unlinked, `noindex`, and `Disallow`ed in robots.txt) pending a rebuild; the page still works by direct URL. Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
 
 ### Source / audit page
 
@@ -194,7 +197,7 @@ calendar.html: date/month, plus any page-specific calendar controls
 map.html: department, state, date/month
 employers.html: department, state, employer type
 sources.html: festival, department, employer route
-schedule.html: date/month
+schedule.html: date/month (off public navigation; reachable by direct URL only)
 ```
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
@@ -212,6 +215,7 @@ assets/calendar-interactive.js
 assets/map-page-static.js
 assets/employers-department-browser.js
 assets/sources-employer-links.js
+assets/guide-page.js
 assets/site-footer.js
 assets/icons.js
 data/iatse-us-local-directory.js
@@ -262,9 +266,11 @@ Every active core HTML page must load the main data packages, then the public-sa
 <script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script>
 <script src="data/packages/research-queue-route-updates.js?v=route1"></script>
 <script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script>
-<script src="assets/atlas-core-v2.js?v=multi16"></script>
+<script src="assets/atlas-core-v2.js?v=multi20"></script>
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
+
+Cache-bust query values (for example `?v=multi20`, `?v=footer12`, `?v=atlas1`) are bumped together across all pages whenever the underlying shared asset changes, so every page requests the same current version.
 
 `iatse.html` also loads `data/iatse-organization-info.js` and may use a newer `atlas-core-v2.js` cache-bust value when IATSE copy changes. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
 
@@ -383,7 +389,7 @@ Preferred event-route language:
 verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
 ```
 
-The `iatse.html` page itself may show public IATSE local and craft organization directory records as worker-routing reference data. It should provide useful research guidance, not repeat generic warning text on every card.
+The `iatse.html` page is built around how a worker actually joins IATSE: the overhire-to-membership path, the permit-vs-member distinction, other ways in (apprenticeship/training, organizing, transfer, craft guilds), official IATSE resource links (local-union directory, About IATSE, IATSE Training Trust), and a searchable local directory. Each local opens a modal with actionable join steps and a link to the official directory for that local's real contact. It should provide useful join guidance, not repeat generic warning text on every card.
 
 ## Branch research loading rule
 
