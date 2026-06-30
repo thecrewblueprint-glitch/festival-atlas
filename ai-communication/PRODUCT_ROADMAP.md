@@ -73,7 +73,7 @@ sources.html
 
 Do not move raw source links into opportunity, branch, map, or schedule popups.
 
-`Sources` remains the central source/audit page. Source links belong there, but the Sources page does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
+`Sources` remains the central source/audit page. Source links belong there, but Sources is a footer/reference link, not a header nav link.
 
 ### 3.3 Public Filter Scope
 
@@ -92,7 +92,24 @@ schedule.html: date/month
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
-### 3.4 Manifest Is the Data Loading Authority
+### 3.4 Header / Footer Navigation
+
+Current header nav:
+
+```text
+Home
+Opportunities
+Calendar
+Map
+Employers
+IATSE
+Schedule
+Contribute
+```
+
+`Guide` and `Sources` are footer/reference links. The Guide also appears as a home-page callout below the nav and above the first home card.
+
+### 3.5 Manifest Is the Data Loading Authority
 
 Branch research package loading must stay controlled by:
 
@@ -102,9 +119,9 @@ data/packages/branch-research-manifest.js
 
 Do not rely on stale hardcoded fallback arrays.
 
-### 3.5 Validation Comes Before Feature Expansion
+### 3.6 Validation and Human Review
 
-Any code or data change should keep these passing:
+Any code or data change should keep these passing when commands can run:
 
 ```bash
 npm run validate:data
@@ -113,12 +130,14 @@ npm run validate:static-app
 npm run validate:all
 ```
 
+When Aaron says continue and the environment cannot run validation, continue the repo work, state that validation was not run, and treat Aaron's live visual review as the immediate review gate. Do not claim validation passed unless it actually ran.
+
 ## 4. Roadmap Overview
 
 Only four stages matter for making the work research app function:
 
 ```text
-Stage 1 — Stabilize pages, docs, runtime, and validation
+Stage 1 — Stabilize pages, docs, runtime, validation, and deployment
 Stage 2 — Make the public dashboard useful for daily work research
 Stage 3 — Make public opportunity data clearer and safer
 Stage 4 — Make planning views useful
@@ -128,20 +147,21 @@ No backend, private workflow, production architecture, LMS integration, scraping
 
 ---
 
-# Stage 1 — Stabilize Pages, Docs, Runtime, and Validation
+# Stage 1 — Stabilize Pages, Docs, Runtime, Validation, and Deployment
 
 ## Goal
 
-Make the current static app load correctly, validate correctly, and match its repo-visible documentation.
+Make the current static app load correctly, validate correctly, deploy from `research-version`, and match repo-visible documentation.
 
 ## Done When
 
 ```text
-npm run validate:all passes.
-README matches the real active page list and current page-specific filter scope.
+npm run validate:all passes in a real workspace or GitHub Actions.
+GitHub Pages deploys the current research-version branch.
+README matches the real active page list, nav, runtime ownership, and current page-specific filter scope.
 ROADMAP.md and this AI roadmap match current public scope.
 Legal and white pages match public-safe app behavior.
-Navigation is consistent with the intended UI placement for each page.
+Navigation is consistent with intended header/footer placement.
 Current page-specific filters are preserved unless Aaron changes them.
 Manifest covers every branch research package.
 Every branch research package has a matching research report.
@@ -150,14 +170,17 @@ No active Firecrawl/scraping runner exists.
 
 ## Tasks
 
-1. Run baseline validation.
-2. Fix validation failures before new features.
-3. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned.
-4. Keep retired files out of public pages:
+1. Fix validation contract drift before additional feature work.
+2. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned.
+3. Keep retired files out of public pages:
    - `assets/confidence-badges.js`
    - `assets/research-queue-page.js`
-5. Confirm public-safe rendering on cards, modals, map popups, schedule cards, Sources, Contribute, white pages, and legal pages.
-6. Keep `data/packages/festival-research-master-list.js` as an intake asset until individual records are verified.
+   - `assets/opportunities-promoter-filter.js`
+   - `assets/opportunities-date-sort.js`
+   - `assets/iatse-page.js`
+4. Confirm public-safe rendering on cards, modals, map popups, schedule cards, Sources, Contribute, white pages, and legal pages.
+5. Keep `data/packages/festival-research-master-list.js` as an intake asset until individual records are verified.
+6. Confirm live visual review reflects `research-version`, not stale `main` or failed deploy output.
 
 ---
 
@@ -183,6 +206,8 @@ Which planning page should I use next?
 ### 2.1 Improve Home / Guide
 
 Home should explain the app quickly and route users to Guide, Opportunities, Calendar, Map, Employers, Sources, and Schedule as appropriate for the current UI.
+
+The Guide callout belongs at the top of the home app content, not in the hero and not in header nav.
 
 ### 2.2 Keep Research Queue Private
 
@@ -309,15 +334,40 @@ approximate total event days
 month spread
 region spread
 clear add/remove buttons
+mobile-first selected event list
+simple links back to map/calendar/opportunity detail
 ```
 
 Do not store private plans, contacts, pay, lodging, outreach notes, or personal workflow data in this public static app.
 
-### 4.4 Discuss 2026/2027 Rollover Model
+### 4.4 2026/2027 Rollover Cleanup
 
-The rollover package is active, but the long-term model is not yet settled. Before deeper schedule or date-cycle work, discuss whether the app should mutate 2026 IDs into 2027 cycles, create separate 2027 records, or use a base-opportunity plus event-year model.
+The decided model is separate year-specific records. The current rollover bridge creates `*-2027` records at runtime for verified public 2027 cycles and archives the corresponding active `*-2026` source records.
 
-### 4.5 Improve Sources View
+Future cleanup:
+
+```text
+Move verified *-2027 records into canonical opportunity data.
+Shrink or retire data/packages/opportunity-rollover-2027.js.
+Keep pending 2027 records hidden until public source dates are verified.
+```
+
+### 4.5 Future Unified Planning Workspace
+
+Do not attempt the full merge until Schedule is mobile-usable.
+
+Longer-term planning direction:
+
+```text
+pick festival
+see map location
+see public show dates
+see approximate working window
+add/remove from schedule
+later compare travel distance/time when scope and source are approved
+```
+
+### 4.6 Improve Sources View
 
 Sources page should remain the audit table.
 
@@ -338,15 +388,15 @@ avoid raw source links in popups
 Use this order unless Aaron reprioritizes:
 
 ```text
-1. Run validation and fix failures.
-2. Normalize pages/navigation/README/roadmaps/legal/white pages to current decisions.
-3. Preserve the current page-specific filters unless Aaron changes them.
-4. Discuss and settle the 2026/2027 rollover model before deeper schedule changes.
-5. Improve Home and Guide entry flow.
+1. Fix validation/deploy drift created by current nav/runtime decisions.
+2. Align README, ROADMAP, AI protocol files, and collaboration logs with current decisions.
+3. Confirm deploy from research-version and live visual review.
+4. Preserve the current page-specific filters unless Aaron changes them.
+5. Improve Schedule mobile usability.
 6. Improve filter empty states.
 7. Standardize public cards and modals.
-8. Improve Calendar, Map, Schedule, Employers, Sources, and Contribute.
-9. Re-run validation and write a collaboration log or handoff.
+8. Continue public source and producer/promoter verification for priority records.
+9. Canonicalize verified 2027 records after deployment/validation are stable.
 ```
 
 ## What This Roadmap Excludes
@@ -358,13 +408,8 @@ backend architecture
 login/authentication
 private contact database
 payment systems
-job marketplace features
-LMS/training platform integration
-new scraping automation
+scraping automation
 Firecrawl restoration
-public confidence badges
-public value-tier labels
-public research queue panels
+LMS integration
+general business planning
 ```
-
-Those may be separate decisions later. They are not part of making the current static work research app function.
