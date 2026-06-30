@@ -1,7 +1,7 @@
 # Project Chat Group Instructions — Production Atlas / Festival Atlas
 
 Generated: 2026-06-22  
-Updated: 2026-06-27  
+Updated: 2026-06-29  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary working branch: `research-version`
 
@@ -44,6 +44,7 @@ Read these first, in order:
 8. assets/atlas-core-v2.js
 9. tools/validate-static-app.js
 10. tools/validate-branch-research-packages.js
+11. tools/validate-data.js
 ```
 
 Then inspect task-specific files only as needed. Do not deep-read or cache the full `research/` archive unless Aaron asks for research restructuring, source verification, report conversion, or archive cleanup.
@@ -81,13 +82,22 @@ Do not introduce backend/auth/private workflow/payment/scraping architecture unl
 
 ## Current public UI scope
 
-The current public filter/search direction is intentionally narrow:
+Aaron has intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
+
+Current page-specific filter direction:
 
 ```text
-Primary public filters: date / month and producer / promoter.
+opportunities.html: state, department, producer/promoter, date/month
+calendar.html: date/month, plus page-specific calendar controls
+map.html: department, state, date/month
+employers.html: department, state, employer type
+sources.html: festival, department, employer route
+schedule.html: date/month
 ```
 
-Do not reintroduce department, region, state, employer type, confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filters as primary public filters unless Aaron explicitly reopens that UX decision.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
+
+`Sources` remains the central source/audit page. Source links belong there, but `Sources` does not have to be treated as a mandatory primary top-nav item on every page; footer access and contextual links are acceptable when that is the intended UI placement.
 
 Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
 
@@ -167,6 +177,14 @@ Source links belong on `sources.html`.
 
 Do not put raw source links inside opportunity popups, branch popups, map popups, or schedule cards. Sources should remain centralized for auditability and public-safety control.
 
+## Festival research master-list rule
+
+`data/packages/festival-research-master-list.js` is an active repo asset for future research intake. It is not verified opportunity data and must not be rendered as active public opportunity records until individual records are verified from public sources.
+
+## 2026/2027 rollover rule
+
+The current rollover package is active but still needs a product decision discussion before deeper schedule work. Do not silently expand or redesign rollover architecture without Aaron confirming the intended model.
+
 ## Manifest rule
 
 Branch research packages are loaded through:
@@ -217,61 +235,3 @@ A new assistant session should:
 6. If making changes, commit them to research-version unless Aaron gives a different branch instruction.
 7. Leave a handoff or collaboration log after meaningful changes.
 ```
-
-## If Claude or another assistant cannot see a file
-
-Most likely cause:
-
-```text
-They are looking at main, a stale local checkout, or a PR/head branch instead of research-version.
-```
-
-Tell them to run:
-
-```bash
-git fetch origin
-git checkout research-version
-git pull origin research-version
-ls ai-communication
-```
-
-Then check:
-
-```bash
-cat ai-communication/PROJECT_CHAT_GROUP_INSTRUCTIONS.md
-cat ai-communication/PRODUCT_ROADMAP.md
-cat ai-communication/AI_COLLABORATION_PROTOCOL.md
-cat README.md
-cat ROADMAP.md
-```
-
-## What new chats should not do
-
-Do not:
-
-```text
-Ask Aaron to re-explain the project before checking the repo.
-Assume main is current.
-Deep-load the full research archive by default.
-Reintroduce Firecrawl or scraping automation.
-Add backend/login/database/private workflow scope to this app roadmap.
-Publish private/sensitive data.
-Move source links into popups.
-Reintroduce public confidence badges, value-tier labels, public research queue panels, or broad public filter bars.
-Make large undocumented changes.
-Skip handoff notes after meaningful repo updates.
-```
-
-## Standard opening response for new chats
-
-When Aaron says something like `connect to the Production Atlas repo`, `pick up the work research app`, `continue the Festival Atlas roadmap`, or `Claude made updates, catch up`, a good assistant response is:
-
-```text
-I’ll connect to the Production Atlas repository on research-version, read the project chat instructions, collaboration protocol, roadmap, README, and task-specific files. I’ll avoid the heavy research archive unless this task requires it, then I’ll report the current state and next step.
-```
-
-Then actually perform the repo catch-up.
-
-## Final rule
-
-Aaron should not have to rebuild context manually. Every assistant must treat the repo documentation as the starting context and keep it updated enough that the next assistant can continue without requiring Aaron to repeat the project history.
