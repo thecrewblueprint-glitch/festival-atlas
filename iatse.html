@@ -5,5 +5,48 @@
 <header class="hero"><div class="wrap"><div class="eyebrow">Production Atlas</div><h1>IATSE Locals &amp; How to Join</h1><p>Find your IATSE local and learn how to get union live-event work — the overhire-to-membership path, what to ask, and the official directory. Verify details with the local.</p></div></header>
 <nav class="nav"><div class="wrap"><div class="navInner"><a href="index.html">Home</a><a href="opportunities.html">Opportunities</a><a href="calendar.html">Calendar</a><a href="map.html">Map</a><a href="employers.html">Employers</a><a class="active" href="iatse.html">IATSE</a><a href="contribute.html">Contribute</a></div><div id="filters" class="filters" style="grid-template-columns:1fr auto"><input id="q" placeholder="Search by state, city, local number, craft, district, or organization family…"><button class="btn" id="reset">Reset</button></div></div></nav>
 <main class="wrap page" id="app"></main><div id="stats" class="hiddenRuntime"></div><div id="calendarGrid" class="hiddenRuntime"></div><div id="modal" class="modal"><div class="modalbox"><button class="btn close" onclick="closeModal()">Close</button><div id="modalContent"></div></div></div><footer class="wrap"></footer>
-<script src="data/packages/production-branches.js?v=multi1"></script><script src="data/packages/opportunities-2026.js?v=multi1"></script><script src="data/packages/us-employers.js?v=multi1"></script><script src="data/iatse-us-local-directory.js?v=multi1"></script><script src="data/iatse-organization-info.js?v=iatseorg1"></script><script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script><script src="data/packages/research-queue-route-updates.js?v=route1"></script><script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script><script src="assets/atlas-core-v2.js?v=multi22"></script><script src="assets/approx-date-labels.js?v=approx1"></script><script src="assets/site-footer.js?v=footer12"></script><script src="assets/icons.js?v=icons1"></script>
+<script src="data/packages/production-branches.js?v=multi1"></script><script src="data/packages/opportunities-2026.js?v=multi1"></script><script src="data/packages/us-employers.js?v=multi1"></script><script src="data/iatse-us-local-directory.js?v=multi1"></script><script src="data/iatse-organization-info.js?v=iatseorg1"></script><script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script><script src="data/packages/research-queue-route-updates.js?v=route1"></script><script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script><script src="assets/atlas-core-v2.js?v=multi22"></script><script src="assets/approx-date-labels.js?v=approx1"></script><script>
+(function(){
+  if(!document.body || document.body.dataset.page !== 'iatse') return;
+  var PER_PAGE = 10;
+  var page = 0;
+  var sig = '__init';
+  function app(){return document.getElementById('app');}
+  function q(){var input=document.getElementById('q');return input ? input.value : '';}
+  function pageList(current,total){var c=current+1,out=[],i;for(i=1;i<=total;i++){if(i===1||i===total||(i>=c-1&&i<=c+1))out.push(i);else if(out[out.length-1] !== '…')out.push('…');}return out;}
+  function controls(current,total,count){if(total<=1)return '';var start=current*PER_PAGE+1,end=Math.min(count,start+PER_PAGE-1);var nums=pageList(current,total).map(function(p){if(p==='…')return '<span class="pager-gap">…</span>';var idx=p-1;return '<button class="btn pager-num'+(idx===current?' active':'')+'" type="button"'+(idx===current?' aria-current="page"':'')+' onclick="iatsePageSet('+idx+')" aria-label="Page '+p+'">'+p+'</button>';}).join('');return '<div class="pager iatse-pager"><div class="pager-row"><button class="btn" type="button"'+(current<=0?' disabled':'')+' onclick="iatsePageSet('+(current-1)+')" aria-label="Previous IATSE locals">‹ Prev</button><div class="pager-nums">'+nums+'</div><button class="btn" type="button"'+(current>=total-1?' disabled':'')+' onclick="iatsePageSet('+(current+1)+')" aria-label="Next IATSE locals">Next ›</button></div><span class="pager-info">Showing '+start+'–'+end+' of '+count+' · Page '+(current+1)+' of '+total+'</span></div>';}
+  function removeOld(){Array.prototype.slice.call(document.querySelectorAll('.iatse-pager')).forEach(function(el){el.remove();});}
+  function paginate(){
+    var root=app(); if(!root)return;
+    var cards=Array.prototype.slice.call(root.querySelectorAll('article[data-local][data-district]'));
+    removeOld();
+    if(!cards.length)return;
+    var currentSig=q()+'::'+cards.length;
+    if(currentSig!==sig){sig=currentSig;page=0;}
+    var pages=Math.max(1,Math.ceil(cards.length/PER_PAGE));
+    if(page>=pages)page=pages-1;if(page<0)page=0;
+    cards.forEach(function(card,index){card.style.display=(index>=page*PER_PAGE&&index<page*PER_PAGE+PER_PAGE)?'':'none';});
+    var html=controls(page,pages,cards.length);
+    if(!html)return;
+    var first=cards[0];
+    var grid=first.parentNode;
+    if(grid){grid.insertAdjacentHTML('beforebegin',html);grid.insertAdjacentHTML('afterend',html);}
+  }
+  window.iatsePageSet=function(n){page=Number(n)||0;paginate();var root=app();if(root&&root.scrollIntoView)try{root.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}};
+  function install(){
+    var original=window.renderPage;
+    if(typeof original==='function'&&!window.__iatsePaginationWrapped){
+      window.renderPage=function(){var result=original.apply(this,arguments);setTimeout(paginate,0);return result;};
+      window.__iatsePaginationWrapped=true;
+    }
+    var input=document.getElementById('q');
+    if(input&&!input.dataset.iatsePaginationBound){input.dataset.iatsePaginationBound='true';input.addEventListener('input',function(){setTimeout(paginate,50);});}
+    var reset=document.getElementById('reset');
+    if(reset&&!reset.dataset.iatsePaginationBound){reset.dataset.iatsePaginationBound='true';reset.addEventListener('click',function(){setTimeout(paginate,50);});}
+    setTimeout(paginate,50);
+    setTimeout(paginate,250);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script><script src="assets/site-footer.js?v=footer12"></script><script src="assets/icons.js?v=icons1"></script>
 </body></html>
