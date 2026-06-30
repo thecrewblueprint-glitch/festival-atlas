@@ -38,8 +38,8 @@
   function card(row){
     var opportunity=row.opportunity;
     var depts=(opportunity.departments||[]).slice(0,4).map(branchName).join(' · ');
-    return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
-      '<h3>'+esc(opportunity.name)+'</h3>'+ 
+    return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
+      '<h3>'+esc(opportunity.name)+'</h3>'+
       '<p class="sub">'+esc([opportunity.city,opportunity.state].filter(Boolean).join(', '))+'</p>'+ 
       (dateLabel(opportunity)?'<p class="oppline"><b>Festival dates:</b> '+esc(dateLabel(opportunity))+'</p>':'')+
       (depts?'<p class="oppline"><b>Departments:</b> '+esc(depts)+'</p>':'')+

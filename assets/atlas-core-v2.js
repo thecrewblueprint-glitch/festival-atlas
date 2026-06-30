@@ -231,7 +231,7 @@
     var dates=festivalDates(opportunity);
     var prodWindow=productionWindow(opportunity);
     var producer=knownProducer(opportunity);
-    return '<article class="card click" onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
+    return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<div class="sub">'+esc(opportunity.city)+', '+esc(opportunity.state)+(hasVenue?' • '+esc(venue):'')+'</div>'+
       (dates?'<p class="oppline"><b>Festival dates:</b> '+esc(dates)+'</p>':'')+
@@ -245,7 +245,7 @@
   function iatseCard(local){
     var craft=local.craft||'';
     var states=(local.states||[]).join(', ');
-    return '<article class="card click" onclick="openLocal(\''+esc(local.local)+'\',\''+esc(local.district)+'\')">'+
+    return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openLocal(\''+esc(local.local)+'\',\''+esc(local.district)+'\')">'+
       '<h3>IATSE Local '+esc(local.local)+'</h3>'+
       '<div class="sub">'+esc(local.district)+' • '+esc(local.jurisdiction)+'</div>'+
       (craft?'<p><b>Craft:</b> '+esc(craft)+'</p>':'')+
@@ -286,7 +286,7 @@
     var regionSet={};scheduledOpps.forEach(function(o){if(o.region)regionSet[o.region]=1;});
     var ganttRows=scheduledOpps.length?scheduledOpps.map(function(opportunity){
       return '<div class="gantt-row">'+
-        '<div class="gantt-cell" onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span>'+esc(opportunity.name)+'</span></div>'+
+        '<div class="gantt-cell" role="button" tabindex="0" data-keyclick onclick="openOpportunity(\''+esc(opportunity.id)+'\')"><span>'+esc(opportunity.name)+'</span></div>'+
         '<div class="gantt-track"><div class="gantt-dividers">'+MOS.map(function(){return '<span></span>';}).join('')+'</div>'+ganttBar(opportunity)+'</div>'+
         '<div class="gantt-action"><button class="btn" onclick="removeGig(\''+esc(opportunity.id)+'\')">✕</button></div>'+
         '</div>';
@@ -358,7 +358,7 @@
       (upcoming.length?
         '<div style="display:grid;gap:7px">'+upcoming.map(function(o){
           var dates=festivalDates(o);
-          return '<div class="card click" style="padding:12px 16px;display:flex;align-items:center;gap:12px" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
+          return '<div class="card click" role="button" tabindex="0" data-keyclick style="padding:12px 16px;display:flex;align-items:center;gap:12px" onclick="openOpportunity(\''+esc(o.id)+'\')">'+
             '<div style="flex:1;min-width:0">'+
               '<div style="font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(o.name)+'</div>'+
               '<div class="sub" style="font-size:.8rem;margin-top:2px">'+esc(o.city)+', '+esc(o.state)+(dates?' · '+esc(dates):'')+'</div>'+
@@ -431,7 +431,7 @@
     if(!el)return;
     el.innerHTML='<h2>Production Branches</h2><p class="lead">Employers and companies organized by production branch. Open a branch to see the festivals using it and the companies that hire for it.</p><div class="grid">'+branches.map(function(branch){
       var roles=(branch.workerFocus||[]).slice(0,4).join(' \xb7 ');
-      return '<article class="card click" onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employers:</b> '+matchingEmployers(branch.id).length+'</p></article>';
+      return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openBranch(\''+esc(branch.id)+'\')"><h3>'+esc(branch.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active 2026 festivals:</b> '+matchingOpportunities(branch.id).length+'</p><p><b>Employers:</b> '+matchingEmployers(branch.id).length+'</p></article>';
     }).join('')+'</div>';
   }
 
@@ -670,6 +670,20 @@
     var modal=$('#modal');
     if(modal)modal.addEventListener('click',function(event){if(event.target.id==='modal')window.closeModal()});
     document.addEventListener('keydown',function(event){if(event.key==='Escape'){var m=$('#modal');if(m&&m.classList.contains('open'))window.closeModal();}});
+    // Keyboard activation for non-native clickable elements (cards, calendar
+    // cells, gantt rows). Any element marked data-keyclick gets Enter/Space
+    // support so it behaves like the button its role advertises.
+    document.addEventListener('keydown',function(event){
+      if(event.key!=='Enter'&&event.key!==' '&&event.key!=='Spacebar')return;
+      if(!event.target||!event.target.closest)return;
+      var el=event.target.closest('[data-keyclick]');
+      if(!el)return;
+      // Let real controls (links, buttons, inputs) keep their native behavior.
+      var tag=event.target.tagName;
+      if((tag==='A'||tag==='BUTTON'||tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA')&&event.target!==el)return;
+      event.preventDefault();
+      el.click();
+    });
     var page=document.body.dataset.page;
     var branchDependentPages={home:1,branches:1,sources:1,analytics:1,opportunities:1};
     ensureBranchResearch().then(function(){if(branchDependentPages[page])renderPage();});

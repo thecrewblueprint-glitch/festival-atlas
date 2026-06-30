@@ -55,7 +55,7 @@
     var depts=employerDepartments(employer).map(branchName).join(', ');
     var url=bestLink(employer);
     var stateTag=employer.national?'National':((employer.states||[]).map(function(s){return STATE_NAMES[s]||s}).join(', '));
-    return '<article class="card click" onclick="openEmployer(\''+esc(employer.id)+'\')">'+
+    return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openEmployer(\''+esc(employer.id)+'\')">'+
       '<h3>'+esc(employer.name)+'</h3>'+
       '<div class="sub">'+esc(employer.type||'Employer')+(stateTag?' • '+esc(stateTag):'')+'</div>'+
       '<p><b>Department fit:</b> '+esc(contextDepartment||depts||OTHER_LABEL)+'</p>'+

@@ -155,7 +155,7 @@
             var showCount=eventsOnDay(events,day,showRange).length;
             var workCount=eventsOnDay(events,day,workRange).length;
             var dots=showCount?'<div class="cal-ev-dots">'+Array(showCount+1).join('<i class="cal-ev-dot cal-ev-dot-show"></i>')+'</div>':'';
-            return '<div class="cal-date-cell '+(day.getMonth()===month?'':'muted-month')+' '+(dateKey(day)===todayKey?'today':'')+'" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
+            return '<div class="cal-date-cell '+(day.getMonth()===month?'':'muted-month')+' '+(dateKey(day)===todayKey?'today':'')+'" role="button" tabindex="0" data-keyclick aria-label="'+esc(fmt(day,true))+'" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
               '<span class="cal-day-num">'+day.getDate()+'</span>'+(showCount?'<span class="cal-dot-count show">'+showCount+'</span>':(workCount?'<span class="cal-dot-count work">'+workCount+'</span>':''))+dots+'</div>';
           }).join('')+'</div>'+
           '<div class="cal-week-event-grid">'+inWeek.map(function(event,index){return combinedBar(event,week.start,week.end,index+1)}).join('')+(allInWeek.length>8?'<div class="cal-week-more" style="grid-column:1 / 8;grid-row:9">+'+(allInWeek.length-8)+' more this week</div>':'')+'</div>'+
@@ -186,7 +186,7 @@
         var total=showItems.length+workItems.length;
         var isToday=dateKey(day)===todayKey;
         return '<div class="cal-wm-day'+(isToday?' today':'')+(total===0?' cal-wm-empty':'')+'">'+
-          '<div class="cal-wm-header" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
+          '<div class="cal-wm-header" role="button" tabindex="0" data-keyclick aria-label="'+esc(fmt(day,true))+'" onclick="openCalendarDay(\''+dateKey(day)+'\')">'+
             '<span class="cal-wm-dayname">'+DAYS[day.getDay()]+'</span>'+
             '<span class="cal-wm-date">'+fmt(day,false)+'</span>'+
             (total?'<span class="cal-wm-count">'+total+'</span>':'')+
@@ -277,6 +277,7 @@
       '.cal-week-more{pointer-events:none;color:#ffd66b;font-size:.72rem;font-weight:900;padding:2px 8px}'+
       '.cal-week-app{padding-bottom:10px}.cal-week-track{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(26px,auto);gap:6px;min-height:380px;padding:12px;background:#0e141c}.cal-week-track .cal-combined-bar{min-height:26px}'+
       '.cal-day-detail:hover{border-color:rgba(242,183,5,.58)}.cal-show-detail{border-color:rgba(242,183,5,.42)}.cal-work-detail{border-color:rgba(127,183,255,.42)}'+
+      '.cal-date-cell:focus-visible,.cal-wm-header:focus-visible{outline:3px solid rgba(242,183,5,.6);outline-offset:-3px}'+
       // Mobile week list
       '.cal-week-mobile{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0e141c}'+
       '.cal-wm-day{border-bottom:1px solid var(--line)}.cal-wm-day:last-child{border-bottom:0}'+
