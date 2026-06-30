@@ -101,7 +101,8 @@
   }
   var EMP_PER_PAGE=10;
   var empPage=0,empSig='__init';
-  function empPager(page,pages,total,per){if(pages<=1)return '';var start=page*per,end=Math.min(total,start+per);return '<div class="pager"><button class="btn" type="button"'+(page<=0?' disabled':'')+' onclick="empPageGo(-1)" aria-label="Previous results">‹ Prev</button><span class="pager-info">Showing '+(start+1)+'–'+end+' of '+total+' · Page '+(page+1)+' of '+pages+'</span><button class="btn" type="button"'+(page>=pages-1?' disabled':'')+' onclick="empPageGo(1)" aria-label="Next results">Next ›</button></div>'}
+  function pageList(page,pages){var c=page+1,a=[],i;for(i=1;i<=pages;i++){if(i===1||i===pages||(i>=c-1&&i<=c+1))a.push(i);else if(a[a.length-1]!=='…')a.push('…');}return a;}
+  function empPager(page,pages,total,per){if(pages<=1)return '';var start=page*per,end=Math.min(total,start+per);var nums=pageList(page,pages).map(function(p){if(p==='…')return '<span class="pager-gap">…</span>';var idx=p-1;return '<button class="btn pager-num'+(idx===page?' active':'')+'" type="button"'+(idx===page?' aria-current="page"':'')+' onclick="empPageSet('+idx+')" aria-label="Page '+p+'">'+p+'</button>'}).join('');return '<div class="pager"><div class="pager-row"><button class="btn" type="button"'+(page<=0?' disabled':'')+' onclick="empPageSet('+(page-1)+')" aria-label="Previous results">‹ Prev</button><div class="pager-nums">'+nums+'</div><button class="btn" type="button"'+(page>=pages-1?' disabled':'')+' onclick="empPageSet('+(page+1)+')" aria-label="Next results">Next ›</button></div><span class="pager-info">Showing '+(start+1)+'–'+end+' of '+total+' · Page '+(page+1)+' of '+pages+'</span></div>'}
   function render(){
     var app=$('#app');
     if(!app)return;
@@ -125,7 +126,7 @@
     var ctx=f.department?branchName(f.department):'';
     app.innerHTML=intro+heading+pg+'<div class="grid">'+pageData.map(function(employer){return employerCard(employer,ctx)}).join('')+'</div>'+pg;
   }
-  window.empPageGo=function(d){empPage+=Number(d)||0;render();var app=$('#app');if(app&&app.scrollIntoView)try{app.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
+  window.empPageSet=function(n){empPage=Number(n)||0;render();var app=$('#app');if(app&&app.scrollIntoView)try{app.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
   function install(){
     var month=$('#monthFilter');
     if(month)month.remove();
