@@ -16,6 +16,12 @@
   function pageList(current,total){var c=current+1,out=[],i;for(i=1;i<=total;i++){if(i===1||i===total||(i>=c-1&&i<=c+1))out.push(i);else if(out[out.length-1] !== '…')out.push('…');}return out;}
   function controls(current,total,count){if(total<=1)return '';var start=current*PER_PAGE+1,end=Math.min(count,start+PER_PAGE-1);var nums=pageList(current,total).map(function(p){if(p==='…')return '<span class="pager-gap">…</span>';var idx=p-1;return '<button class="btn pager-num'+(idx===current?' active':'')+'" type="button"'+(idx===current?' aria-current="page"':'')+' onclick="iatsePageSet('+idx+')" aria-label="Page '+p+'">'+p+'</button>';}).join('');return '<div class="pager iatse-pager"><div class="pager-row"><button class="btn" type="button"'+(current<=0?' disabled':'')+' onclick="iatsePageSet('+(current-1)+')" aria-label="Previous IATSE locals">‹ Prev</button><div class="pager-nums">'+nums+'</div><button class="btn" type="button"'+(current>=total-1?' disabled':'')+' onclick="iatsePageSet('+(current+1)+')" aria-label="Next IATSE locals">Next ›</button></div><span class="pager-info">Showing '+start+'–'+end+' of '+count+' · Page '+(current+1)+' of '+total+'</span></div>';}
   function removeOld(){Array.prototype.slice.call(document.querySelectorAll('.iatse-pager')).forEach(function(el){el.remove();});}
+  function moveStatsBelowTopPager(){
+    var root=app(); if(!root)return;
+    var stats=root.querySelector('.stats');
+    var topPager=root.querySelector('.iatse-pager');
+    if(stats&&topPager&&stats.previousElementSibling!==topPager){topPager.insertAdjacentElement('afterend',stats);}
+  }
   function paginate(){
     var root=app(); if(!root)return;
     var cards=Array.prototype.slice.call(root.querySelectorAll('article[data-local][data-district]'));
@@ -30,7 +36,7 @@
     if(!html)return;
     var first=cards[0];
     var grid=first.parentNode;
-    if(grid){grid.insertAdjacentHTML('beforebegin',html);grid.insertAdjacentHTML('afterend',html);}
+    if(grid){grid.insertAdjacentHTML('beforebegin',html);grid.insertAdjacentHTML('afterend',html);moveStatsBelowTopPager();}
   }
   window.iatsePageSet=function(n){page=Number(n)||0;paginate();var root=app();if(root&&root.scrollIntoView)try{root.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}};
   function install(){
