@@ -43,10 +43,11 @@
     if(employer.national)return true;
     return (employer.states||[]).indexOf(stateCode)>-1;
   }
+  function empHay(e){return String([e.name,e.type,e.region,(e.states||[]).map(function(s){return s+' '+(STATE_NAMES[s]||s)}).join(' '),employerDepartments(e).map(branchName).join(' '),e.bestUse].join(' ')).toLowerCase()}
   function matches(employer){
     var f=filters();
     var depts=employerDepartments(employer);
-    return (!f.q||text(employer).indexOf(f.q)>-1)
+    return (!f.q||empHay(employer).indexOf(f.q)>-1)
       &&(!f.department||depts.indexOf(f.department)>-1)
       &&matchesState(employer,f.state)
       &&(!f.type||employer.type===f.type);
