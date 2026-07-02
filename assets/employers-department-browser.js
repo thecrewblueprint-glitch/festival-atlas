@@ -58,11 +58,11 @@
   function companyOverview(employer){
     var type=String(employer.type||'Live-event production employer').replace(/^U\.S\.\s*/,'');
     var coverage=stateLabel(employer)||employer.region||'publicly listed markets';
-    return employer.name+' is a '+type.toLowerCase()+' route serving '+coverage+'.';
+    return type+' serving '+coverage+'.';
   }
   function employmentAngle(employer){
     if(employer.bestUse)return cleanSentence(employer.bestUse);
-    return 'Check the official website, careers page, and public contact route.';
+    return 'Check the official website, careers page, and public contact page.';
   }
   function linkButton(label,url){return url?'<a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(label)+' ↗</a>':''}
   function publicLinks(employer){

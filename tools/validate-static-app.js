@@ -192,7 +192,11 @@ check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not refe
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(core.includes('function sortOpportunities'), 'atlas-core-v2.js is missing core opportunity date sorting');
-check(core.includes('function iatseResearchUse'), 'atlas-core-v2.js is missing useful IATSE card guidance');
+// IATSE guidance moved from per-card "research use" text to the tabbed join flow:
+// card CTA + per-local modal join steps. Validate the current guidance markers.
+check(core.includes('How to join / get work'), 'atlas-core-v2.js is missing the IATSE card join CTA');
+check(core.includes('How to join or get work with this local'), 'atlas-core-v2.js is missing the IATSE per-local join guidance');
+check(core.includes('not affiliated with or endorsed by IATSE'), 'atlas-core-v2.js is missing the IATSE independence disclaimer');
 check(core.includes('guide-home-callout'), 'atlas-core-v2.js is missing the home Guide callout');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
 check(!core.includes('Verify directly before outreach.</p></article>'), 'IATSE cards still contain repeated generic verify-before-outreach line');
