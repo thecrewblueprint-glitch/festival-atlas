@@ -1,6 +1,10 @@
 (function(){
   if(!document.body || document.body.dataset.page!=='map')return;
 
+  var PER_PAGE=12;
+  var mapPage=0;
+  var mapSig='__init';
+
   function esc(value){return String(value==null?'':value).replace(/[&<>'"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]})}
   function $(selector){return document.querySelector(selector)}
   function branchName(id){var match=(window.branches||[]).find(function(branch){return branch.id===id});return match?match.name:id}
@@ -35,14 +39,28 @@
       return {opportunity:opportunity,coords:coords[opportunity.id]};
     }).sort(function(a,b){return (parseDate(a.opportunity.startDate)||new Date(9999,0,1))-(parseDate(b.opportunity.startDate)||new Date(9999,0,1));});
   }
+  function pageList(page,pages){var c=page+1,a=[],i;for(i=1;i<=pages;i++){if(i===1||i===pages||(i>=c-1&&i<=c+1))a.push(i);else if(a[a.length-1]!=='…')a.push('…')}return a}
+  function pager(page,pages,total){
+    if(pages<=1)return '';
+    var start=page*PER_PAGE,end=Math.min(total,start+PER_PAGE);
+    var nums=pageList(page,pages).map(function(p){
+      if(p==='…')return '<span class="map-pager-gap">…</span>';
+      var idx=p-1;
+      return '<button class="btn map-pager-num'+(idx===page?' active':'')+'" type="button"'+(idx===page?' aria-current="page"':'')+' onclick="mapPageSet('+idx+')" aria-label="Map list page '+p+'">'+p+'</button>';
+    }).join('');
+    return '<div class="map-pager"><div class="map-pager-row"><button class="btn" type="button"'+(page<=0?' disabled':'')+' onclick="mapPageSet('+(page-1)+')" aria-label="Previous map results">‹ Prev</button><div class="map-pager-nums">'+nums+'</div><button class="btn" type="button"'+(page>=pages-1?' disabled':'')+' onclick="mapPageSet('+(page+1)+')" aria-label="Next map results">Next ›</button></div><span class="map-pager-info">Showing '+(start+1)+'–'+end+' of '+total+' · Page '+(page+1)+' of '+pages+'</span></div>';
+  }
+  window.mapPageSet=function(n){mapPage=Number(n)||0;render();var el=document.querySelector('.map-results-heading');if(el&&el.scrollIntoView)try{el.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
   function card(row){
     var opportunity=row.opportunity;
     var depts=(opportunity.departments||[]).slice(0,4).map(branchName).join(' · ');
+    var mapped=Array.isArray(row.coords)&&row.coords.length===2;
     return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openOpportunity(\''+esc(opportunity.id)+'\')">'+
       '<h3>'+esc(opportunity.name)+'</h3>'+
       '<p class="sub">'+esc([opportunity.city,opportunity.state].filter(Boolean).join(', '))+'</p>'+ 
       (dateLabel(opportunity)?'<p class="oppline"><b>Festival dates:</b> '+esc(dateLabel(opportunity))+'</p>':'')+
       (depts?'<p class="oppline"><b>Departments:</b> '+esc(depts)+'</p>':'')+
+      (!mapped?'<p class="oppline"><b>Map status:</b> Multi-market / unmapped</p>':'')+
       '<p class="cardcta">Open festival →</p>'+ 
     '</article>';
   }
@@ -58,8 +76,15 @@
     var app=$('#app');
     if(!app)return;
     var all=rows();
+    var sig=JSON.stringify(filterValues())+'::'+all.length;
+    if(sig!==mapSig){mapSig=sig;mapPage=0;}
     var mapped=all.filter(function(row){return Array.isArray(row.coords)&&row.coords.length===2});
     var unmapped=all.filter(function(row){return !Array.isArray(row.coords)||row.coords.length!==2});
+    var pages=Math.max(1,Math.ceil(all.length/PER_PAGE));
+    if(mapPage>=pages)mapPage=pages-1;
+    if(mapPage<0)mapPage=0;
+    var pageRows=all.slice(mapPage*PER_PAGE,mapPage*PER_PAGE+PER_PAGE);
+    var controls=pager(mapPage,pages,all.length);
     app.innerHTML='<section class="map-static-page">'+
       '<h2>Festival Map</h2>'+ 
       '<p class="lead">Static clickable U.S. map for regional work planning. Marker placement is approximate.</p>'+ 
@@ -69,9 +94,10 @@
         mapped.map(function(row){var p=projected(row.coords);var label=row.opportunity.name+(row.opportunity.city?' — '+row.opportunity.city+', '+row.opportunity.state:'');return '<button class="static-map-marker" type="button" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+'%" onclick="openOpportunity(\''+esc(row.opportunity.id)+'\')" aria-label="'+esc(label)+'" title="'+esc(row.opportunity.name)+'"><span>'+esc(row.opportunity.name)+'</span></button>';}).join('')+
       '</div>'+ 
       '<p class="sub" style="margin:10px 0 18px">'+mapped.length+' mapped festivals'+(unmapped.length?' · '+unmapped.length+' multi-market / unmapped records':'')+'</p>'+ 
-      '<h3>Mapped festivals</h3>'+ 
-      '<div class="grid">'+(mapped.length?mapped.map(card).join(''):'<p class="sub">No mapped festivals match the current filters.</p>')+'</div>'+ 
-      (unmapped.length?'<h3 style="margin-top:24px">Multi-market / unmapped</h3><div class="grid">'+unmapped.map(card).join('')+'</div>':'')+
+      '<h3 class="map-results-heading">Festival list</h3>'+ 
+      controls+
+      '<div class="grid map-card-grid">'+(all.length?pageRows.map(card).join(''):'<p class="sub">No festivals match the current filters.</p>')+'</div>'+ 
+      controls+
     '</section>';
   }
   function installStyles(){
@@ -84,7 +110,9 @@
       '.static-map-marker{position:absolute;transform:translate(-50%,-50%);width:17px;height:17px;border-radius:999px;border:2px solid #071018;background:var(--gold2);box-shadow:0 0 0 4px rgba(242,183,5,.18),0 8px 18px rgba(0,0,0,.35);cursor:pointer;z-index:3}'+
       '.static-map-marker::after{content:"";position:absolute;inset:-14px;border-radius:50%}'+
       '.static-map-marker:hover{transform:translate(-50%,-50%) scale(1.25);z-index:10}.static-map-marker span{display:none;position:absolute;left:20px;top:-10px;min-width:140px;max-width:240px;background:#101720;border:1px solid var(--line);border-radius:10px;padding:7px 9px;color:#fff;font-size:.74rem;text-align:left}.static-map-marker:hover span{display:block}'+
-      '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}}';
+      '.map-pager{display:grid;gap:7px;margin:12px 0 14px;padding:10px 12px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.035)}'+
+      '.map-pager-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.map-pager-nums{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}.map-pager-num.active{background:rgba(245,180,0,.18);border-color:rgba(245,180,0,.62);color:#ffd66b}.map-pager-gap{color:var(--muted);font-weight:900;padding:0 2px}.map-pager-info{display:block;color:var(--muted);font-size:.78rem;text-align:center}.map-card-grid{margin-top:8px}'+
+      '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}.map-pager{position:sticky;top:58px;z-index:5;background:rgba(9,13,18,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.map-pager-row{display:grid;grid-template-columns:1fr;gap:8px}.map-pager-row>.btn{width:100%}.map-pager-nums{order:-1}.map-pager-num{min-width:38px}}';
     document.head.appendChild(style);
   }
   function install(){
