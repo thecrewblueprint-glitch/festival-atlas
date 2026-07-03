@@ -1,0 +1,8 @@
+name = "festival-atlas-worker"
+main = "index.js"
+compatibility_date = "2024-09-23"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "festival-atlas-vault"
+database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
