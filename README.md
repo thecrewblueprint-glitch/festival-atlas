@@ -3,7 +3,7 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-06-30
+Updated: 2026-07-03
 
 Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter and employer-route leads, review source references, and plan scheduling.
 
@@ -192,13 +192,18 @@ Aaron has intentionally reopened the public filter decision. Do not revert the a
 Current page-specific filter direction:
 
 ```text
-opportunities.html: state, department, producer/promoter, date/month
+opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month
 calendar.html: date/month, plus any page-specific calendar controls
-map.html: department, state, date/month
-employers.html: department, state, employer type
-sources.html: festival, department, employer route
+map.html: state, date/month
+employers.html: text search (name, type, state), department, state, employer type
+sources.html: festival, department, employer
 schedule.html: date/month (off public navigation; reachable by direct URL only)
 ```
+
+Opportunities and Employers paginate results 10 per page with a numbered
+Prev/Next jumper; changing any search or filter resets to page 1. The IATSE
+page is tabbed (How to join / Find a local / About IATSE) and paginates its
+local directory the same way.
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 

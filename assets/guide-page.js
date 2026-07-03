@@ -13,7 +13,7 @@
       '<h3>Fast workflow</h3>'+
       '<div class="steps">'+
         step('1','Start on the home page','The home page orients you to the main pages — find events, find employers, and plan the year — and highlights a sample of upcoming festivals.')+
-        step('2','Browse Opportunities','Use the Promoter, State, and Date filters to narrow the festival list. Open a festival for public dates, location, departments, the approximate production window, and confirmed event-specific contacts when available.')+
+        step('2','Browse Opportunities','Search by festival name, city, venue, or producer, or use the State, Department, Promoter, and Date filters to narrow the list. Open a festival for public dates, location, departments, the approximate production window, and confirmed event-specific contacts when available.')+
         step('3','Check timing in Calendar','Use Month or Week view to compare public festival show dates against approximate work windows. The muted blue outline is the planning window; the gold segment is the public show-date span.')+
         step('4','Use Map for travel planning','Use the static U.S. map to compare regional work clusters and travel logic. Marker placement is approximate and intended for planning, not surveying.')+
         step('5','Research Employers by department','Use Employers to find public companies and vendor contacts organized by the departments they hire in. These are industry contacts and may or may not be tied to a specific festival.')+
@@ -21,17 +21,16 @@
       '</div>'+
       '<h3>Pages</h3>'+
       '<div class="grid">'+
-        card('Home','Orientation to the main pages, a sample of upcoming festivals, and quick links to IATSE locals, your schedule, and the Contribute page.')+
-        card('Opportunities','Festival cards with public dates, city and state, venue when known, the approximate production window, producer or promoter when public, departments, and public contact notes. Filters: promoter, state, and date.')+
+        card('Home','Orientation to the main pages, a sample of upcoming festivals, and quick links to festivals, employers, the calendar, IATSE join guidance, the Map, and the Contribute page.')+
+        card('Opportunities','Festival cards with public dates, city and state, venue when known, the approximate production window, producer or promoter when public, departments, and public contact notes. Search by name, city, venue, or producer, with state, department, promoter, and date filters. Results show 10 per page.')+
         card('Calendar','Interactive Month and Week planning view. The outer muted blue bar is the approximate work window; the inner gold bar is the public festival show days.')+
         card('Map','Static clickable U.S. festival map for regional planning, nearby work clusters, and travel routing.')+
         card('Employers','Public companies and vendor contacts in the live-event production industry, organized by the departments they hire in. Department fit is an industry research aid, not confirmation that a company is working a specific festival.')+
         card('Sources','Central page for public source links, kept separate so cards, popups, and modals stay focused on work mapping.')+
         card('Contribute','Submit festival research data or feedback on the app. Submissions are reviewed before any information is used.')+
-        card('Schedule','Personal Gantt planner stored in your browser. Add festivals to your schedule to compare production windows, overlaps, and months covered.')+
-        card('IATSE Locals','Directory of U.S. IATSE locals organized by state and jurisdiction. Use as a union contact research aid — verify directly before outreach.')+
+        card('IATSE','How to join IATSE and get union live-event work — the overhire-to-membership path, permit vs. member, and a searchable directory of U.S. locals. Independent research aid; verify details directly with the local.')+
       '</div>'+
-      '<p class="section-intro">Additional explanatory and legal pages — including About, How the Data Works, Employer Route Methodology, the Date &amp; Work Window Disclaimer, and the privacy and terms pages — are linked in the footer. The Schedule and IATSE locals page is also available.</p>'+
+      '<p class="section-intro">Additional explanatory and legal pages — including About, How the Data Works, Employer Methodology, the Date &amp; Work Window Disclaimer, and the privacy and terms pages — are linked in the footer.</p>'+
       '<h3>How to read the data labels</h3>'+
       '<div class="tablewrap"><table class="matrix"><thead><tr><th>Label or page</th><th>Meaning</th><th>How to use it</th></tr></thead><tbody>'+
         row('Confirmed event-specific contact','A public record ties the company to that specific event.','Use as a stronger research lead, then verify current status before outreach.')+
