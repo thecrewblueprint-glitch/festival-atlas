@@ -46,6 +46,11 @@
     }
   }
   function persistSideScroll(){}
+  function registerServiceWorker(){
+    if(!('serviceWorker' in navigator))return;
+    if(location.protocol!=='https:'&&location.hostname!=='localhost')return;
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  }
   function installSiteBanner(){
     if(document.getElementById('site-banner'))return;
     var nav=document.querySelector('.nav');
@@ -61,6 +66,7 @@
     installSiteBanner();
     normalizeNav();
     persistSideScroll();
+    registerServiceWorker();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
