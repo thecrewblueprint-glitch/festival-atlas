@@ -66,7 +66,7 @@
       '<div class="notice"><b>Map note:</b> this local U.S. basemap is for route planning, not precision surveying. Open each festival for dates and public details.</div>'+ 
       '<div class="static-map-shell">'+
         usSvg()+
-        mapped.map(function(row){var p=projected(row.coords);return '<button class="static-map-marker" type="button" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+'%" onclick="openOpportunity(\''+esc(row.opportunity.id)+'\')" title="'+esc(row.opportunity.name)+'"><span>'+esc(row.opportunity.name)+'</span></button>';}).join('')+
+        mapped.map(function(row){var p=projected(row.coords);var label=row.opportunity.name+(row.opportunity.city?' — '+row.opportunity.city+', '+row.opportunity.state:'');return '<button class="static-map-marker" type="button" style="left:'+p.x.toFixed(2)+'%;top:'+p.y.toFixed(2)+'%" onclick="openOpportunity(\''+esc(row.opportunity.id)+'\')" aria-label="'+esc(label)+'" title="'+esc(row.opportunity.name)+'"><span>'+esc(row.opportunity.name)+'</span></button>';}).join('')+
       '</div>'+ 
       '<p class="sub" style="margin:10px 0 18px">'+mapped.length+' mapped festivals'+(unmapped.length?' · '+unmapped.length+' multi-market / unmapped records':'')+'</p>'+ 
       '<h3>Mapped festivals</h3>'+ 
@@ -82,6 +82,7 @@
       '.static-map-shell{position:relative;height:520px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(circle at 18% 55%,rgba(127,183,255,.16),transparent 22%),radial-gradient(circle at 76% 42%,rgba(242,183,5,.14),transparent 24%),linear-gradient(135deg,#0c1219,#182230);box-shadow:var(--shadow2);margin:14px 0 8px}'+
       '.us-map-outline{position:absolute;inset:3% 2% 5%;width:96%;height:92%;z-index:1;filter:drop-shadow(0 18px 25px rgba(0,0,0,.28))}.us-land{fill:rgba(127,183,255,.085);stroke:none}.us-border{fill:none;stroke:rgba(224,234,245,.55);stroke-width:3;stroke-linejoin:round}.state-lines{fill:none;stroke:rgba(224,234,245,.14);stroke-width:1.1}.coast-accent{fill:none;stroke:rgba(242,183,5,.25);stroke-width:2;stroke-linecap:round}'+
       '.static-map-marker{position:absolute;transform:translate(-50%,-50%);width:17px;height:17px;border-radius:999px;border:2px solid #071018;background:var(--gold2);box-shadow:0 0 0 4px rgba(242,183,5,.18),0 8px 18px rgba(0,0,0,.35);cursor:pointer;z-index:3}'+
+      '.static-map-marker::after{content:"";position:absolute;inset:-14px;border-radius:50%}'+
       '.static-map-marker:hover{transform:translate(-50%,-50%) scale(1.25);z-index:10}.static-map-marker span{display:none;position:absolute;left:20px;top:-10px;min-width:140px;max-width:240px;background:#101720;border:1px solid var(--line);border-radius:10px;padding:7px 9px;color:#fff;font-size:.74rem;text-align:left}.static-map-marker:hover span{display:block}'+
       '@media(max-width:760px){.static-map-shell{height:360px}.us-map-outline{inset:4% 0 6%;width:100%;height:90%}.static-map-marker span{display:none!important}}';
     document.head.appendChild(style);

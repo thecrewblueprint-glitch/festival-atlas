@@ -79,7 +79,19 @@
   var iatseTab='join',iatseLocPage=0,iatseLocSig='__init';
   window.iatseSetTab=function(t){iatseTab=t;if(t!=='find'){var qi=$('#q');if(qi)qi.value='';}renderIatse();var el=$('#app');if(el&&el.scrollIntoView)try{el.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
   window.iatseLocPageSet=function(n){iatseLocPage=Number(n)||0;renderIatse();var el=$('#app');if(el&&el.scrollIntoView)try{el.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}};
-  function iatseTabBtn(id,label,active){return '<button class="iatse-tab'+(active===id?' active':'')+'" type="button" role="tab" aria-selected="'+(active===id?'true':'false')+'" onclick="iatseSetTab(\''+id+'\')">'+label+'</button>'}
+  function iatseTabBtn(id,label,active){return '<button class="iatse-tab'+(active===id?' active':'')+'" type="button" id="iatse-tab-'+id+'" role="tab" aria-selected="'+(active===id?'true':'false')+'" aria-controls="iatse-panel-'+id+'" tabindex="'+(active===id?'0':'-1')+'" onclick="iatseSetTab(\''+id+'\')">'+label+'</button>'}
+  var IATSE_TAB_ORDER=['join','find','about'];
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    if(!e.target||!e.target.closest||!e.target.closest('.iatse-tabs'))return;
+    var current=IATSE_TAB_ORDER.indexOf((e.target.id||'').replace('iatse-tab-',''));
+    if(current<0)return;
+    e.preventDefault();
+    var next=(current+(e.key==='ArrowRight'?1:IATSE_TAB_ORDER.length-1))%IATSE_TAB_ORDER.length;
+    window.iatseSetTab(IATSE_TAB_ORDER[next]);
+    var btn=document.getElementById('iatse-tab-'+IATSE_TAB_ORDER[next]);
+    if(btn)btn.focus();
+  });
   function renderIatse(){
     var el=$('#app');if(!el)return;
     var info=window.IATSE_ORGANIZATION_INFO||{};var summary=info.officialSummary||{};var families=info.departmentFamilies||[];
@@ -132,9 +144,9 @@
       '<p class="lead">'+esc(summary.workerScope||'IATSE is the union for live theater, concert, film/TV, and trade-show production crews across the U.S. and Canada.')+' Locals are autonomous and each sets its own membership process — there is no single national sign-up.</p>'+
       '<div class="notice"><b>Public worker guide:</b> this page explains the path and points to official IATSE resources. It is not a job referral or a jurisdiction ruling — always confirm current details directly with the local. Production Atlas is an independent research tool and is not affiliated with or endorsed by IATSE or any local union.</div>'+
       '<div class="iatse-tabs" role="tablist">'+iatseTabBtn('join','How to join',tab)+iatseTabBtn('find','Find a local',tab)+iatseTabBtn('about','About IATSE',tab)+'</div>'+
-      '<div class="iatse-panel" data-tab="join"'+(tab==='join'?'':' hidden')+'>'+join+'</div>'+
-      '<div class="iatse-panel" data-tab="find"'+(tab==='find'?'':' hidden')+'>'+find+'</div>'+
-      '<div class="iatse-panel" data-tab="about"'+(tab==='about'?'':' hidden')+'>'+about+'</div>';
+      '<div class="iatse-panel" id="iatse-panel-join" role="tabpanel" aria-labelledby="iatse-tab-join" data-tab="join"'+(tab==='join'?'':' hidden')+'>'+join+'</div>'+
+      '<div class="iatse-panel" id="iatse-panel-find" role="tabpanel" aria-labelledby="iatse-tab-find" data-tab="find"'+(tab==='find'?'':' hidden')+'>'+find+'</div>'+
+      '<div class="iatse-panel" id="iatse-panel-about" role="tabpanel" aria-labelledby="iatse-tab-about" data-tab="about"'+(tab==='about'?'':' hidden')+'>'+about+'</div>';
   }
   function renderMatrix(){var el=$('#app');if(!el)return;var rows=branches.map(function(b){var links=matchingEmployers(b.id).slice(0,10).map(function(e){return plainLink(e.name,bestLink(e))}).join('<br>');return '<tr><td><b>'+esc(b.name)+'</b><br><span class="sub">'+esc(b.question||'')+'</span></td><td>'+esc((b.researchNeeds||[]).join(', '))+'</td><td>'+esc((b.workerFocus||[]).join(', '))+'</td><td>'+links+'</td><td><button class="btn" onclick="openBranch(\''+esc(b.id)+'\')">Open branch</button></td></tr>'}).join('');el.innerHTML='<h2>Employer and Hiring Matrix</h2><div class="tablewrap"><table class="matrix"><thead><tr><th>Branch</th><th>Research needs</th><th>Worker focus</th><th>General leads</th><th>Detail</th></tr></thead><tbody>'+rows+'</tbody></table></div>'}
   function renderBranches(){var el=$('#app');if(!el)return;el.innerHTML='<h2>Production Branches</h2><p class="lead">Employers and companies organized by production branch.</p><div class="grid">'+branches.map(function(b){var roles=(b.workerFocus||[]).slice(0,4).join(' · ');return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openBranch(\''+esc(b.id)+'\')"><h3>'+esc(b.name)+'</h3>'+(roles?'<p class="sub">'+esc(roles)+'</p>':'')+'<p><b>Active festivals:</b> '+matchingOpportunities(b.id).length+'</p><p><b>Employers:</b> '+matchingEmployers(b.id).length+'</p></article>'}).join('')+'</div>'}
@@ -151,7 +163,8 @@
   window.openBranch=function(id){var b=branches.find(function(x){return x.id===id});if(!b)return;ensureBranchResearch().then(function(){var records=branchIndex.records.filter(function(r){return r.branchId===id});var cards=records.map(function(r){var o=opportunities.find(function(x){return norm(x.id)===norm(r.opportunityId)||norm(x.name)===norm(r.opportunityName)})||{id:r.opportunityId,name:r.opportunityName,departments:[id]};return '<div style="margin:0 0 4px"><p class="sub" style="margin:0 0 4px;color:var(--muted)"><b>'+esc(o.name||r.opportunityName||r.opportunityId)+'</b></p>'+branchCard(o,id)+'</div>'}).join('');var general=matchingEmployers(id).slice(0,12).map(employerRow).join('');openModal('<h2>'+esc(b.name)+'</h2><h3>Employers by festival</h3>'+(cards||'<p class="sub">No festival-specific companies listed yet.</p>')+(general?'<h3>Industry companies in this branch</h3><ul style="margin:0;padding:0">'+general+'</ul>':''))})};
 
   var _lastFocus=null;
-  function openModal(html){var modal=$('#modal'),content=$('#modalContent');if(!modal||!content)return;content.innerHTML=html;modal.classList.add('open');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');_lastFocus=document.activeElement;var box=modal.querySelector('.modalbox');if(box){box.setAttribute('tabindex','-1');box.focus()}}
+  function openModal(html){var modal=$('#modal'),content=$('#modalContent');if(!modal||!content)return;content.innerHTML=html;modal.classList.add('open');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');var heading=content.querySelector('h1,h2,h3');if(heading){heading.id=heading.id||'modal-title';modal.setAttribute('aria-labelledby',heading.id)}else{modal.removeAttribute('aria-labelledby')}_lastFocus=document.activeElement;var box=modal.querySelector('.modalbox');if(box){box.setAttribute('tabindex','-1');box.focus()}
+    if(!modal.dataset.trapBound){modal.dataset.trapBound='true';modal.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var nodes=modal.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,[tabindex]:not([tabindex="-1"])');if(!nodes.length)return;var first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}})}}
   window.openModal=openModal;
   window.closeModal=function(){var modal=$('#modal');if(modal){modal.classList.remove('open');modal.removeAttribute('aria-modal')}if(_lastFocus&&typeof _lastFocus.focus==='function')_lastFocus.focus();_lastFocus=null};
 
