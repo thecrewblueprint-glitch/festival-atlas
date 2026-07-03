@@ -13,10 +13,8 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_006_AUDIO = {
       confirmedVendors: [],
       likelyResponsible: ['Coachella production team', 'sound company / FOH and monitor package route', 'Rat Sound Systems lead to verify', 'touring artist audio packages'],
       publicLeads: ['Rat Sound Systems', 'DiGiCo social-source lead'],
-      sourceLinks: [
-        {label:'DiGiCo Facebook result mentioning Rat Sound Systems / Coachella FOH lead', url:'https://www.facebook.com/DiGiCo.Official/posts/our-time-at-the-coachella-valley-music-and-arts-festival-2026-has-come-to-an-end/1354088996752503/'}
-      ],
-      evidenceSummary: 'Audio micro refresh found a social-source lead referencing Rat Sound Systems and Coachella FOH context. Treat as a weak but useful follow-up lead.',
+      sourceLinks: [],
+      evidenceSummary: 'Audio micro refresh found a social-source lead referencing Rat Sound Systems and Coachella FOH context. The original Facebook source is not publicly reviewable (login-gated), so it was removed from the public source list; treat as a weak follow-up lead.',
       branchDisplayText: 'Coachella Audio lead: Rat Sound Systems surfaced through social-source search. Verify against stronger production credits before treating as confirmed.',
       nextAction: 'Verify Coachella stage-specific sound vendor, Rat Sound Systems involvement, Sahara tent FOH route, and current-year production credits.'
     },
@@ -43,10 +41,8 @@ window.OPPORTUNITY_BRANCH_RESEARCH_BATCH_006_AUDIO = {
       confirmedVendors: [],
       likelyResponsible: ['Insomniac production team', 'festival audio vendor route', 'FOH / monitor / systems route', 'Las Vegas labor route'],
       publicLeads: ['DiGiCo social-source lead'],
-      sourceLinks: [
-        {label:'DiGiCo Facebook result mentioning EDC Las Vegas audio support lead', url:'https://www.facebook.com/DiGiCo.Official/posts/our-time-at-the-coachella-valley-music-and-arts-festival-2026-has-come-to-an-end/1354088996752503/'}
-      ],
-      evidenceSummary: 'Audio micro refresh found a social-source lead referencing recurring audio support for EDC Las Vegas. Treat as weak route lead pending stronger confirmation.',
+      sourceLinks: [],
+      evidenceSummary: 'Audio micro refresh found a social-source lead referencing recurring audio support for EDC Las Vegas. The original Facebook source was login-gated and also pointed at a Coachella post (misattributed), so it was removed from the public source list; treat as a weak lead pending stronger confirmation.',
       branchDisplayText: 'EDC Las Vegas Audio lead: possible recurring audio support surfaced from social-source result. Needs verification before use as confirmed vendor data.',
       nextAction: 'Verify current EDC Las Vegas audio vendors by stage, Insomniac production route, and vendor announcements.'
     }
