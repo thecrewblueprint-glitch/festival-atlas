@@ -1,6 +1,11 @@
 (function(){
+  var SUPPORT_URL='https://github.com/sponsors/thecrewblueprint-glitch';
   function footerHtml(){
     return '<div class="site-footer-inner">'+
+      '<div class="site-support-card">'+
+        '<div class="site-support-copy"><b>Support Production Atlas</b><span>Production Atlas stays free. Optional support helps keep public sources checked, maps usable, and new work-research features moving.</span></div>'+
+        '<a class="site-support-link" href="'+SUPPORT_URL+'" target="_blank" rel="noopener">Optional support ↗</a>'+
+      '</div>'+
       '<div class="site-footer-brand">'+
         '<b>Production Atlas</b>'+
         '<span>A public work-mapping tool for live-event production contractors, created by <a href="https://deadhanglaborllc.com" target="_blank" rel="noopener">Deadhang Labor LLC</a>.</span>'+
@@ -19,6 +24,8 @@
     style.textContent=''+
       'footer.wrap{max-width:none;margin:0;padding:0;background:rgba(8,11,15,.92);border-top:1px solid var(--line)}'+
       '.site-footer-inner{max-width:1240px;margin:auto;padding:28px 20px 34px;color:var(--muted)}'+
+      '.site-support-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px;padding:14px 16px;border:1px solid rgba(245,180,0,.22);border-radius:18px;background:rgba(245,180,0,.055)}'+
+      '.site-support-copy{display:grid;gap:3px}.site-support-copy b{color:#fff;font-size:.95rem}.site-support-copy span{color:var(--muted);font-size:.88rem;max-width:760px}.site-support-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid rgba(245,180,0,.42);border-radius:999px;padding:9px 13px;color:#ffd66b;text-decoration:none;font-weight:900;background:rgba(245,180,0,.08)}.site-support-link:hover{background:rgba(245,180,0,.15);color:#fff}'+
       '.site-footer-brand{display:grid;gap:4px;margin-bottom:18px}.site-footer-brand b{color:#fff;font-size:1rem}.site-footer-brand span{max-width:760px}'+
       '.site-footer-columns{display:grid;grid-template-columns:1.1fr 1.25fr 1.65fr;gap:18px}'+
       '.site-footer-columns h4{margin:0 0 8px;color:#ffd66b;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}'+
@@ -26,24 +33,69 @@
       '.contribute-hero-btn{display:inline-block;margin-top:18px}'+
       '.site-banner{background:rgba(245,180,0,.10);border-bottom:1px solid rgba(245,180,0,.22);padding:7px 20px;font-size:.82rem;color:var(--muted);text-align:center}'+
       '.site-banner a{color:#ffd66b;font-weight:700;text-decoration:none}.site-banner a:hover{text-decoration:underline}'+
-      '.navInner{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;scrollbar-width:auto}.navInner a{flex:0 0 auto}.navInner::-webkit-scrollbar{height:8px}.navInner::-webkit-scrollbar-thumb{background:rgba(245,180,0,.55);border-radius:999px}.navInner::-webkit-scrollbar-track{background:rgba(255,255,255,.08)}'+
-      '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}}';
+      '.navInner{display:none!important}'+
+      '.nav .wrap{position:relative}.nav .filters{width:100%;margin-left:0}'+
+      '.step-n{display:none!important}.steps .step-card{padding-top:22px}.steps .step-card h4{margin-top:0}.steps .step-card::before{content:"";display:block;width:34px;height:3px;border-radius:999px;background:rgba(245,180,0,.65);margin:0 0 12px}'+
+      '.atlas-menu-toggle{position:fixed;top:14px;right:14px;z-index:4000;width:44px;height:44px;border-radius:14px;border:1px solid rgba(245,180,0,.42);background:rgba(8,11,15,.72);color:#ffd66b;box-shadow:0 16px 46px rgba(0,0,0,.38);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:grid;place-items:center;cursor:pointer}'+
+      '.atlas-menu-toggle:hover,.atlas-menu-toggle:focus{background:rgba(245,180,0,.14);border-color:rgba(245,180,0,.78);outline:none}.atlas-menu-toggle svg{width:24px;height:24px}'+
+      '.atlas-menu-panel{position:fixed;inset:0;z-index:3990;display:none;background:rgba(3,5,8,.58);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);padding:72px 14px 18px;overflow:auto}'+
+      '.atlas-menu-panel.open{display:block}.atlas-menu-card{width:min(380px,100%);margin:0 0 0 auto;border:1px solid rgba(245,180,0,.24);border-radius:24px;background:rgba(10,13,18,.82);box-shadow:0 24px 80px rgba(0,0,0,.55);padding:18px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}'+
+      '.atlas-menu-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.atlas-menu-title{display:grid;gap:2px}.atlas-menu-title b{color:#ffd66b;font-size:1rem;text-transform:uppercase;letter-spacing:.08em}.atlas-menu-title span{color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.12em}'+
+      '.atlas-menu-close{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;width:36px;height:36px;cursor:pointer;font-size:1.1rem}.atlas-menu-close:hover{background:rgba(245,180,0,.12);color:#ffd66b}'+
+      '.atlas-menu-section{margin-top:14px}.atlas-menu-section h4{margin:0 0 8px;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em}.atlas-menu-links{display:grid;gap:7px}'+
+      '.atlas-menu-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;border-radius:15px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:#eef5ff;text-decoration:none;font-weight:900}.atlas-menu-link:hover{border-color:rgba(245,180,0,.5);background:rgba(245,180,0,.10);color:#fff}.atlas-menu-link.active{border-color:rgba(245,180,0,.72);background:rgba(245,180,0,.16);color:#ffd66b}.atlas-menu-link small{color:var(--muted);font-size:.72rem;font-weight:700}'+
+      '.atlas-menu-foot{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);color:var(--muted);font-size:.78rem;line-height:1.45}.atlas-menu-foot a{color:#ffd66b;text-decoration:none;font-weight:900}.atlas-menu-foot a:hover{text-decoration:underline}'+
+      'body.atlas-menu-open{overflow:hidden}'+
+      '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}.site-support-card{display:grid}.site-support-link{width:100%}.atlas-menu-toggle{top:10px;right:10px}.atlas-menu-panel{padding-top:62px}.atlas-menu-card{border-radius:22px}}';
     document.head.appendChild(style);
+  }
+  function linkHtml(item,current){
+    var href=item[0],label=item[1],note=item[2]||'';
+    var active=current===href.replace('./','')||(current===''&&href.indexOf('index.html')>-1);
+    return '<a class="atlas-menu-link'+(active?' active':'')+'" href="'+href+'"><span>'+label+'</span>'+(note?'<small>'+note+'</small>':'')+'</a>';
+  }
+  function installHamburgerNav(){
+    if(document.getElementById('atlas-menu-toggle'))return;
+    var current=(location.pathname.split('/').pop()||'index.html');
+    var work=[['./index.html','Home','Start'],['./opportunities.html','Opportunities','Festivals'],['./calendar.html','Calendar','Dates'],['./map.html','Map','Routes'],['./employers.html','Employers','Contacts'],['./iatse.html','IATSE','Locals'],['./contribute.html','Contribute','Submit']];
+    var reference=[['./guide.html','Guide','How to use'],['./sources.html','Sources','Audit'],['./about.html','About','Project'],['./feedback.html','Feedback','Notes']];
+    var btn=document.createElement('button');
+    btn.id='atlas-menu-toggle';
+    btn.className='atlas-menu-toggle';
+    btn.type='button';
+    btn.setAttribute('aria-label','Open site menu');
+    btn.setAttribute('aria-controls','atlas-menu-panel');
+    btn.setAttribute('aria-expanded','false');
+    btn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>';
+    var panel=document.createElement('div');
+    panel.id='atlas-menu-panel';
+    panel.className='atlas-menu-panel';
+    panel.innerHTML='<div class="atlas-menu-card" role="dialog" aria-modal="true" aria-label="Site navigation">'+
+      '<div class="atlas-menu-head"><div class="atlas-menu-title"><b>Production Atlas</b><span>Intel & Ops</span></div><button class="atlas-menu-close" type="button" aria-label="Close menu">×</button></div>'+
+      '<div class="atlas-menu-section"><h4>Directory</h4><div class="atlas-menu-links">'+work.map(function(item){return linkHtml(item,current)}).join('')+'</div></div>'+
+      '<div class="atlas-menu-section"><h4>Reference</h4><div class="atlas-menu-links">'+reference.map(function(item){return linkHtml(item,current)}).join('')+'</div></div>'+
+      '<div class="atlas-menu-foot">Production Atlas is free to use. <a href="'+SUPPORT_URL+'" target="_blank" rel="noopener">Optional support</a> helps keep it maintained.</div>'+
+      '</div>';
+    document.body.appendChild(btn);
+    document.body.appendChild(panel);
+    var close=panel.querySelector('.atlas-menu-close');
+    function setOpen(open){
+      panel.classList.toggle('open',open);
+      document.body.classList.toggle('atlas-menu-open',open);
+      btn.setAttribute('aria-expanded',open?'true':'false');
+      btn.setAttribute('aria-label',open?'Close site menu':'Open site menu');
+      if(open&&close)close.focus();
+    }
+    btn.addEventListener('click',function(){setOpen(!panel.classList.contains('open'))});
+    if(close)close.addEventListener('click',function(){setOpen(false);btn.focus()});
+    panel.addEventListener('click',function(e){if(e.target===panel)setOpen(false)});
+    panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){setOpen(false)})});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open')){setOpen(false);btn.focus()}});
   }
   function normalizeNav(){
     var nav=document.querySelector('.navInner');
     if(!nav)return;
     document.querySelectorAll('.navInner a[href$="branches.html"],.navInner a[href="./branches.html"],.navInner a[href$="guide.html"],.navInner a[href="./guide.html"],.navInner a[href$="sources.html"],.navInner a[href="./sources.html"]').forEach(function(link){link.remove();});
-    var active=nav.querySelector('a.active');
-    if(active){
-      setTimeout(function(){
-        try{
-          var nr=nav.getBoundingClientRect();
-          var ar=active.getBoundingClientRect();
-          nav.scrollLeft+=(ar.left+ar.width/2)-(nr.left+nr.width/2);
-        }catch(e){}
-      },120);
-    }
   }
   function persistSideScroll(){}
   function registerServiceWorker(){
@@ -65,11 +117,12 @@
     installStyles();
     installSiteBanner();
     normalizeNav();
+    installHamburgerNav();
     persistSideScroll();
     registerServiceWorker();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  setTimeout(function(){normalizeNav();persistSideScroll();},500);
+  setTimeout(function(){normalizeNav();installHamburgerNav();persistSideScroll();},500);
 })();
