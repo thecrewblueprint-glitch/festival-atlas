@@ -320,6 +320,25 @@ if (legacyRuntime) {
   check(legacyRuntime.includes('__branchResearchRuntimeArchived'), 'branch-research-runtime.js exists but is not inert/archived');
 }
 
+// --- Asset hygiene: no orphaned scripts, uniform cache versions ------------
+// Catches two recurring agent mistakes: leaving dead scripts behind, and
+// forgetting to bump a cache version uniformly after editing an asset.
+const allHtml = fs.readdirSync(root).filter(f => f.endsWith('.html'));
+const htmlBodies = allHtml.map(f => ({ file: f, content: fs.readFileSync(path.join(root, f), 'utf8') }));
+const assetsPath = path.join(root, 'assets');
+const assetScripts = fs.existsSync(assetsPath)
+  ? fs.readdirSync(assetsPath).filter(f => f.endsWith('.js'))
+  : [];
+assetScripts.forEach(name => {
+  const referenced = htmlBodies.some(h => h.content.includes('assets/' + name));
+  check(referenced, `Orphaned asset (loaded by no page): assets/${name} — wire it into a page or delete it`);
+  const versions = new Set();
+  const re = new RegExp('assets/' + name.replace(/[.]/g, '\\.') + '\\?v=([A-Za-z0-9]+)', 'g');
+  htmlBodies.forEach(h => { let m; while ((m = re.exec(h.content))) versions.add(m[1]); });
+  check(versions.size <= 1,
+    `Inconsistent cache version for assets/${name}: [${[...versions].join(', ')}] — bump the same ?v= on every page that loads it`);
+});
+
 if (warn.length) {
   console.warn('\nWarnings:');
   warn.forEach(message => console.warn(`- ${message}`));

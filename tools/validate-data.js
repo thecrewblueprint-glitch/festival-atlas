@@ -48,6 +48,7 @@ const dateRe = /^\d{4}-\d{2}-\d{2}$/;
 const placeholderRe = /^(check|verify|tbd|todo|unknown|source needed|needs source)$/i;
 const allowedMasterStatuses = new Set(['unverified-intake', 'batch-verification-complete']);
 const allowedResearchStatuses = new Set(['unverified-intake', 'public-verified', 'flagged-needs-human-review', 'removed-invalid-year']);
+const ALLOWED_REGIONS = ['Midwest', 'Northeast', 'South', 'West', 'United States multi-market'];
 
 function validateOpportunityShape(record, label) {
   check(record.id && /^[a-z0-9-]+$/.test(record.id), `${label}: invalid or missing id`);
@@ -56,6 +57,11 @@ function validateOpportunityShape(record, label) {
   if (record.month != null) {
     check(Number.isInteger(record.month) && record.month >= 1 && record.month <= 12,
       `${label}: month must be 1–12, got ${record.month}`);
+  }
+
+  if (record.region) {
+    check(ALLOWED_REGIONS.includes(record.region),
+      `${label}: region "${record.region}" not in allowed set {${ALLOWED_REGIONS.join(', ')}}`);
   }
 
   if (record.startDate) {
