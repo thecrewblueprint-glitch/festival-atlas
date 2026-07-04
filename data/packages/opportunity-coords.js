@@ -79,5 +79,6 @@ window.RESOURCE_OPP_COORDS={
   'welcome-to-rockville-2027':[29.2108,-81.0228],
   'beyond-wonderland-socal-2027':[34.1083,-117.2898],
   'bottlerock-napa-2027':[38.2975,-122.2869],
-  'country-thunder-arizona-2027':[33.0314,-111.3871]
+  'country-thunder-arizona-2027':[33.0314,-111.3871],
+  'wonky-woods-2026':[37.2975,-84.2119]
 };
