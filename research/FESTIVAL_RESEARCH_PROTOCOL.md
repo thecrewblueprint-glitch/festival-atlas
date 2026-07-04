@@ -120,6 +120,36 @@ block.
 - If a festival's 2026 edition is over or unconfirmed but a 2027 edition is
   publicly announced, use the 2027 dates and a `-2027` slug.
 
+## Common mistakes to avoid (from prior batches — read this)
+
+These are real errors caught in earlier batches. Do not repeat them:
+
+1. **`departments` is a bareword preset, never a quoted string.** Write
+   `departments:music` — NOT `departments:'music'`. A quoted string breaks the
+   app and fails validation. Same for `full`, `edm`, `standard`.
+2. **Date span must be a real event window (days, not weeks).** If an event is
+   actually a multi-week concert series, summer academy, or season, do NOT set
+   `startDate`/`endDate` to the whole span — it renders a broken months-long
+   bar. Use only the main festival weekend, or skip it. (Genuine multi-week
+   **state fairs** are the one exception and are fine.)
+3. **`producer.name` must be the actual promoter/producer** — not a grantmaker,
+   arts council, tourism board, or parks/recreation department unless they truly
+   run the event. If you're unsure who produces it, use
+   `producer:{name:'verify — <best guess>',status:'needs_source_link'}`.
+4. **The source must be the official site or a credible outlet.** Double-check
+   the domain is real (watch for typo'd or invented domains). Prefer the
+   festival's own site over a press release.
+5. **Prioritize crew-relevant festivals** — events that build real stages and
+   hire touring/festival production crew (bass/EDM, rock, country, jam,
+   hip-hop, large multi-stage, grandstand fairs). De-prioritize small
+   chamber/classical/ballroom-jazz events unless they're a notable large
+   production.
+6. **When unsure, don't force it.** A festival you can't fully confirm goes in
+   the "COULD NOT CONFIRM" list, not the paste block.
+
+Also skip anything on `research/REJECTED_CANDIDATES.md` — those were already
+reviewed and rejected.
+
 ## 8. Definition of done (per batch)
 
 - [ ] Every festival is new (checked against the current list).

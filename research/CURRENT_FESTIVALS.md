@@ -1,130 +1,147 @@
 # Current Festivals (dedup reference)
 
-Snapshot for the Festival Research Protocol. **Do not add a festival already on
-this list** (or a per-market sibling of it). Regenerate after dataset changes:
+Snapshot for the Festival Research Protocol. Do not add a festival already on
+this list (or a per-market sibling). Regenerate after dataset changes with the
+command in the protocol. Total: 141 names (snapshot 2026-07-04).
 
-```
-node -e 'global.window=global;global.document={addEventListener(){}};require("./data/packages/opportunities-2026.js");console.log(window.RESOURCE_OPPORTUNITIES.map(o=>o.name+" ("+(o.state||"?")+")").sort().join("\n"))'
-```
-
-Total: 119 records (snapshot 2026-07-04).
-
-- Aftershock (CA)
-- APOG (WA)
-- Austin City Limits (TX)
-- Bass Canyon (WA)
-- Beyond Wonderland SoCal (CA)
-- Blue Highway Fest (VA)
-- Blue Ridge Rock Festival (VA)
-- Bonnaroo (TN)
-- Boston Calling (MA)
-- BottleRock Napa Valley (CA)
-- Bourbon & Beyond (KY)
-- Breakaway Arizona (AZ)
-- Breakaway Atlanta (GA)
-- Breakaway Carolina (NC)
-- Breakaway Dallas (TX)
-- Breakaway Houston (TX)
-- Breakaway Massachusetts (MA)
-- Breakaway Michigan (MI)
-- Breakaway Minnesota (MN)
-- Breakaway Music Festival (tour overview) (US)
-- Breakaway NorCal (CA)
-- Breakaway Ohio (OH)
-- Breakaway Philadelphia (PA)
-- Breakaway Tampa (FL)
-- Breakaway Utah (UT)
-- Briggs Farm Blues Festival (PA)
-- Burning Man (NV)
-- Calling All Magical People (MD)
-- Capitol Hill Block Party (WA)
-- Cascade Equinox Festival (OR)
-- CMA Fest (TN)
-- Coachella (CA)
-- Countdown NYE (CA)
-- Country Concert (OH)
-- Country Thunder (US multi-market) (US)
-- Country Thunder Arizona (AZ)
-- Country Thunder Florida (FL)
-- Country Thunder Wisconsin (WI)
-- CRSSD Festival (CA)
-- Dancefestopia (KS)
-- Desert Hearts Festival (CA)
-- Dreamstate SoCal (CA)
-- Dreamville Festival (NC)
-- Earl Scruggs Music Festival (NC)
-- EDC Las Vegas (NV)
-- EDC Orlando (FL)
-- Electric Forest (MI)
-- Electric Zoo (NY)
-- Faster Horses (MI)
-- FloydFest (VA)
-- FreshGrass Festival (MA)
-- Gem and Jam (AZ)
-- Governors Ball (NY)
-- GrassRoots Finger Lakes Festival (NY)
-- Great Blue Heron Festival (NY)
-- Grey Fox Bluegrass Festival (NY)
-- HARD Summer (CA)
-- High Sierra Music Festival (CA)
-- Hinterland (IA)
-- Huck Finn Jubilee (CA)
-- Hulaween (FL)
-- III Points (FL)
-- Inkcarceration (OH)
-- Joshua Tree Music Festival Fall (CA)
-- Kilby Block Party (UT)
-- Levitate Music Festival (MA)
-- Levitation Austin (TX)
-- Life Is Beautiful (NV)
-- Lightning in a Bottle (CA)
-- Lights All Night (TX)
-- Lollapalooza Chicago (IL)
-- Louder Than Life (KY)
-- M3F Fest (AZ)
-- MerleFest (NC)
-- Muddy Roots (TN)
-- New Orleans Jazz & Heritage Festival (LA)
-- Newport Folk Festival (RI)
-- Newport Jazz Festival (RI)
-- Nocturnal Wonderland (CA)
-- North Coast Music Festival (IL)
-- Northern Nights (CA)
-- Oceans Calling (MD)
-- Okeechobee Music & Arts Festival (FL)
-- Philadelphia Folk Festival (PA)
-- Pickathon (OR)
-- Pickin' in the Pines (AZ)
-- Portola Music Festival (CA)
-- Railbird Festival (KY)
-- Reggae on the River (CA)
-- Rhythms on the Rio (CO)
-- Rock Fest Wisconsin (WI)
-- Rocklahoma (OK)
-- Rocky Mountain Folks Festival (CO)
-- Roostertail Music Festival (IN)
-- Roots Picnic (PA)
-- Salmonfest (AK)
-- Sea.Hear.Now (NJ)
-- Secret Dreams Festival (OH)
-- Shakori Hills GrassRoots Festival Fall (NC)
-- Shaky Knees (GA)
-- Sick New World (NV)
-- Sonic Temple (OH)
-- Sound Haven (TN)
-- Stagecoach (CA)
-- Summerfest (WI)
-- Suwannee Spring Reunion (FL)
-- Telluride Bluegrass Festival (CO)
-- Telluride Blues and Brews (CO)
-- The Great Beyond (?)
-- Treefort Music Fest (ID)
-- Ultra Music Festival (FL)
-- Under the Big Sky Fest (MT)
-- Wakaan Music Festival (AR)
-- Weedstock (DE)
-- Welcome to Rockville (FL)
-- Wheatland Music Festival (MI)
-- When We Were Young (NV)
-- Wonky Woods (KY)
-- Wormtown Music Festival (MA)
+- Aftershock
+- Alabama Strawberry Festival
+- Aloha Jazz Festival
+- APOG
+- Appalachian String Band Music Festival
+- Austin City Limits
+- Bass Canyon
+- Beyond Wonderland SoCal
+- Birthplace of American Music Festival
+- Blue Highway Fest
+- Blue Ridge Rock Festival
+- Bonnaroo
+- Boston Calling
+- BottleRock Napa Valley
+- Bourbon & Beyond
+- Breakaway Arizona
+- Breakaway Atlanta
+- Breakaway Carolina
+- Breakaway Dallas
+- Breakaway Houston
+- Breakaway Massachusetts
+- Breakaway Michigan
+- Breakaway Minnesota
+- Breakaway Music Festival (tour overview)
+- Breakaway NorCal
+- Breakaway Ohio
+- Breakaway Philadelphia
+- Breakaway Tampa
+- Breakaway Utah
+- Briggs Farm Blues Festival
+- Burlington Discover Jazz Festival
+- Burning Man
+- Calling All Magical People
+- Capitol Hill Block Party
+- Cascade Equinox Festival
+- Cheyenne Frontier Days
+- CMA Fest
+- Coachella
+- Countdown NYE
+- Country Concert
+- Country Thunder (US multi-market)
+- Country Thunder Arizona
+- Country Thunder Florida
+- Country Thunder Wisconsin
+- CRSSD Festival
+- Dancefestopia
+- DC Jazz Festival
+- Desert Hearts Festival
+- Dreamstate SoCal
+- Dreamville Festival
+- Earl Scruggs Music Festival
+- EDC Las Vegas
+- EDC Orlando
+- Electric Forest
+- Electric Zoo
+- Faster Horses
+- Festival International de Louisiane
+- FloydFest
+- FreshGrass Festival
+- Gem and Jam
+- Governors Ball
+- GrassRoots Finger Lakes Festival
+- Great Blue Heron Festival
+- Greater Hartford Festival of Jazz
+- Grey Fox Bluegrass Festival
+- HARD Summer
+- High Sierra Music Festival
+- Hinterland
+- Huck Finn Jubilee
+- Hulaween
+- III Points
+- Inkcarceration
+- Iowa State Fair
+- Joshua Tree Music Festival Fall
+- Kilby Block Party
+- Levitate Music Festival
+- Levitation Austin
+- Life Is Beautiful
+- Lightning in a Bottle
+- Lights All Night
+- Litchfield Jazz Festival
+- Lollapalooza Chicago
+- Louder Than Life
+- M3F Fest
+- MerleFest
+- Merrie Monarch Festival
+- Mountain Music Festival
+- Muddy Roots
+- Nebraska State Fair
+- New Hampshire Music Festival
+- New Mexico State Fair
+- New Orleans Jazz & Heritage Festival
+- Newport Folk Festival
+- Newport Jazz Festival
+- Nocturnal Wonderland
+- North Coast Music Festival
+- North Dakota State Fair
+- Northern Nights
+- Oceans Calling
+- Odunde Festival
+- Okeechobee Music & Arts Festival
+- Philadelphia Folk Festival
+- Pickathon
+- Pickin' in the Pines
+- Portola Music Festival
+- Railbird Festival
+- Reggae on the River
+- Rhythms on the Rio
+- Rock Fest Wisconsin
+- Rock The South
+- Rocklahoma
+- Rocky Mountain Folks Festival
+- Rolling Loud Orlando
+- Roostertail Music Festival
+- Roots Picnic
+- Salmonfest
+- Sea.Hear.Now
+- Secret Dreams Festival
+- Shakori Hills GrassRoots Festival Fall
+- Shaky Knees
+- Sick New World
+- Sonic Temple
+- Sound Haven
+- Stagecoach
+- Summerfest
+- Suwannee Spring Reunion
+- Telluride Bluegrass Festival
+- Telluride Blues and Brews
+- The Great Beyond
+- Treefort Music Fest
+- Ultra Music Festival
+- Under the Big Sky Fest
+- Wakaan Music Festival
+- Washington State Fair
+- Weedstock
+- Welcome to Rockville
+- Western Idaho State Fair
+- Wheatland Music Festival
+- When We Were Young
+- Wonky Woods
+- Wormtown Music Festival
