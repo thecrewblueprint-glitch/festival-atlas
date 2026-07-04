@@ -74,7 +74,7 @@ Created: YYYY-MM-DD
 Review after: YYYY-MM-DD
 Assistant: ChatGPT | Claude | Claude Code | other
 Branch: research-version
-Commit: <sha or range>
+Commit: <sha>            (or "Commits: <sha>, <sha>" or "Commit range: <sha>..<sha>")
 ```
 
 For current work, logs should also include access mode, files changed, files deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status where applicable, known risks, and next action.

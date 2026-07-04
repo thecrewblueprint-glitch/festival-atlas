@@ -128,7 +128,9 @@ function validateCollaborationEntry(relPath) {
   check(/^Review after: \d{4}-\d{2}-\d{2}$/m.test(text), `${relPath} missing Review after date metadata`);
   check(/^Assistant: /m.test(text), `${relPath} missing Assistant metadata`);
   check(/^Branch: research-version$/m.test(text), `${relPath} missing research-version branch metadata`);
-  check(/^Commit: /m.test(text), `${relPath} missing Commit metadata`);
+  // Accept "Commit:", "Commits:" or "Commit range:" — connector-only sessions
+  // can't know a hash before committing, so any traceable form is valid.
+  check(/^Commit(s|\srange)?:\s/m.test(text), `${relPath} missing Commit metadata`);
   check(text.includes('## Validation status'), `${relPath} missing Validation status section`);
   check(text.includes('## Next action'), `${relPath} missing Next action section`);
 }
