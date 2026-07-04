@@ -24,6 +24,10 @@ of claiming success.
   Core must not also render those pages — see `EXTERNAL_RENDER_PAGES` in core.
 - Pages are flat HTML files at the repo root. They share `assets/atlas.css` and
   are stitched together by `assets/site-footer.js` at runtime.
+- **To add or edit festival records, follow
+  `data/packages/OPPORTUNITY_RECORD_SCHEMA.md`** — it has the copy-paste
+  `opp({...})` template, the department presets, a filled example, and the
+  completeness rules the validator enforces.
 
 ## 2. Prime directives (the reason this file exists)
 

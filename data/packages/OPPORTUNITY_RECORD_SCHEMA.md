@@ -6,6 +6,47 @@ The goal is to keep Production Atlas pullable, readable, and expandable without 
 
 ---
 
+## How to add a festival (copy-paste template)
+
+Records are added with the `opp({...})` helper at the top of
+`data/packages/opportunities-2026.js`. `opp()` fills safe defaults
+(`opportunityType`, `status`, `accommodation`, `travelCompensation`, empty
+relationship arrays, etc.) — **you only specify what you actually know.** Insert
+your record as a new line just before the closing `];` of
+`window.RESOURCE_OPPORTUNITIES` (remember the comma on the line above it).
+
+### Department presets (use one; don't hand-list unless truly custom)
+
+| preset | meaning |
+| --- | --- |
+| `full` | all 12 departments (large multi-stage festival) |
+| `edm` | `full` minus backline (electronic / bass festival) |
+| `music` | `standard` plus backline (band-forward festival) |
+| `standard` | staging, lighting, audio, video_led, power, site_ops, logistics, stage_mgmt, production_office |
+
+### Filled example (a real, complete record)
+
+```js
+opp({id:'wonky-woods-2026',name:'Wonky Woods',city:'Livingston',state:'KY',region:'South',month:8,startDate:'2026-08-14',endDate:'2026-08-16',venue:'Rockcastle Riverside',producer:{name:'Wonky World Entertainment',status:'public_record'},active2026Status:'confirmed_active_2026',active2026CheckedDate:'2026-07-04',sourceQuality:'source_attached_verified',active2026SourceUrl:'https://www.wonkywoods.com/',departments:edm,accommodation:{...unk,lodgingLikely:'possible',lodgingType:'camping_or_crew_housing_unknown'},longTermValueScore:38,nextResearchActions:['verify production vendor stack','verify Kentucky IATSE/local labor route','research camping/crew lodging route']})
+```
+
+Then add a map pin in `data/packages/opportunity-coords.js`:
+`'wonky-woods-2026':[37.2975,-84.2119],` (approximate `[lat, lon]`).
+
+### Rules the validator enforces (run `npm run validate:all`)
+
+- `id` is a unique lowercase slug; `region` must be one of **West / Midwest /
+  South / Northeast / United States multi-market**.
+- Dates are `YYYY-MM-DD`; `endDate >= startDate`; `month` is 1–12.
+- **A visible record (`visibleInActive2026View: true`) must have `city`,
+  `state`, `region`, and non-empty `departments`.** If you can't fill those,
+  set `visibleInActive2026View: false` and note what's missing in
+  `nextResearchActions` — never ship a half-empty visible card.
+- After editing any data package, bump its `?v=` tag **uniformly on every page**
+  that loads it.
+
+---
+
 ## Required Core Fields
 
 ```js

@@ -64,6 +64,17 @@ function validateOpportunityShape(record, label) {
       `${label}: region "${record.region}" not in allowed set {${ALLOWED_REGIONS.join(', ')}}`);
   }
 
+  // A record shown in the public/active view must render a complete card.
+  // If these can't be filled, keep it hidden (visibleInActive2026View: false)
+  // until verified rather than shipping a half-empty card.
+  if (record.visibleInActive2026View === true) {
+    ['city', 'state', 'region'].forEach(f => {
+      check(!!record[f], `${label}: visible record missing required "${f}" (hide it until filled)`);
+    });
+    check(Array.isArray(record.departments) && record.departments.length > 0,
+      `${label}: visible record has no departments`);
+  }
+
   if (record.startDate) {
     check(dateRe.test(record.startDate), `${label}: startDate format invalid: ${record.startDate}`);
   }
