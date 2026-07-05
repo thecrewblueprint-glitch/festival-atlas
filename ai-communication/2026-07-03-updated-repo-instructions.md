@@ -1,8 +1,9 @@
 # Updated Repo Instructions — Production Atlas / Festival Atlas
 
-Status: active
-Created: 2026-07-03
-Owner: Aaron
+Status: active  
+Created: 2026-07-03  
+Updated: 2026-07-05  
+Owner: Aaron  
 Branch: research-version
 
 ## Purpose
@@ -70,7 +71,23 @@ Cloudflare may still exist at DNS/account level, but no Worker backend is curren
 
 ---
 
-## 3. Public safety
+## 3. Current app state
+
+Aaron has confirmed the current app functions are correct. Documentation should align to current behavior instead of reintroducing removed UI.
+
+```text
+Active opportunities: 254 records in data/packages/opportunities-2026.js
+Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Map coordinates: 249 of 254 opportunity records currently mappable
+2027 model: separate year-specific records through opportunity-rollover-2027.js
+Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
+Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Schedule: browser-local localStorage planner, direct URL only, off header nav
+```
+
+---
+
+## 4. Public safety
 
 Do not publish or render:
 
@@ -105,7 +122,7 @@ Unknown publicly. Human verification needed.
 
 ---
 
-## 4. Source-link rule
+## 5. Source-link rule
 
 Raw source links belong on:
 
@@ -126,7 +143,7 @@ Employer popups may show official homepage/careers/apply/contact/public social c
 
 ---
 
-## 5. Current page ownership
+## 6. Current page ownership
 
 Preferred runtime ownership:
 
@@ -143,6 +160,9 @@ assets/map-page-static.js
 assets/employers-department-browser.js
   Owns Employers.
 
+assets/research-queue-page.js
+  Owns only the supplemental analytics.html action-first research queue.
+
 assets/site-footer.js
   Owns footer and header-normalization support.
 
@@ -158,13 +178,14 @@ Retired runtime helpers must not be reintroduced:
 assets/opportunities-promoter-filter.js
 assets/opportunities-date-sort.js
 assets/iatse-page.js
-assets/research-queue-page.js
 assets/confidence-badges.js
 ```
 
+`assets/research-queue-page.js` is no longer retired. It is intentionally restored for supplemental `analytics.html` only. Do not move it into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
+
 ---
 
-## 6. Current public pages
+## 7. Current public pages
 
 Primary public/workflow pages:
 
@@ -215,7 +236,7 @@ contact-data-requests.html
 
 ---
 
-## 7. Current navigation rule
+## 8. Current navigation rule
 
 Current practical header nav shown in current page files:
 
@@ -229,27 +250,29 @@ IATSE
 Contribute
 ```
 
-Current README states Schedule is temporarily off public navigation pending rebuild. Some older docs may still mention Schedule in header nav. Treat current files and README as the newer practical state unless Aaron reopens Schedule navigation.
-
 Guide and Sources belong in footer/reference flow, not header nav. Guide also appears as a Home page callout.
+
+Schedule is temporarily off public header navigation pending rebuild.
 
 ---
 
-## 8. Filters and search behavior
+## 9. Filters and search behavior
 
 Current intended public filters:
 
 ```text
 opportunities.html: text search, state, department, producer/promoter, date/month
 calendar.html: date/month plus calendar controls
-map.html: state and date/month, with map-owned behavior
+map.html: state and date/month, with map-owned behavior; no department filter in current UI
 employers.html: text search, department, state, employer type
 sources.html: festival, department, employer/source route
 schedule.html: date/month, direct URL only while off public nav
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
-IATSE search was specifically tightened after `local 26` returned zero results. It should support patterns such as:
+Do not re-add the Map department filter unless Aaron explicitly reopens that UI.
+
+IATSE search should support patterns such as:
 
 ```text
 local 26
@@ -270,7 +293,7 @@ Do not regress the IATSE search back to raw JSON substring matching only.
 
 ---
 
-## 9. IATSE page current behavior
+## 10. IATSE page current behavior
 
 `iatse.html` loads IATSE data and `assets/atlas-core-v2.js`.
 
@@ -290,7 +313,7 @@ The IATSE local directory pagination belongs in `assets/atlas-core-v2.js`, not i
 
 ---
 
-## 10. Employers page current behavior
+## 11. Employers page current behavior
 
 `assets/employers-department-browser.js` owns Employers rendering.
 
@@ -312,7 +335,7 @@ Do not invent social links. Only show social/public channels if present in the e
 
 ---
 
-## 11. Data loading and branch research
+## 12. Data loading and branch research
 
 Branch research package loading is manifest-driven through:
 
@@ -334,7 +357,7 @@ Do not deep-read the full `research/` archive unless the task requires research 
 
 ---
 
-## 12. 2027 rollover state
+## 13. 2027 rollover state
 
 The active model is separate year-specific records.
 
@@ -344,17 +367,24 @@ Temporary runtime bridge:
 data/packages/opportunity-rollover-2027.js
 ```
 
+Default public cycle guard:
+
+```text
+data/packages/public-cycle-scope.js
+```
+
 Rules:
 
 ```text
 Do not mutate a visible 2026 record into a 2027 opportunity.
 Use separate *-2027 records for verified future-year cycles.
-Eventually move verified 2027 records into canonical opportunity data and shrink/retire the bridge.
+Keep future-year records out of the default 2026 active view until a public cycle/year UI is intentionally added.
+Eventually move verified *-2027 records into canonical opportunity data and shrink/retire the bridge.
 ```
 
 ---
 
-## 13. Validation commands
+## 14. Validation commands
 
 Use when possible:
 
@@ -386,7 +416,7 @@ Do not claim validation passed unless it actually ran.
 
 ---
 
-## 14. Collaboration and handoff rule
+## 15. Collaboration and handoff rule
 
 Every meaningful repo update must leave a collaboration log in:
 
@@ -419,7 +449,7 @@ Routine logs go in `ai-communication/collaboration-log/`. Major handoffs and ins
 
 ---
 
-## 15. App logo / visual asset note
+## 16. App logo / visual asset note
 
 A new Production Atlas app logo was generated in chat and minified to under 1.1 MB as a 1024x1024 PNG.
 
@@ -439,29 +469,29 @@ Then update favicon/social/manifest references only if requested.
 
 ---
 
-## 16. Current next priorities
+## 17. Current next priorities
 
 Recommended next work order:
 
 ```text
 1. Run or trigger npm run validate:all in a real workspace/GitHub Actions environment.
 2. Confirm live site serves research-version output.
-3. Mobile spot-check nav, filters, IATSE, Employers, Opportunities, Map, and Schedule.
+3. Mobile spot-check nav, filters, IATSE, Employers, Opportunities, Map, Analytics, and Schedule direct URL.
 4. Continue cleaning search/filter empty states.
 5. Improve Schedule mobile usability before restoring it to header nav.
 6. Continue public source and producer/promoter verification.
-7. Canonicalize verified 2027 records after validation/deploy stability.
-8. Keep docs aligned when runtime/page behavior changes.
+7. Refine remaining map coordinates when exact public venue/location data is available.
+8. Canonicalize verified 2027 records after validation/deploy stability.
+9. Keep docs aligned when runtime/page behavior changes.
 ```
 
 ---
 
-## 17. Current caution items
+## 18. Current caution items
 
 ```text
-Some older docs still mention Schedule in header nav; README/current files treat Schedule as off public nav.
-IATSE search was recently changed; verify live behavior visually.
+IATSE search was recently changed; verify live behavior visually after deploy.
 The app remains static; do not add AI/backend/Cloudflare Worker functionality without explicit approval.
 The generated logo file is not a repo asset until committed.
-Validation has not been run from the GitHub connector environment.
+Validation has not been run from GitHub connector-only environments.
 ```
