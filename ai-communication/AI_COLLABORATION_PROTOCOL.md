@@ -1,7 +1,7 @@
-# AI Collaboration Protocol — ChatGPT and Claude
+# AI Collaboration Protocol — ChatGPT, Claude, Claude Code, and Future Agents
 
 Generated: 2026-06-22  
-Updated: 2026-06-29  
+Updated: 2026-07-05  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary working branch: `research-version`
 
@@ -116,6 +116,20 @@ Older documents must be amended or marked superseded when they conflict with cur
 
 Production Atlas is a static GitHub Pages app with no backend, login, public database, payment flow, or scraping automation. It loads JavaScript data packages through `window.*` exports. Branch research loading is manifest-driven. Sources stay centralized on `sources.html`. Public display must remain public-safe.
 
+Current repo-visible state:
+
+```text
+Active opportunities: 254 records in data/packages/opportunities-2026.js
+Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Map coordinates: 249 of 254 opportunity records currently mappable
+2027 model: separate year-specific records through opportunity-rollover-2027.js
+Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
+Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Schedule: browser-local localStorage planner, direct URL only, off header nav
+```
+
+Aaron has confirmed the current app functions are correct. Documentation work should describe current behavior instead of reintroducing removed UI.
+
 ## Current public UI decision
 
 Aaron intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
@@ -123,12 +137,13 @@ Aaron intentionally reopened the earlier narrow filter decision. Do not revert t
 Current page-specific filter direction:
 
 ```text
-opportunities.html: state, department, producer/promoter, date/month
+opportunities.html: text search, state, department, producer/promoter, date/month
 calendar.html: date/month, plus page-specific calendar controls
-map.html: department, state, date/month
-employers.html: department, state, employer type
+map.html: state and date/month; no department filter in current UI
+employers.html: text search, department, state, employer type
 sources.html: festival, department, employer route
-schedule.html: date/month
+schedule.html: date/month, direct URL only while off public nav
+iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
 Current header nav:
@@ -140,15 +155,16 @@ Calendar
 Map
 Employers
 IATSE
-Schedule
 Contribute
 ```
 
 `Guide` and `Sources` are footer/reference links, not header nav links. The Guide also appears as a home-page callout at the top of the home app content, between the nav bar and the first home card.
 
+`Schedule` remains functional by direct URL but is intentionally off header navigation pending rebuild.
+
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue filtering as a primary public filter unless Aaron explicitly reopens those items.
 
-Do not reintroduce public confidence badges, public value-tier labels, public research queue panels, or internal next-action dashboards.
+Do not reintroduce public confidence badges, public value-tier labels, public research queue panels in primary public navigation, or internal next-action dashboards.
 
 ## Helper-script / owner-file rule
 
@@ -161,6 +177,7 @@ assets/atlas-core-v2.js owns core shared page rendering, filtering, sort behavio
 assets/calendar-interactive.js may own Calendar because Calendar is intentionally external.
 assets/map-page-static.js may own Map because Map is intentionally external.
 assets/employers-department-browser.js may own Employers because Employers is intentionally external.
+assets/research-queue-page.js owns the supplemental analytics.html action-first research queue only.
 data packages own data only, not UI patching.
 ```
 
@@ -172,9 +189,10 @@ Retired helpers must not be reintroduced:
 assets/opportunities-promoter-filter.js
 assets/opportunities-date-sort.js
 assets/iatse-page.js
-assets/research-queue-page.js
 assets/confidence-badges.js
 ```
+
+`assets/research-queue-page.js` is no longer retired. It is intentionally restored for supplemental `analytics.html` only. It must not be moved into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
 
 ## Public-safety rule
 
@@ -216,13 +234,13 @@ Do not place raw source links in opportunity popups, branch popups, map popups, 
 
 ## Festival research intake rule
 
-`data/packages/festival-research-master-list.js` is an active repo asset for future festival verification work. It is not active opportunity data. Records from it must stay `unverified-intake` until individually verified from public sources and promoted into app data.
+`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It currently contains 258 records after reconciliation. It is not automatically active opportunity data by itself: records must be individually verified and promoted or matched to app data before being treated as active public opportunities.
 
 ## 2026/2027 rollover rule
 
 The decided model is separate year-specific records for verified future-year public cycles.
 
-Temporary bridge behavior in `data/packages/opportunity-rollover-2027.js` may create `*-2027` records at runtime until verified records are moved into the canonical opportunity package.
+Temporary bridge behavior in `data/packages/opportunity-rollover-2027.js` may create `*-2027` records at runtime until verified records are moved into the canonical opportunity package. `data/packages/public-cycle-scope.js` currently keeps future-year records out of the default 2026 public view.
 
 Do not expand the old mutation model where a visible `*-2026` record becomes a 2027 opportunity.
 
