@@ -1,11 +1,11 @@
 # Map Department Filter Fix
 
-Status: complete
+Status: superseded
 Created: 2026-07-05
 Review after: 2026-07-19
 Assistant: ChatGPT
 Branch: research-version
-Commit: 14756625ef51a2cb99a9e71418d7a80d93a0fd5f
+Commits: 14756625ef51a2cb99a9e71418d7a80d93a0fd5f, 9de91c190b427e22319c4b2bc7bc6d59769f4b80
 
 ## Access mode
 
@@ -21,9 +21,12 @@ GitHub connector only: can fetch/update/delete repo files, but cannot run npm sc
 
 ## What changed
 
-Added the missing `<select id="branchFilter">` control to the Map page filter bar.
+Superseded. The originally added `<select id="branchFilter">` control was removed from the Map page after Aaron clarified that Claude had intentionally removed/kept off that department filter and that removed UI should not be reintroduced without checking current intent.
 
-The page-owned map renderer, `assets/map-page-static.js`, already reads `branchFilter` and filters mapped opportunities by department. The public HTML did not expose the matching control, creating drift with the documented map filter direction.
+Current intended result after superseding commit:
+
+- `map.html` filter bar remains state + date/month + reset.
+- No department filter appears on the Map page.
 
 ## Documents examined for drift
 
@@ -39,12 +42,12 @@ The page-owned map renderer, `assets/map-page-static.js`, already reads `branchF
 
 ## Documents updated
 
-- None
+- This collaboration log was updated to `Status: superseded`.
 
 ## Documents intentionally not updated and why
 
-- `README.md` still has a stale line describing `map.html` as state/date-only. I did not update it in this connector pass because full-file replacement is required and this session is limited. The behavior now matches the higher-priority project instructions and roadmap direction: department, state, and date/month.
-- The public-cycle helper issue identified in audit is not fixed in this change. It needs a focused owner-file refactor in `assets/atlas-core-v2.js` or a data-canonicalization pass, not another patch-layer update.
+- Broader Map filter documentation drift remains unresolved. Aaron's latest instruction controls the immediate behavior: do not re-add the Map department filter.
+- No roadmap or README replacement was attempted in this correction pass because the explicit request was to revert the Map UI change, not to reopen broader documentation cleanup.
 
 ## Validation status
 
@@ -58,13 +61,13 @@ npm run validate:all
 
 ## Human-review status
 
-Human live visual review needed. Open `map.html` and confirm the filter bar now includes department, state, date/month, and reset controls.
+Human live visual review needed. Open `map.html` and confirm the filter bar no longer includes department and only shows state, date/month, and reset controls.
 
 ## Known risks
 
-- Validation may still fail because README/public behavior documentation has known drift around Map filter wording.
+- Validation or documentation checks may still flag current docs that say Map supports department filtering. That should be handled as a separate documentation/source-of-truth cleanup, not by reintroducing the removed UI.
 - The previous `data/packages/public-cycle-scope.js` helper remains loaded by several pages and still requires a separate cleanup/refactor.
 
 ## Next action
 
-Run `npm run validate:all`, then do a focused cleanup pass for the 2027 public-cycle helper and documentation drift around Schedule/header nav and Map filter wording.
+Respect Aaron's latest instruction: do not reintroduce previously removed UI controls simply because an older document says they should exist. For the next cleanup pass, update docs to match the intentional current Map behavior if Aaron confirms that is the durable decision.
