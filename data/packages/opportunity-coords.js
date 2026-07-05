@@ -259,5 +259,6 @@ window.RESOURCE_OPP_COORDS={
   'tico-time-bluegrass-2027':[36.911,-107.928],
   'rooster-walk-2027':[36.686,-79.873],
   'rise-and-vibes-2027':[36.911,-107.928],
-  'beyond-wonderland-midwest-2027':[41.475,-88.057]
+  'beyond-wonderland-midwest-2027':[41.475,-88.057],
+  'desert-hearts-2026':[35.18,-111.65]
 };
