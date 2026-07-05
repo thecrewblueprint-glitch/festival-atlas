@@ -1,147 +1,34 @@
-# Current Festivals (dedup reference)
+# Current Festivals
 
-Snapshot for the Festival Research Protocol. Do not add a festival already on
-this list (or a per-market sibling). Regenerate after dataset changes with the
-command in the protocol. Total: 141 names (snapshot 2026-07-04).
+Status: superseded snapshot  
+Updated: 2026-07-05
 
-- Aftershock
-- Alabama Strawberry Festival
-- Aloha Jazz Festival
-- APOG
-- Appalachian String Band Music Festival
-- Austin City Limits
-- Bass Canyon
-- Beyond Wonderland SoCal
-- Birthplace of American Music Festival
-- Blue Highway Fest
-- Blue Ridge Rock Festival
-- Bonnaroo
-- Boston Calling
-- BottleRock Napa Valley
-- Bourbon & Beyond
-- Breakaway Arizona
-- Breakaway Atlanta
-- Breakaway Carolina
-- Breakaway Dallas
-- Breakaway Houston
-- Breakaway Massachusetts
-- Breakaway Michigan
-- Breakaway Minnesota
-- Breakaway Music Festival (tour overview)
-- Breakaway NorCal
-- Breakaway Ohio
-- Breakaway Philadelphia
-- Breakaway Tampa
-- Breakaway Utah
-- Briggs Farm Blues Festival
-- Burlington Discover Jazz Festival
-- Burning Man
-- Calling All Magical People
-- Capitol Hill Block Party
-- Cascade Equinox Festival
-- Cheyenne Frontier Days
-- CMA Fest
-- Coachella
-- Countdown NYE
-- Country Concert
-- Country Thunder (US multi-market)
-- Country Thunder Arizona
-- Country Thunder Florida
-- Country Thunder Wisconsin
-- CRSSD Festival
-- Dancefestopia
-- DC Jazz Festival
-- Desert Hearts Festival
-- Dreamstate SoCal
-- Dreamville Festival
-- Earl Scruggs Music Festival
-- EDC Las Vegas
-- EDC Orlando
-- Electric Forest
-- Electric Zoo
-- Faster Horses
-- Festival International de Louisiane
-- FloydFest
-- FreshGrass Festival
-- Gem and Jam
-- Governors Ball
-- GrassRoots Finger Lakes Festival
-- Great Blue Heron Festival
-- Greater Hartford Festival of Jazz
-- Grey Fox Bluegrass Festival
-- HARD Summer
-- High Sierra Music Festival
-- Hinterland
-- Huck Finn Jubilee
-- Hulaween
-- III Points
-- Inkcarceration
-- Iowa State Fair
-- Joshua Tree Music Festival Fall
-- Kilby Block Party
-- Levitate Music Festival
-- Levitation Austin
-- Life Is Beautiful
-- Lightning in a Bottle
-- Lights All Night
-- Litchfield Jazz Festival
-- Lollapalooza Chicago
-- Louder Than Life
-- M3F Fest
-- MerleFest
-- Merrie Monarch Festival
-- Mountain Music Festival
-- Muddy Roots
-- Nebraska State Fair
-- New Hampshire Music Festival
-- New Mexico State Fair
-- New Orleans Jazz & Heritage Festival
-- Newport Folk Festival
-- Newport Jazz Festival
-- Nocturnal Wonderland
-- North Coast Music Festival
-- North Dakota State Fair
-- Northern Nights
-- Oceans Calling
-- Odunde Festival
-- Okeechobee Music & Arts Festival
-- Philadelphia Folk Festival
-- Pickathon
-- Pickin' in the Pines
-- Portola Music Festival
-- Railbird Festival
-- Reggae on the River
-- Rhythms on the Rio
-- Rock Fest Wisconsin
-- Rock The South
-- Rocklahoma
-- Rocky Mountain Folks Festival
-- Rolling Loud Orlando
-- Roostertail Music Festival
-- Roots Picnic
-- Salmonfest
-- Sea.Hear.Now
-- Secret Dreams Festival
-- Shakori Hills GrassRoots Festival Fall
-- Shaky Knees
-- Sick New World
-- Sonic Temple
-- Sound Haven
-- Stagecoach
-- Summerfest
-- Suwannee Spring Reunion
-- Telluride Bluegrass Festival
-- Telluride Blues and Brews
-- The Great Beyond
-- Treefort Music Fest
-- Ultra Music Festival
-- Under the Big Sky Fest
-- Wakaan Music Festival
-- Washington State Fair
-- Weedstock
-- Welcome to Rockville
-- Western Idaho State Fair
-- Wheatland Music Festival
-- When We Were Young
-- Wonky Woods
-- Wormtown Music Festival
+This file previously served as the dedup reference for festival research batches. It is now superseded by the reconciled registry in:
+
+```text
+data/packages/festival-research-master-list.js
+```
+
+Current repo-visible state:
+
+```text
+Active opportunity records: 254
+Festival registry/master-list records: 258
+Map coordinates: 249 of 254 opportunity records currently mappable
+```
+
+Do not use the old 141-name snapshot as the active dedup authority. Before adding a festival, check both:
+
+```text
+data/packages/festival-research-master-list.js
+data/packages/opportunities-2026.js
+```
+
+Then follow:
+
+```text
+research/FESTIVAL_RESEARCH_PROTOCOL.md
+data/packages/OPPORTUNITY_RECORD_SCHEMA.md
+```
+
+A future local-tool pass may regenerate this file as a full human-readable 258-record list. Until then, the JavaScript master registry is the authoritative current festival registry.
