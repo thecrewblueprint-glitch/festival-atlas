@@ -1,7 +1,7 @@
 # Project Chat Group Instructions — Production Atlas / Festival Atlas
 
 Generated: 2026-06-22  
-Updated: 2026-06-29  
+Updated: 2026-07-05  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary working branch: `research-version`
 
@@ -85,10 +85,10 @@ Where is the work?
 When is it happening?
 Who publicly produces, promotes, operates, or routes the work?
 Who are the public employer/vendor/labor-route leads?
-Which source, map, calendar, employer, or schedule page should Aaron review next?
+Which source, map, calendar, employer, IATSE, or schedule page should Aaron review next?
 ```
 
-The current goal is to make the static work research app function well, not to build a backend or future platform.
+The current goal is to keep the static work research app functioning well, not to build a backend or future platform.
 
 ## Current app boundary
 
@@ -105,6 +105,20 @@ No scraping/network automation
 
 Do not introduce backend/auth/private workflow/payment/scraping architecture unless Aaron explicitly opens that topic.
 
+## Current repo-visible app state
+
+```text
+Active opportunities: 254 records in data/packages/opportunities-2026.js
+Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Map coordinates: 249 of 254 opportunity records currently mappable
+2027 model: separate year-specific records through opportunity-rollover-2027.js
+Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
+Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Schedule: browser-local localStorage planner, direct URL only, off header nav
+```
+
+Aaron has confirmed the current app functions are correct. Documentation should align to current behavior instead of reintroducing removed UI.
+
 ## Current public UI scope
 
 Aaron has intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
@@ -112,12 +126,13 @@ Aaron has intentionally reopened the earlier narrow filter decision. Do not reve
 Current page-specific filter direction:
 
 ```text
-opportunities.html: state, department, producer/promoter, date/month
+opportunities.html: text search, state, department, producer/promoter, date/month
 calendar.html: date/month, plus page-specific calendar controls
-map.html: department, state, date/month
-employers.html: department, state, employer type
+map.html: state and date/month; no department filter in current UI
+employers.html: text search, department, state, employer type
 sources.html: festival, department, employer route
-schedule.html: date/month
+schedule.html: date/month, direct URL only while off public nav
+iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
 Current header nav:
@@ -129,15 +144,16 @@ Calendar
 Map
 Employers
 IATSE
-Schedule
 Contribute
 ```
 
 `Guide` and `Sources` are footer/reference links, not header nav links. The Guide also appears as a home-page callout at the top of the home app content, between the nav bar and the first home card.
 
+`Schedule` remains functional by direct URL but is intentionally off header navigation pending rebuild.
+
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
-Internal research queues, confidence scoring, value tiers, and private workflow details stay out of the public UI.
+The action-first research queue is currently scoped to supplemental `analytics.html` only. It must not be moved into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
 
 ## Current roadmap scope
 
@@ -218,13 +234,13 @@ Do not put raw source links inside opportunity popups, branch popups, map popups
 
 ## Festival research master-list rule
 
-`data/packages/festival-research-master-list.js` is an active repo asset for future research intake. It is not verified opportunity data and must not be rendered as active public opportunity records until individual records are verified from public sources.
+`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It currently contains 258 records after reconciliation. It is not automatically active opportunity data by itself: records must be individually verified and promoted or matched to app data before being treated as active public opportunities.
 
 ## 2026/2027 rollover rule
 
 The decided model is separate year-specific records for verified future public cycles.
 
-`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that may create `*-2027` records at runtime until verified records are moved into canonical opportunity data.
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that may create `*-2027` records at runtime until verified records are moved into canonical opportunity data. `data/packages/public-cycle-scope.js` currently keeps future-year records out of the default 2026 public view.
 
 Do not expand the old mutation model where a visible `*-2026` record becomes a 2027 opportunity.
 
@@ -263,18 +279,4 @@ For documentation-only changes, validation may be skipped, but say clearly:
 Validation not run; documentation-only change.
 ```
 
-For code/data/page changes, do not claim automated validation passed unless it actually ran.
-
-## How a new chat should start
-
-A new assistant session should:
-
-```text
-1. Identify Aaron's requested task.
-2. Use GitHub repo and research-version branch as current context.
-3. Read the project instructions, collaboration protocol, drift-control protocol, product roadmap, README, root ROADMAP, and relevant files.
-4. Confirm whether the task is docs, code, data, research, validation, planning, legal/policy page, public UI page work, or deployment troubleshooting.
-5. Work from current repo files, not stale chat memory.
-6. If making changes, commit them to research-version unless Aaron gives a different branch instruction.
-7. Leave a handoff or collaboration log after meaningful changes.
-```
+For code/data changes, do not claim completion unless validation was run or the inability to run it is documented.
