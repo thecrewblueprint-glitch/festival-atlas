@@ -3,11 +3,13 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-07-03
+Updated: 2026-07-05
 
 Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter and employer-route leads, review source references, and plan scheduling.
 
 The repository can contain deeper research and supplemental audit data, but the public-facing pages should stay concise, worker-useful, and public-safe.
+
+README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
 
 ## Live GitHub Pages site
 
@@ -15,8 +17,6 @@ The repository can contain deeper research and supplemental audit data, but the 
 - **GitHub Pages URL:** https://thecrewblueprint-glitch.github.io/festival-atlas/
 
 Maintenance rule: keep this README current when significant app behavior, public navigation, public filter scope, runtime loading, active shared files, validation contract, data state, page roles, collaboration-log convention, public-safety policy, or source-link policy changes.
-
-README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
 
 ## Repository / branch
 
@@ -29,7 +29,25 @@ Live preview source branch: research-version
 Public site: https://atlas.thecrewblueprint.com/
 ```
 
-`research-version` is the intended live working branch. `main` must not be edited, patched, or used as a live hotfix unless Aaron explicitly says to touch `main`.
+`research-version` is the intended live working branch. `main` must not be edited, patched, merged into, or used as a live hotfix unless Aaron explicitly says to touch `main`.
+
+## Current state snapshot
+
+Current repo-visible app state as of 2026-07-05:
+
+```text
+Public app type: static GitHub Pages app
+Public navigation: Home, Opportunities, Calendar, Map, Employers, IATSE, Contribute
+Schedule: functional by direct URL only; off header navigation pending rebuild
+Active opportunity package: data/packages/opportunities-2026.js
+Current active opportunity count: 254 opportunity records
+Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Map coordinates: 249 of 254 opportunity records currently mappable
+Analytics: supplemental retained audit page with action-first research queue
+Backend/auth/database/payment/scraping: none
+```
+
+The app functions are currently treated as correct. Documentation should describe current behavior instead of reintroducing removed UI or patch-layer assumptions.
 
 ## Source-of-truth rule
 
@@ -109,19 +127,25 @@ How does this affect calendar, travel, and scheduling decisions?
 index.html        Home: quick explanation, dashboard, and clear Guide link.
 guide.html        Full Guide for Use and public-safe workflow.
 opportunities.html
-                  Festival/event profiles with page-specific filters for state,
-                  department, producer/promoter, and date/month.
+                  Festival/event profiles with page-specific filters for text search,
+                  state, department, producer/promoter, and date/month.
 calendar.html     Month-by-month planning view for event timing and availability.
 map.html          Location view for routing, travel clustering, and nearby opportunities.
-schedule.html     Local browser-only planning view. Temporarily off public navigation
-                  (unlinked, noindex, robots-disallowed); still functional by direct URL,
-                  saved schedules preserved, pending a rebuild.
+                  Current Map filters are state and date/month; do not re-add the
+                  removed department filter unless Aaron explicitly reopens it.
 employers.html    Public company, employer, vendor, producer, venue, and apply/contact routes.
-iatse.html        How to join IATSE: union-join guidance (overhire-to-membership path,
-                  permit vs. member, other ways in), official IATSE resources, and a
-                  searchable local directory with per-local join steps. Core public reference page.
+iatse.html        How to join IATSE: union-join guidance, official IATSE resources,
+                  searchable local directory, pagination, and per-local join steps.
 contribute.html   Public-safe human-submission route; all submissions require review.
 feedback.html     Public app feedback route.
+```
+
+Schedule state:
+
+```text
+schedule.html     Local browser-only planning view. Temporarily off public navigation
+                  (unlinked, noindex, robots-disallowed); still functional by direct URL,
+                  saved schedules preserved, pending a mobile/usability rebuild.
 ```
 
 ### Header / footer navigation rule
@@ -138,7 +162,7 @@ IATSE
 Contribute
 ```
 
-Schedule is temporarily off public navigation (unlinked, `noindex`, and `Disallow`ed in robots.txt) pending a rebuild; the page still works by direct URL. Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
+Schedule is temporarily off public navigation pending a rebuild; the page still works by direct URL. Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
 
 ### Source / audit page
 
@@ -154,7 +178,7 @@ Source links still belong on `sources.html`, not inside opportunity popups, bran
 about.html
                     What Production Atlas is and is not.
 data-methodology.html
-                    How public event, employer, source, and planning data works.
+                    How public event, employer, source, map, date, and planning data works.
 employer-route-methodology.html
                     Difference between general employer routes and confirmed event-specific routes.
 date-work-window-disclaimer.html
@@ -180,7 +204,8 @@ These pages are retained because validation expects them and they may be useful 
 ```text
 branches.html      Supplemental department/research view. Public nav currently hides it.
 matrix.html        Supplemental department/employer matrix.
-analytics.html     Supplemental clustering/audit view. Internal research queue is not public.
+analytics.html     Supplemental clustering/audit view with the intentionally restored
+                   action-first research queue in assets/research-queue-page.js.
 ```
 
 Do not delete supplemental retained pages unless validation scripts and public workflow are updated in the same work cycle.
@@ -194,20 +219,16 @@ Current page-specific filter direction:
 ```text
 opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month
 calendar.html: date/month, plus any page-specific calendar controls
-map.html: state, date/month
+map.html: state and date/month; no department filter in current UI
 employers.html: text search (name, type, state), department, state, employer type
 sources.html: festival, department, employer
 schedule.html: date/month (off public navigation; reachable by direct URL only)
+iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
-Opportunities and Employers paginate results 10 per page with a numbered
-Prev/Next jumper; changing any search or filter resets to page 1. The IATSE
-page is tabbed (How to join / Find a local / About IATSE) and paginates its
-local directory the same way.
+Opportunities and Employers paginate results 10 per page with a numbered Prev/Next jumper; changing any search or filter resets to page 1. The IATSE page is tabbed (How to join / Find a local / About IATSE) and paginates its local directory the same way.
 
-Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
-
-Broader planning functionality belongs in a later schedule/travel-planning layer. That future layer may connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
 ## Active shared files
 
@@ -221,6 +242,7 @@ assets/map-page-static.js
 assets/employers-department-browser.js
 assets/sources-employer-links.js
 assets/guide-page.js
+assets/research-queue-page.js        analytics.html supplemental audit queue only
 assets/site-footer.js
 assets/icons.js
 data/iatse-us-local-directory.js
@@ -228,6 +250,7 @@ data/iatse-organization-info.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
+data/packages/public-cycle-scope.js
 data/packages/opportunity-coords.js
 data/packages/festival-research-master-list.js
 data/packages/branch-research-manifest.js
@@ -237,11 +260,12 @@ Retired public helpers must not be reintroduced:
 
 ```text
 assets/confidence-badges.js
-assets/research-queue-page.js
 assets/opportunities-promoter-filter.js
 assets/opportunities-date-sort.js
 assets/iatse-page.js
 ```
+
+`assets/research-queue-page.js` is no longer retired. It is intentionally restored for the supplemental `analytics.html` audit queue. It must not be moved into primary public navigation, cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly changes the app scope.
 
 ## Runtime ownership
 
@@ -250,18 +274,19 @@ assets/iatse-page.js
 External page renderers remain acceptable only where they are intentionally page-owned:
 
 ```text
-assets/calendar-interactive.js       Calendar
-assets/map-page-static.js            Map
-assets/employers-department-browser.js Employers
-assets/sources-employer-links.js     Sources support
-assets/guide-page.js                 Guide content
+assets/calendar-interactive.js          Calendar
+assets/map-page-static.js               Map
+assets/employers-department-browser.js  Employers
+assets/sources-employer-links.js        Sources support
+assets/guide-page.js                    Guide content
+assets/research-queue-page.js           Analytics supplemental audit queue
 ```
 
 Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
 
 ## Required runtime load order
 
-Every active core HTML page must load the main data packages, then the public-safe research update packages, then the app runtime. Current order for primary app pages:
+Every active core HTML page must load the main data packages, then the public-safe research update packages, then any public-cycle scoping guard, then the app runtime. Current order for primary app pages:
 
 ```html
 <script src="data/packages/production-branches.js?v=multi1"></script>
@@ -271,19 +296,20 @@ Every active core HTML page must load the main data packages, then the public-sa
 <script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script>
 <script src="data/packages/research-queue-route-updates.js?v=route1"></script>
 <script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script>
+<script src="data/packages/public-cycle-scope.js?v=cycle1"></script>
 <script src="assets/atlas-core-v2.js?v=multi20"></script>
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
 
-Cache-bust query values (for example `?v=multi20`, `?v=footer12`, `?v=atlas1`) are bumped together across all pages whenever the underlying shared asset changes, so every page requests the same current version.
+Cache-bust query values are bumped together across all pages whenever the underlying shared asset changes, so every page requests the same current version.
 
-`iatse.html` also loads `data/iatse-organization-info.js` and may use a newer `atlas-core-v2.js` cache-bust value when IATSE copy changes. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
+`iatse.html` also loads `data/iatse-organization-info.js`. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. `analytics.html` loads `assets/research-queue-page.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
 
-Do not add `async` or `defer` to these data/runtime package scripts. `opportunity-taxonomy.js`, `research-queue-route-updates.js`, and `opportunity-rollover-2027.js` must execute before `atlas-core-v2.js` reads `window.RESOURCE_OPPORTUNITIES` when a page depends on rollover state.
+Do not add `async` or `defer` to these data/runtime package scripts.
 
-## Internal research queue
+## Analytics research queue boundary
 
-The internal research queue lives outside the public GitHub Pages app. Public pages should not render research queue tasks, internal next actions, confidence/audit language, empty branch research records, missing-data warnings, source-needed filler, value-tier badges, or confidence badges as primary content.
+The action-first research queue currently lives only on the supplemental retained `analytics.html` page. It is public-safe audit/planning scaffolding and is not part of the primary public workflow. Public cards, modals, map popups, schedule cards, and primary page copy should still avoid research queue tasks, internal next actions, confidence/audit language, missing-data warnings, source-needed filler, value-tier badges, or confidence badges.
 
 ## Important data files
 
@@ -296,21 +322,22 @@ data/iatse-organization-info.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
+data/packages/public-cycle-scope.js
 data/packages/opportunity-coords.js
 data/packages/festival-research-master-list.js
 data/packages/branch-research-manifest.js
 data/packages/branch-research-batch-*.js
 ```
 
-## Active taxonomy and route research packages
+## Active taxonomy, route, cycle, and map packages
 
 ```text
 data/packages/opportunity-taxonomy.js              source/date research updates
 data/packages/research-queue-route-updates.js      public producer/operator route leads
 data/packages/opportunity-rollover-2027.js         separate-year 2027 public-cycle bridge
+data/packages/public-cycle-scope.js                default public-cycle visibility guard
+data/packages/opportunity-coords.js                map coordinates for opportunity records
 ```
-
-These packages are loaded directly by active HTML pages before `assets/atlas-core-v2.js` when those pages need them. `assets/approx-date-labels.js` may re-apply UI polish and guarded fallback behavior, but it is not the canonical first-load path for these packages.
 
 Route updates are public-safe route leads only. They do not confirm vendors, labor providers, private contacts, pay, lodging, travel support, per diem, call times, or referrals.
 
@@ -359,7 +386,7 @@ Accommodation, travel, lodging, per diem, and similar worker-support details are
 
 The chosen rollover model is separate year-specific records.
 
-`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view.
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view. `data/packages/public-cycle-scope.js` additionally keeps the default public 2026 view from mixing in future-year records unless the app scope is changed.
 
 Do not expand the older mutation model where a visible `*-2026` record becomes a 2027 opportunity. Long-term cleanup should move verified `*-2027` records into canonical opportunity data and then shrink or retire the bridge.
 
@@ -367,9 +394,7 @@ Do not update exact dates unless the new public dates are visible from a reliabl
 
 ## Festival research master-list rule
 
-`data/packages/festival-research-master-list.js` is an active intake asset, not verified opportunity data.
-
-Records in this file should remain `unverified-intake` until a small batch is verified from public sources and promoted into an active app data package.
+`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It currently contains 258 records after reconciliation. It is not automatically active opportunity data by itself: records must be individually verified and promoted or matched to app data before they should be treated as active public opportunities.
 
 ## Employer-link rule
 
@@ -394,7 +419,7 @@ Preferred event-route language:
 verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
 ```
 
-The `iatse.html` page is built around how a worker actually joins IATSE: the overhire-to-membership path, the permit-vs-member distinction, other ways in (apprenticeship/training, organizing, transfer, craft guilds), official IATSE resource links (local-union directory, About IATSE, IATSE Training Trust), and a searchable local directory. Each local opens a modal with actionable join steps and a link to the official directory for that local's real contact. It should provide useful join guidance, not repeat generic warning text on every card.
+The `iatse.html` page is built around how a worker actually joins IATSE: the overhire-to-membership path, the permit-vs-member distinction, other ways in, official IATSE resource links, and a searchable local directory. Each local opens a modal with actionable join steps and a link to the official directory for that local's real contact.
 
 ## Branch research loading rule
 
