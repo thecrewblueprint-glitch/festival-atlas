@@ -2,7 +2,8 @@ Status: complete
 Created: 2026-07-05
 Review after: 2026-07-19
 Assistant: Claude Code
-Branch: claude/site-audit-navbar-restore-14ewsl
+Branch: research-version
+Commit: pushed on feature branch claude/site-audit-navbar-restore-14ewsl
 Access mode: Local clone / terminal + full network (link checker, headless Chromium attempted)
 
 # Link audit, PWA cache bump, dead-domain repair, navbar verification
@@ -70,6 +71,13 @@ test: both forms return HTTP 200, title "Interface Form - Airtable", with
 page ID and bogus app ID both return HTTP 404. Conclusion: both embeds are genuine
 published public forms.
 
-## Validation
+## Validation status
 
 `npm run validate:all` passes 3/3 after changes.
+
+## Next action
+
+Deploy and hard-refresh/reinstall the PWA to confirm the stale-cache hamburger
+symptom clears. If a hamburger still appears on a specific page or the installed
+PWA, capture where and reproduce. Consider upgrading the Desert Hearts batch-1
+source from an Instagram link to an official site.
