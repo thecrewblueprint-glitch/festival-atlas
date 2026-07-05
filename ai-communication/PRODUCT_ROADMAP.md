@@ -1,7 +1,7 @@
 # Production Atlas Work Research App Roadmap
 
 Generated: 2026-06-22  
-Updated: 2026-06-29  
+Updated: 2026-07-05  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary branch: `research-version`  
 Scope: Make the current static work research app function well. Do not roadmap backend architecture, private workflow systems, payment, authentication, scraping automation, or unrelated future platform structure.
@@ -20,11 +20,9 @@ The app should help answer:
 5. What public source or planning page should Aaron review next?
 ```
 
-The app is successful when Aaron can open it, filter by the current page-specific controls, compare public work-route leads, review sources, and decide what to research next without digging through raw research documents.
+The app is successful when Aaron can open it, filter by the current page-specific controls, compare public work-route leads, review sources, inspect map/calendar timing, and decide what to research next without digging through raw research documents.
 
 ## 2. Current App Boundary
-
-Keep the roadmap focused on the current static app.
 
 Current app type:
 
@@ -44,9 +42,23 @@ Working rule:
 Make the research app useful and reliable before considering any larger platform structure.
 ```
 
-## 3. Non-Negotiable Operating Rules
+## 3. Current Built State
 
-### 3.1 Public-Safe Display
+```text
+Active opportunities: 254 records in data/packages/opportunities-2026.js
+Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Map coordinates: 249 of 254 opportunity records currently mappable
+2027 model: separate year-specific records through opportunity-rollover-2027.js
+Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
+Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Schedule: browser-local localStorage planner, direct URL only, off header nav
+```
+
+The current app functions are correct. Documentation should describe the current status instead of reintroducing removed UI or retired decisions.
+
+## 4. Non-Negotiable Operating Rules
+
+### 4.1 Public-Safe Display
 
 Do not render or publish:
 
@@ -63,7 +75,7 @@ client-sensitive information
 private referrals
 ```
 
-### 3.2 Sources Stay Centralized
+### 4.2 Sources Stay Centralized
 
 Source links belong on:
 
@@ -75,24 +87,25 @@ Do not move raw source links into opportunity, branch, map, or schedule popups.
 
 `Sources` remains the central source/audit page. Source links belong there, but Sources is a footer/reference link, not a header nav link.
 
-### 3.3 Public Filter Scope
+### 4.3 Public Filter Scope
 
 Aaron intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
 
 Current page-specific filter direction:
 
 ```text
-opportunities.html: state, department, producer/promoter, date/month
+opportunities.html: text search, state, department, producer/promoter, date/month
 calendar.html: date/month, plus page-specific calendar controls
-map.html: department, state, date/month
-employers.html: department, state, employer type
+map.html: state and date/month; no department filter in current UI
+employers.html: text search, department, state, employer type
 sources.html: festival, department, employer route
-schedule.html: date/month
+schedule.html: date/month, direct URL only while off public nav
+iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
-### 3.4 Header / Footer Navigation
+### 4.4 Header / Footer Navigation
 
 Current header nav:
 
@@ -103,13 +116,12 @@ Calendar
 Map
 Employers
 IATSE
-Schedule
 Contribute
 ```
 
-`Guide` and `Sources` are footer/reference links. The Guide also appears as a home-page callout below the nav and above the first home card.
+`Guide` and `Sources` are footer/reference links. The Guide also appears as a home-page callout below the nav and above the first home card. `Schedule` exists by direct URL only and remains off header navigation pending rebuild.
 
-### 3.5 Manifest Is the Data Loading Authority
+### 4.5 Manifest Is the Data Loading Authority
 
 Branch research package loading must stay controlled by:
 
@@ -119,7 +131,11 @@ data/packages/branch-research-manifest.js
 
 Do not rely on stale hardcoded fallback arrays.
 
-### 3.6 Validation and Human Review
+### 4.6 Analytics Research Queue Boundary
+
+`assets/research-queue-page.js` is no longer retired. It is intentionally restored for `analytics.html` only. Do not move that queue into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
+
+### 4.7 Validation and Human Review
 
 Any code or data change should keep these passing when commands can run:
 
@@ -131,19 +147,6 @@ npm run validate:all
 ```
 
 When Aaron says continue and the environment cannot run validation, continue the repo work, state that validation was not run, and treat Aaron's live visual review as the immediate review gate. Do not claim validation passed unless it actually ran.
-
-## 4. Roadmap Overview
-
-Only four stages matter for making the work research app function:
-
-```text
-Stage 1 — Stabilize pages, docs, runtime, validation, and deployment
-Stage 2 — Make the public dashboard useful for daily work research
-Stage 3 — Make public opportunity data clearer and safer
-Stage 4 — Make planning views useful
-```
-
-No backend, private workflow, production architecture, LMS integration, scraping automation, Firecrawl restoration, or unrelated platform planning belongs in this roadmap.
 
 ---
 
@@ -158,7 +161,7 @@ Make the current static app load correctly, validate correctly, deploy from `res
 ```text
 npm run validate:all passes in a real workspace or GitHub Actions.
 GitHub Pages deploys the current research-version branch.
-README matches the real active page list, nav, runtime ownership, and current page-specific filter scope.
+README matches the real active page list, nav, runtime ownership, current page-specific filter scope, and data counts.
 ROADMAP.md and this AI roadmap match current public scope.
 Legal and white pages match public-safe app behavior.
 Navigation is consistent with intended header/footer placement.
@@ -170,16 +173,11 @@ No active Firecrawl/scraping runner exists.
 
 ## Tasks
 
-1. Fix validation contract drift before additional feature work.
-2. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned.
-3. Keep retired files out of public pages:
-   - `assets/confidence-badges.js`
-   - `assets/research-queue-page.js`
-   - `assets/opportunities-promoter-filter.js`
-   - `assets/opportunities-date-sort.js`
-   - `assets/iatse-page.js`
-4. Confirm public-safe rendering on cards, modals, map popups, schedule cards, Sources, Contribute, white pages, and legal pages.
-5. Keep `data/packages/festival-research-master-list.js` as an intake asset until individual records are verified.
+1. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned with current behavior.
+2. Keep source links centralized on Sources.
+3. Keep Schedule off header nav until its rebuild is ready.
+4. Keep Analytics queue documented as supplemental audit scaffolding only.
+5. Keep public pages free of private/sensitive information.
 6. Confirm live visual review reflects `research-version`, not stale `main` or failed deploy output.
 
 ---
@@ -188,7 +186,7 @@ No active Firecrawl/scraping runner exists.
 
 ## Goal
 
-Make the app useful as a public work-research command center instead of an internal research queue.
+Make the app useful as a public work-research command center without confusing supplemental audit scaffolding for the primary public workflow.
 
 ## Done When
 
@@ -209,13 +207,13 @@ Home should explain the app quickly and route users to Guide, Opportunities, Cal
 
 The Guide callout belongs at the top of the home app content, not in the hero and not in header nav.
 
-### 2.2 Keep Research Queue Private
+### 2.2 Keep Research Queue Scoped
 
-The internal research queue lives outside the public GitHub Pages app. Do not reintroduce a public research-queue panel or internal next-action dashboard.
+The action-first research queue currently lives only on supplemental `analytics.html`. It must not be exposed as a primary public workflow, public card element, popup element, map popup element, schedule card element, or public filter unless Aaron reopens that scope.
 
 ### 2.3 Improve Current Filters
 
-Improve empty states and counts for the current page-specific filters. Do not remove state or department filters from Opportunities/Map unless Aaron explicitly changes that decision.
+Improve empty states and counts for the current page-specific filters. Do not add a Map department filter unless Aaron explicitly changes that decision.
 
 ### 2.4 Keep Sorting Practical but Not Publicly Scored
 
@@ -285,6 +283,10 @@ affiliate-disclosure.html
 contact-data-requests.html
 ```
 
+### 3.5 Maintain Festival Registry Accuracy
+
+`data/packages/festival-research-master-list.js` is the reconciled registry and intake control file. It currently contains 258 records. Do not treat a registry record as active public opportunity data unless it is verified and promoted or matched into active app data.
+
 ---
 
 # Stage 4 — Make Planning Views Useful
@@ -321,9 +323,11 @@ Which events are unmapped or public-TBD?
 What should I inspect next?
 ```
 
+Current map state: 249 of 254 opportunity records have coordinates. Refine city-centroid coordinates to venue-precise only when reliable public location information exists.
+
 ### 4.3 Improve Schedule View
 
-Schedule is local browser planning only. It should stay public-safe.
+Schedule is local browser planning only and is currently off public header navigation. It should stay public-safe.
 
 Improve it to show:
 
@@ -342,13 +346,14 @@ Do not store private plans, contacts, pay, lodging, outreach notes, or personal 
 
 ### 4.4 2026/2027 Rollover Cleanup
 
-The decided model is separate year-specific records. The current rollover bridge creates `*-2027` records at runtime for verified public 2027 cycles and archives the corresponding active `*-2026` source records.
+The decided model is separate year-specific records. The current rollover bridge creates `*-2027` records at runtime for verified public 2027 cycles and archives the corresponding active `*-2026` source records. `public-cycle-scope.js` keeps future-year records out of the default 2026 public view.
 
 Future cleanup:
 
 ```text
 Move verified *-2027 records into canonical opportunity data.
 Shrink or retire data/packages/opportunity-rollover-2027.js.
+Reassess data/packages/public-cycle-scope.js after core owner-file cycle controls exist.
 Keep pending 2027 records hidden until public source dates are verified.
 ```
 
@@ -388,15 +393,14 @@ avoid raw source links in popups
 Use this order unless Aaron reprioritizes:
 
 ```text
-1. Fix validation/deploy drift created by current nav/runtime decisions.
-2. Align README, ROADMAP, AI protocol files, and collaboration logs with current decisions.
-3. Confirm deploy from research-version and live visual review.
-4. Preserve the current page-specific filters unless Aaron changes them.
-5. Improve Schedule mobile usability.
-6. Improve filter empty states.
-7. Standardize public cards and modals.
-8. Continue public source and producer/promoter verification for priority records.
-9. Canonicalize verified 2027 records after deployment/validation are stable.
+1. Run or trigger npm run validate:all in a real workspace or GitHub Actions environment.
+2. Confirm the live site is serving research-version output.
+3. Spot-check public pages on mobile, especially nav, filters, IATSE, Employers, Opportunities, Map, Analytics, and Schedule direct URL.
+4. Improve Schedule mobile usability before restoring it to header nav.
+5. Improve filter empty states.
+6. Continue public source and producer/promoter verification for priority records.
+7. Refine remaining map coordinates when exact public venue/location data is available.
+8. Canonicalize verified 2027 records after validation/deploy are stable.
 ```
 
 ## What This Roadmap Excludes
