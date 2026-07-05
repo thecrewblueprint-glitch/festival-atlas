@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION whenever the precached list below changes.
-var CACHE_VERSION = 'atlas-shell-v2';
+var CACHE_VERSION = 'atlas-shell-v3';
 
 var PRECACHE = [
   '/',
@@ -8,9 +8,9 @@ var PRECACHE = [
   '/favicon.svg',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
-  '/assets/atlas.css?v=atlas6',
-  '/assets/atlas-core-v2.js?v=multi29',
-  '/assets/site-footer.js?v=footer13',
+  '/assets/atlas.css?v=atlas7',
+  '/assets/atlas-core-v2.js?v=multi30',
+  '/assets/site-footer.js?v=footer14',
   '/assets/icons.js?v=icons1'
 ];
 
