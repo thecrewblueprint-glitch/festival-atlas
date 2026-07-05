@@ -225,7 +225,7 @@ if (exists(masterListFile)) {
     check(allowedMasterStatuses.has(master.status), `festival master list status is not recognized: ${master.status}`);
     check(Array.isArray(master.records), 'festival master list records must be an array');
     if (Array.isArray(master.records)) {
-      check(master.records.length === 161, `festival master list must contain 161 records, found ${master.records.length}`);
+      check(master.records.length === 258, `festival master list must contain 258 records, found ${master.records.length}`);
       const seqSeen = new Set();
       const nameYearSeen = new Set();
       master.records.forEach((record, index) => {
@@ -235,7 +235,7 @@ if (exists(masterListFile)) {
         seqSeen.add(record.sequence);
         check(record.name, `${label}: missing name`);
         check(record.year === 2026 || record.year === 2027, `${label}: year must be 2026 or 2027`);
-        check(Number.isInteger(record.batch) && record.batch >= 1 && record.batch <= 8, `${label}: batch must be 1–8`);
+        check(Number.isInteger(record.batch) && record.batch >= 1 && record.batch <= 13, `${label}: batch must be 1–13`);
         check(allowedResearchStatuses.has(record.researchStatus), `${label}: unrecognized researchStatus: ${record.researchStatus}`);
         if (record.opportunityId) {
           check(/^[a-z0-9-]+$/.test(record.opportunityId), `${label}: invalid opportunityId: ${record.opportunityId}`);
