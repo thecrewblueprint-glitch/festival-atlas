@@ -73,7 +73,6 @@ const retiredRuntimeReferences = [
   'assets/opportunities-promoter-filter.js',
   'assets/opportunities-date-sort.js',
   'assets/iatse-page.js',
-  'assets/research-queue-page.js',
   'assets/confidence-badges.js'
 ];
 
