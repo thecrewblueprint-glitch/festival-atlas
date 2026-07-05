@@ -1,5 +1,5 @@
 // Bump CACHE_VERSION whenever the precached list below changes.
-var CACHE_VERSION='atlas-shell-v1';
+var CACHE_VERSION='atlas-shell-v2';
 var PRECACHE=[
   '/',
   '/index.html',
@@ -7,9 +7,9 @@ var PRECACHE=[
   '/favicon.svg',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
-  '/assets/atlas.css?v=atlas5',
-  '/assets/atlas-core-v2.js?v=multi28',
-  '/assets/site-footer.js?v=footer12',
+  '/assets/atlas.css?v=atlas6',
+  '/assets/atlas-core-v2.js?v=multi29',
+  '/assets/site-footer.js?v=footer13',
   '/assets/icons.js?v=icons1'
 ];
 var OFFLINE_HTML='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline — Production Atlas</title><style>body{font-family:system-ui,sans-serif;background:#0c1219;color:#f2f3f5;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:24px;text-align:center}main{max-width:420px}h1{color:#f5b400}a{color:#f5b400}</style></head><body><main><h1>You are offline</h1><p>This page has not been saved for offline use yet. Reconnect and try again.</p><p><a href="/index.html">Back to Home</a></p></main></body></html>';
