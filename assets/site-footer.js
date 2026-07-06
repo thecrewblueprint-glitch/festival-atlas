@@ -7,7 +7,7 @@
         '<a class="site-support-link" href="'+SUPPORT_URL+'" target="_blank" rel="noopener">Optional support ↗</a>'+
       '</div>'+
       '<div class="site-footer-brand">'+
-        '<b>Production Atlas</b>'+
+        '<img class="site-footer-logo" src="assets/brand/production-atlas-logo-lockup.svg" alt="Production Atlas logo">'+
         '<span>A public work-mapping tool for live-event production contractors, created by <a href="https://deadhanglaborllc.com" target="_blank" rel="noopener">Deadhang Labor LLC</a>.</span>'+
       '</div>'+
       '<div class="site-footer-columns">'+
@@ -26,7 +26,7 @@
       '.site-footer-inner{max-width:1240px;margin:auto;padding:28px 20px 34px;color:var(--muted)}'+
       '.site-support-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px;padding:14px 16px;border:1px solid rgba(245,180,0,.22);border-radius:18px;background:rgba(245,180,0,.055)}'+
       '.site-support-copy{display:grid;gap:3px}.site-support-copy b{color:#fff;font-size:.95rem}.site-support-copy span{color:var(--muted);font-size:.88rem;max-width:760px}.site-support-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid rgba(245,180,0,.42);border-radius:999px;padding:9px 13px;color:#ffd66b;text-decoration:none;font-weight:900;background:rgba(245,180,0,.08)}.site-support-link:hover{background:rgba(245,180,0,.15);color:#fff}'+
-      '.site-footer-brand{display:grid;gap:4px;margin-bottom:18px}.site-footer-brand b{color:#fff;font-size:1rem}.site-footer-brand span{max-width:760px}'+
+      '.site-footer-brand{display:grid;grid-template-columns:minmax(0,420px) 1fr;align-items:center;gap:16px;margin-bottom:18px}.site-footer-logo{display:block;width:100%;max-width:420px;height:auto;border:1px solid rgba(245,180,0,.18);border-radius:16px;background:#050708}.site-footer-brand span{max-width:760px}'+
       '.site-footer-columns{display:grid;grid-template-columns:1.1fr 1.25fr 1.65fr;gap:18px}'+
       '.site-footer-columns h4{margin:0 0 8px;color:#ffd66b;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}'+
       '.site-footer-columns a{display:inline-block;margin:0 14px 8px 0;color:#cfe4ff;text-decoration:none;font-weight:800}.site-footer-columns a:hover{text-decoration:underline;color:#fff}'+
@@ -34,8 +34,9 @@
       '.site-banner{background:rgba(245,180,0,.10);border-bottom:1px solid rgba(245,180,0,.22);padding:7px 20px;font-size:.82rem;color:var(--muted);text-align:center}'+
       '.site-banner a{color:#ffd66b;font-weight:700;text-decoration:none}.site-banner a:hover{text-decoration:underline}'+
       '.nav .wrap{position:relative}.nav .filters{width:100%;margin-left:0}'+
+      '.hero .wrap{position:relative}.site-hero-mark{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:104px;height:104px;border-radius:22px;box-shadow:0 20px 55px rgba(0,0,0,.38),0 0 34px rgba(245,180,0,.12);border:1px solid rgba(245,180,0,.25);background:#050708}.home-visual-banner{max-width:1240px;margin:22px auto 0;padding:0 20px}.home-visual-banner img{display:block;width:100%;height:auto;border-radius:22px;border:1px solid rgba(245,180,0,.18);box-shadow:0 24px 70px rgba(0,0,0,.38);background:#050708}'+
       '.step-n{display:none!important}.steps .step-card{padding-top:22px}.steps .step-card h4{margin-top:0}.steps .step-card::before{content:"";display:block;width:34px;height:3px;border-radius:999px;background:rgba(245,180,0,.65);margin:0 0 12px}'+
-      '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}.site-support-card{display:grid}.site-support-link{width:100%}}';
+      '@media(max-width:900px){.site-footer-columns{grid-template-columns:1fr 1fr}.site-footer-brand{grid-template-columns:1fr}.site-hero-mark{position:static;transform:none;margin-top:18px;width:92px;height:92px}}@media(max-width:760px){.site-footer-columns{grid-template-columns:1fr}.site-footer-columns a{display:block;margin:0 0 10px}.site-support-card{display:grid}.site-support-link{width:100%}.site-footer-logo{max-width:100%}.home-visual-banner{margin-top:16px;padding:0 14px}.home-visual-banner img{border-radius:16px}}';
     document.head.appendChild(style);
   }
   function normalizeNav(){
@@ -59,6 +60,25 @@
     banner.innerHTML='Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.';
     nav.parentNode.insertBefore(banner,nav);
   }
+  function installBrandImages(){
+    var heroWrap=document.querySelector('.hero .wrap');
+    if(heroWrap&&!heroWrap.querySelector('.site-hero-mark')){
+      var mark=document.createElement('img');
+      mark.className='site-hero-mark';
+      mark.src='assets/brand/production-atlas-mark.svg';
+      mark.alt='Production Atlas mark';
+      heroWrap.appendChild(mark);
+    }
+    if(document.body&&document.body.dataset.page==='home'&&!document.querySelector('.home-visual-banner')){
+      var hero=document.querySelector('.hero');
+      if(hero){
+        var banner=document.createElement('section');
+        banner.className='home-visual-banner';
+        banner.innerHTML='<img src="assets/web/production-atlas-hero-banner.svg" alt="Production Atlas live-event production work map banner">';
+        hero.parentNode.insertBefore(banner,hero.nextSibling);
+      }
+    }
+  }
   function installMapStateBoundaryOverlay(){
     if(!document.body||document.body.dataset.page!=='map')return;
     if(document.querySelector('script[data-map-state-boundary-overlay]'))return;
@@ -78,6 +98,7 @@
   }
   function install(){
     installStyles();
+    installBrandImages();
     installSiteBanner();
     normalizeNav();
     persistSideScroll();
@@ -88,5 +109,5 @@
     if(footer)footer.innerHTML=footerHtml();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  setTimeout(function(){normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();installCalendarDotLegend();},500);
+  setTimeout(function(){installBrandImages();normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();installCalendarDotLegend();},500);
 })();
