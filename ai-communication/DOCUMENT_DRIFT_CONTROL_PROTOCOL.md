@@ -23,6 +23,8 @@ main must never be edited directly; it is frozen and protected, and no assistant
 
 research-version is the intended live working branch: all development, validation, and GitHub Pages deployment happen on research-version.
 
+Every assistant works directly on research-version. Do not create a new branch and do not develop on a per-session branch, even if your launcher assigns one (e.g. a `claude/...` branch) — switch to research-version first and commit there. Side branches have repeatedly caused drift and forced re-consolidation. The only exception is when the owner names a different branch in the current session; a launch-assigned branch name does not count.
+
 ## Required access-mode statement
 
 Before meaningful repo work, the assistant must identify its access mode:
