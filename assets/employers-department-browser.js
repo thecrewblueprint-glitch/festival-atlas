@@ -147,7 +147,7 @@
       typeSelect.dataset.employerBrowserFilled='true';
     }
   }
-  var EMP_PER_PAGE=10;
+  var EMP_PER_PAGE=12;
   var empPage=0,empSig='__init';
   function pageList(page,pages){var c=page+1,a=[],i;for(i=1;i<=pages;i++){if(i===1||i===pages||(i>=c-1&&i<=c+1))a.push(i);else if(a[a.length-1]!=='…')a.push('…');}return a;}
   function empPager(page,pages,total,per){if(pages<=1)return '';var start=page*per,end=Math.min(total,start+per);var nums=pageList(page,pages).map(function(p){if(p==='…')return '<span class="pager-gap">…</span>';var idx=p-1;return '<button class="btn pager-num'+(idx===page?' active':'')+'" type="button"'+(idx===page?' aria-current="page"':'')+' onclick="empPageSet('+idx+')" aria-label="Page '+p+'">'+p+'</button>'}).join('');return '<div class="pager"><div class="pager-row"><button class="btn" type="button"'+(page<=0?' disabled':'')+' onclick="empPageSet('+(page-1)+')" aria-label="Previous results">‹ Prev</button><div class="pager-nums">'+nums+'</div><button class="btn" type="button"'+(page>=pages-1?' disabled':'')+' onclick="empPageSet('+(page+1)+')" aria-label="Next results">Next ›</button></div><span class="pager-info">Showing '+(start+1)+'–'+end+' of '+total+' · Page '+(page+1)+' of '+pages+'</span></div>'}
