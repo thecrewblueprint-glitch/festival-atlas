@@ -69,15 +69,6 @@
       mark.alt='Production Atlas mark';
       heroWrap.appendChild(mark);
     }
-    if(document.body&&document.body.dataset.page==='home'&&!document.querySelector('.home-visual-banner')){
-      var hero=document.querySelector('.hero');
-      if(hero){
-        var banner=document.createElement('section');
-        banner.className='home-visual-banner';
-        banner.innerHTML='<img src="assets/web/production-atlas-hero-banner.svg" alt="Production Atlas live-event production work map banner">';
-        hero.parentNode.insertBefore(banner,hero.nextSibling);
-      }
-    }
   }
   function installMapStateBoundaryOverlay(){
     if(!document.body||document.body.dataset.page!=='map')return;
@@ -109,5 +100,5 @@
     if(footer)footer.innerHTML=footerHtml();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  setTimeout(function(){installBrandImages();normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();installCalendarDotLegend();},500);
+  setTimeout(function(){normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();installCalendarDotLegend();},500);
 })();
