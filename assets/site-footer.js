@@ -59,15 +59,25 @@
     banner.innerHTML='Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.';
     nav.parentNode.insertBefore(banner,nav);
   }
+  function installMapStateBoundaryOverlay(){
+    if(!document.body||document.body.dataset.page!=='map')return;
+    if(document.querySelector('script[data-map-state-boundary-overlay]'))return;
+    var script=document.createElement('script');
+    script.src='assets/map-state-boundary-overlay.js?v=mapstates1';
+    script.dataset.mapStateBoundaryOverlay='true';
+    script.async=false;
+    document.head.appendChild(script);
+  }
   function install(){
     installStyles();
     installSiteBanner();
     normalizeNav();
     persistSideScroll();
     registerServiceWorker();
+    installMapStateBoundaryOverlay();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  setTimeout(function(){normalizeNav();persistSideScroll();},500);
+  setTimeout(function(){normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();},500);
 })();
