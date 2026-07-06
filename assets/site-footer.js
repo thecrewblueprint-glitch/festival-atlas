@@ -68,6 +68,14 @@
     script.async=false;
     document.head.appendChild(script);
   }
+  function installCalendarDotLegend(){
+    if(!document.body||document.body.dataset.page!=='calendar')return;
+    if(document.getElementById('calendar-dot-legend-style'))return;
+    var style=document.createElement('style');
+    style.id='calendar-dot-legend-style';
+    style.textContent='body[data-page="calendar"] .cal-status::after{content:"Gold dot = one festival on that day · click/tap a date to view festival list and approximate work-window details";display:block;margin-top:7px;color:#ffd66b;font-weight:800}';
+    document.head.appendChild(style);
+  }
   function install(){
     installStyles();
     installSiteBanner();
@@ -75,9 +83,10 @@
     persistSideScroll();
     registerServiceWorker();
     installMapStateBoundaryOverlay();
+    installCalendarDotLegend();
     var footer=document.querySelector('footer');
     if(footer)footer.innerHTML=footerHtml();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
-  setTimeout(function(){normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();},500);
+  setTimeout(function(){normalizeNav();persistSideScroll();installMapStateBoundaryOverlay();installCalendarDotLegend();},500);
 })();
