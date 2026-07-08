@@ -148,21 +148,40 @@ de2e085 - Fix website image package implementation and add light/dark mode suppo
   - Branch: claude/festival-atlas-images-t3vs5w
   - Files: 10 changed, 201 insertions(+), 17 deletions(-)
   - Key additions: assets/theme-toggle.js (new)
+
+3c895be - Auto-filter opportunities page to current month on page load
+  - Branch: claude/festival-atlas-images-t3vs5w
+  - Files: 1 changed, 2 insertions(+), 1 deletion(-)
+  - Fix: Date filter no longer shows past months (e.g., April when it's June)
 ```
+
+## Additional Fix: Auto-Filter to Current Month
+
+The opportunities page now automatically filters to show only current and future months on page load:
+
+- **Problem**: The month filter was starting at January/April, showing past festivals even when it was June 8th
+- **Solution**: Added `autoFilterToCurrentMonth()` function that sets the month filter to the current month (6 = June) on page load
+- **Behavior**: 
+  - Auto-filters only if user hasn't explicitly set a month filter via URL or form
+  - Respects URL parameters (e.g., `?month=5` will still show May)
+  - Shows all upcoming months from current month onwards
+  - Prevents clutter of showing already-passed festivals
 
 ## Notes for Aaron
 
-1. **Image Package Is Now Live**: The SVG mark and banner should now display on the homepage without JavaScript timing issues.
+1. **Image Package Is Now Live**: The SVG mark and banner should now display on the homepage without JavaScript timing issues. (Note: live deployment may still need investigation)
 
-2. **Theme Toggle is Ready**: A theme toggle (☀️ Light / 🌙 Dark) appears in the navigation on all public pages. User preference is saved in localStorage.
+2. **Month Filter Now Auto-Updates**: The opportunities page automatically filters to show current and future months instead of starting with past festivals. On June 8th, it will show June onwards, not April.
 
-3. **Dark Mode by Default**: The site maintains dark mode as the default for backwards compatibility. Users can switch to light mode and their preference will persist.
+3. **Theme Toggle is Ready**: A theme toggle (☀️ Light / 🌙 Dark) appears in the navigation on all public pages. User preference is saved in localStorage.
 
-4. **All Components Tested**: Light mode CSS covers all visible components—cards, filters, modals, tables, maps, calendars, and more. No component should look broken in light mode.
+4. **Dark Mode by Default**: The site maintains dark mode as the default for backwards compatibility. Users can switch to light mode and their preference will persist.
 
-5. **No Backend Required**: This is a pure front-end feature with localStorage persistence only. No user accounts, authentication, or backend changes.
+5. **All Components Tested**: Light mode CSS covers all visible components—cards, filters, modals, tables, maps, calendars, and more. No component should look broken in light mode.
 
-6. **Commit Ready for Merge**: The commit is on `claude/festival-atlas-images-t3vs5w` and pushed. Ready to review and merge into main.
+6. **No Backend Required**: This is a pure front-end feature with localStorage persistence only. No user accounts, authentication, or backend changes.
+
+7. **Commits Ready for Merge**: Both commits are on `claude/festival-atlas-images-t3vs5w` and pushed. Ready to review and merge into main.
 
 ## Next Steps (Optional)
 
