@@ -31,3 +31,15 @@ Corrected the website image package implementation so the repository-hosted bran
 
 - This intentionally uses the image package on the site rather than only storing the files in the repo.
 - Other pages that still reference older cached footer query strings may need their script version bumped later if browser caching prevents the sitewide hero/footer image updates from appearing immediately there. The homepage was explicitly bumped.
+
+## Validation status
+
+passed
+
+## Review after
+
+2026-07-15
+
+## Next action
+
+Verify homepage hero mark and banner SVGs display correctly on live site. If images don't appear, check for CDN caching issues or missing SVG rendering support in deployment environment.

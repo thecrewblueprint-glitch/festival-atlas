@@ -25,3 +25,15 @@ Added repository-hosted Production Atlas image assets needed for website sharing
 ## Note
 
 The full generated image package remains available as the downloadable ZIP from the chat. The repo now contains the live-site critical assets needed for Facebook/Open Graph preview behavior.
+
+## Validation status
+
+passed
+
+## Review after
+
+2026-07-15
+
+## Next action
+
+Monitor social preview rendering on live site. If images don't appear in shared links, check CDN cache and re-deploy assets.
