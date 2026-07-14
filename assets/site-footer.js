@@ -44,7 +44,7 @@
     if(!nav)return;
     document.querySelectorAll('.navInner a[href$="branches.html"],.navInner a[href="./branches.html"],.navInner a[href$="guide.html"],.navInner a[href="./guide.html"],.navInner a[href$="sources.html"],.navInner a[href="./sources.html"]').forEach(function(link){link.remove();});
   }
-  function persistSideScroll(){}
+  function persistSideScroll(){var nav=document.querySelector('.navInner');if(!nav)return;var activeLink=nav.querySelector('a.active');if(activeLink){activeLink.scrollIntoView({behavior:'auto',block:'nearest',inline:'center'});}}
   function registerServiceWorker(){
     if(!('serviceWorker' in navigator))return;
     if(location.protocol!=='https:'&&location.hostname!=='localhost')return;
