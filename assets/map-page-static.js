@@ -21,10 +21,14 @@
   function matches(opportunity){
     var f=filterValues();
     var hay=text(opportunity)+' '+(opportunity.departments||[]).map(branchName).join(' ').toLowerCase();
-    return (!f.q||hay.indexOf(f.q)>-1)
-      &&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)
-      &&(!f.state||opportunity.state===f.state)
-      &&(!f.month||String(opportunity.month)===f.month);
+    var monthMatch=!f.month||String(opportunity.month)===f.month;
+    if(!monthMatch)return false;
+    if(f.month)return (!f.q||hay.indexOf(f.q)>-1)&&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)&&(!f.state||opportunity.state===f.state);
+    var now=new Date();
+    var todayMs=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+    var endDate=parseDate(opportunity.endDate)||parseDate(opportunity.startDate);
+    var isFuture=endDate&&endDate.getTime()>=todayMs;
+    return isFuture&&(!f.q||hay.indexOf(f.q)>-1)&&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)&&(!f.state||opportunity.state===f.state);
   }
   function projected(coords){
     var lat=coords[0], lon=coords[1];
