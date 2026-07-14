@@ -20,7 +20,7 @@ body{margin:0;background:radial-gradient(circle at 82% -12%,rgba(242,183,5,.12),
 a{color:var(--blue);text-underline-offset:3px}
 a:hover{color:#b7d7ff}
 .wrap{max-width:1240px;margin:auto;padding:0 20px}
-.hero{padding:38px 0 26px;background:radial-gradient(circle at 84% -20%,rgba(242,183,5,.20),transparent 30%),linear-gradient(135deg,#101923 0,#17283b 58%,#26384b 100%);border-bottom:1px solid rgba(255,255,255,.10);color:#fff}
+.hero{padding:20px 0;background:radial-gradient(circle at 84% -20%,rgba(242,183,5,.20),transparent 30%),linear-gradient(135deg,#101923 0,#17283b 58%,#26384b 100%);border-bottom:1px solid rgba(255,255,255,.10);color:#fff;display:flex;align-items:center;justify-content:center}.hero img{display:block;max-width:100%;height:auto;max-width:1200px;border-radius:22px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#ffd66b;font-size:.76rem;text-transform:uppercase;letter-spacing:.16em;font-weight:900}
 .hero h1{font-size:clamp(2.25rem,5vw,4.55rem);line-height:.95;margin:.22em 0 .18em;text-transform:uppercase;letter-spacing:-.055em}
 .hero p,.lead{max-width:920px;color:#c6d0dc;line-height:1.62}
@@ -163,9 +163,6 @@ a.btn{text-decoration:none;display:inline-block}
 .save-star:focus-visible{outline:3px solid rgba(242,183,5,.45);outline-offset:2px}
 .save-star[aria-pressed="true"]{background:var(--gold2);color:#111827;border-color:var(--gold2)}
 #savedOnly.active{background:var(--gold2);color:#111827;border-color:var(--gold2)}
-.site-hero-mark{display:block;max-width:200px;height:auto;margin:18px auto 0;opacity:0.95}
-.home-visual-banner{display:flex;justify-content:center;align-items:center;padding:24px 0;background:rgba(0,0,0,.25)}
-.home-visual-banner img{display:block;max-width:100%;height:auto;max-width:1200px}
 html[data-theme="light"]{
   --bg:#f4f1ea;
   --paper:#ffffff;
