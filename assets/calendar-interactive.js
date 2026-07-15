@@ -22,15 +22,23 @@
     branch:(($('#branchFilter')||{}).value||''),
     region:(($('#regionFilter')||{}).value||''),
     month:(($('#monthFilter')||{}).value||''),
+    year:(($('#yearFilter')||{}).value||''),
     state:(($('#stateFilter')||{}).value||'')
   }}
   function matchesFilter(opportunity){
     var f=filterValues();
+    var start=parseDate(opportunity.startDate);
+    var end=parseDate(opportunity.endDate)||start;
+    if(!start||!end)return false;
+    var now=new Date();
+    var todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     var hay=JSON.stringify(opportunity||{}).toLowerCase()+' '+(opportunity.departments||[]).map(branchName).join(' ').toLowerCase();
-    return (!f.q||hay.indexOf(f.q)>-1)
+    return end>=todayStart
+      &&(!f.q||hay.indexOf(f.q)>-1)
       &&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)
       &&(!f.region||opportunity.region===f.region)
       &&(!f.month||String(opportunity.month)===f.month)
+      &&(!f.year||String(start.getFullYear())===f.year)
       &&(!f.state||opportunity.state===f.state);
   }
   function allEvents(){
@@ -146,7 +154,7 @@
     var month=state.cursor.getMonth();
     var todayKey=dateKey(new Date());
     return '<div class="calendar-app-frame">'+
-      '<div class="cal-weekdays app-weekdays">'+DAYS.map(function(day){return '<div>'+day+'</div>'}).join('')+'</div>'+
+      '<div class="cal-weekdays app-weekdays">'+DAYS.map(function(day){return '<div>'+day+'</div>';}).join('')+'</div>'+
       '<div class="cal-month-weeks">'+monthWeeks(state.cursor).map(function(week){
         var inWeek=eventsInRange(events,week.start,week.end,workRange).slice(0,8);
         var allInWeek=eventsInRange(events,week.start,week.end,workRange);
@@ -170,7 +178,7 @@
     var end=addDays(start,6);
     var rows=eventsInRange(events,start,end,workRange).slice(0,18);
     return '<div class="calendar-app-frame cal-week-app">'+
-      '<div class="cal-weekdays app-weekdays">'+days.map(function(day){return '<button type="button" onclick="openCalendarDay(\''+dateKey(day)+'\')"><b>'+DAYS[day.getDay()]+'</b><span>'+fmt(day,false)+'</span></button>'}).join('')+'</div>'+
+      '<div class="cal-weekdays app-weekdays">'+days.map(function(day){return '<button type="button" onclick="openCalendarDay(\''+dateKey(day)+'\')"><b>'+DAYS[day.getDay()]+'</b><span>'+fmt(day,false)+'</span></button>';}).join('')+'</div>'+
       '<div class="cal-week-track">'+(rows.length?rows.map(function(event,index){return combinedBar(event,start,end,index+1)}).join(''):'<p class="sub">No festivals or approximate work windows in this week under current filters.</p>')+'</div>'+
       '</div>';
   }
@@ -278,7 +286,6 @@
       '.cal-week-app{padding-bottom:10px}.cal-week-track{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(26px,auto);gap:6px;min-height:380px;padding:12px;background:#0e141c}.cal-week-track .cal-combined-bar{min-height:26px}'+
       '.cal-day-detail:hover{border-color:rgba(242,183,5,.58)}.cal-show-detail{border-color:rgba(242,183,5,.42)}.cal-work-detail{border-color:rgba(127,183,255,.42)}'+
       '.cal-date-cell:focus-visible,.cal-wm-header:focus-visible{outline:3px solid rgba(242,183,5,.6);outline-offset:-3px}'+
-      // Mobile week list
       '.cal-week-mobile{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0e141c}'+
       '.cal-wm-day{border-bottom:1px solid var(--line)}.cal-wm-day:last-child{border-bottom:0}'+
       '.cal-wm-day.today .cal-wm-header{box-shadow:inset 0 0 0 2px rgba(242,183,5,.45)}'+
@@ -294,7 +301,6 @@
       '.cal-wm-show{border:1px solid rgba(242,183,5,.6);background:rgba(242,183,5,.1);color:#ffd66b}'+
       '.cal-wm-work{border:1px dashed rgba(127,183,255,.5);background:rgba(127,183,255,.08);color:#9dc8ff}'+
       '.cal-wm-empty{opacity:.5}'+
-      // Responsive
       '@media(max-width:900px){.cal-app-toolbar{display:block}.cal-control-stack{justify-items:start;margin-top:12px}.calendar-app-frame{min-width:860px}.cal-status{display:block}.cal-status span{display:block;margin:2px 0}.cal-week-row{min-height:174px}}'+
       '@media(max-width:700px){'+
         '.cal-scroll{overflow:visible;border:none;border-radius:0;background:transparent;box-shadow:none}'+
