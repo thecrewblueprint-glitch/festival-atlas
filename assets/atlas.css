@@ -21,6 +21,9 @@ a{color:var(--blue);text-underline-offset:3px}
 a:hover{color:#b7d7ff}
 .wrap{max-width:1240px;margin:auto;padding:0 20px}
 .hero{position:relative;padding:38px 0 26px;background:radial-gradient(circle at 84% -20%,rgba(242,183,5,.20),transparent 30%),linear-gradient(135deg,#101923 0,#17283b 58%,#26384b 100%);border-bottom:1px solid rgba(255,255,255,.10);color:#fff}
+.hero-subtitle{padding:20px 0 18px;background:#0f1419;border-bottom:1px solid rgba(255,255,255,.08);color:#fff}
+.hero-subtitle .eyebrow{color:#ffd66b}
+.hero-subtitle h1{font-size:1.68rem;line-height:1.2;margin:8px 0 0;text-transform:uppercase;letter-spacing:-.055em}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#ffd66b;font-size:.76rem;text-transform:uppercase;letter-spacing:.16em;font-weight:900}
 .hero h1{font-size:clamp(2.25rem,5vw,4.55rem);line-height:.95;margin:.22em 0 .18em;text-transform:uppercase;letter-spacing:-.055em}
 .hero p,.lead{max-width:920px;color:#c6d0dc;line-height:1.62}
@@ -183,6 +186,7 @@ html[data-theme="light"]{
 }
 html[data-theme="light"] body{background:linear-gradient(180deg,#f4f1ea 0,#ede7dd 42%,#ede7dd 100%);color:var(--ink)}
 html[data-theme="light"] .hero{background:linear-gradient(135deg,#ece7db 0,#e8dcd0 58%,#f0e6d8 100%);border-bottom-color:rgba(24,32,42,.12);color:#18202a}
+html[data-theme="light"] .hero-subtitle{background:#f4f1ea;border-bottom-color:rgba(24,32,42,.08);color:#18202a}
 html[data-theme="light"] .eyebrow{color:#b87900}
 html[data-theme="light"] .hero p,.hero.light p{color:var(--ink)}
 html[data-theme="light"] .nav{background:rgba(255,255,255,.92);border-bottom-color:var(--line)}
