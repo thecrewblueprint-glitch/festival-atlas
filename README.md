@@ -3,7 +3,7 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-07-05
+Updated: 2026-07-15
 
 Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter and employer-route leads, review source references, and plan scheduling.
 
@@ -33,7 +33,7 @@ Public site: https://atlas.thecrewblueprint.com/
 
 ## Current state snapshot
 
-Current repo-visible app state as of 2026-07-05:
+Current repo-visible app state as of 2026-07-15:
 
 ```text
 Public app type: static GitHub Pages app
@@ -217,9 +217,9 @@ Aaron has intentionally reopened the public filter decision. Do not revert the a
 Current page-specific filter direction:
 
 ```text
-opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month
-calendar.html: date/month, plus any page-specific calendar controls
-map.html: state and date/month; no department filter in current UI
+opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month, year (2026/2027)
+calendar.html: date/month, year (2026/2027), plus any page-specific calendar controls
+map.html: state, date/month, year (2026/2027); no department filter in current UI
 employers.html: text search (name, type, state), department, state, employer type
 sources.html: festival, department, employer
 schedule.html: date/month (off public navigation; reachable by direct URL only)
@@ -227,6 +227,8 @@ iatse.html: text search for local number, city, state, state abbreviation, craft
 ```
 
 Opportunities and Employers paginate results 10 per page with a numbered Prev/Next jumper; changing any search or filter resets to page 1. The IATSE page is tabbed (How to join / Find a local / About IATSE) and paginates its local directory the same way.
+
+Year filter (2026/2027 toggle) is available on Opportunities, Calendar, and Map pages to separate calendar cycles. Users can view all dates, filter to 2026 only, or filter to 2027 only. Filter selections persist through URL parameters.
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
@@ -386,7 +388,9 @@ Accommodation, travel, lodging, per diem, and similar worker-support details are
 
 The chosen rollover model is separate year-specific records.
 
-`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view. `data/packages/public-cycle-scope.js` additionally keeps the default public 2026 view from mixing in future-year records unless the app scope is changed.
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view. `data/packages/public-cycle-scope.js` keeps the default public view from mixing in future-year records unless the app scope is changed.
+
+Year filtering allows users to explicitly select between 2026, 2027, or all dates. The year filter is implemented via URL parameters (year=2026, year=2027) and is available on Opportunities, Calendar, and Map pages. Filter selections persist and can be shared via URL.
 
 Do not expand the older mutation model where a visible `*-2026` record becomes a 2027 opportunity. Long-term cleanup should move verified `*-2027` records into canonical opportunity data and then shrink or retire the bridge.
 

@@ -1,5 +1,6 @@
 Status: complete
 Created: 2026-07-05
+Review after: 2026-07-22
 Assistant: ChatGPT
 Branch: research-version
 Commits: 88120394ca7ffdb3cd9f89ec377642881b2cfaca, ff3a87c8b36b02fcfc643227b1caefb9e4578d0d
@@ -27,7 +28,15 @@ Corrected the website image package implementation so the repository-hosted bran
 - `assets/web/production-atlas-hero-banner.svg`
 - `assets/brand/production-atlas-logo-lockup.svg`
 
+## Validation status
+
+✅ Images integrated into homepage — hero banner, footer branding, and footer mark now visible on published site.
+
 ## Notes
 
 - This intentionally uses the image package on the site rather than only storing the files in the repo.
 - Other pages that still reference older cached footer query strings may need their script version bumped later if browser caching prevents the sitewide hero/footer image updates from appearing immediately there. The homepage was explicitly bumped.
+
+## Next action
+
+Monitor deployed site to confirm images render correctly. If images don't appear on secondary pages, update cache-busting version numbers on those pages' script references to site-footer.js and related assets.

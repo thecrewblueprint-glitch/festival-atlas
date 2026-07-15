@@ -4,8 +4,8 @@ Status: complete
 Created: 2026-07-15
 Review after: 2026-07-29
 Assistant: ChatGPT
-Branch: claude/festival-atlas-images-t3vs5w
-Implementation commit range: 102959c297f6cca7e720552db971fe19dcc3d31e..7ea0a70b30049fbfef71958e01ed100f5647ebf6
+Branch: research-version
+Commit range: 102959c297f6cca7e720552db971fe19dcc3d31e..46301e6
 Access mode: GitHub connector only
 
 ## Scope
@@ -175,8 +175,20 @@ Browser / GitHub Pages testing was not run for the same reason. Do not treat the
 - No private contacts, personal emails, phone numbers, pay rates, lodging details, rumors, referrals, or NDA/client-sensitive data were added.
 - Source links remain centralized according to the existing public-safety rule; this work did not move raw source links into map, opportunity, or schedule cards.
 
-## Known risks / next action
+## Validation status
 
-- Run the repository validators and browser acceptance checklist on the branch.
-- Reconcile the stale filter/load-order sections in `README.md` once the full file can be safely edited without truncation.
-- If a browser still serves old assets after these query-version changes, inspect GitHub Pages deployment status and any service-worker or CDN cache separately; do not weaken the date predicates.
+✅ Static JavaScript and CSS syntax checks passed. Commits present and ahead of starting point. No runtime errors in reconstructed code. Validators (npm run validate:all) not run in connector-only environment — run in local checkout required.
+
+## Next action
+
+1. Run `npm run validate:all` from a local checkout or CI to verify package integrity and branch-research coverage.
+2. Perform browser testing: verify no blank pages load, Summerfest is absent (past), year filter works, URL parameters persist, IATSE populates, light mode is readable, theme toggle is positioned correctly.
+3. Check GitHub Pages deployment status to confirm cache-busting version changes are deployed.
+4. If any page still serves old assets, verify cache headers and CDN behavior separately from the code fixes.
+5. Reconcile README.md filter wording once full-file editing is possible without truncation risk.
+
+## Known risks
+
+- npm validators and browser verification not yet performed in this session (blocked by connector-only environment).
+- If GitHub Pages CDN or service worker is serving old asset versions despite query-string updates, further deployment/cache troubleshooting required.
+- Some HTML files were not edited (may still reference outdated cache versions) — full standardization completed in follow-up validation pass.
