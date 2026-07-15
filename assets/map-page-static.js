@@ -16,23 +16,19 @@
     q:(($('#q')||{}).value||'').trim().toLowerCase(),
     branch:(($('#branchFilter')||{}).value||''),
     state:(($('#stateFilter')||{}).value||''),
-    month:(($('#monthFilter')||{}).value||''),
-    year:(($('#yearFilter')||{}).value||'')
+    month:(($('#monthFilter')||{}).value||'')
   }}
   function matches(opportunity){
     var f=filterValues();
     var hay=text(opportunity)+' '+(opportunity.departments||[]).map(branchName).join(' ').toLowerCase();
-    var startDate=parseDate(opportunity.startDate);
-    var endDate=parseDate(opportunity.endDate)||startDate;
-    if(!startDate||!endDate)return false;
+    var monthMatch=!f.month||String(opportunity.month)===f.month;
+    if(!monthMatch)return false;
+    if(f.month)return (!f.q||hay.indexOf(f.q)>-1)&&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)&&(!f.state||opportunity.state===f.state);
     var now=new Date();
     var todayMs=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
-    return endDate.getTime()>=todayMs
-      &&(!f.month||String(opportunity.month)===f.month)
-      &&(!f.year||String(startDate.getFullYear())===f.year)
-      &&(!f.q||hay.indexOf(f.q)>-1)
-      &&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)
-      &&(!f.state||opportunity.state===f.state);
+    var endDate=parseDate(opportunity.endDate)||parseDate(opportunity.startDate);
+    var isFuture=endDate&&endDate.getTime()>=todayMs;
+    return isFuture&&(!f.q||hay.indexOf(f.q)>-1)&&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)&&(!f.state||opportunity.state===f.state);
   }
   function projected(coords){
     var lat=coords[0], lon=coords[1];
@@ -44,7 +40,7 @@
   function rows(){
     var coords=window.RESOURCE_OPP_COORDS||{};
     return (window.scopedOpportunities||[]).filter(matches).map(function(opportunity){
-      return {opportunity:opportunity,coords:coords[opportunity.id]||coords[opportunity.previousCycleId]};
+      return {opportunity:opportunity,coords:coords[opportunity.id]};
     }).sort(function(a,b){return (parseDate(a.opportunity.startDate)||new Date(9999,0,1))-(parseDate(b.opportunity.startDate)||new Date(9999,0,1));});
   }
   function pageList(page,pages){var c=page+1,a=[],i;for(i=1;i<=pages;i++){if(i===1||i===pages||(i>=c-1&&i<=c+1))a.push(i);else if(a[a.length-1]!=='…')a.push('…')}return a}

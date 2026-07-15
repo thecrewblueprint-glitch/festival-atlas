@@ -7,7 +7,10 @@
     "validate:data": "node tools/validate-data.js",
     "validate:branch-research": "node tools/validate-branch-research-packages.js",
     "validate:static-app": "node tools/validate-static-app.js",
-    "validate:all": "npm run validate:data && npm run validate:branch-research && npm run validate:static-app"
+    "audit": "node tools/audit-watcher.js",
+    "audit:verbose": "node tools/audit-watcher.js --verbose",
+    "audit:json": "node tools/audit-watcher.js --json",
+    "validate:all": "npm run validate:data && npm run validate:branch-research && npm run validate:static-app && npm run audit"
   },
   "engines": {
     "node": ">=18"
