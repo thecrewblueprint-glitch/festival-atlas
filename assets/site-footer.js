@@ -89,7 +89,6 @@
   }
   function install(){
     installStyles();
-    installBrandImages();
     installSiteBanner();
     normalizeNav();
     persistSideScroll();
