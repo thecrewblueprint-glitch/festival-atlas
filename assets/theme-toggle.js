@@ -55,11 +55,11 @@
   }
 
   function installToggle(){
-    var nav=document.querySelector('.navInner');
-    if(!nav)return;
+    var header=document.querySelector('header.hero');
+    if(!header)return;
     if(document.getElementById('theme-toggle'))return;
     var btn=createToggleButton();
-    nav.appendChild(btn);
+    header.appendChild(btn);
   }
 
   function installStyles(){
@@ -67,6 +67,7 @@
     var style=document.createElement('style');
     style.id='theme-toggle-style';
     style.textContent=''+
+      'header.hero .theme-toggle{position:absolute;top:14px;right:14px;z-index:10}'+
       '.theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;font-size:1.1rem;font-weight:900;padding:0;margin:0;transition:all .2s ease;text-decoration:none}'+
       '.theme-toggle:hover{border-color:rgba(245,180,0,.58);background:rgba(245,180,0,.08)}'+
       '.theme-toggle:focus-visible{outline:3px solid rgba(242,183,5,.45);outline-offset:2px}'+
