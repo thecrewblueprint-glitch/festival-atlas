@@ -187,9 +187,9 @@ html[data-theme="light"] .nav a{border-color:var(--line2);background:#ffffff;col
 html[data-theme="light"] .nav a:hover{border-color:rgba(184,121,0,.42);background:#fafaf8;color:#0d1117}
 html[data-theme="light"] .nav a.active{background:var(--gold2);color:#ffffff;border-color:var(--gold2);box-shadow:0 8px 18px rgba(184,121,0,.18)}
 html[data-theme="light"] .filters{border-color:rgba(184,121,0,.35);background:rgba(255,255,255,.82)}
-html[data-theme="light"] .filters input,.filters select,.btn{border-color:var(--line2);background:#ffffff;color:var(--ink)}
+html[data-theme="light"] .filters input,html[data-theme="light"] .filters select{border-color:var(--line2);background:#ffffff;color:var(--ink)}
 html[data-theme="light"] .filters input::placeholder{color:#8a9199}
-html[data-theme="light"] .filters input:focus,.filters select:focus{outline-color:rgba(184,121,0,.35);border-color:var(--gold2)}
+html[data-theme="light"] .filters input:focus,html[data-theme="light"] .filters select:focus{outline-color:rgba(184,121,0,.35);border-color:var(--gold2)}
 html[data-theme="light"] .btn{background:var(--gold2);color:#ffffff;border-color:var(--gold2)}
 html[data-theme="light"] .btn:hover{background:#c68800;color:#ffffff}
 html[data-theme="light"] .notice{border-color:rgba(184,121,0,.32);background:rgba(184,121,0,.12);color:#6d5000}
