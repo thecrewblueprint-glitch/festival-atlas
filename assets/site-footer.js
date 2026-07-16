@@ -26,12 +26,12 @@
       '.site-footer-inner{max-width:1240px;margin:auto;padding:28px 20px 34px;color:var(--muted)}'+
       '.site-support-card{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px;padding:14px 16px;border:1px solid rgba(245,180,0,.22);border-radius:18px;background:rgba(245,180,0,.055)}'+
       '.site-support-copy{display:grid;gap:3px}.site-support-copy b{color:#fff;font-size:.95rem}.site-support-copy span{color:var(--muted);font-size:.88rem;max-width:760px}.site-support-link{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;border:1px solid rgba(245,180,0,.42);border-radius:999px;padding:9px 13px;color:#ffd66b;text-decoration:none;font-weight:900;background:rgba(245,180,0,.08)}.site-support-link:hover{background:rgba(245,180,0,.15);color:#fff}'+
-      '.site-footer-brand{display:grid;grid-template-columns:minmax(0,420px) 1fr;align-items:center;gap:16px;margin-bottom:18px}.site-footer-logo{display:block;width:100%;max-width:420px;height:auto;border:1px solid rgba(245,180,0,.18);border-radius:16px;background:#050708}.site-footer-brand span{max-width:760px}'+
+      '.site-footer-brand{display:grid;grid-template-columns:minmax(0,240px) 1fr;align-items:center;gap:16px;margin-bottom:18px}.site-footer-logo{display:block;width:100%;max-width:240px;height:auto;border:1px solid rgba(245,180,0,.18);border-radius:14px;background:#050708}.site-footer-brand span{max-width:760px}'+
       '.site-footer-columns{display:grid;grid-template-columns:1.1fr 1.25fr 1.65fr;gap:18px}'+
       '.site-footer-columns h4{margin:0 0 8px;color:#ffd66b;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em}'+
       '.site-footer-columns a{display:inline-block;margin:0 14px 8px 0;color:#cfe4ff;text-decoration:none;font-weight:800}.site-footer-columns a:hover{text-decoration:underline;color:#fff}'+
       '.contribute-hero-btn{display:inline-block;margin-top:18px}'+
-      '.site-banner{background:rgba(245,180,0,.10);border-bottom:1px solid rgba(245,180,0,.22);padding:7px 20px;font-size:.82rem;color:var(--muted);text-align:center}'+
+      '.site-banner{margin:16px 0 0;padding:12px 18px;font-size:.9rem;color:var(--muted);text-align:center;background:rgba(245,180,0,.08);border:1px solid rgba(245,180,0,.22);border-radius:16px}'+
       '.site-banner a{color:#ffd66b;font-weight:700;text-decoration:none}.site-banner a:hover{text-decoration:underline}'+
       '.nav .wrap{position:relative}.nav .filters{width:100%;margin-left:0}'+
       '.hero .wrap{position:relative}.site-hero-mark{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:104px;height:104px;border-radius:22px;box-shadow:0 20px 55px rgba(0,0,0,.38),0 0 34px rgba(245,180,0,.12);border:1px solid rgba(245,180,0,.25);background:#050708}.home-visual-banner{max-width:1240px;margin:22px auto 0;padding:0 20px}.home-visual-banner img{display:block;width:100%;height:auto;border-radius:22px;border:1px solid rgba(245,180,0,.18);box-shadow:0 24px 70px rgba(0,0,0,.38);background:#050708}'+
@@ -51,14 +51,14 @@
     navigator.serviceWorker.register('/sw.js').catch(function(){});
   }
   function installSiteBanner(){
-    if(document.getElementById('site-banner'))return;
-    var nav=document.querySelector('.nav');
-    if(!nav)return;
-    var banner=document.createElement('div');
-    banner.id='site-banner';
-    banner.className='site-banner';
-    banner.innerHTML='Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.';
-    nav.parentNode.insertBefore(banner,nav);
+    if(document.getElementById('site-banner-wrap'))return;
+    var main=document.querySelector('main.page')||document.querySelector('main');
+    if(!main||!main.parentNode)return;
+    var wrap=document.createElement('div');
+    wrap.className='wrap';
+    wrap.id='site-banner-wrap';
+    wrap.innerHTML='<div id="site-banner" class="site-banner">Have festival or employer data to add? Submit it on the <a href="./contribute.html">Contribute page</a> &nbsp;·&nbsp; General comments go to <a href="./feedback.html">Feedback</a>.</div><hr class="section-divider">';
+    main.parentNode.insertBefore(wrap,main);
   }
   function installBrandImages(){
     var heroWrap=document.querySelector('.hero .wrap');

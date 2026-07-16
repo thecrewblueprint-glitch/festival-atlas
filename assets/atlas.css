@@ -263,3 +263,11 @@ html[data-theme="light"] .gantt-action .btn:hover{border-color:#e89090;color:#c4
 html[data-theme="light"] .pager-num:not(.active){background:var(--paper);color:var(--ink);border-color:var(--line2)}
 html[data-theme="light"] .pager .btn:disabled{background:var(--paper);color:var(--muted);border-color:var(--line2)}
 html[data-theme="light"] .home-visual-banner{background:rgba(24,32,42,.12)}
+/* Consistent page header: hero image -> nav -> page-head(title+desc) -> contribute bubble -> divider -> content */
+.page-head{padding:22px 0 2px}
+.page-head .eyebrow{margin-bottom:6px}
+.page-head h1{font-size:clamp(1.85rem,4.5vw,3rem);text-transform:uppercase;letter-spacing:-.045em;line-height:1;margin:2px 0 10px;color:#fff}
+.page-head p{max-width:940px;color:#c6d0dc;line-height:1.6;margin:0;font-size:1.02rem}
+hr.section-divider{border:0;border-top:1px solid var(--line);margin:16px 0 0}
+html[data-theme="light"] .page-head h1{color:#18202a}
+html[data-theme="light"] .page-head p{color:#3a4557}
