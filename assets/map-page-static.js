@@ -16,14 +16,17 @@
     q:(($('#q')||{}).value||'').trim().toLowerCase(),
     branch:(($('#branchFilter')||{}).value||''),
     state:(($('#stateFilter')||{}).value||''),
-    month:(($('#monthFilter')||{}).value||'')
+    month:(($('#monthFilter')||{}).value||''),
+    year:(($('#yearFilter')||{}).value||'')
   }}
   function matches(opportunity){
     var f=filterValues();
     var hay=text(opportunity)+' '+(opportunity.departments||[]).map(branchName).join(' ').toLowerCase();
     var monthMatch=!f.month||String(opportunity.month)===f.month;
     if(!monthMatch)return false;
-    if(f.month)return (!f.q||hay.indexOf(f.q)>-1)&&(!f.branch||(opportunity.departments||[]).indexOf(f.branch)>-1)&&(!f.state||opportunity.state===f.state);
+    var oppYear=String(opportunity.eventYear||opportunity.publicCycleYear||2026);
+    var yearMatch=!f.year||String(oppYear)===f.year;
+    if(!yearMatch)return false;
     var now=new Date();
     var todayMs=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
     var endDate=parseDate(opportunity.endDate)||parseDate(opportunity.startDate);
