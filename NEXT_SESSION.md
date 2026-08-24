@@ -2,7 +2,7 @@
 
 **Purpose:** lightweight interruption-recovery checkpoint. Repository/PR evidence outranks this file if they diverge.
 
-## Current canonical model
+## Canonical model
 
 - Accepted/deployment branch: `research-version`.
 - `main`: frozen/non-authoritative scaffolding.
@@ -10,18 +10,20 @@
 - Required validation: `npm run validate:all` when executable in the working environment.
 - Detailed historical collaboration records: `ai-communication/collaboration-log/`.
 
-## Active governance proposal
+## Governance state
 
-- Work branch: `chatgpt/governance-completion`
-- Objective: reconcile the old direct-to-`research-version` workflow with matrix PR-first governance while preserving Production Atlas safety, validation, and deployment architecture.
-- Product/site/data behavior: intentionally unchanged.
-- Validation status: repository-level/static review only in connector session; local `npm run validate:all` not executed here.
+The repository uses managed work branches and pull requests for substantive changes while preserving `research-version` as accepted/deployment state.
+
+This checkpoint intentionally does **not** encode a specific PR or work branch as permanently active. Open PRs and current Git refs are the authoritative source for active proposed work and must be inspected at session start.
+
+Product/site/data behavior is not changed by this governance model.
 
 ## Resume sequence
 
-1. Inspect the current PR/work-branch state for this governance proposal.
-2. Re-read `AGENTS.md` and `CLAUDE.md` diff against `research-version`.
-3. Confirm no product/data/deployment files changed.
-4. Run `npm run validate:all` in an executable environment if available before integration.
-5. Audit and merge only with applicable owner authority.
-6. After accepted merge, normalize this checkpoint to no active governance proposal.
+1. Refresh `research-version` and confirm its exact head.
+2. Inspect open PRs and relevant work branches before writing.
+3. Read `AGENTS.md` and `CLAUDE.md` for the current operating contract.
+4. Establish repository write authority before modifying a work branch.
+5. Reuse an existing matching PR when possible rather than creating duplicate work.
+6. Run `npm run validate:all` when executable before integrating substantive changes; if it cannot be run, record that accurately.
+7. Merge only with applicable owner authority, then verify accepted `research-version` state.
