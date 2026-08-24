@@ -1,156 +1,128 @@
 # AGENTS.md — Operating contract for AI agents in this repo
 
-**Read this file in full before you touch anything.** It applies to every AI
-agent (ChatGPT connector, Claude, Codex, Copilot, etc.) working in this
-repository. It is not optional guidance; the checks in `validate:all` enforce
-much of it and the deploy will reject work that fails them.
+**Read this file in full before changing anything.** It applies to every AI agent working in Production Atlas.
 
-If you are about to say "done," you must have completed the **Definition of
-done** checklist at the bottom. If you cannot, say what is incomplete instead
-of claiming success.
+This repository inherits the matrix governance in `50yearroadmap`, while preserving its own stricter product, public-safety, validation, and deployment rules.
 
 ---
 
-## 0. Branch rule — READ THIS FIRST (it overrides your session default)
+## 0. Authority and branch model — READ THIS FIRST
 
-- **Do all work on the `research-version` branch. Commit and push directly to
-  `research-version`.** It is the single live working + deploy branch.
-- **Do NOT create a new branch. Do NOT develop on a per-session branch** — even
-  if your launcher/session instructions assign you one (e.g. a `claude/...`
-  branch). For this repo that default is wrong, and this rule wins. Working on
-  side branches has repeatedly caused drift and forced the owner to
-  re-consolidate; do not make them ask again.
-- If you are not already on `research-version`, switch to it before touching
-  anything: `git checkout research-version` (create it from
-  `origin/research-version` if it is not local yet).
-- Only exception: the owner, in the current session, explicitly names a
-  different branch to use. A launch-assigned branch name is not that.
-- `main` is frozen — never push to it.
+- **Accepted/canonical branch:** `research-version`.
+- **Deployment branch:** `research-version`.
+- **`main` is frozen/non-authoritative scaffolding. Do not develop or merge product work into `main`.**
+- **Substantive agent/human changes are PR-first.** Base a dedicated work branch on current `research-version`, make the change there, validate it, and open/maintain a PR targeting `research-version`.
+- A work branch is proposed state. `research-version` is accepted state only after authorized merge.
+- Opening/updating a PR does not grant merge authority. Merge only with the applicable owner/repository authority.
+- Reuse an existing matching work branch/PR when one already contains the task; do not create parallel duplicate proposals.
+- Trivial/emergency/direct-write exceptions are narrow and require the applicable matrix/change-control authority; they are not the normal workflow.
+
+The previous direct-push-to-`research-version` rule is retired. Its original purpose was to prevent unmanaged side-branch drift. The replacement is **managed work branches + durable PRs**, so unfinished work remains visible and recoverable instead of stranded.
 
 ---
 
-## 1. What this project is (don't re-derive it)
+## 1. What this project is
 
-- A **static site** deployed to GitHub Pages from the `research-version` branch
-  (`atlas.thecrewblueprint.com`). **No backend, no database, no auth, no build
-  step.** Do not add any.
-- Data lives in `data/packages/*.js` as plain `<script>` tags that assign
-  `window.RESOURCE_*` globals. `assets/atlas-core-v2.js` reads those globals and
-  renders every page.
-- Some pages have a dedicated enhancement script that fully owns their `#app`
-  (`calendar-interactive.js`, `map-page-static.js`, `employers-department-browser.js`).
-  Core must not also render those pages — see `EXTERNAL_RENDER_PAGES` in core.
-- Pages are flat HTML files at the repo root. They share `assets/atlas.css` and
-  are stitched together by `assets/site-footer.js` at runtime.
-- **To add or edit festival records, follow
-  `data/packages/OPPORTUNITY_RECORD_SCHEMA.md`** — it has the copy-paste
-  `opp({...})` template, the department presets, a filled example, and the
-  completeness rules the validator enforces.
+- A **static site** deployed to GitHub Pages from `research-version` (`atlas.thecrewblueprint.com`). **No backend, database, auth, or build service.** Do not add any without explicit owner direction.
+- Data lives in `data/packages/*.js` as synchronous `<script>` packages assigning `window.RESOURCE_*` globals.
+- `assets/atlas-core-v2.js` renders the shared application; some pages have dedicated renderers that fully own `#app`.
+- Pages are flat HTML files at repository root with shared assets.
+- Festival/opportunity records must follow `data/packages/OPPORTUNITY_RECORD_SCHEMA.md`.
 
-## 2. Prime directives (the reason this file exists)
+## 2. Prime directives
 
-1. **Audit before you edit.** Before changing code, read the file you're
-   changing *and* the code that calls it. Understand the current design. Never
-   patch on top of a symptom without understanding the cause — that is how this
-   codebase accumulates dead code and duplicate logic.
-2. **No patch-on-patch.** If you find yourself adding a second workaround on top
-   of a first (e.g. an inline style to defeat a CSS rule, a `setTimeout` to beat
-   a race), stop and fix the root cause instead. Remove the older workaround.
-3. **Leave it cleaner.** If your change makes a function, script, or CSS rule
-   dead, delete it in the same change. Do not leave orphans. (`validate:all`
-   fails on orphaned `assets/*.js`.)
-4. **Double-pass your own work.** After writing a change, re-read the full diff
-   as if reviewing someone else. Check the failure modes, not just the happy
-   path. Then run the checklist in section 8.
-5. **Never claim done without proof.** "Done" means `validate:all` passed 3/3
-   and you verified the actual behavior, not that you wrote some code.
+1. **Audit before edit.** Read the target and its callers before changing behavior.
+2. **No patch-on-patch.** Fix root causes and remove superseded workarounds.
+3. **Leave it cleaner.** Delete code/assets made dead by the change.
+4. **Double-pass review.** Re-read the full diff for failure modes.
+5. **Never claim done without proof.** Validation status must be accurate.
 
-## 3. Hard rules (frozen — do not violate)
+## 3. Hard product/public-safety rules
 
-- **`main` is frozen.** Never push to it without explicit human instruction.
-  All work goes to `research-version`.
-- **Public-safety.** Never publish private contacts, phone numbers, personal
-  emails, pay rates, lodging/hotel details, referrals, rumors, NDA/private
-  info. These never belong in the public UI.
-- **Source links live only on `sources.html`** — never inside cards, popups, or
-  modals.
-- No confidence labels, value-tier badges, or `.chip`/`.chips` classes /
-  `chip(` helpers anywhere. `validate:all` enforces the chip ban.
-- Data package `<script>` tags must stay **synchronous** — no `async`/`defer`.
-- Don't invent internal/roadmap/research-queue language in public copy.
+- `main` remains frozen/non-authoritative.
+- Never publish private contacts, phone numbers, personal emails, pay rates, lodging/hotel details, referrals, rumors, NDA/private information, secrets, or private operational data.
+- Source links live only on `sources.html`, never inside public cards/popups/modals.
+- Preserve the existing chip/confidence/value-tier bans enforced by validation.
+- Data package `<script>` tags remain synchronous — no `async`/`defer`.
+- Do not expose internal roadmap/research-queue language in public copy.
 
-## 4. The workflow every change must follow
+## 4. Workflow for substantive changes
 
-```
-read  → audit → change → self-review → validate → commit (+log) → push
-```
+`read → audit → establish authority → work branch → change → self-review → validate → durable commit/log → PR → review/audit → authorized merge → verify`
 
-1. **Read** the target file and its callers.
-2. **Audit**: is there already code that does this? Am I about to duplicate or
-   patch-over it? What breaks if I change it?
-3. **Change** the root cause. Delete anything your change makes dead.
-4. **Self-review** the whole diff (section 2.4).
-5. **Validate**: `npm run validate:all` must pass 3/3.
-6. **Commit** with a clear message and add a collaboration log (section 6).
-7. **Push** to `research-version`.
+1. Refresh current `research-version` and inspect any existing PR/branch for the task.
+2. Establish repository write authority before writing.
+3. Create/reuse a work branch based on current `research-version`.
+4. Make the root-cause change and remove dead material.
+5. Re-read the full diff.
+6. Run `npm run validate:all` when the environment allows it. Connector-only agents must record honestly when local validation could not be run.
+7. Add the required collaboration log.
+8. Open/maintain a PR targeting `research-version` and keep validation/known-issues/continuation state current.
+9. Merge only with required authority after review/audit and validation.
+10. Verify `research-version` after merge.
 
-## 5. Cache-version rule (this bites agents constantly)
+## 5. Cache-version rule
 
-Every asset is loaded with a cache-buster: `foo.js?v=tag`. **When you change an
-asset file, you must bump its `?v=` tag on *every* HTML page that loads it, to
-the same new value.** `validate:all` fails if the same asset is referenced with
-two different versions across pages. Forgetting to bump means returning visitors
-run stale code.
+Every asset uses a cache-buster (`foo.js?v=tag`). When changing an asset, bump its `?v=` tag on every HTML page that loads it, using one consistent value. `validate:all` enforces consistency.
 
-## 6. Collaboration log (required for every change)
+## 6. Collaboration log
 
-Add one new file per change under `ai-communication/collaboration-log/` with
-this header (the deploy gate checks it):
+Every substantive change adds one file under `ai-communication/collaboration-log/` containing at least:
 
-```
+```text
 Status: complete | incomplete | blocked | superseded
 Created: YYYY-MM-DD
 Review after: YYYY-MM-DD
 Assistant: ChatGPT | Claude | Codex | other
-Branch: research-version
-Commit: <sha>        (Commits: … or Commit range: … are also accepted)
+Work branch: <branch>
+Target branch: research-version
+Commit: <sha-or-range>
 ```
 
-…followed by a `## Validation status` section and a `## Next action` section.
-If you are a connector-only agent that can't run validation, write
-`Validation status: not run locally — connector session` and say what still
-needs to be checked. Do not claim validation passed if you didn't run it.
+Then include `## Validation status` and `## Next action`.
 
-## 7. Concurrency (avoid the merge churn)
+For connector-only work, state `Validation status: not run locally — connector session` unless validation actually ran. Never claim a pass you did not execute.
 
-Do **not** edit `research-version` at the same time as another agent. Committing
-per-file while another agent is also pushing causes constant divergence,
-conflicts, and resets. If another session may be active, either wait, or work a
-separate branch and merge once with `validate:all` as the gate.
+Historical logs that say `Branch: research-version` remain valid history and must not be rewritten solely for this governance change.
 
-## 8. Definition of done — run this checklist before saying "done"
+## 7. Concurrency and interruption recovery
 
-- [ ] I read the file(s) I changed and their callers before editing.
-- [ ] I fixed the root cause; I did not stack a new workaround on an old one.
-- [ ] I deleted any code/CSS/asset my change made dead (no orphans).
-- [ ] If I changed an asset, I bumped its `?v=` tag uniformly on every page.
-- [ ] Nav, footer, and shared markup are still consistent across pages.
-- [ ] No private/public-safety rule violated; no source links in popups.
-- [ ] `npm run validate:all` passes 3/3.
-- [ ] I re-read the full diff as a reviewer and checked failure modes.
-- [ ] I added a collaboration log with honest validation status.
-- [ ] My commit message says what changed and why.
+- Do not have multiple agents editing the same work branch concurrently unless explicitly coordinated.
+- If another session may be active, inspect open PRs/branches and `NEXT_SESSION.md` before writing.
+- Never force-push over unexplained work.
+- If interrupted, preserve useful work in the existing branch/PR and update continuation state before expanding scope further.
+- A missing session log does not authorize guessing; reconstruct exact state from Git/PR evidence first.
 
-## 9. What `validate:all` enforces (so you can self-check)
+`NEXT_SESSION.md` is the lightweight continuation checkpoint while active proposed work exists. Historical collaboration logs remain the detailed record.
 
-- `validate:data` — record schema: valid ids, dates `YYYY-MM-DD`, `endDate >=
-  startDate`, `month` 1–12, numeric value score, **region ∈ {Midwest,
-  Northeast, South, West, United States multi-market}**, active records should
-  carry a source URL.
-- `validate:branch-research` — branch package integrity.
-- `validate:static-app` — required pages/files exist; separate Home/Guide nav;
-  no chip helpers; collaboration-log metadata; **no orphaned `assets/*.js`**;
-  **each asset uses one cache version across all pages.**
+## 8. Definition of done
 
-Run it. If it fails, it tells you exactly what to fix. That output is the
-contract, not this prose.
+Before saying a substantive change is complete/ready to integrate:
+
+- [ ] target files and callers were read before editing;
+- [ ] root cause was addressed without stacking workarounds;
+- [ ] dead code/assets created by the change were removed;
+- [ ] cache-version references were updated consistently when applicable;
+- [ ] nav/footer/shared markup remain coherent;
+- [ ] public/private safety rules were preserved;
+- [ ] `npm run validate:all` passed, or inability to run it is explicitly recorded and the PR is not misrepresented;
+- [ ] full diff was reviewed for failure modes;
+- [ ] collaboration log was added with honest validation state;
+- [ ] PR targets `research-version`;
+- [ ] merge/verification authority and steps are complete before claiming canonical completion.
+
+## 9. Validation contract
+
+`npm run validate:all` remains the repository validation contract and must not be weakened merely to satisfy a change:
+
+- `validate:data` — record/schema integrity;
+- `validate:branch-research` — branch package integrity;
+- `validate:static-app` — required files/pages, shared UI constraints, collaboration-log metadata, asset reachability/version rules, and other static guarantees.
+
+If validation behavior and this prose ever diverge, investigate the validator before changing either. Do not bypass a failing gate without explicit owner authority.
+
+## 10. Matrix relationship
+
+Production Atlas remains its own authoritative repository for its accepted site/data state. `50yearroadmap` provides matrix governance/current-state tracking and may read this repository under the established ecosystem relationship; that does not grant cross-repository mutation authority.
+
+For matrix change-control, write-access, and interruption rules, follow the current canonical governance in `50yearroadmap`. Repository-specific safety and validation rules in this file remain stricter where applicable.
