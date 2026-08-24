@@ -1,22 +1,20 @@
 # CLAUDE.md — Session Preferences
 
-## Never use AskUserQuestion (or any multiple-choice/decision-card UI)
+## Never use AskUserQuestion
 
-The owner's standing preference, applies here too: converse in plain text
-only. If blocked on a decision only the owner can make, ask directly in a
-normal chat message — don't render it as a card with selectable options.
+The owner's standing preference applies here: use normal conversational text for questions; do not render multiple-choice/decision-card UI.
 
-## Paired with 50yearroadmap
+## Start here
 
-This repo (**Production Atlas**) is governed by `50yearroadmap`'s
-`companies/production-atlas/` folder (see `09_sops.md`). **The canonical
-branch here is `research-version`, not `main`** — `main` is protected
-scaffolding only; don't develop there (see `50yearroadmap`'s
-`governance/REPOSITORY_AUTHORITY_MAP.md` for the full authority detail).
+Read `AGENTS.md` in full before changing anything. It is the canonical local operating contract for all agents and now contains the completed Production Atlas governance model.
 
-Every session should have both repos attached. If this is a fresh session:
-read `50yearroadmap`'s `AGENT_ORIENTATION.md` first, then this file. Write
-access to `50yearroadmap` requires an explicit ask and grant, even at
-session-end — see `governance/WRITE_ACCESS_PROTOCOL.md` there. Full
-governance package for this repo specifically: pending a dedicated
-owner-directed pass, not yet built beyond this file.
+## Repository relationship
+
+- This repository is **Production Atlas**.
+- Accepted/deployment branch: **`research-version`**.
+- `main` is frozen/non-authoritative scaffolding.
+- Substantive work uses managed work branches and PRs targeting `research-version`; do not push proposed work directly to the accepted branch merely because it deploys from there.
+- `50yearroadmap` provides the ecosystem governance/current-state layer and tracks Production Atlas through `companies/production-atlas/`; it does not inherit mutation authority over this repository.
+- Write authority for any other repository remains separate.
+
+For exact product/public-safety/validation rules and interruption recovery, follow `AGENTS.md` and current canonical matrix governance in `50yearroadmap`.
