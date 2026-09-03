@@ -121,7 +121,15 @@ Before saying a substantive change is complete/ready to integrate:
 
 If validation behavior and this prose ever diverge, investigate the validator before changing either. Do not bypass a failing gate without explicit owner authority.
 
-## 10. Matrix relationship
+## 10. Orchestrator operating-layer pointer
+
+Every repository-attached session follows the top-level lightweight operating/continuity contract in `50yearroadmap/AGENT_ORIENTATION.md` and `50yearroadmap/governance/CONTINUITY_CONTRACT.md` in addition to this repository's stricter local rules.
+
+- Routine deterministic Production Atlas work stays local; Roadmapdev is relevance-triggered for consequential, cross-system, uncertain, evidence-conflicted, or explicitly requested analysis and remains advisory.
+- Supabase project `Roadmap` is the durable shared memory/evidence/research plane when available; a provider without direct Supabase access uses the canonical `50yearroadmap` bridge/read-through continuity path and must not ask the owner for credentials merely to continue.
+- This pointer does not grant writes to `50yearroadmap`, Roadmapdev, Supabase, or any other repository/system and does not weaken the `research-version` branch, validation, public-safety, or PR-first rules above.
+
+## 11. Matrix relationship
 
 Production Atlas remains its own authoritative repository for its accepted site/data state. `50yearroadmap` provides matrix governance/current-state tracking and may read this repository under the established ecosystem relationship; that does not grant cross-repository mutation authority.
 
