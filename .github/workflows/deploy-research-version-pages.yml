@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - research-version
-      - experiment/production-atlas-clean-sheet-20260906
   workflow_dispatch:
 
 permissions:
@@ -66,7 +65,6 @@ jobs:
             --exclude='ai-communication' \
             --exclude='archive' \
             --exclude='docs' \
-            --exclude='experiment' \
             --exclude='handoffs' \
             --exclude='research' \
             --exclude='schemas' \
