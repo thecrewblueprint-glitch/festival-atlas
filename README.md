@@ -3,11 +3,13 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-07-15
+Updated: 2026-09-07
 
-Production Atlas is a static GitHub Pages work-mapping app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter and employer-route leads, review source references, and plan scheduling.
+Production Atlas is a static GitHub Pages work and market-intelligence app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter, employer, and labor-organization routes, review source references, and plan scheduling.
 
-The repository can contain deeper research and supplemental audit data, but the public-facing pages should stay concise, worker-useful, and public-safe.
+The repository is the canonical public store for accepted public-safe market and institutional research that powers the product. Public-facing pages should stay concise, worker-useful, and free of personal information. Private analysis, unresolved sensitive intelligence, and personal data do not belong in this repository.
+
+The Crew Blueprint is the sibling public training system: https://thecrewblueprint-glitch.github.io/thecrewblueprint/. Production Atlas owns current work and market intelligence; The Crew Blueprint owns durable technical, safety, academic, and job-readiness curriculum. Each site links to the other, while their datasets remain separate.
 
 README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
 
@@ -33,7 +35,7 @@ Public site: https://atlas.thecrewblueprint.com/
 
 ## Current state snapshot
 
-Current repo-visible app state as of 2026-07-15:
+Current repo-visible app state as of 2026-09-07:
 
 ```text
 Public app type: static GitHub Pages app
@@ -134,8 +136,9 @@ map.html          Location view for routing, travel clustering, and nearby oppor
                   Current Map filters are state and date/month; do not re-add the
                   removed department filter unless Aaron explicitly reopens it.
 employers.html    Public company, employer, vendor, producer, venue, and apply/contact routes.
-iatse.html        How to join IATSE: union-join guidance, official IATSE resources,
-                  searchable local directory, pagination, and per-local join steps.
+iatse.html        IATSE institutional and worker-route guide: structure, distinct referral,
+                  employment, membership, training, organizing, and touring states;
+                  searchable partial local snapshot; current official-source routing.
 contribute.html   Public-safe human-submission route; all submissions require review.
 feedback.html     Public app feedback route.
 ```
@@ -167,7 +170,7 @@ Schedule is temporarily off public navigation pending a rebuild; the page still 
 ### Source / audit page
 
 ```text
-sources.html      Central public source list for auditability.
+sources.html      Central public event, employer, and IATSE institutional source list.
 ```
 
 Source links still belong on `sources.html`, not inside opportunity popups, branch popups, map popups, or schedule cards.
@@ -226,7 +229,7 @@ schedule.html: date/month (off public navigation; reachable by direct URL only)
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
-Opportunities and Employers paginate results 10 per page with a numbered Prev/Next jumper; changing any search or filter resets to page 1. The IATSE page is tabbed (How to join / Find a local / About IATSE) and paginates its local directory the same way.
+Opportunities and Employers paginate results 10 per page with a numbered Prev/Next jumper; changing any search or filter resets to page 1. The IATSE page is tabbed (Work & membership routes / Find a local / How IATSE is structured) and paginates its retained 221-record partial local snapshot the same way. The current official IATSE directory remains canonical for local discovery.
 
 Year filter (2026/2027 toggle) is available on Opportunities, Calendar, and Map pages to separate calendar cycles. Users can view all dates, filter to 2026 only, or filter to 2027 only. Filter selections persist through URL parameters.
 
@@ -249,6 +252,7 @@ assets/site-footer.js
 assets/icons.js
 data/iatse-us-local-directory.js
 data/iatse-organization-info.js
+research/iatse-public-market-research-sweep-2026-09-07.md
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
@@ -294,18 +298,42 @@ Every active core HTML page must load the main data packages, then the public-sa
 <script src="data/packages/production-branches.js?v=multi1"></script>
 <script src="data/packages/opportunities-2026.js?v=multi1"></script>
 <script src="data/packages/us-employers.js?v=multi1"></script>
-<script src="data/iatse-us-local-directory.js?v=multi1"></script>
+<script src="data/iatse-us-local-directory.js?v=iatse-dir2"></script>
 <script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script>
 <script src="data/packages/research-queue-route-updates.js?v=route1"></script>
 <script src="data/packages/opportunity-rollover-2027.js?v=rollover2"></script>
 <script src="data/packages/public-cycle-scope.js?v=cycle1"></script>
-<script src="assets/atlas-core-v2.js?v=multi20"></script>
+<script src="assets/atlas-core-v2.js?v=multi34"></script>
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
 
 Cache-bust query values are bumped together across all pages whenever the underlying shared asset changes, so every page requests the same current version.
 
-`iatse.html` also loads `data/iatse-organization-info.js`. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`. `analytics.html` loads `assets/research-queue-page.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js`.
+`iatse.html` and `sources.html` also load `data/iatse-organization-info.js`. The IATSE package owns public institutional structure, source-bounded route patterns, training/touring distinctions, directory-audit metadata, and the no-personal-data publication boundary. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`, which renders both the IATSE official-source register and employer links. `analytics.html` loads `assets/research-queue-page.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js` and includes the sibling Crew Blueprint training link.
+
+## IATSE institutional-intelligence boundary
+
+IATSE is modeled as a labor-organization ecosystem, not an employer category or a single national hiring funnel. Keep these layers distinct:
+
+```text
+IATSE International
+district
+autonomous local union
+market/craft jurisdiction
+agreement
+referral or hiring-hall mechanism
+employer
+work call
+membership pathway
+training or credential pathway
+touring agreement and labor-requirement signal
+```
+
+The 221-record `data/iatse-us-local-directory.js` file is a partial snapshot dated 2026-06-21. The 2026-09-07 audit found omissions in at least Delaware, Idaho, New Hampshire, North Dakota, and South Dakota and observed the official U.S. directory total changing between 305 and 306 on the same research date. Never describe the retained file as a complete national directory. Do not infer jurisdiction, an employer relationship, referral eligibility, membership eligibility, a credential requirement, guaranteed work, or an event-specific labor assignment from a directory record.
+
+The canonical public research narrative is `research/iatse-public-market-research-sweep-2026-09-07.md`. Official URLs are represented in `data/iatse-organization-info.js` and rendered on `sources.html`; IATSE popups link to that central source register instead of embedding personal contact routes.
+
+No personal names, personal email addresses, direct phone numbers, worker records, application data, private referral or availability status, member-only material, or private pay/lodging/call details may be added to public IATSE packages.
 
 Do not add `async` or `defer` to these data/runtime package scripts.
 
