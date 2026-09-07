@@ -5,7 +5,7 @@ Assistant: ChatGPT
 Branch: research-version
 Work branch: experiment/production-atlas-clean-sheet-20260906
 Target branch: research-version
-Commits: 016b1536ce6a0184fd18b407931bd2dd3bb66e2e, 336687bc13064dabf258e63c6ed6359ae920db1a, ce046c23b8f8484f2e8e939694891136e9887f37, 8c5d6b0ac6478d8c0a2629fde06b8fb9120f64a3
+Commits: 016b1536ce6a0184fd18b407931bd2dd3bb66e2e, 336687bc13064dabf258e63c6ed6359ae920db1a, ce046c23b8f8484f2e8e939694891136e9887f37, 8c5d6b0ac6478d8c0a2629fde06b8fb9120f64a3, f3422149cefa0ef9dd8132d712b0e5038b5ac363, 3f5c452aed8a0f2ff88dd45b705c3956b6a3744f
 
 # Clean-sheet Production Atlas work-run prototype
 
@@ -52,19 +52,18 @@ Roadmapdev and 50yearroadmap were used as design/intelligence inputs only. No pr
 
 ## Validation status
 
-- `assets/workspace.js`: `node --check` passed before commit.
-- Clean-sheet files were authored without modifying existing accepted product files or data packages.
-- Repository `npm run validate:all` was not executed in this connector session.
-- No deployment workflow was changed or invoked for this experiment.
-- No PR was opened and no merge was performed.
+- `assets/workspace.js`: syntax-checked before initial commit.
+- GitHub Actions run `34070276664` executed `npm run validate:all` against experimental head `f3422149cefa0ef9dd8132d712b0e5038b5ac363`; the **Validate static app** job passed.
+- The same run's Pages deployment job failed before deployment. The experiment-only attempt to make the branch a Pages source was then fully reverted; `.github/workflows/deploy-research-version-pages.yml` is byte-for-byte back to the accepted `research-version` version on this branch.
+- No Production Atlas public data package or existing public page was modified.
 
 ## Known risks
 
-- The experimental page is not on the deployed GitHub Pages branch, so it has not yet received browser/device visual QA.
+- The experimental page has not yet received browser/device visual QA.
 - Employer matching is intentionally broad (state/national + department overlap) and must remain labeled as general lead matching, never event-specific staffing evidence.
 - Straight-line distance is not routing distance or travel-time feasibility.
 - The current 2027 rollover remains a temporary data bridge inherited from the source branch.
 
 ## Next action
 
-Keep the branch set aside. When the owner wants to review it, provide a preview/deployment path that does not disturb the live `research-version` site, then judge the concept on actual worker planning usefulness before proposing any merge or architecture expansion.
+Use the repository's normal PR-first path to port the additive preview files to `research-version`, leaving the existing homepage and deployed product untouched. After merge/deploy, review `workspace.html` at the live domain. Keep the experimental branch preserved as the isolated clean-sheet source and rollback/reference point.
