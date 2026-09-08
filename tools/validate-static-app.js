@@ -186,6 +186,7 @@ check(footer.includes('guide.html'), 'site-footer.js does not include Guide foot
 check(footer.includes('sources.html'), 'site-footer.js does not include Sources footer link');
 check(footer.includes('normalizeNav'), 'site-footer.js does not normalize header nav');
 check(footer.includes('guide.html') && footer.includes('sources.html'), 'site-footer.js missing footer-only Guide/Sources support');
+check(footer.includes('thecrewblueprint-glitch.github.io/thecrewblueprint/'), 'site-footer.js is missing the sibling Crew Blueprint training link');
 
 const core = exists('assets/atlas-core-v2.js') ? read('assets/atlas-core-v2.js') : '';
 check(core.includes('function loadBranchManifest'), 'atlas-core-v2.js does not load branch-research-manifest.js');
@@ -193,14 +194,36 @@ check(core.includes('BRANCH_RESEARCH_MANIFEST'), 'atlas-core-v2.js does not refe
 check(core.includes('function renderSources'), 'atlas-core-v2.js is missing the Sources page renderer');
 check(core.includes('function branchCard'), 'atlas-core-v2.js is missing branch card rendering');
 check(core.includes('function sortOpportunities'), 'atlas-core-v2.js is missing core opportunity date sorting');
-// IATSE guidance moved from per-card "research use" text to the tabbed join flow:
-// card CTA + per-local modal join steps. Validate the current guidance markers.
-check(core.includes('How to join / get work'), 'atlas-core-v2.js is missing the IATSE card join CTA');
-check(core.includes('How to join or get work with this local'), 'atlas-core-v2.js is missing the IATSE per-local join guidance');
+// IATSE is an institutional/labor-routing layer, not one national hiring funnel.
+check(core.includes('Open local research context'), 'atlas-core-v2.js is missing the IATSE local research CTA');
+check(core.includes('Research this local'), 'atlas-core-v2.js is missing the IATSE per-local research guidance');
 check(core.includes('not affiliated with or endorsed by IATSE'), 'atlas-core-v2.js is missing the IATSE independence disclaimer');
+check(core.includes('There is no single national sequence'), 'atlas-core-v2.js is missing the non-universal IATSE route boundary');
+check(core.includes('Registration is not referral'), 'atlas-core-v2.js does not separate IATSE worker-route states');
+check(!core.includes('Most live-event workers join by first working'), 'atlas-core-v2.js still overgeneralizes the national IATSE joining path');
+check(!core.includes('Most newcomers start as a non-member permit hand'), 'atlas-core-v2.js still overgeneralizes permit-hand entry');
+check(!core.includes('often required to be callable'), 'atlas-core-v2.js still presents credentials as broadly required');
 check(core.includes('guide-home-callout'), 'atlas-core-v2.js is missing the home Guide callout');
 check(!core.includes('function chip('), 'atlas-core-v2.js still contains public badge/chip rendering helper');
 check(!core.includes('Verify directly before outreach.</p></article>'), 'IATSE cards still contain repeated generic verify-before-outreach line');
+
+const iatseDirectory = exists('data/iatse-us-local-directory.js') ? read('data/iatse-us-local-directory.js') : '';
+check(iatseDirectory.includes("coverageStatus:'partial_non_exhaustive_snapshot'"), 'IATSE directory is not labeled as a partial snapshot');
+check(iatseDirectory.includes("knownGapStates:['DE','ID','NH','ND','SD']"), 'IATSE directory audit is missing known gap states');
+check(iatseDirectory.includes("j.includes('Washington, DC')"), 'IATSE directory parser is missing the Washington, DC alias');
+
+const iatseInfo = exists('data/iatse-organization-info.js') ? read('data/iatse-organization-info.js') : '';
+check(iatseInfo.includes('public_safe_institutional_and_labor_market_reference'), 'IATSE organization package is missing its public-safe status');
+check(iatseInfo.includes('institutionLayers'), 'IATSE organization package is missing institutional layers');
+check(iatseInfo.includes('entryRoutePatterns'), 'IATSE organization package is missing source-bounded entry-route patterns');
+check(iatseInfo.includes('sourceRegistry'), 'IATSE organization package is missing its public source registry');
+
+const sourceSupport = exists('assets/sources-employer-links.js') ? read('assets/sources-employer-links.js') : '';
+check(sourceSupport.includes("mount.id='iatse-sources'"), 'Sources support does not render the IATSE source register');
+check(sourceSupport.includes('info.sourceRegistry'), 'Sources support does not read the IATSE source registry');
+
+const sourcesPage = exists('sources.html') ? read('sources.html') : '';
+check(sourcesPage.includes('data/iatse-organization-info.js'), 'sources.html does not load the IATSE organization package');
 
 const approx = exists('assets/approx-date-labels.js') ? read('assets/approx-date-labels.js') : '';
 check(approx.includes('Approx. date window'), 'approx-date-labels.js does not label cards as approximate date windows');
@@ -238,6 +261,9 @@ check(readme.includes('ai-communication/collaboration-log/incomplete/'), 'README
 check(readme.includes('incomplete or blocked logs must remain auditable'), 'README.md missing incomplete/blocked audit retention rule');
 check(readme.includes('data/packages/research-queue-route-updates.js'), 'README.md missing active route research update package');
 check(readme.includes('data/iatse-organization-info.js'), 'README.md missing IATSE organization info asset');
+check(readme.includes('IATSE institutional-intelligence boundary'), 'README.md missing the IATSE institutional-intelligence boundary');
+check(readme.includes('partial snapshot dated 2026-06-21'), 'README.md missing the IATSE partial-snapshot warning');
+check(readme.includes('sibling public training system'), 'README.md missing the Crew Blueprint sibling boundary');
 check(readme.includes('Required runtime load order'), 'README.md missing required runtime load order section');
 check(readme.includes('index.html        Home: quick explanation'), 'README.md missing current Home page role');
 check(readme.includes('guide.html        Full Guide for Use'), 'README.md missing current Guide page role');

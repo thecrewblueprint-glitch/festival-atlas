@@ -29,6 +29,32 @@
     return rows;
   }
 
+  function renderIatseSources(){
+    var app=document.querySelector('#app');
+    if(!app) return;
+    var info=window.IATSE_ORGANIZATION_INFO||{};
+    var rows=Array.isArray(info.sourceRegistry)?info.sourceRegistry:[];
+    var groups=[...new Set(rows.map(function(row){return row.group||'IATSE';}))];
+    var mount=document.getElementById('iatse-sources');
+    if(!mount){
+      mount=document.createElement('section');
+      mount.id='iatse-sources';
+      mount.className='card';
+      mount.style.marginTop='32px';
+      mount.style.borderTop='1px solid var(--line)';
+      mount.style.paddingTop='24px';
+      app.appendChild(mount);
+    }
+    mount.innerHTML='<h2>IATSE institutional and worker-route sources</h2>'+
+      '<p class="lead">Official IATSE International, Training Trust, and local-union sources used for the public institutional package. These sources show that local discovery, referral, employment, membership, training, organizing, and touring are separate states. No personal contact data is retained here.</p>'+
+      '<div class="notice">Observed '+esc(info.updated||'')+'. Local rules and directory counts can change; use the current official source before acting. A representative local sample demonstrates procedural variety and is not a ranking, recommendation, or complete census.</div>'+
+      groups.map(function(group){
+        var groupRows=rows.filter(function(row){return (row.group||'IATSE')===group;});
+        return '<h3 class="section-kicker">'+esc(group)+'</h3><div class="tablewrap"><table class="matrix"><thead><tr><th>Organization source</th><th>Source owner</th><th>Link</th></tr></thead><tbody>'+groupRows.map(function(row){return '<tr><td>'+esc(row.label)+'</td><td>'+esc(row.owner||'Official organization')+'</td><td>'+link('Open official source',row.url)+'</td></tr>';}).join('')+'</tbody></table></div>';
+      }).join('');
+    if(window.location.hash==='#iatse-sources')setTimeout(function(){mount.scrollIntoView({block:'start'});},0);
+  }
+
   function populateEmployerSelect(){
     var employerSelect=document.querySelector('#employerFilter');
     if(!employerSelect || employerSelect.dataset.filled==='true') return;
@@ -76,8 +102,10 @@
   function install(){
     var app=document.querySelector('#app');
     if(!app) return;
+    if(!document.getElementById('iatse-sources')) renderIatseSources();
     if(!document.getElementById('employer-source-routes')) renderEmployerSources();
     new MutationObserver(function(){
+      if(!document.getElementById('iatse-sources')) renderIatseSources();
       if(!document.getElementById('employer-source-routes')) renderEmployerSources();
     }).observe(app,{childList:true});
   }
