@@ -1,10 +1,10 @@
 # Production Atlas — Public Roadmap
 
-**Status as of July 5, 2026 · research-version branch**
+**Status as of September 9, 2026 · research-version branch**
 
-Production Atlas is a public-safe scouting dashboard for live-event production workers. It maps festivals, public dates, approximate production windows, producers/promoters, public employer routes, source references, IATSE/local research guidance, and planning views.
+Production Atlas is a public-safe job knowledge base and scouting dashboard for live-event production workers. It maps festivals, public dates, approximate production windows, producers/promoters, public employer routes, source references, IATSE/local research guidance, planning views, department fit, and practical application-routing support.
 
-This roadmap reflects the current product decision: the public app should be simple, public-safe, worker-useful, and deployed from `research-version`. The current app functions are treated as correct; documentation should describe current behavior instead of reintroducing removed UI.
+This roadmap reflects the current product decision: the public app should be simple, public-safe, worker-useful, and deployed from `research-version`. The current app should help a worker move from **what work do I want → which employers fit → what experience path normally applies → where do I apply → what have I already pursued** without overstating unverified job requirements.
 
 ---
 
@@ -27,34 +27,58 @@ Latest repo-visible state:
 - The festival research master-list registry contains **258 records** in `data/packages/festival-research-master-list.js`.
 - Map coordinates cover **249 of 254 opportunity records**; the remaining unmapped records are intentionally null until exact locations are public or are multi-market overviews.
 - The 2027 rollover decision is separate year-specific records.
-- The rollover bridge creates verified `*-2027` records at runtime and archives the corresponding active `*-2026` records from the default public active view.
 - Public route research update records exist in `data/packages/research-queue-route-updates.js`.
 - Branch research packages load through `data/packages/branch-research-manifest.js`.
 - Primary public/work-flow pages: Home, Guide, Opportunities, Calendar, Map, Employers, IATSE, Contribute, Feedback.
 - Schedule still exists and works by direct URL, but is off public header navigation pending a mobile/usability rebuild.
 - Source/audit page: Sources.
 - Supplemental retained pages: Branches/Departments, Matrix, Analytics.
-- Analytics currently includes the intentionally restored action-first research queue through `assets/research-queue-page.js`; it is supplemental audit scaffolding, not a primary public workflow or filter.
-- White pages: About, How the Data Works, Employer Route Methodology, Date & Work Window Disclaimer.
-- Legal/policy pages: Privacy Policy, Terms & Conditions, Limitation of Liability, Cookie Notice, Accessibility Statement, Affiliate Disclosure, Contact & Data Requests.
+- Analytics includes the action-first research queue through `assets/research-queue-page.js`; it remains supplemental audit scaffolding, not a primary public workflow or filter.
+- A shared professional job-knowledge-base visual layer now lives in `assets/atlas-job-kb.css` and is loaded by Home, Employers, Market, Opportunities, IATSE, Calendar, and Map.
+- Employers now supports department, experience-path, geography, employer-type, and browser-local application-status filtering.
+- Employers now includes a browser-local application workspace. It stores employer ID, selected target department, application stage, and local update timestamp in localStorage only. It does not publish or transmit application data.
+- `data/packages/production-branches.js` carries department-level `experienceBand` and `experienceLabel` guidance. These fields describe the normal access pattern of a department; they are **not** claims about requirements for a current vacancy.
+- Backend/auth/database/payment/scraping remain absent.
 
 ---
 
 ## Active UI scope decision
 
-Aaron intentionally reopened the filter decision. Do not revert the app to a date/promoter-only model.
+Do not revert the app to a date/promoter-only model.
 
 Current page-specific filter direction:
 
 ```text
-opportunities.html: text search, state, department, producer/promoter, date/month
-calendar.html: date/month, plus page-specific calendar controls
-map.html: state and date/month; no department filter in current UI
-employers.html: text search, department, state, employer type
+opportunities.html: text search, state, department, producer/promoter, date/month, year
+calendar.html: date/month, year, plus page-specific calendar controls
+map.html: state, date/month, year; no department filter in current UI
+employers.html: text search, department, role-path experience band, state, employer type, browser-local application status
 sources.html: festival, department, employer route
 schedule.html: date/month, direct URL only while off public nav
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
+
+Experience-path filters on Employers are based on department-level guidance:
+
+```text
+entry       Entry-accessible department paths
+mixed       Departments with both entry and experienced paths
+experienced Qualification- or responsibility-heavy department paths
+```
+
+These labels must never be rendered as a claim that a specific employer vacancy is entry-level or experienced unless the actual current opening supports that claim. Public UI must continue telling users to verify current posting requirements, certifications, and qualifications.
+
+Application-status values are browser-local workflow states only:
+
+```text
+Researching
+Ready to apply
+Applied
+Follow-up
+Closed
+```
+
+They are personal workflow state, not public employer data and not repository data.
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue status as a primary public filter unless Aaron explicitly reopens those items.
 
@@ -70,21 +94,21 @@ IATSE
 Contribute
 ```
 
-`Guide` and `Sources` are footer/reference links. Guide also appears as a top home-page callout below the nav and above the first home card. Schedule is off header nav pending rebuild.
-
-The future schedule and travel planner is a separate planning layer. It can later connect user availability, event timing, map routing, projected travel distance, estimated travel time, schedule gaps, and location conflicts.
+`Guide` and `Sources` are footer/reference links. Schedule remains off header nav pending rebuild.
 
 ---
 
 ## Public readiness boundaries
 
-Production Atlas helps identify where work may be worth researching. It does not guarantee employment, contracts, hiring, placement, vendor access, referral, call times, lodging, travel support, per diem, or any specific outcome.
+Production Atlas helps identify where work may be worth researching and gives workers a structured way to organize public hiring routes. It does not guarantee employment, contracts, hiring, placement, vendor access, referral, call times, lodging, travel support, per diem, or any specific outcome.
 
 The Employers page and route notes identify public research routes. A company, venue, promoter, vendor, or local-jurisdiction reference should not be treated as a confirmed event-specific working relationship unless a public source directly supports that connection.
 
-Public event dates may be known, but build/load-in and strike/load-out windows are planning estimates unless a source confirms otherwise. The Date & Work Window Disclaimer page must remain linked in the footer.
+Department experience guidance is directional. A department marked entry-accessible can still have experienced openings; an experienced/qualification-heavy department can still contain support roles. The actual posting controls.
 
-Accommodation, lodging, travel, and per-diem information can be useful when public and reliable. Missing supplemental details should not count against a record's core work-finding usefulness and should not create public clutter.
+Browser-local application organization must remain localStorage-only unless Aaron explicitly opens a separate private-user architecture. No application history, resume data, private notes, personal contacts, or worker records may enter the public repo.
+
+Public event dates may be known, but build/load-in and strike/load-out windows are planning estimates unless a source confirms otherwise. The Date & Work Window Disclaimer page must remain linked in the footer.
 
 ---
 
@@ -95,25 +119,31 @@ Goal: keep actual pages, README, roadmaps, legal pages, white pages, validation 
 - [x] Keep `research-version` as the current working branch.
 - [x] Keep `main` protected unless Aaron explicitly says to touch it.
 - [x] Keep source links centralized on `sources.html`.
-- [x] Keep Guide and Sources out of header nav; keep them in the footer/reference flow.
 - [x] Keep Schedule off header nav until the rebuild is ready.
 - [x] Keep public pages free of private contacts, pay rates, lodging details, rumors, private referrals, and NDA/client-sensitive information.
-- [x] Remove public confidence badge/value-tier direction from current docs.
-- [x] Document current page-specific filters instead of reverting to date/promoter only.
-- [x] Document the Analytics research queue as a supplemental retained audit view, not a primary public workflow.
-- [ ] Run `npm run validate:all` after connector-based documentation updates in a local or GitHub Actions environment.
-- [ ] Confirm GitHub Pages deploys current `research-version` output.
+- [x] Preserve page-specific filters instead of reverting to date/promoter only.
+- [x] Add the shared Atlas job-knowledge-base visual system to the primary workflow pages.
+- [x] Add department-level experience-path guidance without inventing vacancy-level requirements.
+- [x] Add a browser-local employer application workspace with no backend or public application storage.
+- [ ] Run `npm run validate:all` after this connector-based update in a local or GitHub Actions environment.
+- [ ] Confirm GitHub Pages deploys current `research-version` output and visually inspect the normalized pages.
 
 ---
 
-## Phase 2 — Improve public worker usability
+## Phase 2 — Make the public job knowledge base useful for application decisions
 
-Goal: a worker can quickly understand what the app does and how to use it without confusing supplemental audit scaffolding for the primary workflow.
+Goal: a worker can quickly identify the type of work they want, narrow the employer set, understand the likely access level, reach official application routes, and organize follow-up.
 
-- [ ] Tighten Home copy around where, when, producer/operator, employer route, and which page to use next.
-- [x] Keep the Guide page as the main public instruction page and add a home-page Guide callout.
-- [ ] Add or improve empty-state language when current page filters return no results.
-- [ ] Continue mobile audit for nav, filters, cards, calendar, map, schedule, and modals.
+- [x] Keep Employer Profiles as the primary hiring-oriented directory.
+- [x] Filter employers by production department.
+- [x] Add department-level entry/mixed/experienced path guidance.
+- [x] Add a local application shortlist/status workspace.
+- [x] Allow a saved employer to carry a target department.
+- [x] Keep application state private to the user's browser.
+- [ ] Add stronger role-level evidence when public job postings can be normalized safely.
+- [ ] Where current public openings are available, distinguish actual posting requirements from general department-path guidance.
+- [ ] Improve empty-state language and counts across remaining pages.
+- [ ] Continue mobile audit for nav, filters, cards, calendar, map, employer workspace, and modals.
 - [ ] Keep footer navigation consistent across public, white, and legal pages.
 
 ---
@@ -126,22 +156,23 @@ Goal: strengthen the public work-finding signal without publishing private or sp
 - [ ] Verify public producer/promoter/operator names for priority records.
 - [ ] Add or refine public employer/apply/careers/contact links where reliable.
 - [ ] Add event-specific employer/vendor relationships only when a public source supports the exact connection.
-- [ ] Keep Breakaway and Country Thunder market-level records current as public dates and venues change.
-- [ ] Track `breakaway-houston-2026` venue until a public venue is announced.
+- [ ] Normalize public job-opening metadata when source quality is sufficient to support role title, department, location, opening status, and stated experience/qualification requirements.
+- [ ] Do not infer job level from company reputation, job title alone, or department classification.
 - [ ] Treat `data/packages/festival-research-master-list.js` as the reconciled registry and intake control file; records still need source-backed promotion/matching before being treated as active opportunity data.
 
 ---
 
 ## Phase 4 — Improve planning views
 
-Goal: make Calendar, Map, and Schedule useful without turning the public app into a private workflow system.
+Goal: make Calendar, Map, Schedule, and application organization useful without turning the public repository into a private workflow database.
 
 - [ ] Calendar: keep month/date behavior clear and label approximate work windows.
 - [ ] Map: keep location pins public-safe and avoid implying certainty beyond sources.
 - [ ] Map: refine city-centroid coordinates to venue-precise coordinates where reliable public information exists.
 - [ ] Schedule: keep planning browser-local through localStorage only.
-- [ ] Improve Schedule mobile usability first: selected-event cards, overlap warnings, month spread, region spread, add/remove clarity, and links back to Map/Calendar/Opportunity details.
-- [ ] Future planning layer: selected festival workspace, map location, show dates, approximate work window, add/remove from schedule, routing distance, travel time, schedule gaps, and conflict flags.
+- [ ] Employer application workspace: keep status and target-department state browser-local through localStorage only.
+- [ ] Improve Schedule mobile usability before restoring it to header nav.
+- [ ] Future planning layer may connect selected festival, map location, show dates, approximate work window, employer route, application status, routing distance, travel time, schedule gaps, and conflict flags without uploading private state.
 
 ---
 
@@ -187,21 +218,20 @@ Possible future research areas:
 - venue-based seasonal work
 - touring theatrical productions
 
-Do not expand into backend, login, payment, private contact databases, marketplace features, LMS integration, scraping automation, or Firecrawl restoration under this public static-app roadmap.
+Do not expand into backend, login, payment, public personal-contact databases, or scraping automation under this public static-app roadmap unless Aaron explicitly changes scope.
 
 ---
 
 ## Priority order for the next development sprint
 
-1. Run or trigger `npm run validate:all` after connector-based documentation updates.
-2. Confirm the live site is serving `research-version` output.
-3. Spot-check public pages on mobile, especially the nav, filters, IATSE page, Employers, Opportunities, Map, Analytics, and Schedule direct URL.
-4. Improve Schedule mobile usability before restoring it to header nav.
-5. Improve filter empty states.
-6. Continue public source and producer/promoter verification for priority records.
-7. Refine remaining map coordinates when exact public venue/location data is available.
+1. Run or trigger `npm run validate:all` after the current connector-based UI/runtime changes.
+2. Confirm the live site is serving current `research-version` output.
+3. Visually review the normalized theme on Home, Employers, Market, Opportunities, IATSE, Calendar, and Map at desktop and mobile widths.
+4. Verify employer experience filtering, shortlist add/remove, target-department selection, application-status filtering, and localStorage persistence.
+5. Improve employer/job evidence so actual public openings can be classified from their stated requirements rather than general department guidance.
+6. Improve Schedule mobile usability before restoring it to header nav.
+7. Continue public source and producer/promoter verification for priority records.
 8. Canonicalize verified 2027 records after validation/deploy are stable.
-9. Keep white/legal pages aligned when page behavior changes.
 
 ---
 
