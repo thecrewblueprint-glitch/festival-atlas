@@ -67,12 +67,15 @@ Read these first, in order:
 7. package.json
 8. data/packages/branch-research-manifest.js
 9. data/packages/production-branches.js
-10. assets/atlas-job-kb.css
-11. assets/employers-department-browser.js
-12. assets/atlas-core-v2.js
-13. tools/validate-static-app.js
-14. tools/validate-branch-research-packages.js
-15. tools/validate-data.js
+10. data/packages/JOB_OPENING_RECORD_SCHEMA.md
+11. data/packages/current-job-openings.js
+12. assets/atlas-job-kb.css
+13. assets/employers-department-browser.js
+14. assets/atlas-core-v2.js
+15. tools/validate-job-openings.js
+16. tools/validate-static-app.js
+17. tools/validate-branch-research-packages.js
+18. tools/validate-data.js
 ```
 
 Then inspect task-specific files only as needed. Do not deep-read the full `research/` archive unless the task requires research restructuring, source verification, report conversion, or archive cleanup.
@@ -89,6 +92,8 @@ When is it happening?
 Who publicly produces, promotes, operates, or routes the work?
 Which employers or labor organizations fit the department I want?
 Which department paths are normally entry-accessible, mixed, or qualification-heavy?
+Which source-backed current vacancies are actually open?
+Does the current posting explicitly support entry, mixed, experienced, or unknown classification?
 Where is the official careers/apply/contact route?
 Which employers have I already researched or applied to in this browser?
 What is verified and what must still be checked on the current posting?
@@ -125,6 +130,10 @@ Schedule: browser-local localStorage planner, direct URL only, off header nav
 Shared UI normalization: assets/atlas-job-kb.css
 Employers decision workflow: assets/employers-department-browser.js
 Employer application workflow: browser-local localStorage only
+Current vacancy runtime: data/packages/current-job-openings.js
+Current vacancy count: 0 until fresh public postings are deliberately normalized
+Vacancy evidence schema: data/packages/JOB_OPENING_RECORD_SCHEMA.md
+Vacancy validator: tools/validate-job-openings.js
 ```
 
 ## Current public UI scope
@@ -181,6 +190,46 @@ Always keep the UI distinction:
 department-path guidance != current vacancy requirements
 ```
 
+## Current vacancy evidence rule
+
+`data/packages/current-job-openings.js` is the only canonical public runtime surface for normalized current vacancies.
+
+An empty array is valid and intentional. It means no source-backed current vacancy records are loaded, not that employers have no jobs.
+
+Every populated record must follow:
+
+```text
+data/packages/JOB_OPENING_RECORD_SCHEMA.md
+```
+
+Vacancy-level experience values:
+
+```text
+entry
+mixed
+experienced
+unknown
+```
+
+Classification requires explicit current-posting evidence. Do not infer current vacancy level from:
+
+```text
+company reputation
+department experienceBand
+job title alone
+certification alone
+search-result snippets
+old cached job postings
+private contacts
+crew rumors
+```
+
+Use `unknown` when evidence is insufficient.
+
+Every current vacancy must include a public source URL and checked date. Prefer official employer or employer-controlled ATS postings. `npm run validate:job-openings` enforces employer/department resolution, source metadata, allowed status values, and evidence requirements; it warns when an `open` record has not been reverified in 30 days.
+
+The Employers renderer may show a current posting URL with a vacancy record because that URL is both evidence and the public action route. This is separate from the general event/source audit-link rule.
+
 ## Employer application-workspace rule
 
 The Employers page may store these fields in browser localStorage only:
@@ -225,11 +274,12 @@ ai-communication/PRODUCT_ROADMAP.md
 Current priorities:
 
 ```text
-1. Validate and visually review the normalized primary pages.
+1. Validate and visually review the normalized primary pages and vacancy-aware Employers flow.
 2. Keep Employer Profiles as the hiring-oriented decision hub.
-3. Improve public job-opening evidence so actual posting requirements can be normalized when source-backed.
-4. Keep application workflow browser-local and public-safe.
-5. Continue improving Schedule/mobile usability without expanding into a backend.
+3. Populate source-backed current job-opening records from fresh public postings.
+4. Keep vacancy requirements distinct from department-path guidance.
+5. Keep application workflow browser-local and public-safe.
+6. Continue improving Schedule/mobile usability without expanding into a backend.
 ```
 
 ## Collaboration protocol
@@ -276,13 +326,15 @@ private referrals
 Deadhang private commercial strategy
 ```
 
-Public app may show official/public source links on `sources.html`, public producer/promoter/operator names, public route notes, public-safe employer/vendor leads, department fit, department-level experience guidance, and public apply/careers/contact/homepage routes.
+Public app may show official/public event source links on `sources.html`, public producer/promoter/operator names, public route notes, public-safe employer/vendor leads, department fit, department-level experience guidance, source-backed current vacancy information, and public apply/careers/contact/homepage routes.
 
 ## Source link rule
 
-Source links belong on `sources.html`.
+Event/research audit source links belong on `sources.html`.
 
-Do not put raw source links inside opportunity popups, branch popups, map popups, or schedule cards.
+Do not put raw event/research source links inside opportunity popups, branch popups, map popups, or schedule cards.
+
+Source-backed current job-posting URLs may appear with normalized vacancy records on Employers because the vacancy source is also the direct public job/action route.
 
 ## Festival research master-list rule
 
@@ -318,6 +370,7 @@ When adding or editing branch research packages:
 
 ```bash
 npm run validate:data
+npm run validate:job-openings
 npm run validate:branch-research
 npm run validate:static-app
 npm run validate:all
