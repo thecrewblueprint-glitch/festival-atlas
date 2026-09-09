@@ -48,10 +48,15 @@ Analytics: supplemental retained audit page with action-first research queue
 Shared professional UI layer: assets/atlas-job-kb.css
 Employer decision hub: assets/employers-department-browser.js
 Application workspace: browser-local localStorage only
+Current vacancy package: data/packages/current-job-openings.js
+Current source-backed vacancy count: 0 until public postings are deliberately normalized
+Vacancy evidence schema: data/packages/JOB_OPENING_RECORD_SCHEMA.md
 Backend/auth/database/payment/scraping: none
 ```
 
 The shared job-knowledge-base visual layer is loaded on Home, Employers, Market, Opportunities, IATSE, Calendar, and Map. It normalizes the visual system into a professional dark teal/blue information interface while preserving each page's existing public copy.
+
+The Employers page can now render source-backed current vacancies when `RESOURCE_JOB_OPENINGS` contains validated records. The empty starter package is intentional. Atlas must not turn general employer profiles into fictional current jobs.
 
 ## Source-of-truth rule
 
@@ -117,6 +122,8 @@ When is it happening?
 Who publicly produces, promotes, operates, or routes the work?
 Which employers or labor organizations are relevant to the department I want?
 Which departments are normally entry-accessible, mixed, or qualification-heavy?
+Which public vacancies are actually current and source-backed?
+Does the current posting explicitly support an entry, mixed, experienced, or unknown experience classification?
 Which public careers/apply/contact route should I use?
 Which employers have I already researched or applied to in this browser?
 What is verified, what is approximate, and what still requires checking the live posting?
@@ -129,7 +136,8 @@ How do calendar and map information affect travel and scheduling decisions?
 index.html        Home: quick explanation, dashboard, and clear Guide link.
 guide.html        Full Guide for Use and public-safe workflow.
 employers.html    Employer decision hub: company profiles, departments, experience-path guidance,
-                  geography, employer type, official hiring links, and browser-local application workflow.
+                  geography, employer type, official hiring links, source-backed current vacancies,
+                  and browser-local application workflow.
 market.html       Employer/market structure explorer by department, geography, and company type.
 opportunities.html
                   Festival/event profiles with search, state, department, producer/promoter,
@@ -163,7 +171,7 @@ Guide and Sources are footer/reference links, not header nav links. The Guide al
 
 The Employers page is the primary hiring-oriented decision surface.
 
-Workers can filter by:
+Workers can filter employer profiles by:
 
 ```text
 text search
@@ -213,6 +221,30 @@ Stage Management            experienced / responsibility-heavy
 Do not infer that every job at an employer inherits the department label. A current vacancy is entry level, experienced, certified, licensed, or otherwise restricted only when the current public posting or authoritative source states that requirement.
 
 Public UI must continue telling workers to verify current opening requirements, certifications, qualifications, and role scope before applying.
+
+## Current vacancy evidence model
+
+`data/packages/current-job-openings.js` is the canonical public runtime surface for actual current vacancies. Its records must follow `data/packages/JOB_OPENING_RECORD_SCHEMA.md`.
+
+Vacancy-level experience values are:
+
+```text
+entry
+mixed
+experienced
+unknown
+```
+
+Classification must be tied to explicit posting evidence. Examples of acceptable bases include an explicit entry-level statement, no-experience statement, explicit years-of-experience minimum, or clearly stated senior/lead level. A job title, employer reputation, or general department classification is not sufficient evidence by itself.
+
+The source-backed vacancy layer answers a different question from the employer profile:
+
+```text
+Employer profile: Who are they, what departments fit, where do they operate, and where can I apply?
+Vacancy record: What current public opening exists, what department is it in, and what does that posting explicitly require?
+```
+
+An empty current-vacancy package means no source-backed current vacancy records are loaded. It does **not** mean the employers have no openings.
 
 ## Browser-local application workspace
 
@@ -281,6 +313,9 @@ assets/icons.js
 data/iatse-us-local-directory.js
 data/iatse-organization-info.js
 data/packages/production-branches.js
+data/packages/us-employers.js
+data/packages/current-job-openings.js
+data/packages/JOB_OPENING_RECORD_SCHEMA.md
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
@@ -288,11 +323,12 @@ data/packages/public-cycle-scope.js
 data/packages/opportunity-coords.js
 data/packages/festival-research-master-list.js
 data/packages/branch-research-manifest.js
+tools/validate-job-openings.js
 ```
 
 `assets/atlas-job-kb.css` is a shared visual normalization layer. It owns palette and common information-surface styling for the primary workflow pages. It should not contain data logic.
 
-`assets/employers-department-browser.js` owns the Employers page renderer, employer decision filters, department experience display, application shortlist, target-department selection, and browser-local application workflow.
+`assets/employers-department-browser.js` owns the Employers page renderer, employer decision filters, department experience display, source-backed current-vacancy rendering, application shortlist, target-department selection, and browser-local application workflow.
 
 Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
 
@@ -318,7 +354,7 @@ Intentionally page-owned renderers:
 ```text
 assets/calendar-interactive.js          Calendar
 assets/map-page-static.js               Map
-assets/employers-department-browser.js  Employers
+assets/employers-department-browser.js  Employers, including source-backed vacancy display
 assets/sources-employer-links.js        Sources support
 assets/guide-page.js                    Guide content
 assets/research-queue-page.js           Analytics supplemental audit queue
@@ -343,7 +379,14 @@ Representative load order:
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
 
-`employers.html` additionally loads `assets/employers-department-browser.js?v=dept18` and `assets/atlas-job-kb.css?v=kb1`.
+`employers.html` additionally loads:
+
+```html
+<script src="data/packages/current-job-openings.js?v=jobs1"></script>
+<script src="assets/employers-department-browser.js?v=dept19"></script>
+```
+
+and loads `assets/atlas-job-kb.css?v=kb1`.
 
 Home, Market, Opportunities, IATSE, Calendar, and Map also load `assets/atlas-job-kb.css?v=kb1` for shared visual normalization.
 
@@ -393,8 +436,10 @@ Do not move research queue tasks, internal next actions, confidence/audit langua
 
 ```text
 data/packages/production-branches.js
-data/packages/opportunities-2026.js
 data/packages/us-employers.js
+data/packages/current-job-openings.js
+data/packages/JOB_OPENING_RECORD_SCHEMA.md
+data/packages/opportunities-2026.js
 data/iatse-us-local-directory.js
 data/iatse-organization-info.js
 data/packages/opportunity-taxonomy.js
@@ -421,6 +466,23 @@ Employer, vendor, producer, venue, and labor-route links are high priority. Pref
 A homepage is acceptable when it is the only reliable public route or when the contact/application path is embedded there.
 
 Do not use private contacts, personal emails, direct phone numbers, pay information, rumors, private referrals, or private field notes.
+
+## Current job-opening source rule
+
+Current vacancies are volatile and require a separate freshness/evidence standard.
+
+Prefer sources in this order:
+
+```text
+1. official employer job posting
+2. employer-controlled applicant tracking system posting
+3. official employer careers page that states the role requirements
+4. credible public job board only when it clearly reproduces a current employer posting
+```
+
+Do not create current-opening records from search-result snippets alone, old cached postings, social/forum claims, private contacts, crew rumors, company reputation, or general employer profile text.
+
+Every current-opening record must include a public posting URL and `checkedDate`. Open records older than 30 days without reverification produce a validation warning.
 
 ## Festival registry rule
 
@@ -452,7 +514,7 @@ When adding a branch research batch:
 
 ## Public-safety rules
 
-Public data may include official/public links, source records, public company names, producer/promoter/operator names, public route notes, department fit, department-level experience guidance, and official apply/careers/contact/homepage routes.
+Public data may include official/public links, source records, public company names, producer/promoter/operator names, public route notes, department fit, department-level experience guidance, source-backed public vacancy information, and official apply/careers/contact/homepage routes.
 
 Do **not** publish:
 
@@ -473,12 +535,13 @@ private referrals
 Deadhang private commercial strategy
 ```
 
-Raw source links belong on `sources.html`, not inside public opportunity/branch/map/schedule popups.
+Raw event/source audit links belong on `sources.html`, not inside public opportunity/branch/map/schedule popups. Current public job-posting URLs may appear with normalized vacancy records because the vacancy source itself is the application/evidence route.
 
 ## Validation
 
 ```bash
 npm run validate:data
+npm run validate:job-openings
 npm run validate:branch-research
 npm run validate:static-app
 npm run validate:all
@@ -492,3 +555,11 @@ GitHub Actions workflows include:
 ```
 
 When Aaron says continue from a connector-only environment, continue requested edits, state that local validation was not run, and treat human live visual review as the immediate review gate. Do not claim validation passed unless it actually ran or a GitHub Actions result confirms it.
+
+## Validation status
+
+The pre-vacancy normalization head passed the full Production Atlas validation suite and GitHub Pages deployment. The current vacancy-schema/runtime/validator changes require a fresh `validate:all` Actions pass before this work cycle can be marked validated.
+
+## Next action
+
+Run the current full validation/deployment gate, then populate `current-job-openings.js` only from fresh public postings. Start with employers already in `us-employers.js`, classify actual vacancy experience only from explicit source evidence, and preserve `unknown` whenever the posting does not support a safe entry/experienced determination.
