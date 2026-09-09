@@ -11,6 +11,12 @@
     'follow-up':'Follow-up',
     'closed':'Closed'
   };
+  var VACANCY_LEVEL_LABELS={
+    'entry':'Entry level',
+    'mixed':'Mixed / multiple levels',
+    'experienced':'Experienced',
+    'unknown':'Experience not stated'
+  };
   var STATE_NAMES={
     'AL':'Alabama','AZ':'Arizona','CA':'California','CO':'Colorado',
     'FL':'Florida','GA':'Georgia','IL':'Illinois','MN':'Minnesota',
@@ -24,6 +30,7 @@
   function uniq(items){return Array.from(new Set(items)).filter(Boolean)}
   function branches(){return window.branches||window.RESOURCE_BRANCHES||[]}
   function employers(){return window.employers||window.RESOURCE_EMPLOYERS||[]}
+  function jobOpenings(){return Array.isArray(window.RESOURCE_JOB_OPENINGS)?window.RESOURCE_JOB_OPENINGS:[]}
   function branchById(id){return branches().find(function(branch){return branch.id===id})}
   function branchName(id){var branch=branchById(id);return branch?branch.name:(id===OTHER_ID?OTHER_LABEL:String(id||OTHER_LABEL))}
   function branchExperience(id){var branch=branchById(id);return branch&&branch.experienceBand?branch.experienceBand:''}
@@ -39,6 +46,30 @@
       if(b===OTHER_ID)return -1;
       return branchName(a).localeCompare(branchName(b));
     });
+  }
+  function openingsForEmployer(id){
+    return jobOpenings().filter(function(opening){return opening&&opening.employerId===id&&opening.openingStatus==='open'});
+  }
+  function vacancyLevelLabel(level){return VACANCY_LEVEL_LABELS[level]||VACANCY_LEVEL_LABELS.unknown}
+  function vacancyChip(opening){
+    var level=VACANCY_LEVEL_LABELS[opening.experienceLevel]?opening.experienceLevel:'unknown';
+    return '<span class="experience-chip '+esc(level)+'">'+esc(vacancyLevelLabel(level))+'</span>';
+  }
+  function openingRows(employer){
+    var rows=openingsForEmployer(employer.id);
+    if(!rows.length)return '<div class="application-empty">No source-backed current openings are loaded for this employer. This does not mean the employer has no jobs; use the official careers route and verify the current posting.</div>';
+    return '<div class="application-list">'+rows.map(function(opening){
+      var source=(opening.source||{}).url||'';
+      var checked=(opening.source||{}).checkedDate||'';
+      var evidence=(opening.experienceEvidence||{}).summary||'Experience requirement not stated clearly in the normalized source record.';
+      var quals=Array.isArray(opening.qualificationRequirements)?opening.qualificationRequirements.filter(Boolean):[];
+      return '<div class="application-row vacancy-row">'+
+        '<div><strong>'+esc(opening.title||'Current opening')+'</strong><div class="sub">'+esc(branchName(opening.department)||opening.department||'Department not classified')+(opening.location?' • '+esc(opening.location):'')+'</div></div>'+
+        '<div>'+vacancyChip(opening)+'<div class="sub">'+esc(evidence)+'</div></div>'+
+        '<div class="sub">'+(quals.length?'<b>Requirements:</b> '+esc(quals.join(' · ')):'No additional qualification requirement normalized.')+(checked?'<br><b>Checked:</b> '+esc(checked):'')+'</div>'+
+        (source?'<a class="btn primary" href="'+esc(source)+'" target="_blank" rel="noopener">View posting ↗</a>':'<span class="status-chip">Source unavailable</span>')+
+      '</div>';
+    }).join('')+'</div>';
   }
 
   function getApplications(){
@@ -162,11 +193,13 @@
     var url=bestLink(employer);
     var tag=stateLabel(employer);
     var record=applicationRecord(employer.id);
+    var currentOpeningCount=openingsForEmployer(employer.id).length;
     return '<article class="card click" role="button" tabindex="0" data-keyclick onclick="openEmployer(\''+esc(employer.id)+'\')">'+
       '<h3>'+esc(employer.name)+'</h3>'+
       '<div class="sub">'+esc(employer.type||'Employer')+(tag?' • '+esc(tag):'')+'</div>'+
       '<p><b>Department fit:</b> '+esc(contextDepartmentId?branchName(contextDepartmentId):(depts||OTHER_LABEL))+'</p>'+
       experienceChips(employer,contextDepartmentId)+
+      (currentOpeningCount?'<p><span class="status-chip">'+currentOpeningCount+' source-backed current opening'+(currentOpeningCount===1?'':'s')+'</span></p>':'')+
       '<p>'+esc(employer.bestUse||'Public company for live-event production research.')+'</p>'+
       '<div class="employer-actions">'+
         (url?'<a class="btn primary" href="'+esc(url)+'" onclick="event.stopPropagation()" target="_blank" rel="noopener">'+esc(linkLabel(employer))+' ↗</a>':'')+
@@ -219,6 +252,7 @@
       '</div>'+
       '<h3>Role-path guidance</h3>'+experienceChips(employer,'')+
       '<p class="kb-caution">Experience labels describe the normal access pattern of the department, not the requirements of a current vacancy. Verify the actual posting before applying.</p>'+
+      '<h3>Source-backed current openings</h3>'+openingRows(employer)+
       '<h3>Public links</h3>'+
       (publicLinkHtml?'<p class="home-links">'+publicLinkHtml+'</p>':'<p class="sub">No public website/career/contact link is recorded yet.</p>')+
       '<div class="application-actions"><button class="btn '+(record?'shortlisted':'')+'" type="button" onclick="toggleEmployerApplication(\''+esc(employer.id)+'\',event);closeModal()">'+(record?'Remove from application list':'Add to application list')+'</button></div>'+
