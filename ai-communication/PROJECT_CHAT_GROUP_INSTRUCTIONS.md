@@ -1,13 +1,13 @@
 # Project Chat Group Instructions — Production Atlas / Festival Atlas
 
 Generated: 2026-06-22  
-Updated: 2026-07-05  
+Updated: 2026-09-09  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
 Primary working branch: `research-version`
 
 ## Core startup rule
 
-When Aaron opens a new chat about Production Atlas, Festival Atlas, the work research app, or this repository, do not ask him to restate the project context first. Connect to the repository context and catch up from repo-visible documentation.
+When Aaron opens a new chat about Production Atlas, Festival Atlas, the job knowledge base, the work research app, or this repository, do not ask him to restate the project context first. Catch up from repo-visible documentation and current `research-version` files.
 
 The repository is the shared memory.
 
@@ -21,7 +21,7 @@ Default branch main is not the current working state unless Aaron explicitly say
 
 If using GitHub tools, fetch from `ref: research-version`.
 
-If using a local terminal, run:
+If using a local terminal:
 
 ```bash
 git fetch origin
@@ -35,7 +35,7 @@ git pull origin research-version
 
 `main` must never be edited, patched, merged into, hotfixed, or used as a shortcut unless Aaron explicitly says to touch `main`.
 
-Allowed without explicit Aaron approval:
+Allowed without explicit approval:
 
 ```text
 fetch/read main for diagnosis only
@@ -43,7 +43,7 @@ compare main to research-version for deployment troubleshooting
 explain that GitHub Pages appears to be using the wrong source or stale deployment
 ```
 
-Not allowed without explicit Aaron approval:
+Not allowed without explicit approval:
 
 ```text
 commit to main
@@ -61,22 +61,25 @@ Read these first, in order:
 1. ai-communication/PROJECT_CHAT_GROUP_INSTRUCTIONS.md
 2. ai-communication/AI_COLLABORATION_PROTOCOL.md
 3. ai-communication/DOCUMENT_DRIFT_CONTROL_PROTOCOL.md
-4. ai-communication/PRODUCT_ROADMAP.md
-5. README.md
-6. ROADMAP.md
+4. README.md
+5. ROADMAP.md
+6. ai-communication/PRODUCT_ROADMAP.md
 7. package.json
 8. data/packages/branch-research-manifest.js
-9. assets/atlas-core-v2.js
-10. tools/validate-static-app.js
-11. tools/validate-branch-research-packages.js
-12. tools/validate-data.js
+9. data/packages/production-branches.js
+10. assets/atlas-job-kb.css
+11. assets/employers-department-browser.js
+12. assets/atlas-core-v2.js
+13. tools/validate-static-app.js
+14. tools/validate-branch-research-packages.js
+15. tools/validate-data.js
 ```
 
-Then inspect task-specific files only as needed. Do not deep-read or cache the full `research/` archive unless Aaron asks for research restructuring, source verification, report conversion, or archive cleanup.
+Then inspect task-specific files only as needed. Do not deep-read the full `research/` archive unless the task requires research restructuring, source verification, report conversion, or archive cleanup.
 
-## Current project summary
+## Current product summary
 
-Production Atlas / Festival Atlas is Aaron's static public-safe work research app for scouting live-event production opportunities.
+Production Atlas is a static public-safe **job knowledge base and work research app for live-event production workers**.
 
 It should help answer:
 
@@ -84,21 +87,25 @@ It should help answer:
 Where is the work?
 When is it happening?
 Who publicly produces, promotes, operates, or routes the work?
-Who are the public employer/vendor/labor-route leads?
-Which source, map, calendar, employer, IATSE, or schedule page should Aaron review next?
+Which employers or labor organizations fit the department I want?
+Which department paths are normally entry-accessible, mixed, or qualification-heavy?
+Where is the official careers/apply/contact route?
+Which employers have I already researched or applied to in this browser?
+What is verified and what must still be checked on the current posting?
 ```
 
-The current goal is to keep the static work research app functioning well, not to build a backend or future platform.
+The current goal is to make the static public job-research system easier to navigate and more useful for application decisions, not to build a backend or private platform.
 
 ## Current app boundary
 
 ```text
 Static GitHub Pages app
-Public-safe work research dashboard
+Public-safe job/work research knowledge base
 No backend
 No login
 No database
-No private contact storage
+No public private-contact storage
+No server-side application tracking
 No payment processing
 No scraping/network automation
 ```
@@ -109,27 +116,28 @@ Do not introduce backend/auth/private workflow/payment/scraping architecture unl
 
 ```text
 Active opportunities: 254 records in data/packages/opportunities-2026.js
-Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Festival registry/master list: 258 records
 Map coordinates: 249 of 254 opportunity records currently mappable
 2027 model: separate year-specific records through opportunity-rollover-2027.js
-Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
-Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Default public cycle guard: public-cycle-scope.js
+Analytics: supplemental audit page with action-first research queue
 Schedule: browser-local localStorage planner, direct URL only, off header nav
+Shared UI normalization: assets/atlas-job-kb.css
+Employers decision workflow: assets/employers-department-browser.js
+Employer application workflow: browser-local localStorage only
 ```
-
-Aaron has confirmed the current app functions are correct. Documentation should align to current behavior instead of reintroducing removed UI.
 
 ## Current public UI scope
 
-Aaron has intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
+Do not revert the app to date/promoter-only filtering.
 
 Current page-specific filter direction:
 
 ```text
-opportunities.html: text search, state, department, producer/promoter, date/month
-calendar.html: date/month, plus page-specific calendar controls
-map.html: state and date/month; no department filter in current UI
-employers.html: text search, department, state, employer type
+opportunities.html: text search, state, department, producer/promoter, date/month, year
+calendar.html: date/month, year, plus page-specific calendar controls
+map.html: state, date/month, year; no department filter in current UI
+employers.html: text search, department, role-path experience band, state, employer type, browser-local application status
 sources.html: festival, department, employer route
 schedule.html: date/month, direct URL only while off public nav
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
@@ -147,17 +155,66 @@ IATSE
 Contribute
 ```
 
-`Guide` and `Sources` are footer/reference links, not header nav links. The Guide also appears as a home-page callout at the top of the home app content, between the nav bar and the first home card.
-
-`Schedule` remains functional by direct URL but is intentionally off header navigation pending rebuild.
+Guide and Sources are footer/reference links. Schedule remains functional by direct URL but is intentionally off header navigation pending rebuild.
 
 Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
-The action-first research queue is currently scoped to supplemental `analytics.html` only. It must not be moved into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
+## Employer experience-path rule
+
+`data/packages/production-branches.js` contains department-level `experienceBand` and `experienceLabel` fields.
+
+Current bands:
+
+```text
+entry       Entry-accessible department path
+mixed       Entry + experienced paths
+experienced Experienced / qualification- or responsibility-heavy path
+```
+
+These fields describe the normal access pattern of the **department**, not the requirements of a current employer vacancy.
+
+Never convert department-level guidance into a claim that a specific job is entry level or experienced unless the current public job posting or authoritative source says so.
+
+Always keep the UI distinction:
+
+```text
+department-path guidance != current vacancy requirements
+```
+
+## Employer application-workspace rule
+
+The Employers page may store these fields in browser localStorage only:
+
+```text
+employer ID
+target department
+workflow status
+local update timestamp
+```
+
+Current workflow statuses:
+
+```text
+Researching
+Ready to apply
+Applied
+Follow-up
+Closed
+```
+
+Do not add resume data, application answers, worker identity, private notes, private contacts, personal application history, or other personal information to the public repository.
+
+Do not add a server/database sync layer unless Aaron explicitly requests a separate private architecture.
+
+## Shared visual-system rule
+
+`assets/atlas-job-kb.css` is the shared professional visual normalization layer for Home, Employers, Market, Opportunities, IATSE, Calendar, and Map.
+
+It owns palette and common information-surface styling only. Runtime behavior stays in the existing owner scripts. Do not create new patch-layer scripts just to style individual pages when the shared stylesheet can own the rule.
 
 ## Current roadmap scope
 
-The active roadmaps are:
+Active roadmap authorities:
 
 ```text
 README.md
@@ -165,22 +222,19 @@ ROADMAP.md
 ai-communication/PRODUCT_ROADMAP.md
 ```
 
-They are intentionally limited to making the current static work research app function.
-
-Current stages:
+Current priorities:
 
 ```text
-Stage 1 — Stabilize pages, docs, runtime, validation, and deployment
-Stage 2 — Make the public dashboard useful for daily work research
-Stage 3 — Make public opportunity data clearer and safer
-Stage 4 — Make planning views useful
+1. Validate and visually review the normalized primary pages.
+2. Keep Employer Profiles as the hiring-oriented decision hub.
+3. Improve public job-opening evidence so actual posting requirements can be normalized when source-backed.
+4. Keep application workflow browser-local and public-safe.
+5. Continue improving Schedule/mobile usability without expanding into a backend.
 ```
-
-Do not expand the roadmap into backend architecture, private user systems, LMS integration, scraping automation, Firecrawl restoration, or general business planning unless Aaron asks.
 
 ## Collaboration protocol
 
-The active collaboration protocols are:
+Active protocols:
 
 ```text
 ai-communication/AI_COLLABORATION_PROTOCOL.md
@@ -209,6 +263,9 @@ Do not publish or render:
 private contacts
 phone numbers
 personal emails
+worker identity or worker records
+private application history
+resume/application answers
 pay rates
 hotel/lodging details
 crew rumors
@@ -216,33 +273,28 @@ private field notes
 NDA information
 client-sensitive information
 private referrals
+Deadhang private commercial strategy
 ```
 
-Public app may show official/public source links on `sources.html`, public producer/promoter/operator names, public route notes, public-safe employer/vendor leads, public apply/careers/contact/homepage routes, and plain human-verification language where needed.
-
-If uncertain, use language like:
-
-```text
-Unknown publicly. Human verification needed.
-```
+Public app may show official/public source links on `sources.html`, public producer/promoter/operator names, public route notes, public-safe employer/vendor leads, department fit, department-level experience guidance, and public apply/careers/contact/homepage routes.
 
 ## Source link rule
 
 Source links belong on `sources.html`.
 
-Do not put raw source links inside opportunity popups, branch popups, map popups, or schedule cards. Sources should remain centralized for auditability and public-safety control.
+Do not put raw source links inside opportunity popups, branch popups, map popups, or schedule cards.
 
 ## Festival research master-list rule
 
-`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It currently contains 258 records after reconciliation. It is not automatically active opportunity data by itself: records must be individually verified and promoted or matched to app data before being treated as active public opportunities.
+`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It is not automatically active opportunity data by itself. Records must be individually verified and promoted or matched to app data before being treated as active public opportunities.
 
 ## 2026/2027 rollover rule
 
 The decided model is separate year-specific records for verified future public cycles.
 
-`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that may create `*-2027` records at runtime until verified records are moved into canonical opportunity data. `data/packages/public-cycle-scope.js` currently keeps future-year records out of the default 2026 public view.
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge. `data/packages/public-cycle-scope.js` keeps future-year records out of the default public view.
 
-Do not expand the old mutation model where a visible `*-2026` record becomes a 2027 opportunity.
+Do not mutate a visible `*-2026` record into a 2027 opportunity.
 
 ## Manifest rule
 
@@ -264,8 +316,6 @@ When adding or editing branch research packages:
 
 ## Validation commands
 
-Use these commands when relevant:
-
 ```bash
 npm run validate:data
 npm run validate:branch-research
@@ -273,10 +323,4 @@ npm run validate:static-app
 npm run validate:all
 ```
 
-For documentation-only changes, validation may be skipped, but say clearly:
-
-```text
-Validation not run; documentation-only change.
-```
-
-For code/data changes, do not claim completion unless validation was run or the inability to run it is documented.
+For code/data changes, do not claim validation passed unless it was run locally or a GitHub Actions result confirms it. When Aaron explicitly says continue from connector-only access, continue the work and document that local validation was unavailable.
