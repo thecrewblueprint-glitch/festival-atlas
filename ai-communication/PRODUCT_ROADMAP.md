@@ -1,64 +1,67 @@
-# Production Atlas Work Research App Roadmap
+# Production Atlas Job Knowledge Base Roadmap
 
 Generated: 2026-06-22  
-Updated: 2026-07-05  
+Updated: 2026-09-09  
 Repository: `thecrewblueprint-glitch/festival-atlas`  
-Primary branch: `research-version`  
-Scope: Make the current static work research app function well. Do not roadmap backend architecture, private workflow systems, payment, authentication, scraping automation, or unrelated future platform structure.
+Primary branch: `research-version`
 
-## 1. Product Purpose
+## 1. Product purpose
 
-Production Atlas is Aaron's public-safe work research app for scouting live-event production opportunities.
+Production Atlas is a public-safe job knowledge base and work-research app for live-event production workers.
 
-The app should help answer:
+The product should help a worker answer:
 
 ```text
-1. Where is the work?
-2. When is it happening?
-3. Who publicly produces, promotes, operates, or routes the work?
-4. Which public employer/vendor/labor-route leads are relevant?
-5. What public source or planning page should Aaron review next?
+1. What kind of work am I trying to do?
+2. Which departments match that work?
+3. Which employers publicly operate in those departments and markets?
+4. Is the department normally entry-accessible, mixed, or qualification-heavy?
+5. What official careers/apply/contact route should I use?
+6. Which employers have I already researched, applied to, or need to follow up with?
+7. Which events, dates, locations, and labor mechanisms matter to the decision?
+8. What is verified, approximate, or still dependent on the current job posting?
 ```
 
-The app is successful when Aaron can open it, filter by the current page-specific controls, compare public work-route leads, review sources, inspect map/calendar timing, and decide what to research next without digging through raw research documents.
+The app is successful when a worker can move from broad market research to a practical employer shortlist and next action without digging through raw research files or confusing general employer presence with event-specific staffing evidence.
 
-## 2. Current App Boundary
-
-Current app type:
+## 2. Current product boundary
 
 ```text
 Static GitHub Pages app
-Public-safe work research dashboard
+Public-safe employer/event/labor-market knowledge base
+Browser-local planning and application workflow state
 No backend
 No login
-No private contact storage
-No pay/lodging/private field notes
-No scraping or network research automation
+No server-side database
+No public private-contact storage
+No payment processing
+No scraping/network research automation
 ```
 
 Working rule:
 
 ```text
-Make the research app useful and reliable before considering any larger platform structure.
+Make the public knowledge base useful, navigable, evidence-aware, and application-oriented before considering any larger platform architecture.
 ```
 
-## 3. Current Built State
+## 3. Current built state
 
 ```text
 Active opportunities: 254 records in data/packages/opportunities-2026.js
-Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
-Map coordinates: 249 of 254 opportunity records currently mappable
-2027 model: separate year-specific records through opportunity-rollover-2027.js
-Default public cycle guard: public-cycle-scope.js keeps future records out of the default 2026 active view
-Analytics: supplemental retained audit page with action-first research queue via assets/research-queue-page.js
+Festival registry/master list: 258 records
+Map coordinates: 249 of 254 active opportunities currently mappable
+2027 model: separate year-specific records
+Analytics: supplemental audit page with action-first research queue
 Schedule: browser-local localStorage planner, direct URL only, off header nav
+Shared visual layer: assets/atlas-job-kb.css
+Employers renderer: assets/employers-department-browser.js
+Department experience guidance: data/packages/production-branches.js
+Employer application workflow: browser-local localStorage only
 ```
 
-The current app functions are correct. Documentation should describe the current status instead of reintroducing removed UI or retired decisions.
+## 4. Non-negotiable operating rules
 
-## 4. Non-Negotiable Operating Rules
-
-### 4.1 Public-Safe Display
+### 4.1 Public-safe display
 
 Do not render or publish:
 
@@ -66,6 +69,9 @@ Do not render or publish:
 private contacts
 phone numbers
 personal emails
+worker identity or worker records
+private application history
+resume/application answers
 pay rates
 hotel/lodging details
 crew rumors
@@ -73,71 +79,81 @@ private field notes
 NDA information
 client-sensitive information
 private referrals
+Deadhang private commercial strategy
 ```
 
-### 4.2 Sources Stay Centralized
+### 4.2 Sources stay centralized
 
-Source links belong on:
+Raw source links belong on `sources.html`.
 
-```text
-sources.html
-```
+Do not move raw source links into opportunity, branch, map, schedule, or employer-detail popups unless the source-link policy is deliberately changed.
 
-Do not move raw source links into opportunity, branch, map, or schedule popups.
+### 4.3 Public filter scope
 
-`Sources` remains the central source/audit page. Source links belong there, but Sources is a footer/reference link, not a header nav link.
-
-### 4.3 Public Filter Scope
-
-Aaron intentionally reopened the earlier narrow filter decision. Do not revert the app to date/promoter-only filtering.
-
-Current page-specific filter direction:
+Current filter direction:
 
 ```text
-opportunities.html: text search, state, department, producer/promoter, date/month
-calendar.html: date/month, plus page-specific calendar controls
-map.html: state and date/month; no department filter in current UI
-employers.html: text search, department, state, employer type
+opportunities.html: text search, state, department, producer/promoter, date/month, year
+calendar.html: date/month, year, plus page-specific controls
+map.html: state, date/month, year; no department filter in current UI
+employers.html: text search, department, role-path experience band, state, employer type, browser-local application status
 sources.html: festival, department, employer route
 schedule.html: date/month, direct URL only while off public nav
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
 ```
 
-Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue status as primary public filters unless Aaron explicitly reopens them.
 
-### 4.4 Header / Footer Navigation
+### 4.4 Experience guidance is department-level
 
-Current header nav:
+`experienceBand` and `experienceLabel` on production branches describe the normal access pattern of a **department**.
 
-```text
-Home
-Opportunities
-Calendar
-Map
-Employers
-IATSE
-Contribute
-```
-
-`Guide` and `Sources` are footer/reference links. The Guide also appears as a home-page callout below the nav and above the first home card. `Schedule` exists by direct URL only and remains off header navigation pending rebuild.
-
-### 4.5 Manifest Is the Data Loading Authority
-
-Branch research package loading must stay controlled by:
+Current bands:
 
 ```text
-data/packages/branch-research-manifest.js
+entry
+mixed
+experienced
 ```
 
-Do not rely on stale hardcoded fallback arrays.
+Never convert that guidance into a claim that a current job opening has a particular experience requirement unless the current public posting says so.
 
-### 4.6 Analytics Research Queue Boundary
+### 4.5 Application workflow stays browser-local
 
-`assets/research-queue-page.js` is no longer retired. It is intentionally restored for `analytics.html` only. Do not move that queue into primary public navigation, public cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly reopens that scope.
+Allowed localStorage fields:
 
-### 4.7 Validation and Human Review
+```text
+employer ID
+target department
+workflow status
+local update timestamp
+```
 
-Any code or data change should keep these passing when commands can run:
+Current statuses:
+
+```text
+Researching
+Ready to apply
+Applied
+Follow-up
+Closed
+```
+
+Do not add public worker/application data to GitHub. A synced private application system would be a separate owner-authorized architecture.
+
+### 4.6 Shared visual system
+
+`assets/atlas-job-kb.css` is the common professional information-interface layer for Home, Employers, Market, Opportunities, IATSE, Calendar, and Map.
+
+It owns visual normalization only. Runtime logic stays in existing owner scripts.
+
+### 4.7 Analytics research queue boundary
+
+`assets/research-queue-page.js` remains scoped to supplemental `analytics.html` only. Do not expose the research queue as a primary worker workflow.
+
+### 4.8 Validation and human review
+
+Relevant validation commands:
 
 ```bash
 npm run validate:data
@@ -146,274 +162,146 @@ npm run validate:static-app
 npm run validate:all
 ```
 
-When Aaron says continue and the environment cannot run validation, continue the repo work, state that validation was not run, and treat Aaron's live visual review as the immediate review gate. Do not claim validation passed unless it actually ran.
+When Aaron says continue and local validation cannot run, continue repo work, document the limitation, and use human live visual review as the immediate review gate. Do not claim validation passed unless it actually ran or GitHub Actions confirms it.
 
 ---
 
-# Stage 1 — Stabilize Pages, Docs, Runtime, Validation, and Deployment
+# Stage 1 — Normalize the public information architecture
 
 ## Goal
 
-Make the current static app load correctly, validate correctly, deploy from `research-version`, and match repo-visible documentation.
+Make the product look and behave like one professional job knowledge base instead of a collection of differently styled research pages.
 
-## Done When
+## Current state
 
-```text
-npm run validate:all passes in a real workspace or GitHub Actions.
-GitHub Pages deploys the current research-version branch.
-README matches the real active page list, nav, runtime ownership, current page-specific filter scope, and data counts.
-ROADMAP.md and this AI roadmap match current public scope.
-Legal and white pages match public-safe app behavior.
-Navigation is consistent with intended header/footer placement.
-Current page-specific filters are preserved unless Aaron changes them.
-Manifest covers every branch research package.
-Every branch research package has a matching research report.
-No active Firecrawl/scraping runner exists.
-```
-
-## Tasks
-
-1. Keep README, root ROADMAP, AI collaboration files, white pages, and legal pages aligned with current behavior.
-2. Keep source links centralized on Sources.
-3. Keep Schedule off header nav until its rebuild is ready.
-4. Keep Analytics queue documented as supplemental audit scaffolding only.
-5. Keep public pages free of private/sensitive information.
-6. Confirm live visual review reflects `research-version`, not stale `main` or failed deploy output.
+- [x] Add shared job-knowledge-base visual system.
+- [x] Apply it to Home.
+- [x] Apply it to Employers.
+- [x] Apply it to Market.
+- [x] Apply it to Opportunities.
+- [x] Apply it to IATSE.
+- [x] Apply it to Calendar.
+- [x] Apply it to Map.
+- [x] Keep existing public page copy intact during the style normalization.
+- [ ] Visual browser review on desktop and mobile.
+- [ ] Normalize remaining supplemental/reference pages only where doing so improves coherence without obscuring their different purpose.
 
 ---
 
-# Stage 2 — Make the Public Dashboard Useful for Daily Work Research
+# Stage 2 — Make Employer Profiles the application decision hub
 
 ## Goal
 
-Make the app useful as a public work-research command center without confusing supplemental audit scaffolding for the primary public workflow.
+A worker should be able to narrow the employer universe to the companies that fit the work they want and organize a real application sequence.
 
-## Done When
+## Current state
 
-Aaron can open the app and quickly answer:
-
-```text
-Which events happen in the date/month I care about?
-Which producer/promoter/operator is publicly connected?
-Which state, department, employer route, or source page should I inspect next when the current page supports that filter?
-Which planning page should I use next?
-```
-
-## Tasks
-
-### 2.1 Improve Home / Guide
-
-Home should explain the app quickly and route users to Guide, Opportunities, Calendar, Map, Employers, Sources, and Schedule as appropriate for the current UI.
-
-The Guide callout belongs at the top of the home app content, not in the hero and not in header nav.
-
-### 2.2 Keep Research Queue Scoped
-
-The action-first research queue currently lives only on supplemental `analytics.html`. It must not be exposed as a primary public workflow, public card element, popup element, map popup element, schedule card element, or public filter unless Aaron reopens that scope.
-
-### 2.3 Improve Current Filters
-
-Improve empty states and counts for the current page-specific filters. Do not add a Map department filter unless Aaron explicitly changes that decision.
-
-### 2.4 Keep Sorting Practical but Not Publicly Scored
-
-Runtime sorting may use internal usefulness signals, but public cards should not show value scores, value tiers, confidence badges, or internal priority labels.
+- [x] Filter employers by department.
+- [x] Filter employers by geography.
+- [x] Filter employers by employer type.
+- [x] Add department-level entry/mixed/experienced guidance.
+- [x] Filter by role-path experience band.
+- [x] Add employer shortlist/application workspace.
+- [x] Allow a saved employer to carry a target department.
+- [x] Track Researching / Ready to apply / Applied / Follow-up / Closed.
+- [x] Keep application state browser-local.
+- [x] Preserve official careers/apply/contact links as the action route.
+- [ ] Add stronger application-list sorting/grouping if the current simple workspace becomes hard to manage.
+- [ ] Add export/print only if it can remain local and does not create a public personal-data surface.
 
 ---
 
-# Stage 3 — Make Public Opportunity Data Clearer and Safer
+# Stage 3 — Add evidence-backed current job-opening intelligence
 
 ## Goal
 
-Make every opportunity record easy to understand, compare, and verify without overstating certainty.
+Move beyond general employer capability when reliable public job postings are available, without inventing vacancy attributes.
 
-## Done When
-
-Each major public opportunity clearly shows:
+## Target normalized fields
 
 ```text
-what it is
-where it is
-when it happens
-who publicly produces/promotes/operates it when known
-what public employer route exists
-what public source page supports it
-what remains approximate or must be verified outside the app
+employer
+job title
+public posting URL
+department
+location
+employment type when stated
+opening status when verifiable
+experience requirement exactly as stated or normalized from stated requirements
+certification/license requirement when explicitly stated
+travel/touring requirement when explicitly stated
+posting/source date when available
 ```
 
-## Tasks
+## Rules
 
-### 3.1 Standardize Opportunity Cards
-
-Each card should emphasize:
-
-```text
-name
-city/state/venue
-public date window
-approximate planning/work window
-producer/promoter/operator when publicly known
-public employer route entry point
-link to details or Sources page when appropriate
-```
-
-### 3.2 Standardize Opportunity Modals
-
-Each modal should show public-safe event details and employer routes. Do not show raw internal audit fields, value score, confidence score, next human action, or research queue language.
-
-### 3.3 Standardize Employer Route Language
-
-Use neutral wording. Do not upgrade a public lead into a confirmed event-specific relationship unless a public source supports that exact connection.
-
-### 3.4 Keep Legal / White Pages Current
-
-When the app changes, update these as needed:
-
-```text
-about.html
-data-methodology.html
-employer-route-methodology.html
-date-work-window-disclaimer.html
-privacy-policy.html
-terms-and-conditions.html
-limitation-of-liability.html
-cookie-notice.html
-accessibility.html
-affiliate-disclosure.html
-contact-data-requests.html
-```
-
-### 3.5 Maintain Festival Registry Accuracy
-
-`data/packages/festival-research-master-list.js` is the reconciled registry and intake control file. It currently contains 258 records. Do not treat a registry record as active public opportunity data unless it is verified and promoted or matched into active app data.
+- [ ] Do not infer entry level from title alone.
+- [ ] Do not infer experienced level from company reputation or department alone.
+- [ ] Do not infer licensing/certification requirements.
+- [ ] Preserve source provenance.
+- [ ] Treat stale or closed postings differently from current openings.
+- [ ] Keep general employer profile data usable even when no current vacancy exists.
+- [ ] Keep vacancy evidence separate from event staffing evidence.
 
 ---
 
-# Stage 4 — Make Planning Views Useful
+# Stage 4 — Connect employer decisions to event and market context
 
 ## Goal
 
-Make Calendar, Map, and Schedule help Aaron plan which opportunities to track, compare, and possibly pursue.
+Make it easier to understand why an employer is relevant without falsely claiming it staffs a specific show.
 
-## Done When
-
-Aaron can use Calendar, Map, Schedule, Sources, and Employers to understand public timing, geography, producer/operator route, employer route, and planning conflicts.
-
-## Tasks
-
-### 4.1 Improve Calendar View
-
-Calendar should help answer:
-
-```text
-What happens each month?
-Which events overlap?
-Which approximate work windows matter?
-Which public event dates need source review?
-```
-
-### 4.2 Improve Map View
-
-Map should help answer:
-
-```text
-Where are the work targets?
-Which regions cluster together?
-Which events are unmapped or public-TBD?
-What should I inspect next?
-```
-
-Current map state: 249 of 254 opportunity records have coordinates. Refine city-centroid coordinates to venue-precise only when reliable public location information exists.
-
-### 4.3 Improve Schedule View
-
-Schedule is local browser planning only and is currently off public header navigation. It should stay public-safe.
-
-Improve it to show:
-
-```text
-selected events
-date overlap warnings
-approximate total event days
-month spread
-region spread
-clear add/remove buttons
-mobile-first selected event list
-simple links back to map/calendar/opportunity detail
-```
-
-Do not store private plans, contacts, pay, lodging, outreach notes, or personal workflow data in this public static app.
-
-### 4.4 2026/2027 Rollover Cleanup
-
-The decided model is separate year-specific records. The current rollover bridge creates `*-2027` records at runtime for verified public 2027 cycles and archives the corresponding active `*-2026` source records. `public-cycle-scope.js` keeps future-year records out of the default 2026 public view.
-
-Future cleanup:
-
-```text
-Move verified *-2027 records into canonical opportunity data.
-Shrink or retire data/packages/opportunity-rollover-2027.js.
-Reassess data/packages/public-cycle-scope.js after core owner-file cycle controls exist.
-Keep pending 2027 records hidden until public source dates are verified.
-```
-
-### 4.5 Future Unified Planning Workspace
-
-Do not attempt the full merge until Schedule is mobile-usable.
-
-Longer-term planning direction:
-
-```text
-pick festival
-see map location
-see public show dates
-see approximate working window
-add/remove from schedule
-later compare travel distance/time when scope and source are approved
-```
-
-### 4.6 Improve Sources View
-
-Sources page should remain the audit table.
-
-Useful support:
-
-```text
-search by opportunity
-filter by section if useful
-show source label
-open public source
-avoid raw source links in popups
-```
+- [ ] Improve links between departments and relevant employer profiles.
+- [ ] Improve Market → Employer Profile navigation.
+- [ ] Improve Opportunity → relevant public employer-route research when evidence supports the relationship.
+- [ ] Keep producer/promoter, labor provider, technical-production company, venue, and labor organization categories distinct.
+- [ ] Add event-specific employer/vendor relationships only when public evidence supports the exact relationship.
 
 ---
 
-# Execution Order
+# Stage 5 — Improve planning views
 
-Use this order unless Aaron reprioritizes:
+## Goal
 
-```text
-1. Run or trigger npm run validate:all in a real workspace or GitHub Actions environment.
-2. Confirm the live site is serving research-version output.
-3. Spot-check public pages on mobile, especially nav, filters, IATSE, Employers, Opportunities, Map, Analytics, and Schedule direct URL.
-4. Improve Schedule mobile usability before restoring it to header nav.
-5. Improve filter empty states.
-6. Continue public source and producer/promoter verification for priority records.
-7. Refine remaining map coordinates when exact public venue/location data is available.
-8. Canonicalize verified 2027 records after validation/deploy are stable.
-```
+Support practical work planning without turning the public app into a private database.
 
-## What This Roadmap Excludes
+- [ ] Continue Calendar usability improvements.
+- [ ] Continue Map routing/location improvements.
+- [ ] Improve Schedule mobile usability before returning it to header navigation.
+- [ ] Keep Schedule state browser-local.
+- [ ] Keep Employer application state browser-local.
+- [ ] Explore local-only coordination between saved opportunities and saved employer applications if it materially reduces repeated work.
 
-Do not include these in this roadmap:
+---
 
-```text
-backend architecture
-login/authentication
-private contact database
-payment systems
-scraping automation
-Firecrawl restoration
-LMS integration
-general business planning
-```
+# Stage 6 — Improve public data quality
+
+- [ ] Review active source URLs.
+- [ ] Verify producer/promoter/operator names for priority opportunities.
+- [ ] Expand and refresh employer careers/apply/contact routes.
+- [ ] Continue IATSE official-source research while preserving the distinction between international, district, local, jurisdiction, referral, membership, employer, and work call.
+- [ ] Canonicalize verified 2027 records and retire bridge behavior when ready.
+- [ ] Refine remaining map coordinates when exact public locations are available.
+
+---
+
+# Stage 7 — Validate, deploy, and review
+
+Immediate review sequence:
+
+1. Run `npm run validate:all` or equivalent GitHub Actions validation.
+2. Confirm the current `research-version` deployment is live.
+3. Review Home, Employers, Market, Opportunities, IATSE, Calendar, and Map on desktop.
+4. Review the same pages on mobile.
+5. Verify employer filters independently and in combination.
+6. Verify shortlist add/remove.
+7. Verify target-department selection persists.
+8. Verify application status persists and filters correctly.
+9. Verify no local application data appears in repository/network-backed public data.
+10. Verify department experience labels are not phrased as current vacancy requirements.
+
+---
+
+## Next product priority
+
+The strongest next data improvement is **current job-opening normalization with source-backed role requirements**. The current department experience model is useful for navigation, but it should remain a directional layer until actual job-posting evidence can support vacancy-level classification.
