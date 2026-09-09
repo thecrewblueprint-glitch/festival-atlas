@@ -3,55 +3,53 @@
 A project of [Deadhang Labor LLC](https://deadhanglaborllc.com).
 
 Generated: 2026-06-22  
-Updated: 2026-09-07
+Updated: 2026-09-09
 
-Production Atlas is a static GitHub Pages work and market-intelligence app for live-event production contractors. The public app is focused on factual, publicly known or publicly obtainable information that helps workers find festival opportunities, understand public dates and approximate production windows, identify public producer/promoter, employer, and labor-organization routes, review source references, and plan scheduling.
+Production Atlas is a static GitHub Pages job knowledge base and market-intelligence app for live-event production workers. The public app uses factual, publicly known or publicly obtainable information to help workers identify events, understand production timing, find relevant employers and labor routes, narrow opportunities by department and geography, reach official hiring channels, and make more informed application decisions.
 
-The repository is the canonical public store for accepted public-safe market and institutional research that powers the product. Public-facing pages should stay concise, worker-useful, and free of personal information. Private analysis, unresolved sensitive intelligence, and personal data do not belong in this repository.
+The repository is the canonical public store for accepted public-safe market and institutional research that powers the product. Public-facing pages must stay worker-useful and free of personal information. Private analysis, unresolved sensitive intelligence, personal contacts, worker records, private application information, pricing, procurement strategy, and other private Deadhang intelligence do not belong here.
 
-The Crew Blueprint is the sibling public training system: https://thecrewblueprint-glitch.github.io/thecrewblueprint/. Production Atlas owns current work and market intelligence; The Crew Blueprint owns durable technical, safety, academic, and job-readiness curriculum. Each site links to the other, while their datasets remain separate.
+The Crew Blueprint is the sibling public training system. Production Atlas owns current work, employer, hiring-route, market, and event intelligence; The Crew Blueprint owns durable technical, safety, academic, and job-readiness curriculum. Each site may link to the other, but their datasets remain separate.
 
-README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
-
-## Live GitHub Pages site
+## Live site
 
 - **Custom domain:** https://atlas.thecrewblueprint.com/
 - **GitHub Pages URL:** https://thecrewblueprint-glitch.github.io/festival-atlas/
-
-Maintenance rule: keep this README current when significant app behavior, public navigation, public filter scope, runtime loading, active shared files, validation contract, data state, page roles, collaboration-log convention, public-safety policy, or source-link policy changes.
 
 ## Repository / branch
 
 ```text
 Repository: thecrewblueprint-glitch/festival-atlas
-Active research branch: research-version
+Active working branch: research-version
 Default branch: main
 Pages source: GitHub Actions
 Live preview source branch: research-version
-Public site: https://atlas.thecrewblueprint.com/
 ```
 
 `research-version` is the intended live working branch. `main` must not be edited, patched, merged into, or used as a live hotfix unless Aaron explicitly says to touch `main`.
 
 ## Current state snapshot
 
-Current repo-visible app state as of 2026-09-07:
+Current repo-visible state as of 2026-09-09:
 
 ```text
-Public app type: static GitHub Pages app
+Public app type: static GitHub Pages job knowledge base / work research app
 Public navigation: Home, Opportunities, Calendar, Map, Employers, IATSE, Contribute
 Schedule: functional by direct URL only; off header navigation pending rebuild
 Active opportunity package: data/packages/opportunities-2026.js
 Current active opportunity count: 254 opportunity records
-Festival registry/master list: 258 records in data/packages/festival-research-master-list.js
+Festival registry/master list: 258 records
 Map coordinates: 249 of 254 opportunity records currently mappable
 Analytics: supplemental retained audit page with action-first research queue
+Shared professional UI layer: assets/atlas-job-kb.css
+Employer decision hub: assets/employers-department-browser.js
+Application workspace: browser-local localStorage only
 Backend/auth/database/payment/scraping: none
 ```
 
-The app functions are currently treated as correct. Documentation should describe current behavior instead of reintroducing removed UI or patch-layer assumptions.
+The shared job-knowledge-base visual layer is loaded on Home, Employers, Market, Opportunities, IATSE, Calendar, and Map. It normalizes the visual system into a professional dark teal/blue information interface while preserving each page's existing public copy.
 
-## Source-of-truth rule
+## Source-of-truth order
 
 When repo-visible documents disagree, resolve in this order:
 
@@ -72,13 +70,11 @@ When repo-visible documents disagree, resolve in this order:
 
 ## Collaboration log rule
 
-Routine per-commit or per-small-change notes belong in:
+Routine per-commit or compact change-group notes belong in:
 
 ```text
 ai-communication/collaboration-log/
 ```
-
-Use one new file per commit or compact commit group. Do not maintain one giant append-only active-session ledger for routine work.
 
 Recommended filename pattern:
 
@@ -86,74 +82,47 @@ Recommended filename pattern:
 YYYY-MM-DD-###-assistant-short-topic.md
 ```
 
-Each log entry must include lifecycle metadata:
+Each entry should include status, created date, review-after date, assistant, branch, commit/range, access mode, files changed/deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status, known risks, and next action.
 
-```text
-Status: complete | incomplete | blocked | superseded
-Created: YYYY-MM-DD
-Review after: YYYY-MM-DD
-Assistant: ChatGPT | Claude | Claude Code | other
-Branch: research-version
-Commit: <sha>            (or "Commits: <sha>, <sha>" or "Commit range: <sha>..<sha>")
-```
+Complete or superseded logs older than 14 days may be deleted when no longer useful. Incomplete or blocked logs older than 14 days should move to `ai-communication/collaboration-log/incomplete/` and remain auditable.
 
-For current work, logs should also include access mode, files changed, files deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status where applicable, known risks, and next action.
-
-Two-week cleanup rule:
-
-```text
-complete or superseded logs older than 14 days may be deleted if no longer useful.
-incomplete or blocked logs older than 14 days should be moved to ai-communication/collaboration-log/incomplete/.
-incomplete or blocked logs must remain auditable and must not be deleted during routine cleanup.
-```
-
-Use `ai-communication/` root for major handoffs, decision records, current-state summaries, and cross-assistant instructions. Use `ai-communication/collaboration-log/` for compact per-commit/per-change notes.
-
-## Public page strategy
-
-The app should help answer:
+## Product questions the app should answer
 
 ```text
 Where is the work?
 When is it happening?
 Who publicly produces, promotes, operates, or routes the work?
-What is the approximate build/load-in and strike/load-out window?
-Which public companies, employers, vendors, or labor routes are relevant?
-Where can a worker apply, contact, or research those companies?
-How does this affect calendar, travel, and scheduling decisions?
+Which employers or labor organizations are relevant to the department I want?
+Which departments are normally entry-accessible, mixed, or qualification-heavy?
+Which public careers/apply/contact route should I use?
+Which employers have I already researched or applied to in this browser?
+What is verified, what is approximate, and what still requires checking the live posting?
+How do calendar and map information affect travel and scheduling decisions?
 ```
 
-### Primary work-flow pages
+## Primary workflow pages
 
 ```text
-index.html        Home: quick explanation, dashboard, and clear Guide link.
+index.html        Hiring-intelligence home page and primary route into Employer Profiles.
 guide.html        Full Guide for Use and public-safe workflow.
+employers.html    Employer decision hub: company profiles, departments, experience-path guidance,
+                  geography, employer type, official hiring links, and browser-local application workflow.
+market.html       Employer/market structure explorer by department, geography, and company type.
 opportunities.html
-                  Festival/event profiles with page-specific filters for text search,
-                  state, department, producer/promoter, and date/month.
-calendar.html     Month-by-month planning view for event timing and availability.
+                  Festival/event profiles with search, state, department, producer/promoter,
+                  date/month, and year controls.
+calendar.html     Month/date planning view with year controls and approximate work windows.
 map.html          Location view for routing, travel clustering, and nearby opportunities.
-                  Current Map filters are state and date/month; do not re-add the
-                  removed department filter unless Aaron explicitly reopens it.
-employers.html    Public company, employer, vendor, producer, venue, and apply/contact routes.
-iatse.html        IATSE institutional and worker-route guide: structure, distinct referral,
-                  employment, membership, training, organizing, and touring states;
-                  searchable partial local snapshot; current official-source routing.
+iatse.html        IATSE institutional and worker-route guide with searchable retained local snapshot.
 contribute.html   Public-safe human-submission route; all submissions require review.
 feedback.html     Public app feedback route.
 ```
 
-Schedule state:
+Schedule remains functional by direct URL and browser-local storage, but is intentionally off public header navigation pending a mobile/usability rebuild.
 
-```text
-schedule.html     Local browser-only planning view. Temporarily off public navigation
-                  (unlinked, noindex, robots-disallowed); still functional by direct URL,
-                  saved schedules preserved, pending a mobile/usability rebuild.
-```
+### Header navigation
 
-### Header / footer navigation rule
-
-Current header nav:
+Current public header navigation remains:
 
 ```text
 Home
@@ -165,80 +134,116 @@ IATSE
 Contribute
 ```
 
-Schedule is temporarily off public navigation pending a rebuild; the page still works by direct URL. Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links.
+Guide and Sources remain footer/reference links. Schedule remains off header navigation.
 
-### Source / audit page
+## Employer decision model
 
-```text
-sources.html      Central public event, employer, and IATSE institutional source list.
-```
+The Employers page is the primary hiring-oriented decision surface.
 
-Source links still belong on `sources.html`, not inside opportunity popups, branch popups, map popups, or schedule cards.
-
-### White pages
+Workers can filter by:
 
 ```text
-about.html
-                    What Production Atlas is and is not.
-data-methodology.html
-                    How public event, employer, source, map, date, and planning data works.
-employer-route-methodology.html
-                    Difference between general employer routes and confirmed event-specific routes.
-date-work-window-disclaimer.html
-                    Public event dates vs. approximate work-window planning estimates.
+text search
+production department
+role-path experience band
+state
+employer type
+browser-local application status
 ```
 
-### Legal / policy pages
+### Department experience guidance
+
+`data/packages/production-branches.js` carries two public guidance fields:
 
 ```text
-privacy-policy.html
-terms-and-conditions.html
-limitation-of-liability.html
-cookie-notice.html
-accessibility.html
-affiliate-disclosure.html
-contact-data-requests.html
+experienceBand
+experienceLabel
 ```
 
-### Supplemental retained pages
-
-These pages are retained because validation expects them and they may be useful for deeper review, but they are not part of the primary public navigation:
+Current bands:
 
 ```text
-branches.html      Supplemental department/research view. Public nav currently hides it.
-matrix.html        Supplemental department/employer matrix.
-analytics.html     Supplemental clustering/audit view with the intentionally restored
-                   action-first research queue in assets/research-queue-page.js.
+entry       Entry-accessible department path
+mixed       Entry + experienced paths
+experienced Experienced / qualification- or responsibility-heavy path
 ```
 
-Do not delete supplemental retained pages unless validation scripts and public workflow are updated in the same work cycle.
+These are **department-path classifications**, not vacancy classifications.
+
+Examples of the intended interpretation:
+
+```text
+Staging / Structures        entry-accessible
+Site Operations             entry-accessible
+Logistics                   entry-accessible
+Production Assistant/Office entry-accessible
+Lighting                    mixed
+Audio                       mixed
+Video / LED                 mixed
+Scenic / Carpentry          mixed
+Backline                    mixed
+Rigging                     experienced / qualification-heavy
+Power / Electrical          experienced / qualification-heavy
+Stage Management            experienced / responsibility-heavy
+```
+
+Do not infer that every job at an employer inherits the department label. A current vacancy is entry level, experienced, certified, licensed, or otherwise restricted only when the current public posting or authoritative source states that requirement.
+
+Public UI must continue telling workers to verify current opening requirements, certifications, qualifications, and role scope before applying.
+
+## Browser-local application workspace
+
+Employers can be added to a private browser-local application list. The current workflow states are:
+
+```text
+Researching
+Ready to apply
+Applied
+Follow-up
+Closed
+```
+
+Each saved employer may also carry a target department.
+
+The application workspace stores only browser-local workflow state in localStorage:
+
+```text
+employer ID
+target department
+application workflow status
+local update timestamp
+```
+
+It must not send that state to GitHub, analytics, a database, or another user. Do not add resume data, personal notes, private contacts, application answers, worker identity, or other personal application information to the public repository.
+
+This local-only workspace is consistent with the existing Schedule localStorage boundary. Any future synced/private application system is a separate architecture decision and requires explicit owner direction.
 
 ## Public filter scope
 
-Aaron has intentionally reopened the public filter decision. Do not revert the app to a date/promoter-only model.
+Do not revert the app to a date/promoter-only model.
 
 Current page-specific filter direction:
 
 ```text
-opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month, year (2026/2027)
-calendar.html: date/month, year (2026/2027), plus any page-specific calendar controls
-map.html: state, date/month, year (2026/2027); no department filter in current UI
-employers.html: text search (name, type, state), department, state, employer type
+opportunities.html: text search (name, city, venue, producer), state, department, producer/promoter, date/month, year
+calendar.html: date/month, year, plus page-specific calendar controls
+map.html: state, date/month, year; no department filter in current UI
+employers.html: text search, department, role-path experience band, state, employer type, browser-local application status
 sources.html: festival, department, employer
-schedule.html: date/month (off public navigation; reachable by direct URL only)
 iatse.html: text search for local number, city, state, state abbreviation, craft, district, and organization family
+schedule.html: date/month, direct URL only while off public navigation
 ```
 
-Opportunities and Employers paginate results 10 per page with a numbered Prev/Next jumper; changing any search or filter resets to page 1. The IATSE page is tabbed (Work & membership routes / Find a local / How IATSE is structured) and paginates its retained 221-record partial local snapshot the same way. The current official IATSE directory remains canonical for local discovery.
+Opportunities paginate 10 per page. Employers paginate 12 per page. Changing employer decision filters resets the employer result page to page 1. The IATSE local directory remains a retained partial snapshot and should not be described as a complete current national directory.
 
-Year filter (2026/2027 toggle) is available on Opportunities, Calendar, and Map pages to separate calendar cycles. Users can view all dates, filter to 2026 only, or filter to 2027 only. Filter selections persist through URL parameters.
-
-Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or research-queue status as primary public filters unless Aaron explicitly reopens those items.
+Do not expose confidence, value-tier, accommodation, travel, per-diem, source-quality, or public research-queue status as primary public filters unless Aaron explicitly reopens those items.
 
 ## Active shared files
 
 ```text
 assets/atlas.css
+assets/atlas-job-kb.css
+assets/atlas-v3-home.css
 assets/atlas-core-v2.js
 assets/approx-date-labels.js
 assets/festival-modal-public-safe.js
@@ -252,7 +257,7 @@ assets/site-footer.js
 assets/icons.js
 data/iatse-us-local-directory.js
 data/iatse-organization-info.js
-research/iatse-public-market-research-sweep-2026-09-07.md
+data/packages/production-branches.js
 data/packages/opportunity-taxonomy.js
 data/packages/research-queue-route-updates.js
 data/packages/opportunity-rollover-2027.js
@@ -262,22 +267,17 @@ data/packages/festival-research-master-list.js
 data/packages/branch-research-manifest.js
 ```
 
-Retired public helpers must not be reintroduced:
+`assets/atlas-job-kb.css` is a shared visual normalization layer. It owns palette and common information-surface styling for the primary workflow pages. It should not contain data logic.
 
-```text
-assets/confidence-badges.js
-assets/opportunities-promoter-filter.js
-assets/opportunities-date-sort.js
-assets/iatse-page.js
-```
+`assets/employers-department-browser.js` owns the Employers page renderer, employer decision filters, department experience display, application shortlist, target-department selection, and browser-local application workflow.
 
-`assets/research-queue-page.js` is no longer retired. It is intentionally restored for the supplemental `analytics.html` audit queue. It must not be moved into primary public navigation, cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly changes the app scope.
+Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
 
 ## Runtime ownership
 
 `assets/atlas-core-v2.js` owns core public rendering, opportunity date sorting, producer/promoter filter population and filtering, IATSE organization rendering, modals, Sources rendering, and the current Schedule renderer.
 
-External page renderers remain acceptable only where they are intentionally page-owned:
+Intentionally page-owned renderers:
 
 ```text
 assets/calendar-interactive.js          Calendar
@@ -288,15 +288,15 @@ assets/guide-page.js                    Guide content
 assets/research-queue-page.js           Analytics supplemental audit queue
 ```
 
-Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
+## Required runtime loading
 
-## Required runtime load order
+Primary pages load public data packages before runtime scripts. Current shared branch package cache version is `multi2` because the production-branch schema includes experience guidance.
 
-Every active core HTML page must load the main data packages, then the public-safe research update packages, then any public-cycle scoping guard, then the app runtime. Current order for primary app pages:
+Representative load order:
 
 ```html
-<script src="data/packages/production-branches.js?v=multi1"></script>
-<script src="data/packages/opportunities-2026.js?v=multi1"></script>
+<script src="data/packages/production-branches.js?v=multi2"></script>
+<script src="data/packages/opportunities-2026.js?v=multi4"></script>
 <script src="data/packages/us-employers.js?v=multi1"></script>
 <script src="data/iatse-us-local-directory.js?v=iatse-dir2"></script>
 <script src="data/packages/opportunity-taxonomy.js?v=taxonomy2"></script>
@@ -307,13 +307,15 @@ Every active core HTML page must load the main data packages, then the public-sa
 <script src="assets/approx-date-labels.js?v=approx1"></script>
 ```
 
-Cache-bust query values are bumped together across all pages whenever the underlying shared asset changes, so every page requests the same current version.
+`employers.html` additionally loads `assets/employers-department-browser.js?v=dept18` and `assets/atlas-job-kb.css?v=kb1`.
 
-`iatse.html` and `sources.html` also load `data/iatse-organization-info.js`. The IATSE package owns public institutional structure, source-bounded route patterns, training/touring distinctions, directory-audit metadata, and the no-personal-data publication boundary. `map.html` also loads `data/packages/opportunity-coords.js` and `assets/map-page-static.js`. `calendar.html` also loads `assets/calendar-interactive.js`. `employers.html` also loads `assets/employers-department-browser.js`. `sources.html` also loads `assets/sources-employer-links.js`, which renders both the IATSE official-source register and employer links. `analytics.html` loads `assets/research-queue-page.js`. Public modal pages may load `assets/festival-modal-public-safe.js`. Footer/legal/white-page navigation is normalized through `assets/site-footer.js` and includes the sibling Crew Blueprint training link.
+Home, Market, Opportunities, IATSE, Calendar, and Map also load `assets/atlas-job-kb.css?v=kb1` for shared visual normalization.
+
+Do not add `async` or `defer` to data/runtime package scripts unless the runtime dependency model is deliberately redesigned and validated.
 
 ## IATSE institutional-intelligence boundary
 
-IATSE is modeled as a labor-organization ecosystem, not an employer category or a single national hiring funnel. Keep these layers distinct:
+IATSE is modeled as a labor-organization ecosystem, not one employer category or one national hiring funnel. Keep these distinct:
 
 ```text
 IATSE International
@@ -329,19 +331,17 @@ training or credential pathway
 touring agreement and labor-requirement signal
 ```
 
-The 221-record `data/iatse-us-local-directory.js` file is a partial snapshot dated 2026-06-21. The 2026-09-07 audit found omissions in at least Delaware, Idaho, New Hampshire, North Dakota, and South Dakota and observed the official U.S. directory total changing between 305 and 306 on the same research date. Never describe the retained file as a complete national directory. Do not infer jurisdiction, an employer relationship, referral eligibility, membership eligibility, a credential requirement, guaranteed work, or an event-specific labor assignment from a directory record.
+The retained `data/iatse-us-local-directory.js` file is a partial snapshot dated 2026-06-21. Never describe it as a complete national directory. Do not infer jurisdiction, employer relationship, referral eligibility, membership eligibility, credential requirement, guaranteed work, or event-specific labor assignment from a directory record.
 
-The canonical public research narrative is `research/iatse-public-market-research-sweep-2026-09-07.md`. Official URLs are represented in `data/iatse-organization-info.js` and rendered on `sources.html`; IATSE popups link to that central source register instead of embedding personal contact routes.
+No personal names, personal email addresses, direct phone numbers, worker records, private application data, private referral/availability status, member-only material, or private pay/lodging/call details may be added to public IATSE packages.
 
-No personal names, personal email addresses, direct phone numbers, worker records, application data, private referral or availability status, member-only material, or private pay/lodging/call details may be added to public IATSE packages.
+## Analytics boundary
 
-Do not add `async` or `defer` to these data/runtime package scripts.
+The action-first research queue lives only on supplemental `analytics.html`. It is public-safe audit/planning scaffolding and is not part of the primary public workflow.
 
-## Analytics research queue boundary
+Do not move research queue tasks, internal next actions, confidence/audit language, missing-data warnings, source-needed filler, value-tier badges, or confidence badges into public cards, modals, map popups, schedule cards, or primary filters unless Aaron explicitly changes scope.
 
-The action-first research queue currently lives only on the supplemental retained `analytics.html` page. It is public-safe audit/planning scaffolding and is not part of the primary public workflow. Public cards, modals, map popups, schedule cards, and primary page copy should still avoid research queue tasks, internal next actions, confidence/audit language, missing-data warnings, source-needed filler, value-tier badges, or confidence badges.
-
-## Important data files
+## Important public data files
 
 ```text
 data/packages/production-branches.js
@@ -359,75 +359,6 @@ data/packages/branch-research-manifest.js
 data/packages/branch-research-batch-*.js
 ```
 
-## Active taxonomy, route, cycle, and map packages
-
-```text
-data/packages/opportunity-taxonomy.js              source/date research updates
-data/packages/research-queue-route-updates.js      public producer/operator route leads
-data/packages/opportunity-rollover-2027.js         separate-year 2027 public-cycle bridge
-data/packages/public-cycle-scope.js                default public-cycle visibility guard
-data/packages/opportunity-coords.js                map coordinates for opportunity records
-```
-
-Route updates are public-safe route leads only. They do not confirm vendors, labor providers, private contacts, pay, lodging, travel support, per diem, call times, or referrals.
-
-## Core vs supplemental work-finding data
-
-Core public work-finding display should focus on:
-
-```text
-event/festival name
-city, state, region
-venue/site when known
-event dates
-approximate production/build/load-in window
-approximate strike/load-out window
-producer/promoter/operator when publicly known
-public employer/vendor/company/labor-route leads
-public apply/careers/contact/homepage routes
-source availability through sources.html
-```
-
-Supplemental data may remain in the repository for deeper research, validation, and source review. Missing supplemental fields should not be blasted publicly.
-
-Hide these from public cards, modals, map popups, schedule cards, and primary page copy:
-
-```text
-confidence labels or scores
-work-year value scores
-priority target labels
-next human action
-next research action
-research queue tasks
-route intelligence paragraphs
-branch confidence
-branch status values
-internal evidence summaries
-empty branch records
-No event-specific branch record yet
-unknown / verify / source needed filler
-lodging unknown / travel unknown / per diem unknown clutter
-verify before outreach repeated as public warning text
-```
-
-Accommodation, travel, lodging, per diem, and similar worker-support details are supplemental only. Add them when reliable public information exists, but do not treat missing lodging, travel, or per diem information as a blocker for finding where work is, when it happens, which public producer/employer route exists, or what official route to research next.
-
-## Calendar-cycle and 2027 rollover rule
-
-The chosen rollover model is separate year-specific records.
-
-`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified 2027 public cycles and archives the corresponding active `*-2026` records out of the active public view. `data/packages/public-cycle-scope.js` keeps the default public view from mixing in future-year records unless the app scope is changed.
-
-Year filtering allows users to explicitly select between 2026, 2027, or all dates. The year filter is implemented via URL parameters (year=2026, year=2027) and is available on Opportunities, Calendar, and Map pages. Filter selections persist and can be shared via URL.
-
-Do not expand the older mutation model where a visible `*-2026` record becomes a 2027 opportunity. Long-term cleanup should move verified `*-2027` records into canonical opportunity data and then shrink or retire the bridge.
-
-Do not update exact dates unless the new public dates are visible from a reliable source. If a page says a future year is coming but does not publish dates, mark the record for review rather than inventing dates.
-
-## Festival research master-list rule
-
-`data/packages/festival-research-master-list.js` is the current festival registry and research-intake control file. It currently contains 258 records after reconciliation. It is not automatically active opportunity data by itself: records must be individually verified and promoted or matched to app data before they should be treated as active public opportunities.
-
 ## Employer-link rule
 
 Employer, vendor, producer, venue, and labor-route links are high priority. Prefer public links in this order:
@@ -439,39 +370,41 @@ Employer, vendor, producer, venue, and labor-route links are high priority. Pref
 4. official company homepage
 ```
 
-A homepage is acceptable when it is the only reliable public route or when the contact/application path is embedded on the homepage. Do not use private contacts, personal emails, phone numbers, pay information, rumors, or private referrals.
+A homepage is acceptable when it is the only reliable public route or when the contact/application path is embedded there.
 
-## IATSE / local jurisdiction wording rule
+Do not use private contacts, personal emails, direct phone numbers, pay information, rumors, private referrals, or private field notes.
 
-Do not name specific IATSE local numbers in event route research notes unless a direct current public source supports that exact jurisdiction claim and the context requires it.
+## Festival registry rule
 
-Preferred event-route language:
+`data/packages/festival-research-master-list.js` is the festival registry and research-intake control file. It is not automatically active opportunity data. Records must be individually verified and promoted or matched to app data before they are treated as active public opportunities.
 
-```text
-verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
-```
+## 2026 / 2027 rollover rule
 
-The `iatse.html` page is built around how a worker actually joins IATSE: the overhire-to-membership path, the permit-vs-member distinction, other ways in, official IATSE resource links, and a searchable local directory. Each local opens a modal with actionable join steps and a link to the official directory for that local's real contact.
+The chosen model is separate year-specific records.
+
+`data/packages/opportunity-rollover-2027.js` is a temporary static bridge that creates public `*-2027` records for verified public cycles and archives corresponding `*-2026` records from the active public view. `data/packages/public-cycle-scope.js` keeps future-year records out of the default view unless the app scope changes.
+
+Do not mutate a visible 2026 record into a 2027 opportunity. Do not invent future dates when a source has not published them.
 
 ## Branch research loading rule
 
-Branch research data is loaded through:
+Branch research packages are loaded through:
 
 ```text
 data/packages/branch-research-manifest.js
 ```
 
-When adding a new branch research batch:
+When adding a branch research batch:
 
 1. Create one data package in `data/packages/`.
 2. Create one matching report in `research/`.
-3. Add the data package filename to `data/packages/branch-research-manifest.js`.
-4. Keep the rule: one branch research data file equals one `window.*` export only.
-5. Run validation when possible, or document inability to run validation if using connector-only access and Aaron says continue.
+3. Add the package filename to `data/packages/branch-research-manifest.js`.
+4. Keep one branch research data file equal to one `window.*` export.
+5. Run validation when possible, or document inability to run it when using connector-only access and Aaron says continue.
 
 ## Public-safety rules
 
-Public data may include official/public links, employer homepages, source records, public route notes, public company names, public producer/promoter/operator names, and public apply/careers/contact routes.
+Public data may include official/public links, source records, public company names, producer/promoter/operator names, public route notes, department fit, department-level experience guidance, and official apply/careers/contact/homepage routes.
 
 Do **not** publish:
 
@@ -479,6 +412,9 @@ Do **not** publish:
 private contacts
 phone numbers
 personal emails
+worker identity or worker records
+private application history
+resume/application answers
 pay rates
 hotel/lodging details
 crew rumors
@@ -486,15 +422,10 @@ private field notes
 NDA information
 client-sensitive information
 private referrals
+Deadhang private commercial strategy
 ```
 
-Source links belong on:
-
-```text
-sources.html
-```
-
-Do not put raw source links inside public popups.
+Raw source links belong on `sources.html`, not inside public opportunity/branch/map/schedule popups.
 
 ## Validation
 
@@ -505,13 +436,11 @@ npm run validate:static-app
 npm run validate:all
 ```
 
-`validate:all` currently runs all three validation layers.
-
-GitHub Actions workflows:
+GitHub Actions workflows include:
 
 ```text
 .github/workflows/validate-branch-research.yml
 .github/workflows/deploy-research-version-pages.yml
 ```
 
-When Aaron says continue from a connector-only environment, continue making requested edits, state that validation was not run from the environment, and treat human live visual review as the immediate review gate. Do not claim validation passed unless it actually ran.
+When Aaron says continue from a connector-only environment, continue requested edits, state that local validation was not run, and treat human live visual review as the immediate review gate. Do not claim validation passed unless it actually ran or a GitHub Actions result confirms it.
