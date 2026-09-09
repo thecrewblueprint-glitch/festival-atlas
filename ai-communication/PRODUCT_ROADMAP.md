@@ -16,19 +16,22 @@ The product should help a worker answer:
 2. Which departments match that work?
 3. Which employers publicly operate in those departments and markets?
 4. Is the department normally entry-accessible, mixed, or qualification-heavy?
-5. What official careers/apply/contact route should I use?
-6. Which employers have I already researched, applied to, or need to follow up with?
-7. Which events, dates, locations, and labor mechanisms matter to the decision?
-8. What is verified, approximate, or still dependent on the current job posting?
+5. Which source-backed current vacancies are actually open?
+6. Does a current posting explicitly support entry, mixed, experienced, or unknown classification?
+7. What official careers/apply/contact route should I use?
+8. Which employers have I already researched, applied to, or need to follow up with?
+9. Which events, dates, locations, and labor mechanisms matter to the decision?
+10. What is verified, approximate, or still dependent on the current job posting?
 ```
 
-The app is successful when a worker can move from broad market research to a practical employer shortlist and next action without digging through raw research files or confusing general employer presence with event-specific staffing evidence.
+The app is successful when a worker can move from broad market research to a practical employer shortlist and next action without digging through raw research files or confusing general employer presence, department-path guidance, current vacancy evidence, and event-specific staffing evidence.
 
 ## 2. Current product boundary
 
 ```text
 Static GitHub Pages app
 Public-safe employer/event/labor-market knowledge base
+Source-backed current-vacancy data when available
 Browser-local planning and application workflow state
 No backend
 No login
@@ -57,6 +60,10 @@ Shared visual layer: assets/atlas-job-kb.css
 Employers renderer: assets/employers-department-browser.js
 Department experience guidance: data/packages/production-branches.js
 Employer application workflow: browser-local localStorage only
+Current vacancy runtime: data/packages/current-job-openings.js
+Current vacancy records: 0 until fresh public postings are deliberately normalized
+Vacancy schema: data/packages/JOB_OPENING_RECORD_SCHEMA.md
+Vacancy validator: tools/validate-job-openings.js
 ```
 
 ## 4. Non-negotiable operating rules
@@ -82,11 +89,13 @@ private referrals
 Deadhang private commercial strategy
 ```
 
-### 4.2 Sources stay centralized
+### 4.2 Sources stay centralized with one vacancy exception
 
-Raw source links belong on `sources.html`.
+Raw event/research audit links belong on `sources.html`.
 
-Do not move raw source links into opportunity, branch, map, schedule, or employer-detail popups unless the source-link policy is deliberately changed.
+Do not move raw event/research source links into opportunity, branch, map, or schedule popups unless the source-link policy is deliberately changed.
+
+A source-backed current job-posting URL may appear with its vacancy record on Employers because the posting is both the evidence and the public application/action route.
 
 ### 4.3 Public filter scope
 
@@ -118,7 +127,26 @@ experienced
 
 Never convert that guidance into a claim that a current job opening has a particular experience requirement unless the current public posting says so.
 
-### 4.5 Application workflow stays browser-local
+### 4.5 Vacancy classification is source-backed
+
+`data/packages/current-job-openings.js` is the canonical runtime surface for normalized current public vacancies.
+
+Vacancy experience values:
+
+```text
+entry
+mixed
+experienced
+unknown
+```
+
+An empty dataset is valid. It means no current openings have been normalized yet, not that employers have no jobs.
+
+Every populated record must follow `data/packages/JOB_OPENING_RECORD_SCHEMA.md` and pass `npm run validate:job-openings`.
+
+Do not infer vacancy level from company reputation, job title alone, department guidance, certification alone, stale/cached postings, search snippets, or private information. Use `unknown` when the current source does not support a safe classification.
+
+### 4.6 Application workflow stays browser-local
 
 Allowed localStorage fields:
 
@@ -141,22 +169,23 @@ Closed
 
 Do not add public worker/application data to GitHub. A synced private application system would be a separate owner-authorized architecture.
 
-### 4.6 Shared visual system
+### 4.7 Shared visual system
 
 `assets/atlas-job-kb.css` is the common professional information-interface layer for Home, Employers, Market, Opportunities, IATSE, Calendar, and Map.
 
 It owns visual normalization only. Runtime logic stays in existing owner scripts.
 
-### 4.7 Analytics research queue boundary
+### 4.8 Analytics research queue boundary
 
 `assets/research-queue-page.js` remains scoped to supplemental `analytics.html` only. Do not expose the research queue as a primary worker workflow.
 
-### 4.8 Validation and human review
+### 4.9 Validation and human review
 
 Relevant validation commands:
 
 ```bash
 npm run validate:data
+npm run validate:job-openings
 npm run validate:branch-research
 npm run validate:static-app
 npm run validate:all
@@ -206,6 +235,7 @@ A worker should be able to narrow the employer universe to the companies that fi
 - [x] Track Researching / Ready to apply / Applied / Follow-up / Closed.
 - [x] Keep application state browser-local.
 - [x] Preserve official careers/apply/contact links as the action route.
+- [x] Render source-backed current openings inside employer profiles when records exist.
 - [ ] Add stronger application-list sorting/grouping if the current simple workspace becomes hard to manage.
 - [ ] Add export/print only if it can remain local and does not create a public personal-data surface.
 
@@ -216,6 +246,15 @@ A worker should be able to narrow the employer universe to the companies that fi
 ## Goal
 
 Move beyond general employer capability when reliable public job postings are available, without inventing vacancy attributes.
+
+## Architecture complete
+
+- [x] Canonical runtime package: `data/packages/current-job-openings.js`.
+- [x] Record/evidence contract: `data/packages/JOB_OPENING_RECORD_SCHEMA.md`.
+- [x] Employer renderer support for current vacancy rows.
+- [x] Vacancy-level entry/mixed/experienced/unknown labels kept separate from department-path guidance.
+- [x] Dedicated validator: `tools/validate-job-openings.js`.
+- [x] Full validation suite includes `validate:job-openings`.
 
 ## Target normalized fields
 
@@ -231,10 +270,13 @@ experience requirement exactly as stated or normalized from stated requirements
 certification/license requirement when explicitly stated
 travel/touring requirement when explicitly stated
 posting/source date when available
+checked date
 ```
 
-## Rules
+## Next data work
 
+- [ ] Populate the first current opening records from fresh official employer or employer-controlled ATS postings.
+- [ ] Reverify open records as they age; current validator warns after 30 days without reverification.
 - [ ] Do not infer entry level from title alone.
 - [ ] Do not infer experienced level from company reputation or department alone.
 - [ ] Do not infer licensing/certification requirements.
@@ -279,6 +321,7 @@ Support practical work planning without turning the public app into a private da
 - [ ] Review active source URLs.
 - [ ] Verify producer/promoter/operator names for priority opportunities.
 - [ ] Expand and refresh employer careers/apply/contact routes.
+- [ ] Populate and maintain source-backed current-job records.
 - [ ] Continue IATSE official-source research while preserving the distinction between international, district, local, jurisdiction, referral, membership, employer, and work call.
 - [ ] Canonicalize verified 2027 records and retire bridge behavior when ready.
 - [ ] Refine remaining map coordinates when exact public locations are available.
@@ -299,9 +342,10 @@ Immediate review sequence:
 8. Verify application status persists and filters correctly.
 9. Verify no local application data appears in repository/network-backed public data.
 10. Verify department experience labels are not phrased as current vacancy requirements.
+11. Add a test current-opening record only through the schema/validator path before scaling the vacancy dataset.
 
 ---
 
 ## Next product priority
 
-The strongest next data improvement is **current job-opening normalization with source-backed role requirements**. The current department experience model is useful for navigation, but it should remain a directional layer until actual job-posting evidence can support vacancy-level classification.
+The architecture for current job-opening normalization is now built. The next meaningful step is **populate a source-backed pilot of real current openings** from employers already in `us-employers.js`, then evaluate whether the record volume warrants a separate current-jobs browse/filter surface or whether employer-profile integration remains the simpler interface.
