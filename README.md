@@ -11,6 +11,10 @@ The repository is the canonical public store for accepted public-safe market and
 
 The Crew Blueprint is the sibling public training system. Production Atlas owns current work, employer, hiring-route, market, and event intelligence; The Crew Blueprint owns durable technical, safety, academic, and job-readiness curriculum. Each site may link to the other, but their datasets remain separate.
 
+Maintenance rule: keep this README current when significant app behavior, public navigation, public filter scope, runtime loading, active shared files, validation contract, data state, page roles, collaboration-log convention, public-safety policy, or source-link policy changes.
+
+README current when significant app behavior changes. Do not leave source-of-truth drift for another assistant to discover.
+
 ## Live site
 
 - **Custom domain:** https://atlas.thecrewblueprint.com/
@@ -49,7 +53,7 @@ Backend/auth/database/payment/scraping: none
 
 The shared job-knowledge-base visual layer is loaded on Home, Employers, Market, Opportunities, IATSE, Calendar, and Map. It normalizes the visual system into a professional dark teal/blue information interface while preserving each page's existing public copy.
 
-## Source-of-truth order
+## Source-of-truth rule
 
 When repo-visible documents disagree, resolve in this order:
 
@@ -76,15 +80,34 @@ Routine per-commit or compact change-group notes belong in:
 ai-communication/collaboration-log/
 ```
 
+Use one new file per commit or compact commit group. Do not maintain one giant append-only active-session ledger for routine work.
+
 Recommended filename pattern:
 
 ```text
 YYYY-MM-DD-###-assistant-short-topic.md
 ```
 
-Each entry should include status, created date, review-after date, assistant, branch, commit/range, access mode, files changed/deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status, known risks, and next action.
+Each log entry must include lifecycle metadata:
 
-Complete or superseded logs older than 14 days may be deleted when no longer useful. Incomplete or blocked logs older than 14 days should move to `ai-communication/collaboration-log/incomplete/` and remain auditable.
+```text
+Status: complete | incomplete | blocked | superseded
+Created: YYYY-MM-DD
+Review after: YYYY-MM-DD
+Assistant: ChatGPT | Claude | Claude Code | other
+Branch: research-version
+Commit: <sha or range>
+```
+
+For current work, logs should also include access mode, files changed, files deleted, documents examined for drift, documents updated, documents intentionally not updated and why, validation status, human-review status where applicable, known risks, and next action.
+
+Two-week cleanup rule:
+
+```text
+complete or superseded logs older than 14 days may be deleted if no longer useful.
+incomplete or blocked logs older than 14 days should be moved to ai-communication/collaboration-log/incomplete/.
+incomplete or blocked logs must remain auditable and must not be deleted during routine cleanup.
+```
 
 ## Product questions the app should answer
 
@@ -103,7 +126,7 @@ How do calendar and map information affect travel and scheduling decisions?
 ## Primary workflow pages
 
 ```text
-index.html        Hiring-intelligence home page and primary route into Employer Profiles.
+index.html        Home: quick explanation, dashboard, and clear Guide link.
 guide.html        Full Guide for Use and public-safe workflow.
 employers.html    Employer decision hub: company profiles, departments, experience-path guidance,
                   geography, employer type, official hiring links, and browser-local application workflow.
@@ -120,7 +143,7 @@ feedback.html     Public app feedback route.
 
 Schedule remains functional by direct URL and browser-local storage, but is intentionally off public header navigation pending a mobile/usability rebuild.
 
-### Header navigation
+### Header / footer navigation rule
 
 Current public header navigation remains:
 
@@ -134,7 +157,7 @@ IATSE
 Contribute
 ```
 
-Guide and Sources remain footer/reference links. Schedule remains off header navigation.
+Guide and Sources are footer/reference links, not header nav links. The Guide also appears as a home-page callout between the nav bar and the first home card. Sources remains a central audit/source page and must stay reachable from the footer/reference flow and contextual source-page links. Schedule remains off header navigation.
 
 ## Employer decision model
 
@@ -273,6 +296,19 @@ data/packages/branch-research-manifest.js
 
 Do not create patch-layer helper scripts for behavior that belongs in an existing owner file.
 
+### Retired helper rule
+
+Retired public helpers must not be reintroduced:
+
+```text
+assets/confidence-badges.js
+assets/opportunities-promoter-filter.js
+assets/opportunities-date-sort.js
+assets/iatse-page.js
+```
+
+`assets/research-queue-page.js` is intentionally active only for the supplemental `analytics.html` audit queue. It must not be moved into primary public navigation, cards, modals, map popups, schedule cards, or public filters unless Aaron explicitly changes app scope.
+
 ## Runtime ownership
 
 `assets/atlas-core-v2.js` owns core public rendering, opportunity date sorting, producer/promoter filter population and filtering, IATSE organization rendering, modals, Sources rendering, and the current Schedule renderer.
@@ -288,7 +324,7 @@ assets/guide-page.js                    Guide content
 assets/research-queue-page.js           Analytics supplemental audit queue
 ```
 
-## Required runtime loading
+## Required runtime load order
 
 Primary pages load public data packages before runtime scripts. Current shared branch package cache version is `multi2` because the production-branch schema includes experience guidance.
 
@@ -334,6 +370,18 @@ touring agreement and labor-requirement signal
 The retained `data/iatse-us-local-directory.js` file is a partial snapshot dated 2026-06-21. Never describe it as a complete national directory. Do not infer jurisdiction, employer relationship, referral eligibility, membership eligibility, credential requirement, guaranteed work, or event-specific labor assignment from a directory record.
 
 No personal names, personal email addresses, direct phone numbers, worker records, private application data, private referral/availability status, member-only material, or private pay/lodging/call details may be added to public IATSE packages.
+
+## IATSE / local jurisdiction wording rule
+
+Do not name specific IATSE local numbers in event route research notes unless a direct current public source supports that exact jurisdiction claim and the context requires it.
+
+Preferred event-route language:
+
+```text
+verify applicable IATSE/local jurisdiction for <city or site> (research local number before outreach)
+```
+
+Keep referral, hiring-hall registration, membership, training, employer relationships, and actual work calls separate. Do not present one national joining or hiring sequence as universal.
 
 ## Analytics boundary
 
