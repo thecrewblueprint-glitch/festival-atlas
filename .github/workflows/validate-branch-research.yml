@@ -1,14 +1,12 @@
 name: Validate Production Atlas
 
 on:
-  push:
-    branches:
-      - main
-      - research-version
   pull_request:
+    types: [ready_for_review]
     branches:
       - main
       - research-version
+  workflow_dispatch:
 
 jobs:
   validate-production-atlas:
